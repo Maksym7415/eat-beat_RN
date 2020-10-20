@@ -6,33 +6,19 @@ export default function NutritionItem({ color, nutrition_title, nutrition_measur
     const precent = Math.round(nutrition_measure/nutrition_number*100)
   return (
     <View style={styles.itemContainer}>
-        <View style={styles.itemWrapper}>
-            <Text>{nutrition_title}</Text>
-            <Text>({nutrition_unit})</Text>
-            <Text>{nutrition_measure}/</Text>
-            <Text>{nutrition_number}</Text>
-           
-        </View>    
-        <View style={styles.precentWrapper}>
-        <Text>{`${precent} %`}</Text>
-        <Text style={{width: precent, backgroundColor: color, marginLeft: 10}}></Text>
-        </View>
+            <Text style={{width:'22%'}}>{nutrition_title}</Text>
+            <Text style={{width:'10%'}}>({nutrition_unit})</Text>
+            <Text style={{width:'15%'}}>{nutrition_measure}/</Text>
+            <Text style={{width:'15%'}}>{nutrition_number}</Text>
+            <Text style={{width:'12%'}}>{`${precent} %`}</Text>
+            <Text style={{width: precent/2, backgroundColor: color}}></Text>      
     </View>
   );
 }
 
 const styles = StyleSheet.create({
     itemContainer: {
-       // width: 350,
         marginBottom: 10,
-       flexDirection: 'row',
-    },
-    itemWrapper: {
-        width: 250,
-        justifyContent: 'space-evenly',
         flexDirection: 'row',
-    },
-    precentWrapper: {
-        flexDirection: 'row'
     }
 });
