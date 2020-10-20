@@ -1,21 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { Auth, Main } from "./screens/Navigation";
+import Splash from "./screens/SplashScreen";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  const [loaded, setLoaded] = useState(false);
+  const [logged, setLogged] = useState(false);
+  const [userData, setUserData] = useState({});
+  const handleLogging = () => {
+    setLoaded(true);
+  };
+  if (!loaded) {
+    return <Splash />;
+  }
+  if (logged) return <Main />;
+  return <Auth />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// Reminder Notes
