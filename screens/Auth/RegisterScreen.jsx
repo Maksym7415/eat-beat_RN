@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
-import { Picker } from "@react-native-community/picker";
+//import { Picker } from "@react-native-community/picker";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { fbLogin } from "../components/SocialAuth";
@@ -74,7 +74,7 @@ export default function RegisterScreen({ navigation }) {
             <FormikInput value="email" label="Email" />
             <FormikInput value="password" label="Password" />
             <View style={styles.pickerContainer}>
-              <Picker
+              {/* <Picker
                 selectedValue={values.country}
                 style={{ height: 50, width: 100 }}
                 onValueChange={(v, i) => setFieldValue("country", v)}
@@ -83,7 +83,7 @@ export default function RegisterScreen({ navigation }) {
                 {CountryList.map((c) => (
                   <Picker.Item key={c} label={c} value={c} />
                 ))}
-              </Picker>
+              </Picker> */}
             </View>
             <View style={styles.rowContainer}>
               <MyButton

@@ -1,9 +1,14 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
-import { Col } from "../components/Config";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Col } from "./Config";
 
-export function MyButton({ Color = Col.Main, onPress, label, width = "80%" }) {
+export function MyButton({
+  Color = Col.Primary,
+  onPress,
+  label,
+  width = "80%",
+}) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.btn, { backgroundColor: Color, width }]}>
@@ -68,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: Col.Main,
+    borderColor: Col.Primary,
     borderWidth: 2,
     borderRadius: 10,
     marginTop: 20,
@@ -85,13 +90,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   txt2: {
-    color: Col.Main,
+    color: Col.Primary,
     fontSize: 16,
   },
   warningCont: {
     width: "75%",
   },
   warning: {
-    color: Col.prompt,
+    color: Col.Primary,
   },
 });

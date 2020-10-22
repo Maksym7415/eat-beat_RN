@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { Auth, Main } from "./screens/Navigation";
-import { View, Text } from "react-native";
 import Splash from "./screens/SplashScreen";
-
+import { AppContext } from "./components/AppContext";
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
-  const [logged, setLogged] = useState(false);
+  const [loaded, setLoaded] = useState(true);
+  const [logged, setLogged] = useState(true);
   const [userData, setUserData] = useState({});
 
-  const handleLogging = () => {
-    setLoaded(true);
-  };
+  const appContext = useMemo(() => {
+    return {
+      login: () => {
+        setLogged(true);
+      },
+      signOut: () => {
+        //
+      },
+      getData: () => {
+        //
+      },
+      pushData: () => {
+        //
+      },
+    };
+  });
 
-  if (!loaded) {
-    return <Main />;
-  }
-  if (logged) return <Main />;
-  return <Auth />;
+  return (
+    <AppContext.Provider value={appContext}>
+      {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
+    </AppContext.Provider>
+  );
 }
 // Reminder Notes

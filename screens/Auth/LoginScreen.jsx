@@ -6,7 +6,6 @@ import FormikInput from "../components/FormikInput";
 import * as Yup from "yup";
 import { AppContext } from "../components/AppContext";
 import { Col, auth } from "../components/Config";
-import { fbLogin } from "../components/SocialAuth";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -38,19 +37,13 @@ export default function LoginScreen({ navigation }) {
             <FormikInput value="email" label="Email" />
             <FormikInput value="password" label="Password" />
             <MyButton onPress={handleSubmit} label="Sign In" />
-            <ButtonOutline
-              onPress={() =>
-                fbLogin().then(() => console.log("facebook singed in"))
-              }
-              label={"with Facebook"}
-            />
           </>
         )}
       </Formik>
 
       <Text style={styles.signUp} onPress={() => navigation.push("SignUp")}>
         Here for the first time?
-        <Text style={{ color: Col.Main }}> Sign Up</Text>
+        <Text style={{ color: Col.Primary }}> Sign Up</Text>
       </Text>
     </View>
   );
@@ -60,7 +53,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: Col.Bg,
+    backgroundColor: Col.Back,
   },
   orContainer: {
     marginTop: "20%",
@@ -74,11 +67,11 @@ const styles = StyleSheet.create({
   },
   h1: {
     fontSize: 30,
-    color: Col.Main,
+    color: Col.Primary,
     fontWeight: "bold",
   },
   h2: {
-    color: Col.Secondary,
+    color: Col.Grey3,
     fontSize: 24,
   },
   warning: {

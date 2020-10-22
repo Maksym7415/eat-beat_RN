@@ -1,8 +1,6 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 
-export default function ReText({}) {
-  return <Text></Text>;
+export default function ReText(props, children) {
+  return <Text {...props}>{children}</Text>;
 }
-
-const styles = StyleSheet.create({});
