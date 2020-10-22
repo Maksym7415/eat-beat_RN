@@ -45,32 +45,10 @@ const testNutrients = [
 
 export default function SplashScreen() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [data, setData] = useState([
-    {
-      nutrition_title: "sugar",
-      nutrition_measure: 19,
-      nutrition_unit: "g",
-      nutrition_number: 80,
-      color: "#EB665E",
-    },
-    {
-      nutrition_title: "Fiber",
-      nutrition_measure: 7,
-      nutrition_unit: "g",
-      nutrition_number: 25,
-      color: "#2DAF0C",
-    },
-    {
-      nutrition_title: "Vitamin A",
-      nutrition_measure: 3500,
-      nutrition_unit: "IU",
-      nutrition_number: 3500,
-      color: "#EDDE5D",
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    /*
+    
     async function getDailyConsumption() {
       
       const a = await axios(
@@ -85,7 +63,7 @@ export default function SplashScreen() {
       );
 
       // console.log(a.data.accessToken)
-      const data = await axios(
+      const { data } = await axios(
         `https://logisticbrocker.hopto.org/eat-beat/api/meals/daily-consumption?date=2020-01-01`,
         {
           method: "get",
@@ -95,9 +73,11 @@ export default function SplashScreen() {
           },
         }
       ).catch((e) => console.log({ e }));
-      console.log(data);
+      console.log(data)
+    setData(data)
+     
     }
-    getDailyConsumption();*/
+    getDailyConsumption();
   }, []);
   return (
     <ScrollView>
@@ -110,7 +90,7 @@ export default function SplashScreen() {
           <View style={styles.box}>
             <Text style={styles.title}>Total meals</Text>
             <Nutrient child={true}>
-              <Text style={styles.scoreNumber}>3</Text>
+              <Text style={styles.scoreNumber}>{data.totalMeals}</Text>
             </Nutrient>
           </View>
           <View style={styles.box}>
@@ -123,7 +103,7 @@ export default function SplashScreen() {
             <Nutrient child={true}>
               <View style={styles.rowContainer}>
                 <HealthCircle
-                  value={0.71}
+                  value={+data.healthScore / 100}
                   size={40}
                   thickness={6}
                   color={Col.Green1}
@@ -132,7 +112,7 @@ export default function SplashScreen() {
                   animationConfig={{ speed: 4 }}
                 />
                 <View style={styles.rowContainer}>
-                  <Text style={styles.scoreNumber}>71</Text>
+                  <Text style={styles.scoreNumber}>{data.healthScore}</Text>
                   <Text style={[styles.scoreNumber, { fontSize: Typ.H2 }]}>
                     /100
                   </Text>
@@ -143,7 +123,7 @@ export default function SplashScreen() {
         </View>
         <Divider styler={styles.divider} />
         <View style={styles.boxContainer}>
-          {testNutrients.map((item, index) => (
+          {data.defaultNutrients && data.defaultNutrients.map((item, index) => (
             <View key={index} style={styles.box}>
               <Nutrient {...item} />
             </View>
@@ -151,20 +131,23 @@ export default function SplashScreen() {
         </View>
         <Divider styler={styles.divider} />
         <View style={{ paddingHorizontal: Spacing.medium }}>
+          {console.log(data.tooMuchNutrients)}
           <Collapse
-            title={"Too much (3)"}
+            data={data.tooMuchNutrients}
+            title={`Too much (${data.tooMuchNutrients && data.tooMuchNutrients.length})`}
             styler={{ color: Col.Error }}
             icon_type={"alert"}
           />
           <Collapse
-            title={"Not enough (5)"}
+            data={data.notEnough}
+            title={`Not enough (${data.notEnough && data.notEnough.length})`}
             styler={{ color: Col.Info }}
             icon_type={"verify"}
           />
         </View>
         <Divider styler={styles.divider} />
         <View style={styles.nutritionContainer}>
-          {data.map((item) => (
+          {data.nutrientsData && data.nutrientsData.map((item) => (
             <Nutrition key={item.nutrition_title} {...item} />
           ))}
         </View>
