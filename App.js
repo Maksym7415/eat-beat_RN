@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Auth, Main } from "./screens/Navigation";
-import { View, Text } from 'react-native';
+import { View, Text } from "react-native";
 import Splash from "./screens/SplashScreen";
 
 export default function App() {
@@ -12,14 +12,8 @@ export default function App() {
     setLoaded(true);
   };
 
-
   if (!loaded) {
-    return (
-      <>
-      <Main />
-      </>
-      
-    );
+    return <Main />;
   }
   if (logged) return <Main />;
   return <Auth />;
