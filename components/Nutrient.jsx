@@ -3,9 +3,9 @@ import { StyleSheet, Text, View } from "react-native";
 import { Col, Weight, Typ, Spacing } from "./Config";
 
 export default function Nutrient({
-  title = "",
-  currentSize = "",
-  maxSize = "",
+  name = "",
+  currentValue = "",
+  intakeNorm = "",
   unit = "",
   child,
   children,
@@ -16,11 +16,11 @@ export default function Nutrient({
         children
       ) : (
         <View>
-          <Text style={styles.nutrient_title}>{`${title} (${unit})`}</Text>
+          <Text style={styles.nutrient_title}>{`${name} (${unit})`}</Text>
           <View style={styles.nutrient_numbers}>
-            <Text style={styles.unit}>{currentSize}</Text>
+            <Text style={styles.unit}>{currentValue}</Text>
             <View style={styles.maxCount}>
-              <Text style={styles.maxCountText}>{`of ${maxSize}`} </Text>
+              <Text style={styles.maxCountText}>{`of ${intakeNorm}`} </Text>
             </View>
           </View>
         </View>

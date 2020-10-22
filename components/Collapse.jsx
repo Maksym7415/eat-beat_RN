@@ -20,7 +20,7 @@ const alertMessages = [
   },
 ];
 
-export default function Collapse({ title, styler, icon_type }) {
+export default function Collapse({ title, styler, icon_type, data }) {
   const [arrow, setArrow] = useState(false);
   return (
     <TouchableWithoutFeedback onPress={() => setArrow(!arrow)}>
@@ -40,11 +40,11 @@ export default function Collapse({ title, styler, icon_type }) {
           {arrow && (
             <>
               <Divider styler={styles.collapseDivider} />
-              {alertMessages.map((item) => (
-                <View key={item.title} style={{ flexDirection: "row" }}>
-                  <Text style={styles.collapseText}>{item.title}</Text>
+              {data.map((item) => (
+                <View key={item.name} style={{ flexDirection: "row" }}>
+                  <Text style={styles.collapseText}>{item.name}</Text>
                   <Divider styler={styles.verticalDivider} />
-                  <Text style={styles.collapseText}>{item.precent}</Text>
+                  <Text style={styles.collapseText}>{`${item.value || 0} %`}</Text>
                 </View>
               ))}
             </>

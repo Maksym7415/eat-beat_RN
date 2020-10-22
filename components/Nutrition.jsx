@@ -3,19 +3,20 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function NutritionItem({
   color,
-  nutrition_title,
-  nutrition_measure,
-  nutrition_unit,
-  nutrition_number,
+  name,
+  currentValue,
+  unit,
+  defaultValue,
+  percenatage
 }) {
-  const precent = Math.round((nutrition_measure / nutrition_number) * 100);
+  // const precent = Math.round((nutrition_measure / nutrition_number) * 100);
   return (
     <View style={styles.itemContainer}>
-      <Text style={{ width: "25%" }}>{nutrition_title}</Text>
-      <Text style={{ width: "15%" }}>{nutrition_unit}</Text>
-      <Text style={{ width: "20%" }}>{nutrition_measure}/</Text>
-      <Text style={{ width: "15%" }}>{nutrition_number}</Text>
-      <Text style={{ width: "15%" }}>{`${precent} %`}</Text>
+      <Text style={{ width: "25%" }}>{name}</Text>
+      <Text style={{ width: "15%" }}>{unit}</Text>
+      <Text style={{ width: "20%" }}>{currentValue}/</Text>
+      <Text style={{ width: "15%" }}>{defaultValue}</Text>
+      <Text style={{ width: "15%" }}>{`${percenatage || 0} %`}</Text>
       <View
         style={{ width: "8%", backgroundColor: color, borderRadius: 20 }}
       ></View>
