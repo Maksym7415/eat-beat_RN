@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import NutritionItem from '../components/Nutrition';
+import axios from 'axios'
 import Nutrient from '../components/Nutrient';
 import Nutrition from '../components/Nutrition';
 import HealthCircle from '../components/HealthCircle';
@@ -59,10 +60,34 @@ export default function SplashScreen() {
   const [modalVisible, setModalVisible] = useState(false)
 
   const showModal = (sw) => {
-    setModalVisible(sw)
+    setModalVisible(sw);
   }
 
+  useEffect(() => {
+    async function getDailyConsumption() {
+        // const a = await axios(`https://logisticbrocker.hopto.org/eat-beat/api/auth/sign-in`, {
+        //     method: 'post',
+        //     data: {
+        //         "email": "popovmaksim7415@gmail.com",
+        //         "password": "A1bcde"
+        //     }
+        // })
+
+        // console.log(a.data.accessToken)
+        const data = await axios(`https://logisticbrocker.hopto.org/eat-beat/api/meals/daily-consumption?date=2020-01-01`, {
+            method: 'get',
+            headers: {
+                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBvcG92bWFrc2ltNzQxNUBnbWFpbC5jb20iLCJ1c2VyQWdlbnQiOiJFeHBvLzIuMTcuNC4xMDk5NDkgQ0ZOZXR3b3JrLzEyMDYgRGFyd2luLzIwLjEuMCIsInVzZXJJZCI6MSwibmFtZSI6Ik1ha3NpbSIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2MDMzNDk5NDUsImV4cCI6MTYxNjMwOTk0NX0.UYoNVojGcycuszWDr8wiod97gmU4YvlY7vO9O1gkuZQ`,
+                // 'Content-type': 'application/json'
+            }
+        }).catch(e => console.log({e}))
+        console.log(data)
+    }
+    getDailyConsumption();
+  }, [])
+
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Modal modalVisible={modalVisible} showModal={showModal}/>
       <View style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap', marginLeft: 5, marginRight: 5}}>
@@ -87,7 +112,7 @@ export default function SplashScreen() {
                   <View style={{width: '50%'}}>
                     <HealthCircle
                         value={0.71}
-                        size={46}
+                        size={40}
                         thickness={6}
                         color={Col.Green1}
                         unfilledColor={Col.Back3}
@@ -135,17 +160,15 @@ export default function SplashScreen() {
         </View>
   
     </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-    backgroundColor: '#E5E5E5',
+    paddingTop: 12,
+    backgroundColor: Col.Back3,
     height: '100%'
-    //justifyContent: "center",
-    //alignItems: "center",
-   // flex: 1,
   },
   itemContainer: {
     width: '100%',
@@ -172,7 +195,7 @@ nutrient_numbers: {
   justifyContent: 'space-between'
 },
 divider: {
-  borderBottomColor: 'black',
+  borderBottomColor: Col.Grey3,
   borderBottomWidth: 0.5,
   marginBottom: 15,
   marginTop: 15
