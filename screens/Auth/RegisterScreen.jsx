@@ -3,12 +3,10 @@ import { Text, StyleSheet, View } from "react-native";
 //import { Picker } from "@react-native-community/picker";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { fbLogin } from "../components/SocialAuth";
-import FormikInput from "../components/FormikInput";
-import { AppContext } from "../components/AppContext";
-import { Col, auth, fdb } from "../components/Config";
-import { CountryList } from "../components/CountryList";
-import { MyButton, ButtonOutline } from "../components/MyComponents";
+import FormikInput from "../../components/FormikInput";
+import { AppContext } from "../../components/AppContext";
+import { Col } from "../../components/Config";
+import { MyButton, ButtonOutline } from "../../components/MyComponents";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -19,35 +17,18 @@ export default function RegisterScreen({ navigation }) {
   const [clicked, setClicked] = useState(false);
   const { login } = useContext(AppContext);
   const signUp = async (value) => {
-    if (clicked) return null;
+    console.log(value)
+    try{
+      await axios.post('/auth/sign-up', value)
+      await axios.post('/auth/sign-in', value)
+      login()
+    }catch(e) {
 
-    setClicked(true);
-    setTimeout(setClicked(false), 3000);
-
-    await auth
-      .createUserWithEmailAndPassword(value.email, value.password)
-      .then(() => regUser(value))
-      .catch((error) => alert(error));
+    }
   };
 
   const regUser = async (value) => {
-    const { firstName, lastName, country, type } = value;
-    try {
-      let uid = auth.currentUser.uid;
-      let input = {
-        firstName,
-        lastName,
-        country,
-      };
-      let address = "/users/" + type + "/" + uid + "/public";
-      fdb
-        .ref(address)
-        .set(input)
-        .then(() => login(value))
-        .catch((error) => console.log(error));
-    } catch (error) {
-      console.log(error);
-    }
+
   };
 
   return (
@@ -85,27 +66,7 @@ export default function RegisterScreen({ navigation }) {
                 ))}
               </Picker> */}
             </View>
-            <View style={styles.rowContainer}>
-              <MyButton
-                onPress={() => setFieldValue("type", "Recruiter")}
-                label="Recruiter"
-                width={"48%"}
-                Color={values.type == "Recruiter" ? Col.Main : Col.SubText}
-              />
-              <MyButton
-                onPress={() => setFieldValue("type", "Talent")}
-                label="Talent"
-                width={"48%"}
-                Color={values.type == "Recruiter" ? Col.SubText : Col.Main}
-              />
-            </View>
-            <MyButton onPress={handleSubmit} label="Sign Up" />
-            <ButtonOutline
-              onPress={() =>
-                fbLogin().then(() => console.log("facebook singed in"))
-              }
-              label={"with Facebook"}
-            />
+                 <MyButton onPress={handleSubmit} label="Sign Up" />      
           </>
         )}
       </Formik>

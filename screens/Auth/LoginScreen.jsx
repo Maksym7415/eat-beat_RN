@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
+import axios from 'axios';
+import AsyncStorage from "@react-native-community/async-storage";
 import { Text, StyleSheet, View } from "react-native";
-import { MyButton, ButtonOutline } from "../components/MyComponents";
+import { MyButton, ButtonOutline } from "../../components/MyComponents";
 import { Formik } from "formik";
-import FormikInput from "../components/FormikInput";
+import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
-import { AppContext } from "../components/AppContext";
-import { Col, auth } from "../components/Config";
+import { AppContext } from "../../components/AppContext";
+import { Col } from "../../components/Config";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -15,10 +17,13 @@ const Validation = Yup.object().shape({
 export default function LoginScreen({ navigation }) {
   const { login } = useContext(AppContext);
   const signIn = async (value) => {
-    await auth
-      .signInWithEmailAndPassword(value.email, value.password)
-      .then(() => login(value))
-      .catch((error) => console.log(error));
+    try{
+      const data = await axios.post('/auth/sign-in', value)
+      login()
+    }catch(e) {
+
+    }
+    
   };
 
   return (
@@ -41,7 +46,7 @@ export default function LoginScreen({ navigation }) {
         )}
       </Formik>
 
-      <Text style={styles.signUp} onPress={() => navigation.push("SignUp")}>
+      <Text style={styles.signUp} onPress={() => navigation.push("Register")}>
         Here for the first time?
         <Text style={{ color: Col.Primary }}> Sign Up</Text>
       </Text>

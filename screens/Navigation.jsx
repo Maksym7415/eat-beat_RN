@@ -78,7 +78,7 @@ const DrawerNavigator = () =>
 
 export const Main = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="HomePage">
       <Stack.Screen 
         options={({navigation}) => ({
         headerLeft: () => (

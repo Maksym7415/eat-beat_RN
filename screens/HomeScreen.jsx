@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-community/async-storage";
 import {
   StyleSheet,
   Text,
@@ -50,31 +51,9 @@ export default function SplashScreen() {
   useEffect(() => {
     
     async function getDailyConsumption() {
-      
-      const a = await axios(
-        `https://logisticbrocker.hopto.org/eat-beat/api/auth/sign-in`,
-        {
-          method: "post",
-          data: {
-            email: "popovmaksim7415@gmail.com",
-            password: "A1bcde",
-          },
-        }
-      );
-
-      // console.log(a.data.accessToken)
-      const { data } = await axios(
-        `https://logisticbrocker.hopto.org/eat-beat/api/meals/daily-consumption?date=2020-01-01`,
-        {
-          method: "get",
-          headers: {
-            Authorization: `Bearer ${a.data.accessToken}`,
-            // 'Content-type': 'application/json'
-          },
-        }
-      ).catch((e) => console.log({ e }));
-      console.log(data)
-    setData(data)
+    
+      const { data } = await axios('/meals/daily-consumption?date=2020-01-01')
+      setData(data)
      
     }
     getDailyConsumption();
@@ -103,7 +82,7 @@ export default function SplashScreen() {
             <Nutrient child={true}>
               <View style={styles.rowContainer}>
                 <HealthCircle
-                  value={+data.healthScore / 100}
+                  // value={+data.healthScore / 100}
                   size={40}
                   thickness={6}
                   color={Col.Green1}
@@ -131,7 +110,6 @@ export default function SplashScreen() {
         </View>
         <Divider styler={styles.divider} />
         <View style={{ paddingHorizontal: Spacing.medium }}>
-          {console.log(data.tooMuchNutrients)}
           <Collapse
             data={data.tooMuchNutrients}
             title={`Too much (${data.tooMuchNutrients && data.tooMuchNutrients.length})`}
