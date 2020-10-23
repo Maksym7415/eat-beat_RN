@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
-import axios from 'axios';
-import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
 import { Text, StyleSheet, View } from "react-native";
-import { MyButton, ButtonOutline } from "../../components/MyComponents";
+import { MyButton } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
@@ -17,13 +16,12 @@ const Validation = Yup.object().shape({
 export default function LoginScreen({ navigation }) {
   const { login } = useContext(AppContext);
   const signIn = async (value) => {
-    try{
-      const data = await axios.post('/auth/sign-in', value)
-      login()
-    }catch(e) {
-
+    try {
+      await axios.post("/auth/sign-in", value);
+      login();
+    } catch (e) {
+      console.log(e, value);
     }
-    
   };
 
   return (
@@ -42,10 +40,13 @@ export default function LoginScreen({ navigation }) {
             <FormikInput value="email" label="Email" />
             <FormikInput value="password" label="Password" />
             <MyButton onPress={handleSubmit} label="Sign In" />
+            <MyButton
+              onPress={() => navigation.push("Register")}
+              label="Sign Up"
+            />
           </>
         )}
       </Formik>
-
       <Text style={styles.signUp} onPress={() => navigation.push("Register")}>
         Here for the first time?
         <Text style={{ color: Col.Primary }}> Sign Up</Text>
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: Col.Back,
+    backgroundColor: Col.Back3,
   },
   orContainer: {
     marginTop: "20%",

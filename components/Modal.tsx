@@ -8,10 +8,7 @@ export default function ModalWindow({ showModal, modalVisible }) {
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => showModal(false)}
-          >
+          <TouchableOpacity style={styles.closeButton} onPress={showModal}>
             <MaterialIcons name="close" size={24} />
           </TouchableOpacity>
           <Text style={styles.modalTitle}>Health score</Text>

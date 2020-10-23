@@ -1,12 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
-//import { Picker } from "@react-native-community/picker";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../components/FormikInput";
-import { AppContext } from "../../components/AppContext";
 import { Col } from "../../components/Config";
-import { MyButton, ButtonOutline } from "../../components/MyComponents";
+import { MyButton } from "../../components/MyComponents";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -15,20 +13,14 @@ const Validation = Yup.object().shape({
 
 export default function RegisterScreen({ navigation }) {
   const [clicked, setClicked] = useState(false);
-  const { login } = useContext(AppContext);
   const signUp = async (value) => {
-    console.log(value)
-    try{
-      await axios.post('/auth/sign-up', value)
-      await axios.post('/auth/sign-in', value)
-      login()
-    }catch(e) {
-
+    console.log(value);
+    try {
+      await axios.post("/auth/sign-up", value);
+      navigation.goBack();
+    } catch (e) {
+      console.log(e, value);
     }
-  };
-
-  const regUser = async (value) => {
-
   };
 
   return (
@@ -38,35 +30,17 @@ export default function RegisterScreen({ navigation }) {
       </View>
       <Formik
         initialValues={{
-          firstName: "",
-          lastName: "",
           email: "",
           password: "",
-          country: "",
-          type: "Talent",
         }}
         validationSchema={Validation}
         onSubmit={(value) => signUp(value)}
       >
-        {({ handleSubmit, setFieldValue, values }) => (
+        {({ handleSubmit }) => (
           <>
-            <FormikInput value="firstName" label="First Name" />
-            <FormikInput value="lastName" label="Last Name" />
             <FormikInput value="email" label="Email" />
             <FormikInput value="password" label="Password" />
-            <View style={styles.pickerContainer}>
-              {/* <Picker
-                selectedValue={values.country}
-                style={{ height: 50, width: 100 }}
-                onValueChange={(v, i) => setFieldValue("country", v)}
-                style={styles.picker}
-              >
-                {CountryList.map((c) => (
-                  <Picker.Item key={c} label={c} value={c} />
-                ))}
-              </Picker> */}
-            </View>
-                 <MyButton onPress={handleSubmit} label="Sign Up" />      
+            <MyButton onPress={handleSubmit} label="Sign Up" />
           </>
         )}
       </Formik>
@@ -110,18 +84,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: Col.SubText,
     fontSize: 16,
-  },
-  pickerContainer: {
-    marginVertical: 5,
-    paddingHorizontal: 10,
-    height: 40,
-    width: "80%",
-    borderColor: Col.Secondary,
-    borderBottomWidth: 1,
-  },
-  picker: {
-    color: Col.Main,
-    width: "100%",
-    height: "100%",
   },
 });

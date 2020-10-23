@@ -1,4 +1,4 @@
-export default data = {
+export default res = {
   date: "2020-01-01",
   fkUserId: 1,
   healthScore: 10,

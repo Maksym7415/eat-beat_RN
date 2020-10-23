@@ -3,15 +3,10 @@ import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Col } from "./Config";
 
-export function MyButton({
-  Color = Col.Primary,
-  onPress,
-  label,
-  width = "80%",
-}) {
+export function MyButton({ Color = Col.Primary, onPress, label }) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.btn, { backgroundColor: Color, width }]}>
+      <View style={[styles.btn, { backgroundColor: Color }]}>
         <Text style={styles.txt}>{label}</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -38,10 +33,10 @@ export function ErrorMessage({ error, visible }) {
   );
 }
 
-export function TxtButton({ onPress, label, btnStyle = {} }) {
+export function TxtButton({ onPress, label, style }) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.txtBtn, btnStyle]}>
+      <View style={[styles.txtBtn, style]}>
         <Text style={styles.txt2}>{label}</Text>
       </View>
     </TouchableWithoutFeedback>

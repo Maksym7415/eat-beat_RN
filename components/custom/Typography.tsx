@@ -1,0 +1,82 @@
+import React, { Component, ReactElement, ReactText } from "react";
+import { StyleSheet, Text as ReText, TextProps } from "react-native";
+import { Col } from "../Config";
+
+declare interface Props {
+  style?: object;
+  type?: "h4" | "h6" | "sub" | "body" | "bodyBold" | "body2" | "cap";
+  children?: string | ReactText | ReactElement<TextProps>;
+  ellipsizeMode?: "head" | "middle" | "tail" | "clip" | undefined;
+  numberOfLines?: number;
+}
+
+export class Text extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
+  }
+  render() {
+    const {
+      style,
+      type = "body",
+      children,
+      ellipsizeMode,
+      numberOfLines,
+    } = this.props;
+    const def: object = styles[type] || styles.body;
+    return (
+      <ReText
+        ellipsizeMode={ellipsizeMode}
+        numberOfLines={numberOfLines}
+        style={[def, style]}
+      >
+        {children}
+      </ReText>
+    );
+  }
+}
+
+const Font = "Roboto";
+const styles = StyleSheet.create({
+  h4: {
+    //fontFamily: Font,
+    fontWeight: "400",
+    fontSize: 34,
+    color: Col.Grey,
+  },
+  h6: {
+    //fontFamily: Font,
+    fontWeight: "500",
+    fontSize: 20,
+    color: Col.Dark,
+  },
+  sub: {
+    //fontFamily: Font,
+    fontWeight: "500",
+    fontSize: 14,
+    color: Col.Black,
+  },
+  body: {
+    //fontFamily: Font,
+    fontWeight: "400",
+    fontSize: 16,
+    color: Col.Grey,
+  },
+  bodyBold: {
+    //fontFamily: Font,
+    fontWeight: "700",
+    fontSize: 16,
+    color: Col.Dark,
+  },
+  body2: {
+    //fontFamily: Font,
+    fontWeight: "400",
+    fontSize: 14,
+    color: Col.Grey,
+  },
+  cap: {
+    //fontFamily: Font,
+    fontWeight: "400",
+    fontSize: 12,
+    color: Col.Dark,
+  },
+});
