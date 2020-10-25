@@ -1,5 +1,4 @@
 const months = [
-  "Dec",
   "Jan",
   "Feb",
   "Mar",
@@ -11,12 +10,12 @@ const months = [
   "Sep",
   "Oct",
   "Nov",
+  "Dec",
 ];
 
-export const getDate = (date) => {
-  console.log(date);
+export const getDate = (date: Date) => {
   return {
-    month: months[date.getMonth() + 1],
+    month: months[date.getMonth()],
     day: date.getDate(),
   };
 };

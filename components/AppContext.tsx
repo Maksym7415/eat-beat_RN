@@ -1,2 +1,3 @@
-import React from "react";
-export const AppContext = React.createContext();
+import { createContext } from "react";
+import { Memo } from "./interfaces";
+export const AppContext = createContext<Memo>();

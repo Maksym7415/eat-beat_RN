@@ -1,72 +1,74 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Weight, Typ, Spacing } from "./Config";
+import React, { FC } from "react";
+import { StyleSheet, View, TouchableOpacity, Modal } from "react-native";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
+import { Spacing, Col } from "./Config";
+import { Text } from "./custom/Typography";
 
-export default function ModalWindow({ showModal, modalVisible }) {
+interface Props {
+  showModal: () => void;
+  modalVisible: boolean;
+}
+
+const ModalWindow: FC<Props> = ({ showModal, modalVisible }) => {
   return (
-    <Modal animationType="fade" transparent={true} visible={modalVisible}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      onRequestClose={showModal}
+      visible={modalVisible}
+    >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={showModal}>
-            <MaterialIcons name="close" size={24} />
+            <Icon name="close" size={24} color={Col.Black} />
           </TouchableOpacity>
-          <Text style={styles.modalTitle}>Health score</Text>
-          <Text style={styles.description}>
-            {`
-  Health Score is an integral indicator characterising the
-  proximity of the daily nutrient balance to the recommended intake
-  norm. The value is calculated per day and includes all registered
-  foods/meals.
+          <Text type="bodyBold" style={{ marginBottom: Spacing.r_small }}>
+            Health score
+          </Text>
+          <Text type="body2">
+            {`Health Score is an integral indicator characterising the
+proximity of the daily nutrient balance to the recommended intake
+norm. The value is calculated per day and includes all registered
+foods/meals.
 
-  The maximum value is 100 points, the minimum is 0 points.
+The maximum value is 100 points, the minimum is 0 points.
 
-  When calculating the indicator, the following data are taken into
-  account:
-  - deviation from the norm for each nutrient
-  - importance of nutrients (expert opinion of the project
-  nutritionist)
-`}
+When calculating the indicator, the following data are taken into
+account:
+- deviation from the norm for each nutrient
+- importance of nutrients (expert opinion of the project
+nutritionist)`}
           </Text>
         </View>
       </View>
     </Modal>
   );
-}
+};
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    //backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: Col.Shadow,
     paddingHorizontal: Spacing.medium,
   },
   modalView: {
-    backgroundColor: "white",
     borderRadius: 8,
-    padding: Spacing.medium,
     shadowColor: "#000",
+    padding: Spacing.medium,
+    backgroundColor: "white",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
-  },
-  modalTitle: {
-    fontFamily: "Roboto",
-    fontWeight: Weight.Bold,
-    fontSize: Typ.Normal,
-  },
-  description: {
-    fontFamily: "Roboto",
-    fontWeight: Weight.Normal,
-    fontSize: Typ.Small,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
   },
   closeButton: {
     alignSelf: "flex-end",
     paddingHorizontal: Spacing.small,
   },
 });
+export default ModalWindow;

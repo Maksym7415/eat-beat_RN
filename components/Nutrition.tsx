@@ -1,15 +1,20 @@
-import React from "react";
+import React, { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
-
-export default function NutritionItem({
-  color,
-  name,
-  currentValue,
-  unit,
-  defaultValue,
-  percenatage
-}) {
+interface Props {
+  item: {
+    name: string;
+    currentValue: number;
+    unit: string;
+    defaultValue: number;
+    percenatage: number;
+  };
+}
+const NutritionItem: FC<Props> = ({ item }) => {
+  const { name, currentValue, unit, defaultValue, percenatage = 0 } = item;
   // const precent = Math.round((nutrition_measure / nutrition_number) * 100);
+  const color = `rgb(${45 + percenatage * 1.9},${175 - percenatage * 0.73},${
+    12 + percenatage * 0.82
+  })`;
   return (
     <View style={styles.itemContainer}>
       <Text style={{ width: "25%" }}>{name}</Text>
@@ -22,7 +27,7 @@ export default function NutritionItem({
       ></View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   itemContainer: {
@@ -30,3 +35,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
+
+export default NutritionItem;

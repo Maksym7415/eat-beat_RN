@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../Config";

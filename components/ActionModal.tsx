@@ -9,13 +9,16 @@ interface Props {
   onClick: (value: number) => void;
   onClose: () => void;
 }
+
+const RadioInputs = [
+  { label: "Recommend a Recipe", value: 0, disabled: false },
+  { label: "Recommend a Restaurant Dish", value: 1, disabled: true },
+  { label: "Add a Snack", value: 2, disabled: true },
+];
+
 const ActionModal: FC<Props> = ({ visible, onClick, onClose }) => {
   const [select, setSelect] = useState<number>(0);
-  const RadioInputs = [
-    { label: "Recommend a Recipe", value: 0, disabled: false },
-    { label: "Recommend a Restaurant Dish", value: 1, disabled: true },
-    { label: "Add a Snack", value: 2, disabled: true },
-  ];
+
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
       <View style={styles.centeredView}>

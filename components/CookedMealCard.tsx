@@ -17,20 +17,21 @@ interface Props {
 const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
   const { id, title, image } = item;
   return (
-    <View style={styles.container} key={id}>
+    <View style={styles.container}>
       <View style={styles.imageDetails}>
-        <Text>09:00</Text>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={{ uri: image }} />
-        </View>
+        <Text style={styles.timeStamp} type="cap">
+          09:00 AM
+        </Text>
+        <Image style={styles.image} source={{ uri: image }} />
       </View>
       <View style={styles.bodyContainer}>
-        <Pressable
+        <Icon
           style={{ alignSelf: "flex-end" }}
           onPress={() => onDelete(id)}
-        >
-          <Icon name="close" size={32} color={Col.Black} />
-        </Pressable>
+          name="close"
+          size={20}
+          color={Col.Grey}
+        />
         <Text type="cap">Recipe</Text>
         <Text>{title}</Text>
       </View>
@@ -42,26 +43,29 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     flexDirection: "row",
-    backgroundColor: Col.White,
     padding: Spacing.small,
-    margin: Spacing.tiny,
-    overflow: "hidden",
-  },
-  imageContainer: {
-    borderRadius: 4,
-    marginRight: Spacing.large,
-    width: 64,
-    height: 64,
-    overflow: "hidden",
-  },
-  bodyContainer: {
-    flexDirection: "column",
+    backgroundColor: Col.White,
+    marginVertical: Spacing.tiny,
+    width: "100%",
   },
   image: {
-    width: "100%",
-    height: "100%",
+    width: 64,
+    height: 64,
+    borderRadius: 4,
+    overflow: "hidden",
     resizeMode: "cover",
+    marginRight: Spacing.large,
   },
-  imageDetails: {},
+  bodyContainer: {
+    flexShrink: 1,
+    flexDirection: "column",
+    width: "100%",
+  },
+  timeStamp: {
+    marginBottom: Spacing.tiny,
+  },
+  imageDetails: {
+    //
+  },
 });
 export default CookedMealCard;

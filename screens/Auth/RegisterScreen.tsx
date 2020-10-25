@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { Text, StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../components/FormikInput";
 import { Col } from "../../components/Config";
-import { MyButton } from "../../components/MyComponents";
+import { Button } from "../../components/MyComponents";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -40,7 +41,7 @@ export default function RegisterScreen({ navigation }) {
           <>
             <FormikInput value="email" label="Email" />
             <FormikInput value="password" label="Password" />
-            <MyButton onPress={handleSubmit} label="Sign Up" />
+            <Button onPress={handleSubmit} label="Sign Up" />
           </>
         )}
       </Formik>

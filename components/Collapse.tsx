@@ -1,96 +1,94 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
-import Divider from "./Divider";
-import { Col, Spacing, Typ, Weight } from "./Config";
-import { MaterialIcons } from "@expo/vector-icons";
+import React, { FC, useState } from "react";
+import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import { Col, Spacing } from "./Config";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 import SvgMaker from "./SvgMaker";
+import { Text } from "../components/custom/Typography";
+import { Divider } from "./MyComponents";
 
-const alertMessages = [
-  {
-    title: "Total Fat",
-    precent: "135%",
-  },
-  {
-    title: "Cholesterol",
-    precent: "141%",
-  },
-  {
-    title: "Sodium",
-    precent: "179%",
-  },
-];
+interface Props {
+  title: string;
+  icon_type: string;
+  data: [];
+  styler?: object;
+}
 
-export default function Collapse({ title, styler, icon_type, data }) {
+const Collapse: FC<Props> = ({ title, styler, icon_type, data }) => {
   const [arrow, setArrow] = useState(false);
   return (
-    <TouchableWithoutFeedback onPress={() => setArrow(!arrow)}>
+    <TouchableWithoutFeedback
+      disabled={!data.length}
+      onPress={() => setArrow(!arrow)}
+    >
       <View style={styles.container}>
         <View style={styles.collapseClosed}>
           <View style={styles.icon}>
             <SvgMaker name={icon_type} />
-            <Text style={[styler, styles.text]}>{title}</Text>
+            <Text type="bodyBold" style={[styler, styles.text]}>
+              {title}
+            </Text>
           </View>
-          <MaterialIcons
+          <Icon
             name={arrow ? "keyboard-arrow-up" : "keyboard-arrow-down"}
             color={Col.Grey1}
             size={24}
           />
         </View>
-        <View>
-          {arrow && (
-            <>
-              <Divider styler={styles.collapseDivider} />
-              {data.map((item) => (
-                <View key={item.name} style={{ flexDirection: "row" }}>
-                  <Text style={styles.collapseText}>{item.name}</Text>
-                  <Divider styler={styles.verticalDivider} />
-                  <Text style={styles.collapseText}>{`${item.value || 0} %`}</Text>
-                </View>
-              ))}
-            </>
-          )}
-        </View>
+        {arrow ? (
+          <View>
+            <Divider styler={styles.collapseDivider} />
+            {data.map((item) => (
+              <View key={item.name} style={{ flexDirection: "row" }}>
+                <Text style={styles.collapseText}>{item.name}</Text>
+                <Divider styler={styles.verticalDivider} />
+                <Text style={styles.collapseText}>{`${
+                  item.value || 0
+                } %`}</Text>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    backgroundColor: Col.White,
     flexDirection: "column",
-    paddingHorizontal: Spacing.small,
-    paddingVertical: Spacing.medium,
+    backgroundColor: Col.White,
     marginVertical: Spacing.tiny,
+    paddingVertical: Spacing.medium,
+    paddingHorizontal: Spacing.small,
   },
   collapseClosed: {
     flexDirection: "row",
     alignItems: "center",
   },
   icon: {
-    flexDirection: "row",
     flex: 1,
+    flexDirection: "row",
   },
   text: {
     marginLeft: Spacing.small,
   },
   collapseDivider: {
-    borderBottomColor: Col.Grey3,
     borderBottomWidth: 1,
+    borderBottomColor: Col.Grey3,
     marginVertical: Spacing.small,
   },
   verticalDivider: {
+    marginRight: 15,
     borderLeftWidth: 1,
     borderLeftColor: Col.Grey3,
-    marginRight: 15,
   },
   collapseText: {
     width: "50%",
     marginBottom: 6,
-    fontFamily: "Roboto",
-    fontWeight: Weight.Normal,
-    fontSize: Typ.Tiny,
     color: Col.Grey,
   },
 });
+export default Collapse;

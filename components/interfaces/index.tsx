@@ -9,3 +9,26 @@ export interface NavProps {
     params?: any;
   };
 }
+
+export interface Cal {
+  visible: boolean;
+  date: Date;
+}
+
+export interface Memo {
+  calendar: {
+    visible: boolean;
+    date: Date;
+  };
+  saveCal: (currentDate: Cal) => void;
+  login: () => void;
+  signOut: () => void;
+  getData: () => void;
+  pushData: () => void;
+}
+
+export interface CalendarInterface {
+  nativeEvent: {
+    timestamp: number;
+  };
+}

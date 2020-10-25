@@ -4,7 +4,15 @@ import { Col } from "../Config";
 
 declare interface Props {
   style?: object;
-  type?: "h4" | "h6" | "sub" | "body" | "bodyBold" | "body2" | "cap";
+  type?:
+    | "h4"
+    | "h6"
+    | "sub"
+    | "body"
+    | "bodyBold"
+    | "body2"
+    | "bodyBold2"
+    | "cap";
   children?: string | ReactText | ReactElement<TextProps>;
   ellipsizeMode?: "head" | "middle" | "tail" | "clip" | undefined;
   numberOfLines?: number;
@@ -73,6 +81,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Col.Grey,
   },
+  bodyBold2: {
+    //fontFamily: Font,
+    fontWeight: "700",
+    fontSize: 16,
+    color: Col.Dark,
+  },
   cap: {
     //fontFamily: Font,
     fontWeight: "400",
@@ -80,3 +94,4 @@ const styles = StyleSheet.create({
     color: Col.Dark,
   },
 });
+export default Text;

@@ -14,6 +14,7 @@ export const Col = {
   Yellow: "#EDDE5D",
   White: "#FFF",
   Grey: "#666666",
+  Shadow: "rgba(0,0,0,0.3)",
 
   Primary: "#107dcb",
   Primary1: "#3096df",
@@ -37,9 +38,10 @@ export const Col = {
   Grey1: "#46566D",
   Grey2: "#7E7E7E",
   Grey3: "#E7E7E7",
-  Shadow: "rgba(0, 0, 0, 0.7)",
   Error: "#EB665E",
   Info: "#5E6CEB",
+  c: "#3B990F",
+  a: "#ADEA4F",
 };
 
 export const Typ = {
@@ -82,3 +84,145 @@ export const mapItems = [
     label: "dada",
   },
 ];
+export const Database = {
+  home: [
+    {
+      nutrition_title: "sugar",
+      nutrition_measure: 19,
+      nutrition_unit: "g",
+      nutrition_number: 80,
+      color: "#EB665E",
+    },
+    {
+      nutrition_title: "Fiber",
+      nutrition_measure: 7,
+      nutrition_unit: "g",
+      nutrition_number: 25,
+      color: "#2DAF0C",
+    },
+    {
+      nutrition_title: "Vitamin A",
+      nutrition_measure: 3500,
+      nutrition_unit: "IU",
+      nutrition_number: 3500,
+      color: "#EDDE5D",
+    },
+  ],
+  feed: {
+    date: "2020-01-01",
+    fkUserId: 1,
+    healthScore: 75,
+    id: 1,
+    totalMeals: 3,
+    defaultNutrients: [
+      {
+        title: "Calories",
+        unit: "kcal",
+        currentSize: 1318,
+        maxSize: 1800,
+      },
+      {
+        title: "Protein",
+        unit: "g",
+        currentSize: 43,
+        maxSize: 30,
+      },
+      {
+        title: "Fat",
+        unit: "g",
+        currentSize: 57,
+        maxSize: 50,
+      },
+      {
+        title: "Carbs",
+        unit: "g",
+        currentSize: 57,
+        maxSize: 50,
+      },
+    ],
+    tooMuchNutrients: [],
+    notEnough: [],
+    nutrientsData: [
+      {
+        nutrition_title: "sugar",
+        nutrition_measure: 19,
+        nutrition_unit: "g",
+        nutrition_number: 80,
+        color: "#EB665E",
+      },
+      {
+        nutrition_title: "Fiber",
+        nutrition_measure: 7,
+        nutrition_unit: "g",
+        nutrition_number: 25,
+        color: "#2DAF0C",
+      },
+      {
+        nutrition_title: "Vitamin A",
+        nutrition_measure: 3500,
+        nutrition_unit: "IU",
+        nutrition_number: 3500,
+        color: "#EDDE5D",
+      },
+    ],
+    nutrientsUnits: {
+      Alcohol: "g",
+      Caffeine: "mg",
+      Calcium: "mg",
+      Calories: "kcal",
+      Carbs: "g",
+      Cholesterol: "mg",
+      Copper: "mg",
+      Fiber: "g",
+      Folate: "ug",
+      Iron: "mg",
+      Magnesium: "mg",
+      Manganese: "mg",
+      Phosphorus: "mg",
+      Potassium: "mg",
+      Protein: "g",
+      Selenium: "ug",
+      Sodium: "mg",
+      Sugar: "g",
+      "Total Fat": "g",
+      "Vitamin A": "IU",
+      "Vitamin B1": "mg",
+      "Vitamin B12": "ug",
+      "Vitamin B2": "mg",
+      "Vitamin B3": "mg",
+      "Vitamin B5": "mg",
+      "Vitamin B6": "mg",
+      "Vitamin C": "mg",
+      "Vitamin D": "ug",
+      "Vitamin E": "mg",
+      "Vitamin K": "ug",
+      Zinc: "mg",
+    },
+  },
+  meals: [
+    {
+      id: 0,
+      title: "Amaranth Breakfast",
+      image:
+        "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+    },
+    {
+      id: 1,
+      title: "Black coffee without sugar",
+      image:
+        "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+    },
+    {
+      id: 2,
+      title: "Black coffee without sugar",
+      image:
+        "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+    },
+    {
+      id: 3,
+      title: "Black ",
+      image:
+        "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+    },
+  ],
+};

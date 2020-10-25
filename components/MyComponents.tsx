@@ -1,29 +1,45 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Col } from "./Config";
+import React, { FC } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  ViewStyle,
+} from "react-native";
+import { Col, Spacing } from "./Config";
 
-export function MyButton({ Color = Col.Primary, onPress, label }) {
+interface ButtonProps {
+  type?: "fill" | "outline" | "text";
+  onPress: () => void;
+  label: string | number;
+  clicked?: boolean;
+}
+
+interface ErrorProps {
+  error: boolean | string | number;
+  visible: boolean;
+}
+
+interface DividerProps {
+  styler: ViewStyle;
+}
+
+export const Button: FC<ButtonProps> = ({
+  type = "fill",
+  clicked,
+  onPress,
+  label,
+}) => {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.btn, { backgroundColor: Color }]}>
-        <Text style={styles.txt}>{label}</Text>
+    <TouchableWithoutFeedback disabled={clicked} onPress={onPress}>
+      <View style={[styles.button, styles[type]]}>
+        <Text style={type === "fill" ? styles.txt : styles.fill}>{label}</Text>
       </View>
     </TouchableWithoutFeedback>
   );
-}
+};
 
-export function ButtonOutline({ onPress, label, details }) {
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.btnOutline}>
-        <Text style={styles.txt2}>{label}</Text>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-}
-
-export function ErrorMessage({ error, visible }) {
+export const ErrorMessage: FC<ErrorProps> = ({ error, visible }) => {
   if (!error || !visible) return null;
 
   return (
@@ -31,67 +47,38 @@ export function ErrorMessage({ error, visible }) {
       <Text style={styles.warning}>{error}</Text>
     </View>
   );
-}
+};
 
-export function TxtButton({ onPress, label, style }) {
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.txtBtn, style]}>
-        <Text style={styles.txt2}>{label}</Text>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-}
-export function IconButton({ onPress, details, color }) {
-  return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <MaterialCommunityIcons
-        name={details[0]}
-        color={details[1]}
-        size={details[2]}
-      />
-    </TouchableWithoutFeedback>
-  );
-}
+export const Divider: FC<DividerProps> = ({ styler }) => {
+  return <View style={styler} />;
+};
 
 const styles = StyleSheet.create({
-  btn: {
-    padding: 12,
+  button: {
+    borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-    marginTop: 20,
+    padding: Spacing.medium,
+    marginVertical: Spacing.medium,
   },
-  btnOutline: {
-    width: "80%",
-    padding: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderColor: Col.Primary,
+  fill: {
+    backgroundColor: Col.Blue,
+  },
+  text: {
+    backgroundColor: "transparent",
+  },
+  outline: {
     borderWidth: 2,
-    borderRadius: 10,
-    marginTop: 20,
+    borderColor: Col.Blue,
+    backgroundColor: "transparent",
   },
   txt: {
     color: "white",
-    fontSize: 18,
-  },
-  txtBtn: {
-    padding: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  txt2: {
-    color: Col.Primary,
-    fontSize: 16,
   },
   warningCont: {
-    width: "75%",
+    width: "100%",
   },
   warning: {
-    color: Col.Primary,
+    color: Col.Red,
   },
 });

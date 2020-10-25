@@ -1,159 +1,129 @@
-import React, { Component } from 'react'
-import { View, Animated } from 'react-native'
+import React, { FC, useEffect, useRef } from "react";
+import { View, Animated, TextInput, StyleSheet } from "react-native";
+import Svg, { Circle, Defs, G, LinearGradient, Stop } from "react-native-svg";
+import { Col } from "./Config";
 
-export default class ProgressCircle extends Component {
-  static defaultProps = {
-    value: 0,
-    size: 64,
-    thickness: 7,
-    color: '#4c90ff',
-    unfilledColor: 'transparent',
-    style: {},
-    children: null,
-    animationMethod: null,
-    animationConfig: { duration: 200 },
-    shouldAnimateFirstValue: false,
-    onChange() {},
-    onChangeAnimationEnd() {},
-  }
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      animatedValue:
-        props.value.constructor.name === 'AnimatedValue'
-          ? null
-          : new Animated.Value(props.shouldAnimateFirstValue ? 0 : props.value),
-    }
-  }
-
-  componentDidMount() {
-    if (
-      this.props.value.constructor.name !== 'AnimatedValue' &&
-      this.props.shouldAnimateFirstValue &&
-      this.animationMethod
-    ) {
-      this.animateChange(this.props.value)
-    }
-  }
-
-  componentWillReceiveProps({ value }) {
-    this.handleChange(value)
-  }
-
-  render() {
-    const { thickness, unfilledColor, children, style } = this.props
-
-    return (
-      <View style={[this.fullCircleStyle, { flexDirection: 'row' }, style]}>
-        <View
-          pointerEvents="box-none"
-          style={{
-            ...this.fullCircleStyle,
-            borderWidth: thickness,
-            borderColor: unfilledColor,
-            position: 'absolute',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {children}
-        </View>
-        {this.renderHalfCircle()}
-        {this.renderHalfCircle({ isFlipped: true })}
-      </View>
-    )
-  }
-
-  get fullCircleStyle() {
-    return {
-      width: this.props.size,
-      height: this.props.size,
-      borderRadius: this.props.size / 2,
-    }
-  }
-
-  get halfCircleContainerStyle() {
-    return {
-      width: this.props.size / 2,
-      height: this.props.size,
-      overflow: 'hidden',
-    }
-  }
-
-  ANIMATION_TYPES = ['timing', 'spring', 'decay']
-  get animationMethod() {
-    return this.ANIMATION_TYPES.includes(this.props.animationMethod)
-      ? this.props.animationMethod
-      : null
-  }
-
-  handleChange = (value = this.props.value) => {
-    this.props.onChange()
-    if (value.constructor.name === 'AnimatedValue') {
-      return
-    }
-
-    if (this.animationMethod) {
-      this.animateChange(value)
-    } else {
-      this.state.animatedValue.setValue(value)
-    }
-  }
-
-  animateChange = value =>
-    Animated[this.animationMethod](this.state.animatedValue, {
-      toValue: value,
-      useNativeDriver: true,
-      ...this.props.animationConfig,
-    }).start(this.props.onChangeAnimationEnd)
-
-  renderHalfCircle = ({ isFlipped = false } = {}) => {
-    const { size, color, thickness, value, style } = this.props
-    const valueToInterpolate =
-      value.constructor.name === 'AnimatedValue'
-        ? value
-        : this.state.animatedValue
-
-    return (
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          {
-            ...this.halfCircleContainerStyle,
-            transform: [{ scaleX: isFlipped ? -1 : 1 }],
-          },
-          style,
-        ]}
-      >
-        <Animated.View
-          style={{
-            width: size,
-            height: size,
-            transform: [
-              {
-                rotate: valueToInterpolate.interpolate({
-                  inputRange: isFlipped ? [0, 0.5] : [0.5, 1],
-                  outputRange: isFlipped
-                    ? ['180deg', '0deg']
-                    : ['-180deg', '0deg'],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ],
-          }}
-        >
-          <View style={this.halfCircleContainerStyle}>
-            <View
-              style={{
-                ...this.fullCircleStyle,
-                borderWidth: thickness,
-                borderColor: color,
-              }}
-            />
-          </View>
-        </Animated.View>
-      </Animated.View>
-    )
-  }
+interface Props {
+  percentage?: number;
+  radius?: number;
+  stroke?: number;
+  duration?: number;
+  delay?: number;
+  max?: number;
+  textColor?: string;
+  showText?: boolean;
+  background?: string;
 }
+
+const HealthCircle: FC<Props> = ({
+  percentage = 0,
+  radius = 22,
+  stroke = 8,
+  duration = 1500,
+  delay = 0,
+  max = 100,
+  textColor = "black",
+  showText = false,
+  background = "#0001",
+}) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const circleRef = useRef();
+  const textRef = useRef();
+  const halfCircle = radius + stroke;
+  const circleCirc = 2 * Math.PI * radius;
+  const animation = (toValue: number) =>
+    Animated.timing(animatedValue, {
+      toValue,
+      duration,
+      delay,
+      useNativeDriver: true,
+    }).start();
+  useEffect(() => {
+    animation(percentage);
+    animatedValue.addListener((v) => {
+      if (circleRef?.current) {
+        const maxPercentage = (100 * v.value) / max;
+        const strokeDashoffset =
+          circleCirc - (circleCirc * maxPercentage) / 100;
+        circleRef.current.setNativeProps({
+          strokeDashoffset,
+        });
+      }
+      if (textRef?.current) {
+        textRef.current.setNativeProps({
+          text: `${Math.round(v.value)}`,
+        });
+      }
+    });
+    return () => animatedValue.removeAllListeners();
+  }, [percentage]);
+  return (
+    <View>
+      <Svg
+        width={radius * 2}
+        height={radius * 2}
+        viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}
+      >
+        <Defs>
+          <LinearGradient id="linear" x1="0" y1="0" x2="1" y2="1">
+            <Stop offset="0" stopColor="#ADEA4F" />
+            <Stop offset="1" stopColor="#3B990F" />
+          </LinearGradient>
+        </Defs>
+        <G rotation="90" origin={`${halfCircle},${halfCircle}`}>
+          <Circle
+            cx="50%"
+            cy="50%"
+            stroke={background}
+            strokeWidth={stroke - 2}
+            r={radius}
+            fill="transparent"
+          />
+          <AnimatedCircle
+            ref={circleRef}
+            cx="50%"
+            cy="50%"
+            stroke="url(#linear)"
+            strokeWidth={stroke}
+            r={radius}
+            fill="transparent"
+            strokeDasharray={circleCirc}
+            strokeDashoffset={circleCirc}
+            strokeLinecap="round"
+          />
+        </G>
+      </Svg>
+      {showText ? (
+        <AnimatedInput
+          ref={textRef}
+          underlineColorAndroid="transparent"
+          editable={false}
+          defaultValue="0"
+          style={[
+            StyleSheet.absoluteFillObject,
+            {
+              width: radius * 2,
+              fontSize: radius / 1.5,
+              color: textColor,
+              textAlign: "center",
+            },
+          ]}
+        />
+      ) : (
+        <View />
+      )}
+    </View>
+  );
+};
+
+export default HealthCircle;
+/*
+  let color = animatedValue.interpolate({
+    inputRange: [0, 100],
+    outputRange: ["#ADEA4F", "#EB665E"],
+    extrapolate: "clamp",
+  });
+*/

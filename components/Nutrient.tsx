@@ -1,15 +1,25 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Col, Weight, Typ, Spacing } from "./Config";
+import React, { FC } from "react";
+import { StyleSheet, View } from "react-native";
+import { Col, Spacing } from "./Config";
+import { Text } from "./custom/Typography";
 
-export default function Nutrient({
+interface Props {
+  name?: string;
+  currentValue?: string;
+  intakeNorm?: string;
+  unit?: string;
+  child?: boolean;
+  children?: any;
+}
+
+const Nutrient: FC<Props> = ({
   name = "",
   currentValue = "",
   intakeNorm = "",
   unit = "",
   child,
   children,
-}) {
+}) => {
   return (
     <View style={styles.container}>
       {child ? (
@@ -18,52 +28,48 @@ export default function Nutrient({
         <View>
           <Text style={styles.nutrient_title}>{`${name} (${unit})`}</Text>
           <View style={styles.nutrient_numbers}>
-            <Text style={styles.unit}>{currentValue}</Text>
+            <Text type="h6" style={styles.unit}>
+              {currentValue}
+            </Text>
             <View style={styles.maxCount}>
-              <Text style={styles.maxCountText}>{`of ${intakeNorm}`} </Text>
+              <Text type="cap" style={styles.maxCountText}>
+                {`of ${intakeNorm}`}
+              </Text>
             </View>
           </View>
         </View>
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Col.White,
     borderRadius: 8,
-    padding: Spacing.small,
     margin: Spacing.tiny,
+    padding: Spacing.small,
+    backgroundColor: Col.White,
   },
   nutrient_title: {
-    fontFamily: "Roboto",
-    fontWeight: Weight.Normal,
-    fontSize: Typ.Normal,
     color: Col.Grey2,
   },
   nutrient_numbers: {
-    marginTop: Spacing.small,
     flexDirection: "row",
+    marginTop: Spacing.small,
     justifyContent: "space-between",
   },
   unit: {
-    fontWeight: Weight.Normal1,
-    fontSize: Typ.H3,
-    fontFamily: "Roboto",
     color: Col.Grey1,
   },
   maxCount: {
-    backgroundColor: Col.Green,
     minWidth: 70,
     borderRadius: 8,
     paddingTop: Spacing.tiny,
+    backgroundColor: Col.LightGreen,
   },
   maxCountText: {
-    color: Col.Green1,
-    fontFamily: "Roboto",
-    fontWeight: Weight.Normal,
-    fontSize: Typ.Tiny,
+    color: Col.Green,
     textAlign: "center",
   },
 });
+export default Nutrient;
