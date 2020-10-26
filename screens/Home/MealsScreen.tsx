@@ -53,6 +53,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
       <FlatList
         data={feed}
         ListEmptyComponent={() => <EmptyList />}
+        keyExtractor={(item) => `${item.id}`}
         renderItem={({ item, index }) => (
           <CookedMealCard
             key={item.id}

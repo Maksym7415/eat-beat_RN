@@ -21,7 +21,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     setClicked(true);
     try {
       await axios.post("/auth/sign-up", { email, password });
-      navigation.goBack();
+      navigation.push("login");
     } catch (error) {
       console.log(error, { email, password });
       Alert.alert(error);

@@ -1,6 +1,6 @@
 import React, { Component, ReactNode, ReactText } from "react";
 import { StyleSheet, Text as ReText } from "react-native";
-import { Col } from "../Config";
+import { Col, Font } from "../Config";
 
 declare interface Props {
   style?: object;
@@ -46,7 +46,6 @@ export class Text extends Component<Props> {
   }
 }
 
-const Font = "Roboto";
 const styles = StyleSheet.create({
   h4: {
     //fontFamily: Font,

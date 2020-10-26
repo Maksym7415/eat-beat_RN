@@ -21,7 +21,7 @@ interface ErrorProps {
 }
 
 interface DividerProps {
-  styler: ViewStyle;
+  styler?: ViewStyle;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -49,7 +49,7 @@ export const ErrorMessage: FC<ErrorProps> = ({ error, visible }) => {
   );
 };
 
-export const Divider: FC<DividerProps> = ({ styler }) => {
+export const Divider: FC<DividerProps> = ({ styler = styles.divider }) => {
   return <View style={styler} />;
 };
 
@@ -80,5 +80,10 @@ const styles = StyleSheet.create({
   },
   warning: {
     color: Col.Red,
+  },
+  divider: {
+    borderBottomWidth: 1,
+    marginVertical: Spacing.small,
+    borderBottomColor: Col.Divider,
   },
 });

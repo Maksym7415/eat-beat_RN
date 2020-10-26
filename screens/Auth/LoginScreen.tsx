@@ -18,10 +18,10 @@ const Validation = Yup.object().shape({
 const LoginScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
   const { login } = useContext(AppContext);
-  const signIn = async ({ email, password }: AuthProps) => {
+  const signIn = async (value: AuthProps) => {
     setClicked(true);
     try {
-      await axios.post("/auth/sign-in", { email, password });
+      await axios.post("/auth/sign-in", value);
       login();
     } catch (error) {
       setClicked(false);

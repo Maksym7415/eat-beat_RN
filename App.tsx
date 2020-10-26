@@ -23,17 +23,21 @@ export default function App() {
     setLoaded(true);
   };
 
+  const removeToken = async () => {
+    AsyncStorage.clear();
+    setLogged(false);
+  };
   useEffect(() => {
     setAxios();
     loadUser();
-  }, []);
+  }, [logged]);
 
   const appContext = useMemo(
     (): Memo => ({
       calendar: cal,
       saveCal: (value) => setCal(value),
       login: () => setLogged(true),
-      signOut: () => console.log("sign out"),
+      signOut: () => removeToken(),
       getData: () => console.log("get data"),
       pushData: () => console.log("push data"),
       isFetching: (value: boolean) => console.log("hi"),

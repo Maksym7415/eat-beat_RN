@@ -21,6 +21,8 @@ import CalendarButton from "./common/CalendarButton";
 import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
+import { View } from "react-native";
+import TestOut from "../screens/TestOut";
 
 const Stack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -80,6 +82,37 @@ const RecipesTopNavigator = () => (
   </TopTabs.Navigator>
 );
 
+const ProfileTopNavigator = () => (
+  <TopTabs.Navigator
+    tabBarOptions={{
+      style: {
+        backgroundColor: "#EFF0F4",
+        elevation: 0,
+      },
+      indicatorStyle: {
+        backgroundColor: Col.Green,
+      },
+    }}
+    initialRouteName="subscription"
+  >
+    <TopTabs.Screen
+      name="subscription"
+      component={ProfileScreen}
+      options={{ title: "subscription" }}
+    />
+    <TopTabs.Screen
+      name="personalData"
+      component={SearchScreen}
+      options={{ title: "Personal data" }}
+    />
+    <TopTabs.Screen
+      name="foodPreferences"
+      component={RecipiesScreen}
+      options={{ title: "Food preferences" }}
+    />
+  </TopTabs.Navigator>
+);
+
 // Stack Navigators
 export const MainStack = () => {
   return (
@@ -134,20 +167,58 @@ export const RecommendedStack = () => {
   );
 };
 
+export const ProfileStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="recommendedPage">
+      <Stack.Screen
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <BurgerIcon
+              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+            />
+          ),
+          title: "My Profile",
+          headerStyle: {
+            elevation: 0,
+            backgroundColor: Col.White,
+          },
+          headerTitleStyle: {
+            color: Col.Dark,
+          },
+        })}
+        name="recommendedPage"
+        component={ProfileTopNavigator}
+      />
+    </Stack.Navigator>
+  );
+};
+
 // Drawer Navigator
-export const DrawerNavigator = () => (
-  <NavigationContainer>
-    <Drawer.Navigator initialRouteName="HomeDrawer">
-      <Drawer.Screen
-        options={{ title: "Home" }}
-        name="homeDrawer"
-        component={MainStack}
-      />
-      <Drawer.Screen
-        options={{ title: "Recommended" }}
-        name="recommendedDrawer"
-        component={RecommendedStack}
-      />
-    </Drawer.Navigator>
-  </NavigationContainer>
-);
+export const DrawerNavigator = () => {
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="homeDrawer">
+        <Drawer.Screen
+          options={{ title: "Home" }}
+          name="homeDrawer"
+          component={MainStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Recommended" }}
+          name="recommendedDrawer"
+          component={RecommendedStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Profile" }}
+          name="profileDrawer"
+          component={ProfileStack}
+        />
+        <Drawer.Screen
+          options={{ title: "sign Out" }}
+          name="signOut"
+          component={TestOut}
+        />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+};

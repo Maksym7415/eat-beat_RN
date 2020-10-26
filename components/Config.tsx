@@ -64,6 +64,8 @@ export const Spacing = {
   r_small: 12,
 };
 
+export const Font = "Roboto";
+
 export const Weight = {
   Bold: "bold",
   Normal: "normal",
