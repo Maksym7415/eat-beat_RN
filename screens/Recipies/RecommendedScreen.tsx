@@ -20,17 +20,13 @@ interface Props {
 */
 const RecommendedScreen: FC<Props> = () => {
   const [feed, setFeed] = useState<Array<RecommendedMeals>>([]);
-  const { isFetching } = useContext(AppContext);
 
 useEffect(() => {
     const recommendedRecipes = async () => {
       try{
-        isFetching(true)
-        const { data } = await axios(`/meals/recommend-meals`);
-        isFetching(true)
+        const { data } = await axios(`/meals/recommend-meals?date=2020-01-01`);
         setFeed(data)
       }catch(error) {
-        setTimeout(() => isFetching(false), 2000)
         console.log(error)
       }
     }
