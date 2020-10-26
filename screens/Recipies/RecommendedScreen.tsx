@@ -1,7 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect, useContext } from "react";
+import axios from 'axios';
 import { StyleSheet, ScrollView, View } from "react-native";
 import { Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
+import { RecommendedMeals } from '../../components/interfaces'
+import { AppContext } from "../../components/AppContext";
 
 interface Props {
   recipe: string;
@@ -16,36 +19,31 @@ interface Props {
     | "dairyFree";
 */
 const RecommendedScreen: FC<Props> = () => {
-  const [feed, setFeed] = useState([
-    {
-      image:
-        "https://images.unsplash.com/photo-1603498195855-4f17930ee40b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      title: "hello this is a recipe title that is longer than other titles",
-      percentage: 45,
-      catagory: ["vegan", "popular"],
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1603498195855-4f17930ee40b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      title: "Lord of the Rings",
-      percentage: 65,
-      catagory: ["vegetarian", "vegan", "popular"],
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1603498195855-4f17930ee40b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      title: "Zibra Food",
-      percentage: 15,
-      catagory: ["vegetarian", "glutenFree", "paleo"],
-    },
-  ]);
+  const [feed, setFeed] = useState<Array<RecommendedMeals>>([]);
+  const { isFetching } = useContext(AppContext);
+
+useEffect(() => {
+    const recommendedRecipes = async () => {
+      try{
+        isFetching(true)
+        const { data } = await axios(`/meals/recommend-meals`);
+        isFetching(true)
+        setFeed(data)
+      }catch(error) {
+        setTimeout(() => isFetching(false), 2000)
+        console.log(error)
+      }
+    }
+    recommendedRecipes() 
+}, [])
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View style={styles.cardContainer}>
-              <RecipeCard key={`${index}`} item={item} />
+              <RecipeCard key={`${index}`} {...item} />
             </View>
           ))}
         </View>

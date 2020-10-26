@@ -5,18 +5,22 @@ import { Col, Spacing } from "../Config";
 import HealthCircle from "../HealthCircle";
 import SvgMaker from "../SvgMaker";
 import Text from "./Typography";
+import { RecommendedMeals } from '../../components/interfaces'
 
-interface Props {
-  item: {
-    image: string;
-    title: string;
-    percentage: number;
-    catagory: string[];
-  };
-}
 
-const RecipeCard: FC<Props> = ({ item }) => {
-  const { image, title, percentage, catagory } = item;
+const RecipeCard: FC<RecommendedMeals> = (props) => {
+  const { image, title, healthScore, vegetarian, vegan, glutenFree, dairyFree, popular } = props;
+
+  const getImage = (vegetarian: boolean, vegan: boolean, glutenFree: boolean, dairyFree: boolean, popular: boolean) : Array<string> => {
+    const iconsArray = []
+    if(vegetarian) iconsArray.push('vegetarian')
+    if(vegan) iconsArray.push('vegan')
+    if(glutenFree) iconsArray.push('glutenFree')
+    if(dairyFree) iconsArray.push('dairyFree')
+    if(popular) iconsArray.push('popular')
+    return iconsArray
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.imageContainer} source={{ uri: image }}>
@@ -33,7 +37,7 @@ const RecipeCard: FC<Props> = ({ item }) => {
             <HealthCircle
               showText
               radius={32}
-              percentage={percentage}
+              percentage={healthScore}
               textColor="white"
               background="#fff3"
             />
@@ -43,9 +47,9 @@ const RecipeCard: FC<Props> = ({ item }) => {
       <View style={styles.infoContainer}>
         <Text type="bodyBold2">{title}</Text>
         <View style={styles.catagoryContainer}>
-          {catagory.map((item) => (
-            <SvgMaker style={styles.icons} name={item} />
-          ))}
+          {getImage(vegetarian, vegan, glutenFree, dairyFree, popular).map((icon: string, index: number) => 
+            <SvgMaker key={index} style={styles.icons} name={icon} />
+           )}
         </View>
       </View>
     </View>

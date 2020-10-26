@@ -1,3 +1,5 @@
+
+
 export interface NavProps {
   navigation: {
     navigate: (name: string, params?: object) => void;
@@ -25,10 +27,81 @@ export interface Memo {
   signOut: () => void;
   getData: () => void;
   pushData: () => void;
+  isFetching: (value: boolean) => void
 }
 
 export interface CalendarInterface {
   nativeEvent: {
     timestamp: number;
   };
+}
+
+
+interface Properties {
+  title: string,
+  amount: number,
+  unit: string,
+}
+
+interface Nutrients extends Properties {
+  percentOfDailyNeeds: number
+}
+
+interface Ingredients extends Properties {
+  name: string
+  nutrients: {
+    name: string,
+    amount : number,
+    unit: string
+  }
+}
+
+
+interface Nutrition {
+  nutrients: Array<Nutrients>
+  properties: Array<Properties>
+  ingredients: Array<Ingredients>
+  caloricBreakdown: {
+    percentProtein: number,
+    percentFat: number,
+    percentCarbs: number
+  }
+  weightPerServing: {
+    amount: number
+    unit : string
+  }
+}
+
+export interface RecommendedMeals {
+  vegetarian: boolean
+  vegan: boolean
+  glutenFree: boolean
+  dairyFree: boolean
+  veryHealthy: boolean
+  cheap: boolean
+  veryPopular: boolean
+  sustainable: boolean
+  weightWatcherSmartPoints: number
+  gaps: string
+  lowFodmap: boolean
+  aggregateLikes: number
+  spoonacularScore: number
+  healthScore: number
+  creditsText: string
+  sourceName: string
+  pricePerServing: number
+  id: number
+  title: string
+  readyInMinutes: number
+  servings: number
+  sourceUrl: string
+  image: string
+  imageType: string
+  nutrition: Nutrition
+  summary: string
+  cuisines: Array<string>,
+  dishTypes: Array<Array<string>>
+  diets: Array<Array<string>>
+  occasions: Array<string>
+  analyzedInstructions: Array<string>
 }
