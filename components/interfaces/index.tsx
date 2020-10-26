@@ -1,4 +1,14 @@
+export interface InputProps {
+  value: string;
+  label: string;
+  multi?: boolean;
+}
 
+export interface AuthProps {
+  name?: string;
+  email: string;
+  password: string;
+}
 
 export interface NavProps {
   navigation: {
@@ -27,7 +37,7 @@ export interface Memo {
   signOut: () => void;
   getData: () => void;
   pushData: () => void;
-  isFetching: (value: boolean) => void
+  isFetching: (value: boolean) => void;
 }
 
 export interface CalendarInterface {
@@ -36,72 +46,70 @@ export interface CalendarInterface {
   };
 }
 
-
 interface Properties {
-  title: string,
-  amount: number,
-  unit: string,
+  title: string;
+  amount: number;
+  unit: string;
 }
 
 interface Nutrients extends Properties {
-  percentOfDailyNeeds: number
+  percentOfDailyNeeds: number;
 }
 
 interface Ingredients extends Properties {
-  name: string
+  name: string;
   nutrients: {
-    name: string,
-    amount : number,
-    unit: string
-  }
+    name: string;
+    amount: number;
+    unit: string;
+  };
 }
 
-
 interface Nutrition {
-  nutrients: Array<Nutrients>
-  properties: Array<Properties>
-  ingredients: Array<Ingredients>
+  nutrients: Array<Nutrients>;
+  properties: Array<Properties>;
+  ingredients: Array<Ingredients>;
   caloricBreakdown: {
-    percentProtein: number,
-    percentFat: number,
-    percentCarbs: number
-  }
+    percentProtein: number;
+    percentFat: number;
+    percentCarbs: number;
+  };
   weightPerServing: {
-    amount: number
-    unit : string
-  }
+    amount: number;
+    unit: string;
+  };
 }
 
 export interface RecommendedMeals {
-  vegetarian: boolean
-  vegan: boolean
-  glutenFree: boolean
-  dairyFree: boolean
-  veryHealthy: boolean
-  cheap: boolean
-  veryPopular: boolean
-  sustainable: boolean
-  weightWatcherSmartPoints: number
-  gaps: string
-  lowFodmap: boolean
-  aggregateLikes: number
-  spoonacularScore: number
-  healthScore: number
-  creditsText: string
-  sourceName: string
-  pricePerServing: number
-  id: number
-  title: string
-  readyInMinutes: number
-  servings: number
-  sourceUrl: string
-  image: string
-  imageType: string
-  nutrition: Nutrition
-  summary: string
-  cuisines: Array<string>,
-  dishTypes: Array<Array<string>>
-  diets: Array<Array<string>>
-  occasions: Array<string>
-  analyzedInstructions: Array<string>
+  vegetarian: boolean;
+  vegan: boolean;
+  glutenFree: boolean;
+  dairyFree: boolean;
+  veryHealthy: boolean;
+  cheap: boolean;
+  veryPopular: boolean;
+  sustainable: boolean;
+  weightWatcherSmartPoints: number;
+  gaps: string;
+  lowFodmap: boolean;
+  aggregateLikes: number;
+  spoonacularScore: number;
+  healthScore: number;
+  creditsText: string;
+  sourceName: string;
+  pricePerServing: number;
+  id: number;
+  title: string;
+  readyInMinutes: number;
+  servings: number;
+  sourceUrl: string;
+  image: string;
+  imageType: string;
+  nutrition: Nutrition;
+  summary: string;
+  cuisines: Array<string>;
+  dishTypes: Array<Array<string>>;
+  diets: Array<Array<string>>;
+  occasions: Array<string>;
+  analyzedInstructions: Array<string>;
 }

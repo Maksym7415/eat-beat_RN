@@ -58,18 +58,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    padding: Spacing.medium,
+    padding: Spacing.r_small,
     marginVertical: Spacing.medium,
   },
   fill: {
-    backgroundColor: Col.Blue,
+    backgroundColor: Col.Green,
   },
   text: {
     backgroundColor: "transparent",
   },
   outline: {
     borderWidth: 2,
-    borderColor: Col.Blue,
+    borderColor: Col.Green,
     backgroundColor: "transparent",
   },
   txt: {

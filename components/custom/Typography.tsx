@@ -1,5 +1,5 @@
-import React, { Component, ReactElement, ReactText } from "react";
-import { StyleSheet, Text as ReText, TextProps } from "react-native";
+import React, { Component, ReactNode, ReactText } from "react";
+import { StyleSheet, Text as ReText } from "react-native";
 import { Col } from "../Config";
 
 declare interface Props {
@@ -13,9 +13,10 @@ declare interface Props {
     | "body2"
     | "bodyBold2"
     | "cap";
-  children?: string | ReactText | ReactElement<TextProps>;
+  children?: string | ReactText | ReactNode[];
   ellipsizeMode?: "head" | "middle" | "tail" | "clip" | undefined;
   numberOfLines?: number;
+  onPress?: () => void;
 }
 
 export class Text extends Component<Props> {
@@ -29,6 +30,7 @@ export class Text extends Component<Props> {
       children,
       ellipsizeMode,
       numberOfLines,
+      onPress,
     } = this.props;
     const def: object = styles[type] || styles.body;
     return (
@@ -36,6 +38,7 @@ export class Text extends Component<Props> {
         ellipsizeMode={ellipsizeMode}
         numberOfLines={numberOfLines}
         style={[def, style]}
+        onPress={onPress}
       >
         {children}
       </ReText>
