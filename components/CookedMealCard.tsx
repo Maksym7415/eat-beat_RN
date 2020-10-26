@@ -7,20 +7,31 @@ import { Text } from "./custom/Typography";
 interface Props {
   item: {
     id: number;
-    title: string;
+    name: string;
     image: string;
+    creationTime: number;
   };
   onClick: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
+const getTime = (value: number) => {
+  const Now = new Date(value);
+  const Hours = Now.getHours();
+  const Minutes = Now.getMinutes();
+  return `${Hours < 10 ? "0" + Hours : Hours}:${
+    Minutes < 10 ? "0" + Minutes : Minutes
+  } ${Hours < 12 ? "AM" : "PM"}`;
+};
+
 const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
-  const { id, title, image } = item;
+  const { id, name, image, creationTime } = item;
+  const time = getTime(creationTime);
   return (
     <View style={styles.container}>
       <View style={styles.imageDetails}>
         <Text style={styles.timeStamp} type="cap">
-          09:00 AM
+          {time}
         </Text>
         <Image style={styles.image} source={{ uri: image }} />
       </View>
@@ -33,7 +44,7 @@ const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
           color={Col.Grey}
         />
         <Text type="cap">Recipe</Text>
-        <Text>{title}</Text>
+        <Text>{name}</Text>
       </View>
     </View>
   );

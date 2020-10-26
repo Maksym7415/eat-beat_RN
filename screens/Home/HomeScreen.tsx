@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, ScrollView, Pressable } from "react-native";
+import React, { useState, useEffect, useContext, FC } from "react";
+import { StyleSheet, View, ScrollView, Pressable, Alert } from "react-native";
 import axios from "axios";
 import Nutrient from "../../components/Nutrient";
 import Nutrition from "../../components/Nutrition";
@@ -7,7 +7,7 @@ import HealthCircle from "../../components/HealthCircle";
 import Collapse from "../../components/Collapse";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
-import { Col, Spacing, Database } from "../../components/Config";
+import { Col, Spacing } from "../../components/Config";
 import { Text } from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
 import ActionModal from "../../components/ActionModal";
@@ -16,10 +16,10 @@ import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { CalendarInterface, Memo, NavProps } from "../../components/interfaces";
 
-export default function HomeScreen({ navigation }) {
+const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [actionBtn, setActionBtn] = useState(false);
-  const [feed, setFeed] = useState(Database.feed);
+  const [feed, setFeed] = useState<object | null>(null);
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
@@ -33,10 +33,15 @@ export default function HomeScreen({ navigation }) {
       const { data } = await axios(address);
       setFeed(data);
     } catch (error) {
+      Alert.alert("Request failed with status code 404");
       console.log(error);
     }
   };
-  //useEffect(() => getDailyConsumption(), []);
+
+  useEffect(() => {
+    getDailyConsumption();
+  }, [date]);
+
   const onChange = (event: CalendarInterface, selectedDate: Date) => {
     const currentDate = selectedDate || date;
     saveCal({ visible: false, date: currentDate });
@@ -46,6 +51,13 @@ export default function HomeScreen({ navigation }) {
     setActionBtn(false);
     navigation.navigate("recommendedDrawer");
   };
+
+  if (feed === null)
+    return (
+      <View style={styles.loading}>
+        <Text>Loading</Text>
+      </View>
+    );
 
   return (
     <View style={styles.canvas}>
@@ -148,7 +160,7 @@ export default function HomeScreen({ navigation }) {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   canvas: {
@@ -205,4 +217,10 @@ const styles = StyleSheet.create({
     bottom: 20,
     position: "absolute",
   },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
+export default HomeScreen;

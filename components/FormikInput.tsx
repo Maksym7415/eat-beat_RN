@@ -1,10 +1,11 @@
-import React from "react";
+import React, { FC } from "react";
 import { StyleSheet, TextInput } from "react-native";
 import { useFormikContext } from "formik";
 import { ErrorMessage } from "./MyComponents";
-import { Col } from "./Config";
+import { Col, Spacing } from "./Config";
+import { InputProps } from "./interfaces";
 
-export default function formikInput({ value, label, multi = false }) {
+const formikInput: FC<InputProps> = ({ value, label, multi = false }) => {
   const { handleChange, setFieldTouched, touched, errors } = useFormikContext();
   return (
     <>
@@ -14,21 +15,22 @@ export default function formikInput({ value, label, multi = false }) {
         onBlur={() => setFieldTouched(value)}
         placeholder={label}
         multiline={multi}
+        secureTextEntry={value === "password"}
       />
       <ErrorMessage visible={touched[value]} error={errors[value]} />
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   input: {
-    minHeight: 40,
-    maxHeight: 120,
-    width: "80%",
-    color: Col.Primary,
+    borderWidth: 1,
+    color: Col.Dark,
+    borderRadius: 8,
+    padding: Spacing.r_small,
     borderColor: Col.Contrast,
-    borderBottomWidth: 1,
-    marginVertical: 5,
-    paddingHorizontal: 10,
+    marginVertical: Spacing.tiny,
+    fontFamily: "Roboto",
   },
 });
+export default formikInput;

@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.medium,
   },
   modalView: {
+    width: "100%",
     backgroundColor: "white",
     borderRadius: 8,
     padding: Spacing.medium,

@@ -1,9 +1,10 @@
 import React, { FC, useState, useEffect, useContext } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
-import { RecommendedMeals } from '../../components/interfaces'
+
+import { RecommendedMeals } from "../../components/interfaces";
 
 interface Props {
   recipe: string;
@@ -20,25 +21,25 @@ interface Props {
 const RecommendedScreen: FC<Props> = () => {
   const [feed, setFeed] = useState<Array<RecommendedMeals>>([]);
 
-useEffect(() => {
+  useEffect(() => {
     const recommendedRecipes = async () => {
-      try{
+      try {
         const { data } = await axios(`/meals/recommend-meals?date=2020-01-01`);
-        setFeed(data)
-      }catch(error) {
-        console.log(error)
+        setFeed(data);
+      } catch (error) {
+        console.log(error);
       }
-    }
-    recommendedRecipes() 
-}, [])
+    };
+    recommendedRecipes();
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (
-            <View style={styles.cardContainer}>
-              <RecipeCard key={`${index}`} {...item} />
+            <View key={`${index}`} style={styles.cardContainer}>
+              <RecipeCard {...item} />
             </View>
           ))}
         </View>
