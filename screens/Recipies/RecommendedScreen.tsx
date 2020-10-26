@@ -4,7 +4,6 @@ import { StyleSheet, ScrollView, View } from "react-native";
 import { Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
 import { RecommendedMeals } from '../../components/interfaces'
-import { AppContext } from "../../components/AppContext";
 
 interface Props {
   recipe: string;

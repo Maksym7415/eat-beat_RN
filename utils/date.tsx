@@ -14,8 +14,9 @@ const months = [
 ];
 
 export const getDate = (date: Date) => {
+  const day = date.getDate() + ''
   return {
     month: months[date.getMonth()],
-    day: date.getDate(),
+    day: day.length === 1 ? '0' + day : day,
   };
 };
