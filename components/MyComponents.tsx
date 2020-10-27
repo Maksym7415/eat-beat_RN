@@ -1,11 +1,5 @@
 import React, { FC } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  ViewStyle,
-} from "react-native";
+import { View, StyleSheet, Text, ViewStyle, Pressable } from "react-native";
 import { Col, Spacing } from "./Config";
 
 interface ButtonProps {
@@ -13,6 +7,8 @@ interface ButtonProps {
   onPress: () => void;
   label: string | number;
   clicked?: boolean;
+  style?: object;
+  labelStyle?: object;
 }
 
 interface ErrorProps {
@@ -29,13 +25,22 @@ export const Button: FC<ButtonProps> = ({
   clicked,
   onPress,
   label,
+  style,
+  labelStyle,
 }) => {
   return (
-    <TouchableWithoutFeedback disabled={clicked} onPress={onPress}>
-      <View style={[styles.button, styles[type]]}>
-        <Text style={type === "fill" ? styles.txt : styles.fill}>{label}</Text>
+    <Pressable disabled={clicked} onPress={onPress}>
+      <View style={[styles.button, styles[type], style]}>
+        <Text
+          style={[
+            type === "fill" ? styles.label : styles.labelFill,
+            labelStyle,
+          ]}
+        >
+          {label}
+        </Text>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
@@ -72,7 +77,10 @@ const styles = StyleSheet.create({
     borderColor: Col.Green,
     backgroundColor: "transparent",
   },
-  txt: {
+  labelFill: {
+    color: Col.Green,
+  },
+  label: {
     color: "white",
   },
   warningCont: {

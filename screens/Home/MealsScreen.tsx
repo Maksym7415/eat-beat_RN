@@ -7,9 +7,12 @@ import { Memo, NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
+import PopUp from "../../components/PopUp";
 
 const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState(null);
+  const [select, setSelect] = useState(null);
+  const [popVisible, setPopVisible] = useState(false);
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
@@ -38,6 +41,14 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <PopUp
+        header="Delete?"
+        body={`Delete “${select}”?`}
+        right="DELETE"
+        onLeft={() => setPopVisible(false)}
+        onRight={() => console.log("false")}
+        visible={popVisible}
+      />
       {visible ? (
         <DateTimePicker
           testID="dateTimePicker"

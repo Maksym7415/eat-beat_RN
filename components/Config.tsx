@@ -15,6 +15,7 @@ export const Col = {
   White: "#FFF",
   Grey: "#666666",
   Shadow: "rgba(0,0,0,0.3)",
+  Header: "#EFF0F4",
 
   Primary: "#107dcb",
   Primary1: "#3096df",

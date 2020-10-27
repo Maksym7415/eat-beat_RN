@@ -5,9 +5,11 @@ import { Col, Spacing } from "../../components/Config";
 import { Divider } from "../../components/MyComponents";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import UserCard from "./common/UserCard";
+import PopUp from "../../components/PopUp";
 
 export default class ProfileScreen extends Component {
   state = {
+    visible: true,
     data: {
       name: "",
       email: "",
@@ -28,8 +30,9 @@ export default class ProfileScreen extends Component {
     }
   };
   render() {
-    const { data } = this.state;
+    const { data, visible } = this.state;
     const { name, userAvatar, email } = data;
+    const bb = "Amaranth Breakfast Porridge with Blueberry Compote";
     return (
       <View style={styles.canvas}>
         <ScrollView>

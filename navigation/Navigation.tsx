@@ -21,7 +21,6 @@ import CalendarButton from "./common/CalendarButton";
 import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
-import { View } from "react-native";
 import TestOut from "../screens/TestOut";
 
 const Stack = createStackNavigator();
@@ -44,7 +43,7 @@ const HomeTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
-        backgroundColor: "#EFF0F4",
+        backgroundColor: Col.Header,
         elevation: 0,
       },
       indicatorStyle: {
@@ -63,7 +62,7 @@ const RecipesTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
-        backgroundColor: "#EFF0F4",
+        backgroundColor: Col.Header,
         elevation: 0,
       },
       indicatorStyle: {
@@ -86,7 +85,7 @@ const ProfileTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
-        backgroundColor: "#EFF0F4",
+        backgroundColor: Col.Header,
         elevation: 0,
       },
       indicatorStyle: {
