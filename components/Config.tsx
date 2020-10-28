@@ -1,4 +1,5 @@
 export const Col = {
+  Main: "#F29B27",
   Black: "#333942",
   Dark: "#46566D",
   Light: "#8498B1",
@@ -6,7 +7,6 @@ export const Col = {
   Background: "#F7F7FB",
   Divider: "#E7E7E7",
   DarkGreen: "#397504",
-  Green: "#2DAF0C",
   LightGreen: "#D8FCCF",
   Red: "#EB665E",
   DarkBlue: "#1C6995",
@@ -16,6 +16,7 @@ export const Col = {
   Grey: "#666666",
   Shadow: "rgba(0,0,0,0.3)",
   Header: "#EFF0F4",
+  Error: "#FF364F",
 
   Primary: "#107dcb",
   Primary1: "#3096df",
@@ -39,7 +40,6 @@ export const Col = {
   Grey1: "#46566D",
   Grey2: "#7E7E7E",
   Grey3: "#E7E7E7",
-  Error: "#EB665E",
   Info: "#5E6CEB",
   c: "#3B990F",
   a: "#ADEA4F",

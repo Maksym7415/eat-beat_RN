@@ -47,7 +47,7 @@ const HomeTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green,
+        backgroundColor: Col.Main,
       },
     }}
     initialRouteName="home"
@@ -66,7 +66,7 @@ const RecipesTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green,
+        backgroundColor: Col.Main,
       },
     }}
     initialRouteName="recommended"
@@ -89,7 +89,7 @@ const ProfileTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green,
+        backgroundColor: Col.Main,
       },
     }}
     initialRouteName="subscription"
@@ -153,7 +153,7 @@ export const RecommendedStack = () => {
           title: "Eating at a Resturant",
           headerStyle: {
             elevation: 0,
-            backgroundColor: Col.Green,
+            backgroundColor: Col.Main,
           },
           headerTitleStyle: {
             color: "white",

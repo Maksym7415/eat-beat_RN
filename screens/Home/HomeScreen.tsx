@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, FC } from "react";
 import { StyleSheet, View, ScrollView, Pressable, Alert } from "react-native";
-import axios from "axios";
 import Nutrient from "../../components/Nutrient";
 import Nutrition from "../../components/Nutrition";
 import HealthCircle from "../../components/HealthCircle";
@@ -14,7 +13,8 @@ import ActionModal from "../../components/ActionModal";
 import { Divider } from "../../components/MyComponents";
 import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { CalendarInterface, Memo, NavProps } from "../../components/interfaces";
+import { Memo, NavProps } from "../../components/interfaces";
+import server from "../../server";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,26 +23,22 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
-  const getCalendar = (value: Date) => {
-    return value.toJSON().toString().slice(0, 10);
-  };
-
-  const getDailyConsumption = async () => {
-    const address = `/meals/daily-consumption?date=${getCalendar(date)}`;
-    try {
-      const { data } = await axios(address);
-      setFeed(data);
-    } catch (error) {
-      Alert.alert("Request failed with status code 404");
-      console.log(error);
-    }
+  const serveData = async () => {
+    const response = await server.getDailyConsumption(date);
+    response.ok
+      ? setFeed(response.data)
+      : Alert.alert(
+          response.status?.toString(),
+          `${response.problem}\n${JSON.stringify(response.config)}`
+        );
+    console.log("getDailyConsumption => request: ", response.ok);
   };
 
   useEffect(() => {
-    getDailyConsumption();
+    serveData();
   }, [date]);
 
-  const onChange = (event: CalendarInterface, selectedDate: Date) => {
+  const onChange = (event: Event, selectedDate: Date) => {
     const currentDate = selectedDate || date;
     saveCal({ visible: false, date: currentDate });
   };
@@ -84,6 +80,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           is24Hour={true}
           display="default"
           onChange={onChange}
+          style={{ shadowColor: "pink" }}
         />
       )}
       <ScrollView>
@@ -150,8 +147,8 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         <Divider styler={styles.divider} />
         <View style={styles.nutritionContainer}>
           {feed.nutrientsData ? (
-            feed.nutrientsData.map((item) => (
-              <Nutrition key={item.nutrition_title} item={item} />
+            feed.nutrientsData.map((item, index) => (
+              <Nutrition key={`${index}`} item={item} />
             ))
           ) : (
             <View />

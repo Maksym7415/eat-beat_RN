@@ -14,6 +14,7 @@ interface ButtonProps {
 interface ErrorProps {
   error: boolean | string | number;
   visible: boolean;
+  style?: ViewStyle;
 }
 
 interface DividerProps {
@@ -44,11 +45,11 @@ export const Button: FC<ButtonProps> = ({
   );
 };
 
-export const ErrorMessage: FC<ErrorProps> = ({ error, visible }) => {
+export const ErrorMessage: FC<ErrorProps> = ({ error, visible, style }) => {
   if (!error || !visible) return null;
 
   return (
-    <View style={styles.warningCont}>
+    <View style={[styles.warningCont, style]}>
       <Text style={styles.warning}>{error}</Text>
     </View>
   );
@@ -67,18 +68,18 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.medium,
   },
   fill: {
-    backgroundColor: Col.Green,
+    backgroundColor: Col.Main,
   },
   text: {
     backgroundColor: "transparent",
   },
   outline: {
     borderWidth: 2,
-    borderColor: Col.Green,
+    borderColor: Col.Main,
     backgroundColor: "transparent",
   },
   labelFill: {
-    color: Col.Green,
+    color: Col.Main,
   },
   label: {
     color: "white",
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   warning: {
-    color: Col.Red,
+    color: Col.Error,
   },
   divider: {
     borderBottomWidth: 1,

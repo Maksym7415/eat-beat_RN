@@ -32,7 +32,6 @@ export default class ProfileScreen extends Component {
   render() {
     const { data, visible } = this.state;
     const { name, userAvatar, email } = data;
-    const bb = "Amaranth Breakfast Porridge with Blueberry Compote";
     return (
       <View style={styles.canvas}>
         <ScrollView>

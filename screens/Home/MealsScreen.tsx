@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import CookedMealCard from "../../components/CookedMealCard";
 import { Memo, NavProps } from "../../components/interfaces";
@@ -8,6 +8,7 @@ import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
 import PopUp from "../../components/PopUp";
+import server from "../../server";
 
 const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState(null);
@@ -16,22 +17,19 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
-  const getCalendar = (value: Date) => {
-    return value.toJSON().toString().slice(0, 10);
-  };
-
-  const getCookedMeals = async () => {
-    const address = `/meals/cooked-meals?date=${getCalendar(date)}`;
-    try {
-      const { data } = await axios(address);
-      setFeed(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const serveData = async () => {
+    const response = await server.getCookedMeals(date);
+    response.ok
+      ? setFeed(response.data)
+      : Alert.alert(
+          response.status?.toString(),
+          `${response.problem}\n${JSON.stringify(response.config)}`
+        );
+    console.log("getCookedMeals => request: ", response.ok);
   };
 
   useEffect(() => {
-    getCookedMeals();
+    serveData();
   }, [date]);
 
   const onChange = (event: Event, selectedDate: Date) => {
@@ -67,7 +65,6 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item, index }) => (
           <CookedMealCard
-            key={item.id}
             item={item}
             onDelete={(id) => console.log(id)}
             onClick={(id) => console.log(id)}

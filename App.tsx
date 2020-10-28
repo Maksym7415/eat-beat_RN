@@ -5,6 +5,7 @@ import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { AppContext } from "./components/AppContext";
 import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
+import server from "./server";
 
 export default function App() {
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -16,7 +17,7 @@ export default function App() {
   const [userData, setUserData] = useState<object>({});
 
   const loadUser = async () => {
-    const token = await AsyncStorage.getItem("accessToken");
+    const token = await AsyncStorage.getItem("@token");
     if (token) {
       setLogged(true);
     }
@@ -28,7 +29,8 @@ export default function App() {
     setLogged(false);
   };
   useEffect(() => {
-    setAxios();
+    //setAxios();
+    server.setup();
     loadUser();
   }, [logged]);
 

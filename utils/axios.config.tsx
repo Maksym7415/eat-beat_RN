@@ -53,7 +53,8 @@ const LocalStorageService = (() => {
 const setAxios = () => {
   const setDeafults = (() => {
     // host for remote connection
-    axios.defaults.baseURL = "https://logisticbrocker.hopto.org/eat-beat/api";
+    axios.defaults.baseURL =
+      "https://logisticbrocker.hopto.org/eat-beat-test/api";
     axios.defaults.headers.common["Content-Type"] = "application/json";
     axios.defaults.headers.common.accept = "application/json";
     axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";

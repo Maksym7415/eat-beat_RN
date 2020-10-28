@@ -33,7 +33,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
-          Forgot your password
+          Forgot your password?
         </Text>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Col.Green,
+    backgroundColor: Col.Main,
     padding: Spacing.large,
   },
   header: {
@@ -102,11 +102,11 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   txtBtn: {
-    color: Col.Green,
+    color: Col.Main,
     paddingHorizontal: Spacing.large,
   },
   forgot: {
-    color: Col.Green,
+    color: Col.Main,
     padding: Spacing.medium,
     paddingBottom: 0,
   },

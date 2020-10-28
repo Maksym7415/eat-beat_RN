@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Col.Green,
+    backgroundColor: Col.Main,
     padding: Spacing.large,
   },
   header: {
@@ -98,10 +98,10 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   txtBtn: {
-    color: Col.Green,
+    color: Col.Main,
   },
   forgot: {
-    color: Col.Green,
+    color: Col.Main,
     padding: Spacing.medium,
     paddingBottom: 0,
   },

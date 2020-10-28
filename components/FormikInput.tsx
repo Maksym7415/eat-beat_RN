@@ -5,16 +5,15 @@ import { ErrorMessage } from "./MyComponents";
 import { Col, Spacing } from "./Config";
 import { InputProps } from "./interfaces";
 
-const formikInput: FC<InputProps> = ({ value, label, multi = false }) => {
+const formikInput: FC<InputProps> = ({ value, label, error }) => {
   const { handleChange, setFieldTouched, touched, errors } = useFormikContext();
   return (
     <>
       <TextInput
-        style={styles.input}
+        style={[styles.input, error && styles.borderEr]}
         onChangeText={handleChange(value)}
         onBlur={() => setFieldTouched(value)}
         placeholder={label}
-        multiline={multi}
         secureTextEntry={value === "password"}
       />
       <ErrorMessage visible={touched[value]} error={errors[value]} />
@@ -31,6 +30,9 @@ const styles = StyleSheet.create({
     borderColor: Col.Contrast,
     marginVertical: Spacing.tiny,
     fontFamily: "Roboto",
+  },
+  borderEr: {
+    borderColor: Col.Error,
   },
 });
 export default formikInput;
