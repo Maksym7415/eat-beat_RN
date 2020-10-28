@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
-import axios from "axios";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../components/FormikInput";
@@ -8,41 +7,41 @@ import { Col, Spacing } from "../../components/Config";
 import { Button } from "../../components/MyComponents";
 import { Text } from "../../components/custom/Typography";
 import { AuthProps, NavProps } from "../../components/interfaces";
+import server from "../../server";
+import SvgMaker from "../../components/SvgMaker";
 
 const Validation = Yup.object().shape({
-  name: Yup.string().required().label("Full Name"),
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(5).label("Password"),
+  password: Yup.string().required().min(6).label("Password"),
 });
 
 const RegisterScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
-  const signUp = async ({ name, email, password }: AuthProps) => {
+  const signUp = async (value: AuthProps) => {
     setClicked(true);
-    try {
-      await axios.post("/auth/sign-up", { email, password });
-      navigation.push("login");
-    } catch (error) {
-      console.log(error, { email, password });
-      Alert.alert(error);
+    const logged = await server.register(value);
+    if (logged) {
+      navigation.navigate("login");
+    } else {
       setClicked(false);
     }
   };
-
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <SvgMaker name="logo" />
+      </View>
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Create account
         </Text>
         <Formik
-          initialValues={{ email: "", password: "", name: "" }}
+          initialValues={{ email: "", password: "" }}
           validationSchema={Validation}
           onSubmit={(value) => signUp(value)}
         >
           {({ handleSubmit }) => (
             <>
-              <FormikInput value="name" label="Full Name" />
               <FormikInput value="email" label="Email" />
               <FormikInput value="password" label="Password" />
               <Button
@@ -59,7 +58,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
             <Text
               type="bodyBold2"
               style={styles.txtBtn}
-              onPress={() => navigation.push("login")}
+              onPress={() => navigation.navigate("login")}
             >
               {"  Sign in"}
             </Text>
@@ -74,7 +73,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: Col.Main,
     padding: Spacing.large,
   },
@@ -104,6 +102,10 @@ const styles = StyleSheet.create({
     color: Col.Main,
     padding: Spacing.medium,
     paddingBottom: 0,
+  },
+  logoContainer: {
+    marginTop: 80,
+    marginBottom: 50,
   },
 });
 export default RegisterScreen;

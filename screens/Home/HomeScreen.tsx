@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext, FC } from "react";
 import { StyleSheet, View, ScrollView, Pressable, Alert } from "react-native";
-import Nutrient from "../../components/Nutrient";
-import Nutrition from "../../components/Nutrition";
-import HealthCircle from "../../components/HealthCircle";
-import Collapse from "../../components/Collapse";
+import server from "../../server";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
+import Collapse from "../../components/Collapse";
+import Nutrient from "../../components/Nutrient";
+import SvgMaker from "../../components/SvgMaker";
+import Nutrition from "../../components/Nutrition";
+import HealthCircle from "../../components/HealthCircle";
 import { Col, Spacing } from "../../components/Config";
 import { Text } from "../../components/custom/Typography";
-import SvgMaker from "../../components/SvgMaker";
 import ActionModal from "../../components/ActionModal";
 import { Divider } from "../../components/MyComponents";
 import { AppContext } from "../../components/AppContext";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { Memo, NavProps } from "../../components/interfaces";
-import server from "../../server";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);

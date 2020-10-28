@@ -1,5 +1,4 @@
 import { create } from "apisauce";
-import { Alert } from "react-native";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -55,6 +54,10 @@ const getRefresh = async () => {
   return token ? JSON.parse(token).refreshToken : null;
 };
 
+const setHeader = (token: string) => {
+  api.setHeader("Authorization", `Bearer ${token}`);
+};
+
 const setup = async () => {
   const token = await getToken();
   if (token) {
@@ -65,7 +68,14 @@ const setup = async () => {
 
 const logError = ({ problem, config, status }: errorProps) => {
   //Alert.alert(problem);
-  console.log("Error------\n", problem, config, status);
+  console.log(
+    "Error------\nproblem => ",
+    problem,
+    "\nconfig => ",
+    config,
+    "\nstatus => ",
+    status
+  );
 };
 
 const getCalendar = (value: Date) => {
@@ -95,10 +105,9 @@ const getCookedMeals = async (date: Date) => {
 
 const getProfile = async () => {
   const address = apiConfig.get.profile;
-  api.get(address).then((response) => {
-    if (!response.ok) logError(response);
-    return response.data;
-  });
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
 };
 
 const getHistory = async (days: number) => {
@@ -136,7 +145,12 @@ const addCookedMeal = async (payload) => {
 const signIn: AuthFun = async (payload) => {
   const address = apiConfig.post.signIn;
   const response = await api.post(address, payload);
-  response.ok ? setToken(response.data) : logError(response);
+  if (response.ok) {
+    setToken(response.data);
+    setHeader(response.data.accessToken);
+  } else {
+    logError(response);
+  }
   return response.ok;
 };
 
@@ -147,8 +161,11 @@ const register: AuthFun = async (payload) => {
   return response.ok;
 };
 
-const upload = () => {
-  //
+const upload = async (form: FormData) => {
+  const address = apiConfig.post.upload;
+  const response = await api.post(address, form);
+  if (!response.ok) logError(response);
+  return response.ok;
 };
 
 const delCookedMeal = () => {

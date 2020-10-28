@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import SvgMaker from "../../../components/SvgMaker";
 import * as ImageManipulator from "expo-image-manipulator";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
+import server from "../../../server";
 
 interface Props {
   image: string | null;
@@ -21,7 +21,6 @@ interface Props {
 
 const UserCard: FC<Props> = ({ image, name, email }) => {
   const [edit, setEdit] = useState(false);
-  const [avatar, setAvatar] = useState<string | null>(null);
   useEffect(() => {
     (async () => {
       const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -49,20 +48,11 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
       [{ resize: { width: 400, height: 400 } }],
       { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
     );
-    // upload the original image
-    const avResponse = await fetch(manipResult.uri);
+    const avResponse = await fetch(uri);
     const avBlob = await avResponse.blob();
-    console.log(typeof avBlob);
-    let formdata = new FormData();
-    formdata.append("file", avBlob);
-    await Axios.post("/upload", formdata)
-      .then((res) => console.log(res))
-      .catch((er) => console.log(er));
-
-    // try {
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const form = new FormData();
+    form.append("file", avBlob);
+    server.upload(form);
   };
   return (
     <View style={styles.container}>

@@ -1,6 +1,6 @@
 import React, { Component, ReactNode, ReactText } from "react";
 import { StyleSheet, Text as ReText } from "react-native";
-import { Col, Font } from "../Config";
+import { Col } from "../Config";
 
 declare interface Props {
   style?: object;
@@ -48,50 +48,42 @@ export class Text extends Component<Props> {
 
 const styles = StyleSheet.create({
   h4: {
-    //fontFamily: Font,
-    fontWeight: "400",
+    fontFamily: "Inter_400Regular",
     fontSize: 34,
     color: Col.Grey,
   },
   h6: {
-    //fontFamily: Font,
-    fontWeight: "500",
+    fontFamily: "Inter_500Medium",
     fontSize: 20,
     color: Col.Dark,
   },
   sub: {
-    //fontFamily: Font,
-    fontWeight: "500",
+    fontFamily: "Inter_500Medium",
     fontSize: 14,
     color: Col.Black,
   },
   body: {
-    //fontFamily: Font,
-    fontWeight: "400",
+    fontFamily: "Inter_400Regular",
     fontSize: 16,
     color: Col.Grey,
   },
   bodyBold: {
-    //fontFamily: Font,
-    fontWeight: "700",
+    fontFamily: "Inter_700Bold",
     fontSize: 16,
     color: Col.Dark,
   },
   body2: {
-    //fontFamily: Font,
-    fontWeight: "400",
+    fontFamily: "Inter_400Regular",
     fontSize: 14,
     color: Col.Grey,
   },
   bodyBold2: {
-    //fontFamily: Font,
-    fontWeight: "700",
-    fontSize: 16,
+    fontFamily: "Inter_700Bold",
+    fontSize: 14,
     color: Col.Dark,
   },
   cap: {
-    //fontFamily: Font,
-    fontWeight: "400",
+    fontFamily: "Inter_400Regular",
     fontSize: 12,
     color: Col.Dark,
   },

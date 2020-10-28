@@ -5,7 +5,14 @@ import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { AppContext } from "./components/AppContext";
 import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
+import * as Font from "expo-font";
 import server from "./server";
+
+let customFonts = {
+  Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
+  Inter_500Medium: require("./assets/font/Roboto-Medium.ttf"),
+  Inter_700Bold: require("./assets/font/Roboto-Bold.ttf"),
+};
 
 export default function App() {
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -21,6 +28,7 @@ export default function App() {
     if (token) {
       setLogged(true);
     }
+    await Font.loadAsync(customFonts);
     setLoaded(true);
   };
 
@@ -28,11 +36,6 @@ export default function App() {
     AsyncStorage.clear();
     setLogged(false);
   };
-  useEffect(() => {
-    //setAxios();
-    server.setup();
-    loadUser();
-  }, [logged]);
 
   const appContext = useMemo(
     (): Memo => ({
@@ -46,6 +49,11 @@ export default function App() {
     }),
     [cal]
   );
+
+  useEffect(() => {
+    server.setup();
+    loadUser();
+  }, [logged]);
 
   return (
     <AppContext.Provider value={appContext}>

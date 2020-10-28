@@ -10,10 +10,11 @@ import { Col, Spacing } from "../../components/Config";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
+import SvgMaker from "../../components/SvgMaker";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(5).label("Password"),
+  password: Yup.string().required().min(6).label("Password"),
 });
 
 const LoginScreen: FC<NavProps> = ({ navigation }) => {
@@ -33,6 +34,9 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <SvgMaker name="logo" />
+      </View>
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Login
@@ -65,7 +69,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
             <Text
               type="bodyBold2"
               style={styles.txtBtn}
-              onPress={() => navigation.push("register")}
+              onPress={() => navigation.navigate("register")}
             >
               {"  Create account"}
             </Text>
@@ -73,7 +77,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           <Text
             type="bodyBold2"
             style={styles.forgot}
-            onPress={() => navigation.push("restore")}
+            onPress={() => navigation.navigate("restore")}
           >
             Forgot password?
           </Text>
@@ -87,7 +91,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: Col.Main,
     padding: Spacing.large,
   },
@@ -120,6 +123,10 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     marginTop: Spacing.small,
+  },
+  logoContainer: {
+    marginTop: 80,
+    marginBottom: 50,
   },
 });
 

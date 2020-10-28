@@ -2,7 +2,6 @@ import "react-native-gesture-handler";
 import React from "react";
 import { Col } from "../components/Config";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer, DrawerActions } from "@react-navigation/native";
@@ -24,13 +23,18 @@ import SearchScreen from "../screens/Recipies/SearchScreen";
 import TestOut from "../screens/TestOut";
 
 const Stack = createStackNavigator();
-const Tabs = createBottomTabNavigator();
 const TopTabs = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export const Auth = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="login" headerMode="none">
+    <Stack.Navigator
+      initialRouteName="login"
+      headerMode="none"
+      screenOptions={{
+        animationEnabled: false,
+      }}
+    >
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="register" component={Register} />
       <Stack.Screen name="restore" component={Restore} />

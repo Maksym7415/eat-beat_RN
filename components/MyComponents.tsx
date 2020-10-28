@@ -1,6 +1,13 @@
 import React, { FC } from "react";
-import { View, StyleSheet, Text, ViewStyle, Pressable } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ViewStyle,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { Col, Spacing } from "./Config";
+import Text from "./custom/Typography";
 
 interface ButtonProps {
   type?: "fill" | "outline" | "text";
@@ -12,7 +19,7 @@ interface ButtonProps {
 }
 
 interface ErrorProps {
-  error: boolean | string | number;
+  error: string;
   visible: boolean;
   style?: ViewStyle;
 }
@@ -32,14 +39,19 @@ export const Button: FC<ButtonProps> = ({
   return (
     <Pressable disabled={clicked} onPress={onPress}>
       <View style={[styles.button, styles[type], style]}>
-        <Text
-          style={[
-            type === "fill" ? styles.label : styles.labelFill,
-            labelStyle,
-          ]}
-        >
-          {label}
-        </Text>
+        {clicked ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <Text
+            type="sub"
+            style={[
+              type === "fill" ? styles.label : styles.labelFill,
+              labelStyle,
+            ]}
+          >
+            {label}
+          </Text>
+        )}
       </View>
     </Pressable>
   );
@@ -64,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    padding: Spacing.r_small,
+    padding: 14,
     marginVertical: Spacing.medium,
   },
   fill: {

@@ -9,11 +9,27 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
+import EditModal from "../../components/EditModal";
+
+interface ModalData {
+  id: number;
+  name: string;
+  time: string;
+  servings: string;
+  modalVisible: boolean;
+}
 
 const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState(null);
   const [select, setSelect] = useState(null);
   const [popVisible, setPopVisible] = useState(false);
+  const [modalData, setModalData] = useState<ModalData>({
+    id: 0,
+    name: "",
+    time: "",
+    servings: "",
+    modalVisible: false,
+  });
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
@@ -28,9 +44,29 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     console.log("getCookedMeals => request: ", response.ok);
   };
 
+  const onDelete = async (id, name, time, servings, creationTime) => {
+    if (name) {
+      return setModalData({
+        id,
+        name,
+        time,
+        servings: servings + "",
+        modalVisible: true,
+        creationTime,
+      });
+    }
+    await axios.delete(`/meals/cooked-meal/${id}`);
+    serveData();
+  };
+
   useEffect(() => {
     serveData();
   }, [date]);
+
+  useEffect(() => {
+    if (modalData.modalVisible || modalData.cancel) return;
+    serveData();
+  }, [modalData.modalVisible]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     const currentDate = selectedDate || date;
@@ -39,6 +75,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <EditModal {...modalData} setModalData={setModalData} />
       <PopUp
         header="Delete?"
         body={`Delete “${select}”?`}

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: Col.LightGreen,
   },
   maxCountText: {
-    color: Col.Main,
+    color: Col.Green,
     textAlign: "center",
   },
 });
