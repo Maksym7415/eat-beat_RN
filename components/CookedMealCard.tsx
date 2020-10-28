@@ -14,7 +14,7 @@ interface Props {
     servings: number
   };
   onClick: (id: number) => void;
-  onDelete: (id: number) => void;
+  actionHandler: (id: number, name?: string, time?: string, servings?: number, creationTime?: number) => void;
 }
 
 const getTime = (value: number) => {
@@ -26,7 +26,7 @@ const getTime = (value: number) => {
   }`;
 };
 
-const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
+const CookedMealCard: FC<Props> = ({ item, onClick, actionHandler }) => {
   const { id, name, image, creationTime, servings } = item;
   const time = getTime(creationTime);
   return (
@@ -36,7 +36,7 @@ const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
         <View style={styles.iconsContainer}>
             <Icon
               style={{ alignSelf: "flex-end" }}
-              onPress={() => onDelete(id)}
+              onPress={() => actionHandler(id)}
               name="delete"
               size={24}
               color={Col.Grey5}
@@ -46,7 +46,7 @@ const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
             />
             <Icon
               style={{ alignSelf: "flex-end" }}
-              onPress={() => onDelete(id, name, time, servings, creationTime)}
+              onPress={() => actionHandler(id, name, time, servings, creationTime)}
               name="pencil"
               size={24}
               color={Col.Grey5}

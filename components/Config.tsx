@@ -1,5 +1,6 @@
 export const Col = {
   Black: "#333942",
+  Black1: '#000000',
   Dark: "#46566D",
   Light: "#8498B1",
   Inactive: "#CDD1D6",

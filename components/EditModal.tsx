@@ -11,7 +11,7 @@ interface Props{
     time: string
     servings: string
     modalVisible: boolean
-    setModalData: () => void
+    setModalData: ({}) => void
     creationTime: number
 }
 

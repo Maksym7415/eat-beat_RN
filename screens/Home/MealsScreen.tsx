@@ -15,6 +15,7 @@ interface ModalData {
   time: string
   servings: string
   modalVisible: boolean
+  creationTime: number
 }
 
 const MealsScreen: FC<NavProps> = ({ navigation }) => {
@@ -25,7 +26,8 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     name: '',
     time: '',
     servings: '',
-    modalVisible: false
+    modalVisible: false,
+    creationTime: 0
   })
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
@@ -49,9 +51,16 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     saveCal({ visible: false, date: currentDate });
   };
 
-  const onDelete = async (id, name, time, servings, creationTime) => {
+  const actionHandler = async (id: number, name: string, time: string, servings: number, creationTime: number) => {
     if(name) {
-      return setModalData({id, name, time, servings: servings + '', modalVisible: true, creationTime })
+      return setModalData({
+        id, 
+        name, 
+        time, 
+        servings: servings + '', 
+        modalVisible: true, 
+        creationTime, 
+      })
     }
     await axios.delete(`/meals/cooked-meal/${id}`)
     getCookedMeals()
@@ -68,7 +77,10 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-     <EditModal {...modalData} setModalData={setModalData}/>
+     <EditModal 
+      {...modalData} 
+      setModalData={setModalData}
+     />
      {visible ? (
         <DateTimePicker
           testID="dateTimePicker"
@@ -89,7 +101,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
           <CookedMealCard
             key={item.id}
             item={item}
-            onDelete={onDelete}
+            actionHandler={actionHandler}
             onClick={(id) => console.log(id)}
           />
         )}
