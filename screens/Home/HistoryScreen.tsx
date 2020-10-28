@@ -58,14 +58,14 @@ useEffect(() => {
 
   return (   
     <>
-     <Text style={{alignSelf: 'center', marginBottom: 8}}>Your health score</Text>
-   <ScrollView
-      horizontal={true}
-      onScroll={handleScroll}
-      scrollEventThrottle={16}
+     <Text style={{alignSelf: 'center', marginVertical: 8, fontWeight: '500', fontSize: 20 }}>Your health score</Text>
+      <ScrollView
+        horizontal={true}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-    <Chart data={data} />
-  </ScrollView>
+        <Chart data={data} />
+      </ScrollView>
   </>
   )
   

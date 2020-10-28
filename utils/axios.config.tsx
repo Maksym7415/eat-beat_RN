@@ -65,6 +65,7 @@ const setAxios = () => {
 
   axios.interceptors.request.use(
     async (config) => {
+      console.log(config)
       const token = await localStorageService.getAccessToken();
       if (token) {
         if (config.url === "/refresh-token") return config;
@@ -84,6 +85,7 @@ const setAxios = () => {
       return response;
     },
     async (error) => {
+      console.log(error)
       const originalRequest = error.config;
 
       if (error.response.status === 401) {

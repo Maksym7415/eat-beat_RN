@@ -7,9 +7,26 @@ import { Memo, NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
+import EditModal from '../../components/EditModal';
+
+interface ModalData {
+  id: number
+  name: string
+  time: string
+  servings: string
+  modalVisible: boolean
+}
 
 const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState(null);
+ // const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<ModalData>({
+    id: 0,
+    name: '',
+    time: '',
+    servings: 0,
+    modalVisible: false
+  })
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
@@ -18,7 +35,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   const getCookedMeals = async () => {
-    const address = `/meals/cooked-meals?date=${getCalendar(date)}`;
+    const address = `/meals/cooked-meals?date=2020-01-01`;
     try {
       const { data } = await axios(address);
       setFeed(data);
@@ -36,9 +53,18 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     saveCal({ visible: false, date: currentDate });
   };
 
+  const onDelete = async (id, name, time, servings) => {
+    if(name) {
+      return setModalData({id, name, time, servings: servings + '', modalVisible: true })
+    }
+    await axios.delete(`/meals/cooked-meal/${id}`)
+    getCookedMeals()
+  }
+
   return (
     <View style={styles.container}>
-      {visible ? (
+     <EditModal {...modalData} setModalData={setModalData}/>
+     {visible ? (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -58,7 +84,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
           <CookedMealCard
             key={item.id}
             item={item}
-            onDelete={(id) => console.log(id)}
+            onDelete={onDelete}
             onClick={(id) => console.log(id)}
           />
         )}

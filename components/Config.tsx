@@ -38,6 +38,8 @@ export const Col = {
   Grey1: "#46566D",
   Grey2: "#7E7E7E",
   Grey3: "#E7E7E7",
+  Grey4: "#FAFAFA",
+  Grey5: "#ADB4BB",
   Error: "#EB665E",
   Info: "#5E6CEB",
   c: "#3B990F",
