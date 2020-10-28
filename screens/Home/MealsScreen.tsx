@@ -47,22 +47,6 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     console.log("getCookedMeals => request: ", response.ok);
   };
 
-  const onDelete = async (id, name, time, servings, creationTime) => {
-    if (name) {
-      return setModalData({
-        id,
-        name,
-        time,
-        servings: servings + "",
-        modalVisible: true,
-        creationTime,
-      });
-    }
-    await axios.delete(`/meals/cooked-meal/${id}`);
-    serveData();
-  };
-
-
   useEffect(() => {
     serveData();
   }, [date]);
