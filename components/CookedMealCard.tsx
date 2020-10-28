@@ -11,6 +11,7 @@ interface Props {
     name: string;
     image: string;
     creationTime: number;
+    servings: number
   };
   onClick: (id: number) => void;
   onDelete: (id: number) => void;
@@ -22,7 +23,7 @@ const getTime = (value: number) => {
   const Minutes = Now.getMinutes();
   return `${Hours < 10 ? "0" + Hours : Hours}:${
     Minutes < 10 ? "0" + Minutes : Minutes
-  } ${Hours < 12 ? "AM" : "PM"}`;
+  }`;
 };
 
 const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
@@ -45,7 +46,7 @@ const CookedMealCard: FC<Props> = ({ item, onClick, onDelete }) => {
             />
             <Icon
               style={{ alignSelf: "flex-end" }}
-              onPress={() => onDelete(id, name, time, servings)}
+              onPress={() => onDelete(id, name, time, servings, creationTime)}
               name="pencil"
               size={24}
               color={Col.Grey5}

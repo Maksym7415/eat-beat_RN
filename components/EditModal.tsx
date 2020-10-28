@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard, TextInput } 
 import { Col, Typ, Weight, Spacing } from './Config' 
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Console } from 'console';
+import axios from 'axios';
 
 interface Props{
     id: number
@@ -11,6 +12,7 @@ interface Props{
     servings: string
     modalVisible: boolean
     setModalData: () => void
+    creationTime: number
 }
 
 interface Expr{
@@ -25,32 +27,51 @@ interface Time{
     }
 }
 
-export default function EditModal({ setModalData, id, name, time: pTime, servings, modalVisible}: Props) {
+export default function EditModal({ setModalData, id, name, time: pTime, servings, modalVisible, creationTime}: Props) {
     const [amount, setAmount] = useState<string>(servings)
-    const [time, setTime] = useState<Time>({hour: {max: 23, min: 0, value: new Date().getHours() + ''}, minutes: {max: 59, min: 0, value: new Date().getMinutes() + ''}})
+    const p_time = pTime.split(':')
+    const [time, setTime] = useState<Time>({hour: {max: 23, min: 0, value: p_time[0]}, minutes: {max: 59, min: 0, value: p_time[1]}})
+    const updateMeal = async () => {
+        const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
+        try {
+            await axios.patch(`/meals/update-cooked-meal/${id}`, {
+                servings: +amount.replace(/[,-]/g, '.'),
+                creationTime: new Date(t).getTime()
+            })
+            hideModal(false)
+        } catch (error) {
+            console.log({error})
+        }
+    }
 
     const changeHandler = (text: string, name: string) => {
+        const value = text.split(',')
         if(name === 'amount') {
+            if(value.length === 1) return setAmount(text)
+            if(value[1].length > 1) {
+                return setAmount(value[0] + ',' + value[1][0])
+            }
+            if(+value[1] % 5 !== 0 ) return setAmount(value[0])
+            
             return setAmount(text)
         }
         setTime({...time, [name]: {...time[name], value:  +text >= time[name].min && +text <= time[name].max ? text : '' } })
     }
 
     const changePortionAmount = (mark: string) => {
-
         const expr: Expr = {
-            minus: +amount - 1 <= 0 ? 0 : +amount - 1,
-            plus: +amount + 1
+            minus: +amount.replace(/[,-]/g, '.') - 1 <= 0 ? 0 : +amount.replace(/[,-]/g, '.') - 1,
+            plus: +amount.replace(/[,-]/g, '.') + 1
         }
-        console.log(expr[mark])
         setAmount(expr[mark] + '')
     }
-    const hideModal = () => {
-        setModalData((value) => ({...value, modalVisible: false}))
+    const hideModal = (key: boolean) => {
+        setModalData((value) => ({...value, modalVisible: false, id: 0,name: '', time: '',servings: '', cancel: key}))
     }
 
     useEffect(() => {
         setAmount(servings)
+        setTime({hour: {max: 23, min: 0, value: p_time[0]}, minutes: {max: 59, min: 0, value: p_time[1]}})
     }, [id])
 
     return (
@@ -70,12 +91,12 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
                 </Text>
                 <View style={styles.amountContainer}>
                         <TouchableOpacity 
-                            style={{...styles.btn, borderColor: !(+amount) ? Col.Grey3 : styles.btn.borderColor }} 
+                            style={{...styles.btn, borderColor: !isNaN(+amount) && !(+amount) ? Col.Grey3 : styles.btn.borderColor }} 
                             onPress={()=> changePortionAmount('minus')}
-                            disabled={!(+amount)}
+                            disabled={!isNaN(+amount) && !(+amount)}
                         >
                             <Icon
-                                style={{color: !(+amount) ? Col.Grey3 : Col.Green}}
+                                style={{color: !isNaN(+amount) && !(+amount) ? Col.Grey3 : Col.Green}}
                                 name="minus"
                                 size={24}
                             />
@@ -130,7 +151,7 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
             <View style={styles.btnContainer}>
                 <View style={{width: '55%', alignItems: 'flex-end'}}>
                     <TouchableOpacity 
-                        onPress={hideModal} 
+                        onPress={() => hideModal(true)} 
                         style={{paddingVertical: 5, paddingHorizontal: 5}}
                     >
                         <Text style={{color: Col.Blue, fontWeight: '500', fontSize: Typ.Small}}>
@@ -141,7 +162,7 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
                
                 <View style={styles.modalBtn}>
                     <TouchableOpacity 
-                        onPress={hideModal} 
+                        onPress={updateMeal} 
                         style={{paddingVertical: 5, paddingHorizontal: 5}}
                     >
                         <Text style={{color: Col.Blue, fontWeight: '500', fontSize: Typ.Small}}>

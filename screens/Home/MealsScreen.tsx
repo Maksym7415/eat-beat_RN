@@ -24,7 +24,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     id: 0,
     name: '',
     time: '',
-    servings: 0,
+    servings: '',
     modalVisible: false
   })
   const { calendar, saveCal } = useContext<Memo>(AppContext);
@@ -44,22 +44,27 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    getCookedMeals();
-  }, [date]);
-
   const onChange = (event: Event, selectedDate: Date) => {
     const currentDate = selectedDate || date;
     saveCal({ visible: false, date: currentDate });
   };
 
-  const onDelete = async (id, name, time, servings) => {
+  const onDelete = async (id, name, time, servings, creationTime) => {
     if(name) {
-      return setModalData({id, name, time, servings: servings + '', modalVisible: true })
+      return setModalData({id, name, time, servings: servings + '', modalVisible: true, creationTime })
     }
     await axios.delete(`/meals/cooked-meal/${id}`)
     getCookedMeals()
   }
+
+  useEffect(() => {
+    getCookedMeals();
+  }, [date]);
+
+  useEffect(() => {
+    if(modalData.modalVisible || modalData.cancel) return;
+    getCookedMeals();
+  }, [modalData.modalVisible]);
 
   return (
     <View style={styles.container}>
