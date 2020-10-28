@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useContext, FC } from "react";
-import { StyleSheet, View, ScrollView, Pressable, Alert } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,25 +19,23 @@ import { Text } from "../../components/custom/Typography";
 import ActionModal from "../../components/ActionModal";
 import { Divider } from "../../components/MyComponents";
 import { AppContext } from "../../components/AppContext";
-import { Memo, NavProps } from "../../components/interfaces";
+import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [actionBtn, setActionBtn] = useState(false);
-  const [feed, setFeed] = useState<object | null>(null);
+  const [feed, setFeed] = useState<ConsumptionProps | null>(null);
+  const [totalMeals, setTotalMeals] = useState<number>(0);
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
   const serveData = async () => {
-    const response = await server.getDailyConsumption(date);
-    response.ok
-      ? setFeed(response.data)
-      : Alert.alert(
-          response.status?.toString(),
-          `${response.problem}\n${JSON.stringify(response.config)}`
-        );
-    console.log("getDailyConsumption => request: ", response.ok);
+    const { data, ok } = await server.getDailyConsumption(date);
+    if (ok) {
+      setFeed(data);
+      setTotalMeals(data.totalMeals);
+    }
   };
 
   useEffect(() => {
@@ -51,7 +55,24 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   if (feed === null)
     return (
       <View style={styles.loading}>
-        <Text>Loading</Text>
+        <ActivityIndicator size="small" color={Col.Black} />
+      </View>
+    );
+
+  if (!totalMeals)
+    return (
+      <View style={styles.loading}>
+        <Pressable
+          style={styles.actionButton}
+          onPress={() => setActionBtn(!actionBtn)}
+        >
+          <View style={styles.actionContainer}>
+            <SvgMaker name="actionButton" />
+          </View>
+        </Pressable>
+        <Text type="h6" style={{ textAlign: "center" }}>
+          {`Sorry, there is nothing here yet.\nAdd your first meal`}
+        </Text>
       </View>
     );
 
@@ -61,7 +82,9 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         style={styles.actionButton}
         onPress={() => setActionBtn(!actionBtn)}
       >
-        <SvgMaker name="actionButton" />
+        <View style={styles.actionContainer}>
+          <SvgMaker name="actionButton" />
+        </View>
       </Pressable>
       <Modal
         modalVisible={modalVisible}
@@ -79,7 +102,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           mode="date"
           is24Hour={true}
           display="default"
-          onChange={onChange}
+          onChange={(ev, d) => onChange(ev, d)}
           style={{ shadowColor: "pink" }}
         />
       )}
@@ -91,7 +114,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
             </Text>
             <Nutrient child={true}>
               <Text type="h4" style={styles.scoreNumber}>
-                {feed.totalMeals}
+                {totalMeals}
               </Text>
             </Nutrient>
           </View>
@@ -122,7 +145,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           {feed.defaultNutrients ? (
             feed.defaultNutrients.map((item, index) => (
               <View key={`${index}`} style={styles.box}>
-                <Nutrient {...item} />
+                <Nutrient data={item} />
               </View>
             ))
           ) : (
@@ -133,13 +156,13 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         <View style={{ paddingHorizontal: Spacing.medium }}>
           <Collapse
             data={feed.tooMuchNutrients}
-            title={`Too much (${feed.tooMuchNutrients.length})`}
+            title={`Too much (${feed ? feed.tooMuchNutrients.length : 0})`}
             styler={{ color: Col.Error }}
             icon_type={"alert"}
           />
           <Collapse
             data={feed.notEnough}
-            title={`Not enough (${feed.notEnough.length})`}
+            title={`Not enough (${feed ? feed.notEnough.length : 0})`}
             styler={{ color: Col.Info }}
             icon_type={"verify"}
           />
@@ -209,15 +232,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   actionButton: {
-    right: 0,
     zIndex: 1,
-    bottom: 20,
     position: "absolute",
+    right: Spacing.medium,
+    bottom: Spacing.large,
   },
   loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: Spacing.medium,
+    backgroundColor: Col.Background,
+  },
+  actionContainer: {
+    borderRadius: 50,
+    padding: 18,
+    backgroundColor: Col.Main,
+    elevation: 5,
   },
 });
 export default HomeScreen;

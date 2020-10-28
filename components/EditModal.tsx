@@ -50,16 +50,17 @@ export default function EditModal({
   });
   const updateMeal = async () => {
     /*
-        const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
-        try {
-            await axios.patch(`/meals/update-cooked-meal/${id}`, {
-                servings: +amount.replace(/[,-]/g, '.'),
-                creationTime: new Date(t).getTime()
-            })
-            hideModal(false)
-        } catch (error) {
-            console.log({error})
-        }*/
+    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
+    try {
+        await axios.patch(`/meals/update-cooked-meal/${id}`, {
+            servings: +amount.replace(/[,-]/g, '.'),
+            creationTime: new Date(t).getTime()
+        })
+        hideModal(false)
+    } catch (error) {
+        console.log({error})
+    }
+    */
   };
 
   const changeHandler = (text: string, name: string) => {

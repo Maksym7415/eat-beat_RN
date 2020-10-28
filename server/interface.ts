@@ -47,4 +47,4 @@ export interface resProps{
   config:any
 }
 
-export type AuthFun = (v:AuthProps)=> Promise< boolean|void>
+export type AuthFun = (v:AuthProps)=> Promise< boolean|void|object>

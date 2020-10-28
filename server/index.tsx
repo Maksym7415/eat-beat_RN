@@ -66,7 +66,7 @@ const setup = async () => {
   console.log("setup---start\ntoken:", token, "\nsetup---end");
 };
 
-const logError = ({ problem, config, status }: errorProps) => {
+const logError = ({ problem, config, status, headers, data }: errorProps) => {
   //Alert.alert(problem);
   console.log(
     "Error------\nproblem => ",
@@ -74,7 +74,11 @@ const logError = ({ problem, config, status }: errorProps) => {
     "\nconfig => ",
     config,
     "\nstatus => ",
-    status
+    status,
+    "\nheaders => ",
+    headers,
+    "\ndata => ",
+    data
   );
 };
 
@@ -112,10 +116,9 @@ const getProfile = async () => {
 
 const getHistory = async (days: number) => {
   const address = apiConfig.get.history + days;
-  api.get(address).then((response) => {
-    if (!response.ok) logError(response);
-    return response.data;
-  });
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
 };
 
 const getRecipeByName = async (name: string, intolerances: string[]) => {
@@ -158,7 +161,7 @@ const register: AuthFun = async (payload) => {
   const address = apiConfig.post.register;
   const response = await api.post(address, payload);
   response.ok ? setToken(response.data) : logError(response);
-  return response.ok;
+  return response;
 };
 
 const upload = async (form: FormData) => {

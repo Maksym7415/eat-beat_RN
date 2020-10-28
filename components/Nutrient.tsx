@@ -9,17 +9,18 @@ interface Props {
   intakeNorm?: string;
   unit?: string;
   child?: boolean;
-  children?: any;
+  children?: React.ReactNode;
 }
 
-const Nutrient: FC<Props> = ({
-  name = "",
-  currentValue = "",
-  intakeNorm = "",
-  unit = "",
-  child,
-  children,
-}) => {
+const Nutrient: FC<Props> = (data) => {
+  const {
+    name = "",
+    currentValue = "",
+    intakeNorm = "",
+    unit = "",
+    child,
+    children,
+  } = data;
   return (
     <View style={styles.container}>
       {child ? (

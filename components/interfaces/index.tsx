@@ -113,3 +113,47 @@ export interface RecommendedMeals {
   occasions: Array<string>;
   analyzedInstructions: Array<string>;
 }
+
+export interface ConsumptionProps {
+  id: string;
+  date: string;
+  fkUserId: number;
+  healthScore: number;
+  nutrientsData: [
+    {
+      id: number;
+      name: string;
+      synonims: null;
+      shortage: number;
+      overage: number;
+      minCorrection: number;
+      maxCorrection: number;
+      unit: string;
+      defaultValue: number;
+      percenatage: number;
+      color: string;
+      currentValue: number;
+    }
+  ];
+  tooMuchNutrients: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
+  defaultNutrients: [
+    {
+      name: string;
+      intakeNorm: number;
+      unit: string;
+      currentValue: number;
+    }
+  ];
+  notEnough: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
+  totalMeals: number;
+}

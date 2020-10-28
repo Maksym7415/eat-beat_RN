@@ -22,7 +22,10 @@ const ModalWindow: FC<Props> = ({ showModal, modalVisible }) => {
           <TouchableOpacity style={styles.closeButton} onPress={showModal}>
             <Icon name="close" size={24} color={Col.Black} />
           </TouchableOpacity>
-          <Text type="bodyBold" style={{ marginBottom: Spacing.r_small }}>
+          <Text
+            type="bodyBold"
+            style={{ marginBottom: Spacing.r_small, color: Col.Black }}
+          >
             Health score
           </Text>
           <Text type="body2">

@@ -35,13 +35,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
 
   const serveData = async () => {
     const response = await server.getCookedMeals(date);
-    response.ok
-      ? setFeed(response.data)
-      : Alert.alert(
-          response.status?.toString(),
-          `${response.problem}\n${JSON.stringify(response.config)}`
-        );
-    console.log("getCookedMeals => request: ", response.ok);
+    if (response.ok) setFeed(response.data);
   };
 
   const onDelete = async (id, name, time, servings, creationTime) => {
@@ -130,4 +124,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
 export default MealsScreen;

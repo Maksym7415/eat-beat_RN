@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Text } from "../components/custom/Typography";
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
 
 export default function SplashScreen() {
   return (

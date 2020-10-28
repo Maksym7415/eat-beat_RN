@@ -1,10 +1,10 @@
 import React, { FC, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../components/FormikInput";
 import { Col, Spacing } from "../../components/Config";
-import { Button } from "../../components/MyComponents";
+import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Text } from "../../components/custom/Typography";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import server from "../../server";
@@ -17,12 +17,15 @@ const Validation = Yup.object().shape({
 
 const RegisterScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
+  const [error, setError] = useState(false);
   const signUp = async (value: AuthProps) => {
     setClicked(true);
-    const logged = await server.register(value);
-    if (logged) {
+    const response = await server.register(value);
+    if (response.ok) {
       navigation.navigate("login");
     } else {
+      Alert.alert(JSON.stringify(response.data));
+      if (response.status === 400) setError(true);
       setClicked(false);
     }
   };
@@ -44,6 +47,11 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
             <>
               <FormikInput value="email" label="Email" />
               <FormikInput value="password" label="Password" />
+              <ErrorMessage
+                visible={error}
+                error={`this email is already registered`}
+                style={styles.errorContainer}
+              />
               <Button
                 clicked={clicked}
                 onPress={handleSubmit}
@@ -106,6 +114,9 @@ const styles = StyleSheet.create({
   logoContainer: {
     marginTop: 80,
     marginBottom: 50,
+  },
+  errorContainer: {
+    marginTop: Spacing.small,
   },
 });
 export default RegisterScreen;
