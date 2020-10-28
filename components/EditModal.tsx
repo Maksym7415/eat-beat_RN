@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard, TextInput } from 'react-native';
 import { Col, Typ, Weight, Spacing } from './Config' 
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { Console } from 'console';
 import axios from 'axios';
 
 interface Props{
@@ -65,6 +64,7 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
         }
         setAmount(expr[mark] + '')
     }
+
     const hideModal = (key: boolean) => {
         setModalData((value) => ({...value, modalVisible: false, id: 0,name: '', time: '',servings: '', cancel: key}))
     }

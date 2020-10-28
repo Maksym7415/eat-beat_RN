@@ -1,7 +1,7 @@
 import React, { FC, useContext, useState } from "react";
 import axios from "axios";
 import { Alert, StyleSheet, View } from "react-native";
-import { Button } from "../../components/MyComponents";
+import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
@@ -9,28 +9,34 @@ import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
+import server from "../../server";
+import SvgMaker from "../../components/SvgMaker";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(5).label("Password"),
+  password: Yup.string().required().min(6).label("Password"),
 });
 
 const LoginScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
+  const [error, setError] = useState(false);
   const { login } = useContext(AppContext);
   const signIn = async (value: AuthProps) => {
     setClicked(true);
-    try {
-      await axios.post("/auth/sign-in", value);
+    const logged = await server.signIn(value);
+    if (logged) {
       login();
-    } catch (error) {
+    } else {
       setClicked(false);
-      Alert.alert(error);
+      setError(true);
     }
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <SvgMaker name="logo" />
+      </View>
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Login
@@ -42,8 +48,13 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
         >
           {({ handleSubmit }) => (
             <>
-              <FormikInput value="email" label="Email" />
-              <FormikInput value="password" label="Password" />
+              <FormikInput value="email" label="Email" error={error} />
+              <FormikInput value="password" label="Password" error={error} />
+              <ErrorMessage
+                visible={error}
+                error="Login or password are not registered"
+                style={styles.errorContainer}
+              />
               <Button
                 clicked={clicked}
                 onPress={handleSubmit}
@@ -58,7 +69,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
             <Text
               type="bodyBold2"
               style={styles.txtBtn}
-              onPress={() => navigation.push("register")}
+              onPress={() => navigation.navigate("register")}
             >
               {"  Create account"}
             </Text>
@@ -66,7 +77,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           <Text
             type="bodyBold2"
             style={styles.forgot}
-            onPress={() => navigation.push("restore")}
+            onPress={() => navigation.navigate("restore")}
           >
             Forgot password?
           </Text>
@@ -80,8 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Col.Green,
+    backgroundColor: Col.Main,
     padding: Spacing.large,
   },
   header: {
@@ -104,12 +114,19 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   txtBtn: {
-    color: Col.Green,
+    color: Col.Main,
   },
   forgot: {
-    color: Col.Green,
+    color: Col.Main,
     padding: Spacing.medium,
     paddingBottom: 0,
+  },
+  errorContainer: {
+    marginTop: Spacing.small,
+  },
+  logoContainer: {
+    marginTop: 80,
+    marginBottom: 50,
   },
 });
 

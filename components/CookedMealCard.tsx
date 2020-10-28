@@ -1,16 +1,16 @@
 import React, { FC } from "react";
-import { StyleSheet, View, Image, Pressable, BackHandler } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { Col, Spacing, Typ, Weight } from "./Config";
+import { Col, Spacing, Typ } from "./Config";
 import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
 
 interface Props {
   item: {
-    id: number;
-    name: string;
-    image: string;
-    creationTime: number;
+    id: number
+    name: string
+    image: string
+    creationTime: number
     servings: number
   };
   onClick: (id: number) => void;
@@ -27,6 +27,7 @@ const getTime = (value: number) => {
 };
 
 const CookedMealCard: FC<Props> = ({ item, onClick, actionHandler }) => {
+
   const { id, name, image, creationTime, servings } = item;
   const time = getTime(creationTime);
   return (
@@ -56,6 +57,14 @@ const CookedMealCard: FC<Props> = ({ item, onClick, actionHandler }) => {
       <Divider
           styler={styles.horizontalDivider} 
         />
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+      </View>
       <View style={styles.imageDetails}>
         <View>
           <Image style={styles.image} source={{ uri: image }} />
@@ -64,7 +73,6 @@ const CookedMealCard: FC<Props> = ({ item, onClick, actionHandler }) => {
           <Text type="cap" style={styles.recipe}>Recipe</Text>
           <Text style={styles.recipeName}>{name}</Text>
         </View> 
-          
       </View>
     </View>
   );
@@ -74,7 +82,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     paddingHorizontal: Spacing.r_small,
-    paddingVertical: Spacing.small,
+    paddingVertical: Spacing.r_small,
     backgroundColor: Col.White,
     marginVertical: Spacing.tiny,
     width: "100%",
@@ -90,21 +98,18 @@ const styles = StyleSheet.create({
   bodyContainer: {
     display: 'flex',
     justifyContent: 'space-around'
-    // flexShrink: 1,
-    // flexDirection: "column",
-    // width: "100%",
   },
   timeStamp: {
     //marginBottom: Spacing.tiny,
   },
   imageDetails: {
-    //
     display: 'flex',
     flexDirection: 'row'
   },
   iconsContainer: {
     display: 'flex',
     flexDirection: 'row',
+
   },
   verticalDivider: {
     marginRight: 15,
@@ -120,13 +125,13 @@ const styles = StyleSheet.create({
   recipe: {
     color: Col.Grey5,
     fontSize: Typ.Tiny,
-    fontWeight: 'normal',
+    fontWeight: "normal",
   },
   recipeName: {
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
     color: Col.Dark,
-    fontWeight: 'normal',
-    fontSize: Typ.Normal
-  }
+    fontWeight: "normal",
+    fontSize: Typ.Normal,
+  },
 });
 export default CookedMealCard;

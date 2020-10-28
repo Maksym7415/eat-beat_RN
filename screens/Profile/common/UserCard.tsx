@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -6,9 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import SvgMaker from "../../../components/SvgMaker";
+import * as ImageManipulator from "expo-image-manipulator";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
+import server from "../../../server";
 
 interface Props {
   image: string | null;
@@ -17,11 +20,44 @@ interface Props {
 }
 
 const UserCard: FC<Props> = ({ image, name, email }) => {
-  const [edit, setEdit] = useState();
+  const [edit, setEdit] = useState(false);
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    })();
+  }, []);
+
+  const pickAvatar = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      uploadAvatar(result.uri);
+    }
+  };
+
+  const uploadAvatar = async (uri: string) => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: 400, height: 400 } }],
+      { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+    );
+    const avResponse = await fetch(uri);
+    const avBlob = await avResponse.blob();
+    const form = new FormData();
+    form.append("file", avBlob);
+    server.upload(form);
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => console.log("hi")}
+        onPress={pickAvatar}
         style={styles.imagePickerContainer}
       >
         {image === null ? (
@@ -37,7 +73,9 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
         <TextInput value={name} editable={edit} style={styles.nameInput} />
         <TextInput value={email} editable={edit} style={styles.emailInput} />
       </View>
-      <Icon name="edit" size={20} color={Col.Black} />
+      <TouchableOpacity onPress={() => setEdit(!edit)} style={styles.button}>
+        <Icon name="edit" size={20} color={Col.Black} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -82,6 +120,13 @@ const styles = StyleSheet.create({
   detailsContainer: {
     paddingHorizontal: Spacing.medium,
     flex: 1,
+  },
+  button: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 export default UserCard;

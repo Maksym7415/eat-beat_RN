@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
   container: {
     width: 42,
     height: 42,
-    borderRadius: 26,
+    borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Col.Green,
+    backgroundColor: Col.Main,
     marginRight: Spacing.medium,
   },
   button: {

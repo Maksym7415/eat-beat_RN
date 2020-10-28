@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import CookedMealCard from "../../components/CookedMealCard";
 import { Memo, NavProps } from "../../components/interfaces";
@@ -8,6 +8,8 @@ import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
 import EditModal from '../../components/EditModal';
+import PopUp from "../../components/PopUp";
+import server from "../../server";
 
 interface ModalData {
   id: number
@@ -16,35 +18,59 @@ interface ModalData {
   servings: string
   modalVisible: boolean
   creationTime: number
+
 }
 
 const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState(null);
- // const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [select, setSelect] = useState(null);
+  const [popVisible, setPopVisible] = useState(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
-    name: '',
-    time: '',
-    servings: '',
+    name: "",
+    time: "",
+    servings: "",
     modalVisible: false,
     creationTime: 0
-  })
+  });
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
-  const getCalendar = (value: Date) => {
-    return value.toJSON().toString().slice(0, 10);
+  const serveData = async () => {
+    const response = await server.getCookedMeals(date);
+    response.ok
+      ? setFeed(response.data)
+      : Alert.alert(
+          response.status?.toString(),
+          `${response.problem}\n${JSON.stringify(response.config)}`
+        );
+    console.log("getCookedMeals => request: ", response.ok);
   };
 
-  const getCookedMeals = async () => {
-    const address = `/meals/cooked-meals?date=2020-01-01`;
-    try {
-      const { data } = await axios(address);
-      setFeed(data);
-    } catch (error) {
-      console.log(error);
+  const onDelete = async (id, name, time, servings, creationTime) => {
+    if (name) {
+      return setModalData({
+        id,
+        name,
+        time,
+        servings: servings + "",
+        modalVisible: true,
+        creationTime,
+      });
     }
+    await axios.delete(`/meals/cooked-meal/${id}`);
+    serveData();
   };
+
+
+  useEffect(() => {
+    serveData();
+  }, [date]);
+
+  useEffect(() => {
+    if (modalData.modalVisible || modalData.cancel) return;
+    serveData();
+  }, [modalData.modalVisible]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     const currentDate = selectedDate || date;
@@ -63,25 +89,22 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
       })
     }
     await axios.delete(`/meals/cooked-meal/${id}`)
-    getCookedMeals()
+    serveData()
   }
 
-  useEffect(() => {
-    getCookedMeals();
-  }, [date]);
-
-  useEffect(() => {
-    if(modalData.modalVisible || modalData.cancel) return;
-    getCookedMeals();
-  }, [modalData.modalVisible]);
 
   return (
     <View style={styles.container}>
-     <EditModal 
-      {...modalData} 
-      setModalData={setModalData}
-     />
-     {visible ? (
+      <EditModal {...modalData} setModalData={setModalData} />
+      <PopUp
+        header="Delete?"
+        body={`Delete “${select}”?`}
+        right="DELETE"
+        onLeft={() => setPopVisible(false)}
+        onRight={() => console.log("false")}
+        visible={popVisible}
+      />
+      {visible ? (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -99,7 +122,6 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item, index }) => (
           <CookedMealCard
-            key={item.id}
             item={item}
             actionHandler={actionHandler}
             onClick={(id) => console.log(id)}

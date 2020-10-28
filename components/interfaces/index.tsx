@@ -1,7 +1,7 @@
 export interface InputProps {
   value: string;
   label: string;
-  multi?: boolean;
+  error?: boolean;
 }
 
 export interface AuthProps {

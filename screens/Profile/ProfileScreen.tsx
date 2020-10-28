@@ -5,9 +5,12 @@ import { Col, Spacing } from "../../components/Config";
 import { Divider } from "../../components/MyComponents";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import UserCard from "./common/UserCard";
+import PopUp from "../../components/PopUp";
+import server from "../../server";
 
 export default class ProfileScreen extends Component {
   state = {
+    visible: true,
     data: {
       name: "",
       email: "",
@@ -18,17 +21,15 @@ export default class ProfileScreen extends Component {
     super(props);
   }
   componentDidMount = async () => {
-    const address = `/user/profile-data`;
-    try {
-      const { data } = await axios(address);
-      this.setState({ data });
-    } catch (error) {
-      Alert.alert("Request failed with status code 404");
-      console.log(error);
-    }
+    const response = await server.getProfile();
+    const { ok, data, status, problem, config } = response;
+    ok
+      ? this.setState({ data })
+      : Alert.alert(`${status}`, `${problem}\n${JSON.stringify(config)}`);
+    console.log("getProfile => request: ", ok);
   };
   render() {
-    const { data } = this.state;
+    const { data, visible } = this.state;
     const { name, userAvatar, email } = data;
     return (
       <View style={styles.canvas}>

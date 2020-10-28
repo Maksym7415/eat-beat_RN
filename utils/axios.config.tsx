@@ -52,12 +52,12 @@ const LocalStorageService = (() => {
 
 const setAxios = () => {
   const setDeafults = (() => {
-
     // host for remote connection
-    axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://logisticbrocker.hopto.org/eat-beat/api' : 'http://10.4.30.212:8081/api';
-    axios.defaults.headers.common['Content-Type'] = 'application/json';
-    axios.defaults.headers.common.accept = 'application/json';
-    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    axios.defaults.baseURL =
+      "https://logisticbrocker.hopto.org/eat-beat-test/api";
+    axios.defaults.headers.common["Content-Type"] = "application/json";
+    axios.defaults.headers.common.accept = "application/json";
+    axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
     axios.defaults.timeout = 10000;
   })();
 
@@ -122,7 +122,6 @@ const setAxios = () => {
           isRefreshing = false;
         });
       }
-
       return Promise.reject(error);
     }
   );

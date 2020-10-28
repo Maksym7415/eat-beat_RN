@@ -2,7 +2,6 @@ import "react-native-gesture-handler";
 import React from "react";
 import { Col } from "../components/Config";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer, DrawerActions } from "@react-navigation/native";
@@ -21,17 +20,21 @@ import CalendarButton from "./common/CalendarButton";
 import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
-import { View } from "react-native";
 import TestOut from "../screens/TestOut";
 
 const Stack = createStackNavigator();
-const Tabs = createBottomTabNavigator();
 const TopTabs = createMaterialTopTabNavigator();
 const Drawer = createDrawerNavigator();
 
 export const Auth = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="login" headerMode="none">
+    <Stack.Navigator
+      initialRouteName="login"
+      headerMode="none"
+      screenOptions={{
+        animationEnabled: false,
+      }}
+    >
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="register" component={Register} />
       <Stack.Screen name="restore" component={Restore} />
@@ -44,11 +47,11 @@ const HomeTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
-        backgroundColor: "#EFF0F4",
+        backgroundColor: Col.Header,
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green,
+        backgroundColor: Col.Main,
       },
     }}
     initialRouteName="home"
@@ -63,11 +66,11 @@ const RecipesTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
-        backgroundColor: "#EFF0F4",
+        backgroundColor: Col.Header,
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green,
+        backgroundColor: Col.Main,
       },
     }}
     initialRouteName="recommended"
@@ -86,11 +89,11 @@ const ProfileTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
-        backgroundColor: "#EFF0F4",
+        backgroundColor: Col.Header,
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green,
+        backgroundColor: Col.Main,
       },
     }}
     initialRouteName="subscription"
@@ -154,7 +157,7 @@ export const RecommendedStack = () => {
           title: "Eating at a Resturant",
           headerStyle: {
             elevation: 0,
-            backgroundColor: Col.Green,
+            backgroundColor: Col.Main,
           },
           headerTitleStyle: {
             color: "white",

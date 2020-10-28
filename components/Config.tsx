@@ -1,4 +1,5 @@
 export const Col = {
+  Main: "#F29B27",
   Black: "#333942",
   Black1: '#000000',
   Dark: "#46566D",
@@ -16,6 +17,8 @@ export const Col = {
   White: "#FFF",
   Grey: "#666666",
   Shadow: "rgba(0,0,0,0.3)",
+  Header: "#EFF0F4",
+  Error: "#FF364F",
 
   Primary: "#107dcb",
   Primary1: "#3096df",
@@ -41,7 +44,6 @@ export const Col = {
   Grey3: "#E7E7E7",
   Grey4: "#FAFAFA",
   Grey5: "#ADB4BB",
-  Error: "#EB665E",
   Info: "#5E6CEB",
   c: "#3B990F",
   a: "#ADEA4F",

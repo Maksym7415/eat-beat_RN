@@ -9,6 +9,7 @@ import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
+import SvgMaker from "../../components/SvgMaker";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -20,20 +21,19 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
   const signIn = async ({ email }: AuthProps) => {
     setClicked(true);
     try {
-      //await axios.post("/auth/sign-in", { email });
-      //login();
-      Alert.alert("эта функция не реализована на бэкэнде");
     } catch (error) {
       setClicked(false);
-      Alert.alert(error);
     }
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <SvgMaker name="logo" />
+      </View>
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
-          Forgot your password
+          Forgot your password?
         </Text>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -55,7 +55,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
           <Text
             type="bodyBold2"
             style={styles.txtBtn}
-            onPress={() => navigation.push("login")}
+            onPress={() => navigation.navigate("login")}
           >
             Log in
           </Text>
@@ -63,7 +63,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
           <Text
             type="bodyBold2"
             style={styles.txtBtn}
-            onPress={() => navigation.push("register")}
+            onPress={() => navigation.navigate("register")}
           >
             Sign up
           </Text>
@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Col.Green,
+    backgroundColor: Col.Main,
     padding: Spacing.large,
   },
   header: {
@@ -102,13 +101,17 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   txtBtn: {
-    color: Col.Green,
+    color: Col.Main,
     paddingHorizontal: Spacing.large,
   },
   forgot: {
-    color: Col.Green,
+    color: Col.Main,
     padding: Spacing.medium,
     paddingBottom: 0,
+  },
+  logoContainer: {
+    marginTop: 80,
+    marginBottom: 50,
   },
 });
 
