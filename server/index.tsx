@@ -1,9 +1,10 @@
 import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
+import Axios from "axios";
 
 const apiConfig: apiProps = {
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     dailyConsumption: "/meals/daily-consumption?date=",
@@ -29,6 +30,7 @@ const apiConfig: apiProps = {
     intakeNorms: "/user/intake-norms",
     profile: "/user/update-profile",
     password: "/user/update-password",
+    updateCookedMeal: "/meals/update-cooked-meal/",
   },
 };
 
@@ -122,6 +124,14 @@ const getCookedMeals = async (date: Date) => {
   return response;
 };
 
+const updateCookedMeal = async (id: number, data: object) => {
+  const address = apiConfig.put.updateCookedMeal + id;
+  const response = await api.patch(address, data);
+  console.log(response);
+  if (!response.ok) logError(response);
+  return response;
+};
+
 const getProfile = async () => {
   const address = apiConfig.get.profile;
   const response = await api.get(address);
@@ -137,9 +147,10 @@ const getHistory = async (days: number) => {
 };
 
 const getRecipeByName = async (name: string, intolerances: string[]) => {
-  const address =
-    apiConfig.get.recipeByName + name + "&intolerances=" + intolerances.join();
-  api.get(address).then((response) => {
+  const address = apiConfig.get.recipeByName + name;
+  // apiConfig.get.recipeByName + name + "&intolerances=" + intolerances.join();
+
+  return api.get(address).then((response) => {
     if (!response.ok) logError(response);
     return response.data;
   });
@@ -222,4 +233,5 @@ export default {
   updateIntakeNorms,
   updateProfile,
   updatePassword,
+  updateCookedMeal,
 };

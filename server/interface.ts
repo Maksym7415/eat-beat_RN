@@ -26,6 +26,7 @@ export interface apiProps {
     intakeNorms: string;
     profile: string;
     password: string;
+    updateCookedMeal: string
   };
 }
 

@@ -5,11 +5,13 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
+  Keyboard,
   TextInput,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { Col, Typ, Spacing } from "./Config";
+import { Col, Typ, Weight, Spacing } from "./Config";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import axios from "axios";
+import server from "../server";
 
 interface Props {
   id: number;
@@ -17,8 +19,14 @@ interface Props {
   time: string;
   servings: string;
   modalVisible: boolean;
-  setModalData: () => void;
+  setModalData: ({}) => void;
   creationTime: number;
+  cb: (
+    creationTime: number,
+    time: string,
+    amount: string,
+    hideModal: boolean
+  ) => void;
 }
 
 interface Expr {
@@ -41,6 +49,7 @@ export default function EditModal({
   servings,
   modalVisible,
   creationTime,
+  cb,
 }: Props) {
   const [amount, setAmount] = useState<string>(servings);
   const p_time = pTime.split(":");
@@ -48,21 +57,7 @@ export default function EditModal({
     hour: { max: 23, min: 0, value: p_time[0] },
     minutes: { max: 59, min: 0, value: p_time[1] },
   });
-  const updateMeal = async () => {
-    /*
-    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
-    try {
-        await axios.patch(`/meals/update-cooked-meal/${id}`, {
-            servings: +amount.replace(/[,-]/g, '.'),
-            creationTime: new Date(t).getTime()
-        })
-        hideModal(false)
-    } catch (error) {
-        console.log({error})
-    }
-    */
-  };
-
+  console.log(amount);
   const changeHandler = (text: string, name: string) => {
     const value = text.split(",");
     if (name === "amount") {
@@ -86,10 +81,10 @@ export default function EditModal({
   const changePortionAmount = (mark: string) => {
     const expr: Expr = {
       minus:
-        +amount.replace(/[,-]/g, ".") - 1 <= 0
+        +amount.replace(/[,-]/g, ".") - 0.5 <= 0
           ? 0
-          : +amount.replace(/[,-]/g, ".") - 1,
-      plus: +amount.replace(/[,-]/g, ".") + 1,
+          : +amount.replace(/[,-]/g, ".") - 0.5,
+      plus: +amount.replace(/[,-]/g, ".") + 0.5,
     };
     setAmount(expr[mark] + "");
   };
@@ -116,130 +111,139 @@ export default function EditModal({
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
-      <View style={styles.container}>
-        <View style={styles.modalView}>
-          <Text style={styles.title}>{name}</Text>
-          <View>
-            <Text
-              style={{
-                ...styles.title,
-                fontSize: Typ.Small,
-                marginBottom: 8,
-                marginTop: 16,
-              }}
-            >
-              Amount portion
-            </Text>
-            <View style={styles.amountContainer}>
-              <TouchableOpacity
-                style={{
-                  ...styles.btn,
-                  borderColor:
-                    !isNaN(+amount) && !+amount
-                      ? Col.Grey3
-                      : styles.btn.borderColor,
-                }}
-                onPress={() => changePortionAmount("minus")}
-                disabled={!isNaN(+amount) && !+amount}
-              >
-                <Icon
-                  style={{
-                    color: !isNaN(+amount) && !+amount ? Col.Grey3 : Col.Green,
-                  }}
-                  name="minus"
-                  size={24}
-                />
-              </TouchableOpacity>
-
-              <View style={styles.amountWrapper}>
-                <TextInput
-                  style={styles.amount}
-                  value={amount}
-                  keyboardType="numeric"
-                  onChangeText={(text: string) => changeHandler(text, "amount")}
-                ></TextInput>
-              </View>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => changePortionAmount("plus")}
-              >
-                <Icon style={{ color: Col.Green }} name="plus" size={24} />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{ marginTop: 12 }}>
-            <Text
-              style={{ ...styles.title, fontSize: Typ.Small, marginBottom: 8 }}
-            >
-              Time
-            </Text>
-            <View style={styles.timeContainer}>
-              <View style={{ ...styles.amountWrapper, width: "48%" }}>
-                <TextInput
-                  style={styles.amount}
-                  keyboardType="numeric"
-                  value={time.hour.value}
-                  onChangeText={(text: string) => changeHandler(text, "hour")}
-                />
-              </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <View style={styles.modalView}>
+            <Text style={styles.title}>{name}</Text>
+            <View>
               <Text
                 style={{
-                  ...styles.amount,
-                  textAlign: "center",
-                  alignSelf: "center",
+                  ...styles.title,
+                  fontSize: Typ.Small,
+                  marginBottom: 8,
+                  marginTop: 16,
                 }}
               >
-                :
+                Servings portion
               </Text>
-              <View style={{ ...styles.amountWrapper, width: "48%" }}>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.amount}
-                  value={time.minutes.value}
-                  onChangeText={(text: string) =>
-                    changeHandler(text, "minutes")
-                  }
-                />
+              <View style={styles.amountContainer}>
+                <TouchableOpacity
+                  style={{
+                    ...styles.btn,
+                    borderColor:
+                      !isNaN(+amount) && !+amount
+                        ? Col.Grey3
+                        : styles.btn.borderColor,
+                  }}
+                  onPress={() => changePortionAmount("minus")}
+                  disabled={!isNaN(+amount) && !+amount}
+                >
+                  <Icon
+                    style={{
+                      color:
+                        !isNaN(+amount) && !+amount ? Col.Grey3 : Col.Green,
+                    }}
+                    name="minus"
+                    size={24}
+                  />
+                </TouchableOpacity>
+
+                <View style={styles.amountWrapper}>
+                  <TextInput
+                    style={styles.amount}
+                    value={amount}
+                    keyboardType="numeric"
+                    onChangeText={(text: string) =>
+                      changeHandler(text, "amount")
+                    }
+                  ></TextInput>
+                </View>
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => changePortionAmount("plus")}
+                >
+                  <Icon style={{ color: Col.Green }} name="plus" size={24} />
+                </TouchableOpacity>
               </View>
             </View>
-          </View>
-          <View style={styles.btnContainer}>
-            <View style={{ width: "55%", alignItems: "flex-end" }}>
-              <TouchableOpacity
-                onPress={() => hideModal(true)}
-                style={{ paddingVertical: 5, paddingHorizontal: 5 }}
+            <View style={{ marginTop: 12 }}>
+              <Text
+                style={{
+                  ...styles.title,
+                  fontSize: Typ.Small,
+                  marginBottom: 8,
+                }}
               >
+                Time
+              </Text>
+              <View style={styles.timeContainer}>
+                <View style={{ ...styles.amountWrapper, width: "48%" }}>
+                  <TextInput
+                    style={styles.amount}
+                    keyboardType="numeric"
+                    value={time.hour.value}
+                    onChangeText={(text: string) => changeHandler(text, "hour")}
+                  />
+                </View>
                 <Text
                   style={{
-                    color: Col.Blue,
-                    fontWeight: "500",
-                    fontSize: Typ.Small,
+                    ...styles.amount,
+                    textAlign: "center",
+                    alignSelf: "center",
                   }}
                 >
-                  CANCEL
+                  :
                 </Text>
-              </TouchableOpacity>
+                <View style={{ ...styles.amountWrapper, width: "48%" }}>
+                  <TextInput
+                    keyboardType="numeric"
+                    style={styles.amount}
+                    value={time.minutes.value}
+                    onChangeText={(text: string) =>
+                      changeHandler(text, "minutes")
+                    }
+                  />
+                </View>
+              </View>
             </View>
-
-            <View style={styles.modalBtn}>
-              <TouchableOpacity
-                onPress={updateMeal}
-                style={{ paddingVertical: 5, paddingHorizontal: 5 }}
-              >
-                <Text
-                  style={{
-                    color: Col.Blue,
-                    fontWeight: "500",
-                    fontSize: Typ.Small,
-                  }}
+            <View style={styles.btnContainer}>
+              <View style={{ width: "55%", alignItems: "flex-end" }}>
+                <TouchableOpacity
+                  onPress={() => hideModal(true)}
+                  style={{ paddingVertical: 5, paddingHorizontal: 5 }}
                 >
-                  OK
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: Col.Blue,
+                      fontWeight: "500",
+                      fontSize: Typ.Small,
+                    }}
+                  >
+                    CANCEL
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.modalBtn}>
+                <TouchableOpacity
+                  onPress={() => cb(creationTime, time, amount, hideModal, id)}
+                  style={{ paddingVertical: 5, paddingHorizontal: 5 }}
+                >
+                  <Text
+                    style={{
+                      color: Col.Blue,
+                      fontWeight: "500",
+                      fontSize: Typ.Small,
+                    }}
+                  >
+                    OK
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }

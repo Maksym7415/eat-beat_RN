@@ -44,11 +44,12 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (event.nativeEvent.contentOffset.x > offset.count + 650) {
+    event.persist();
+    if (event?.nativeEvent?.contentOffset?.x > offset.count + 650) {
       setOffset((value) => ({
         ...value,
         count: event.nativeEvent.contentOffset.x,
-        offset: value.offset + 15,
+        offset: value.offset + 10,
       }));
       getHealthsScore();
     }
@@ -59,17 +60,18 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <View>
-      <Text
-        style={{
-          alignSelf: "center",
-          marginVertical: 8,
-        }}
-      >
+    <>
+      <Text style={{ alignSelf: "center", marginBottom: 8 }}>
         Your health score
       </Text>
-      {/* <Chart data={data} />{" "} */}
-    </View>
+      <ScrollView
+        horizontal={true}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        <Chart data={data} />
+      </ScrollView>
+    </>
   );
 };
 
