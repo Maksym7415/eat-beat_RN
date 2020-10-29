@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React,{ useContext } from "react";
 import { Col } from "../components/Config";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -21,6 +21,10 @@ import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
 import TestOut from "../screens/TestOut";
+
+import { AppContext } from '../components/AppContext'; 
+
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -147,25 +151,59 @@ export const RecommendedStack = () => {
   return (
     <Stack.Navigator initialRouteName="recommendedPage">
       <Stack.Screen
-        options={({ navigation }) => ({
-          headerLeft: () => (
-            <BurgerIcon
-              name="menuWhite"
-              onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-            />
-          ),
-          title: "Eating at a Resturant",
-          headerStyle: {
-            elevation: 0,
-            backgroundColor: Col.Main,
-          },
-          headerTitleStyle: {
-            color: "white",
-          },
-        })}
+        options={({ navigation, ...other }) => {
+          const { showModal } = useContext(AppContext)
+          return({
+            headerLeft: () => (
+              <BurgerIcon
+                name="menuWhite"
+                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+              />
+            ),
+            headerRight: () => {
+
+              if(other?.route?.state?.index === 1) {
+                return (
+                 <Icon
+                 style={{marginRight: 16}}
+                 onPress={() => showModal(true)}
+                 name={'search'}
+                 color={Col.White}
+                 size={24}
+               />
+               )
+              }
+              return ''
+            },
+            
+            title: "Eating at a Resturant",
+            headerStyle: {
+              elevation: 0,
+              backgroundColor: Col.Main,
+            },
+            headerTitleStyle: {
+              color: "white",
+            },
+          })
+        }}
         name="recommendedPage"
         component={RecipesTopNavigator}
       />
+       {/* <Stack.Screen
+          name="searchScreen"
+          options={({ navigation }) => ({
+            title: "search" ,
+            //headerShown: false,
+            headerStyle: {
+              elevation: 0,
+              backgroundColor: Col.Main,
+            },
+            headerTitleStyle: {
+              color: "white",
+            },
+          })}
+          component={SearchScreen}
+        /> */}
     </Stack.Navigator>
   );
 };

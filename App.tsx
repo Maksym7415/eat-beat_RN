@@ -7,6 +7,7 @@ import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server from "./server";
+import Redux from './components/CustomRedux';
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -17,6 +18,7 @@ let customFonts = {
 export default function App() {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
+  const [show, setShow] = useState<boolean>(false);
   const [cal, setCal] = useState<Cal>({
     visible: false,
     date: new Date(),
@@ -46,8 +48,13 @@ export default function App() {
       getData: () => console.log("get data"),
       pushData: () => console.log("push data"),
       isFetching: (value: boolean) => console.log("hi"),
+      showModal: (value: boolean) => {
+        //console.log(value)
+        setShow(value)
+      },
+      isShow: show
     }),
-    [cal]
+    [cal, show]
   );
 
   useEffect(() => {
@@ -56,9 +63,11 @@ export default function App() {
   }, [logged]);
 
   return (
+   
     <AppContext.Provider value={appContext}>
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
     </AppContext.Provider>
+    
   );
 }
 // Reminder Notes

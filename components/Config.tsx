@@ -9,6 +9,7 @@ export const Col = {
   Divider: "#E7E7E7",
   DarkGreen: "#397504",
   Green: "#2DAF0C",
+  Green1: '#4C9C05',
   LightGreen: "#D8FCCF",
   Red: "#EB665E",
   DarkBlue: "#1C6995",

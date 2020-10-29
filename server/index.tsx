@@ -1,9 +1,10 @@
 import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
+import Axios from "axios";
 
 const apiConfig: apiProps = {
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     dailyConsumption: "/meals/daily-consumption?date=",
@@ -28,6 +29,7 @@ const apiConfig: apiProps = {
     intakeNorms: "/user/intake-norms",
     profile: "/user/update-profile",
     password: "/user/update-password",
+    updateCookedMeal: '/meals/update-cooked-meal/'
   },
 };
 
@@ -103,6 +105,14 @@ const getCookedMeals = async (date: Date) => {
   return response;
 };
 
+const updateCookedMeal = async (id: number, data: object) => {
+  const address = apiConfig.put.updateCookedMeal + id;
+  const response = await api.patch(address, data);
+  console.log(response)
+  if (!response.ok) logError(response);
+  return response;
+}
+
 const getProfile = async () => {
   const address = apiConfig.get.profile;
   const response = await api.get(address);
@@ -110,21 +120,23 @@ const getProfile = async () => {
   return response;
 };
 
-const getHistory = async (days: number) => {
-  const address = apiConfig.get.history + days;
-  api.get(address).then((response) => {
+const getHistory = async (offset: number) => {
+  const address = apiConfig.get.history + offset;
+  return api.get(address).then((response) => {
     if (!response.ok) logError(response);
-    return response.data;
+    return response;
   });
 };
 
 const getRecipeByName = async (name: string, intolerances: string[]) => {
-  const address =
-    apiConfig.get.recipeByName + name + "&intolerances=" + intolerances.join();
-  api.get(address).then((response) => {
+  const address = apiConfig.get.recipeByName + name
+    // apiConfig.get.recipeByName + name + "&intolerances=" + intolerances.join();
+   
+  return api.get(address).then((response) => {
     if (!response.ok) logError(response);
     return response.data;
   });
+
 };
 
 const getSearchSettings = async () => {
@@ -147,6 +159,7 @@ const signIn: AuthFun = async (payload) => {
   const response = await api.post(address, payload);
   if (response.ok) {
     setToken(response.data);
+    // await Axios.post('https://logisticbrocker.hopto.org/eat-beat/api/auth/refresh-token', {refreshToken: response.data.refreshToken}).then((res) => console.log(res)).catch(e => console.log(e))
     setHeader(response.data.accessToken);
   } else {
     logError(response);
@@ -206,4 +219,5 @@ export default {
   updateIntakeNorms,
   updateProfile,
   updatePassword,
+  updateCookedMeal,
 };

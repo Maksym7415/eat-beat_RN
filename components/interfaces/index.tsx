@@ -38,6 +38,8 @@ export interface Memo {
   getData: () => void;
   pushData: () => void;
   isFetching: (value: boolean) => void;
+  showModal: (value: boolean) => void
+  isShow: boolean
 }
 
 export interface CalendarInterface {
@@ -112,4 +114,5 @@ export interface RecommendedMeals {
   diets: Array<Array<string>>;
   occasions: Array<string>;
   analyzedInstructions: Array<string>;
+  actionHandler: (a:string) => void
 }

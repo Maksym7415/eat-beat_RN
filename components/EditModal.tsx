@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard, TextInput, TouchableWithoutFeedback } from 'react-native';
 import { Col, Typ, Weight, Spacing } from './Config' 
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import axios from 'axios';
+import server from '../server';
 
 interface Props{
     id: number
@@ -12,6 +12,7 @@ interface Props{
     modalVisible: boolean
     setModalData: ({}) => void
     creationTime: number
+    cb: (creationTime: number, time: string, amount: string, hideModal: boolean) => void
 }
 
 interface Expr{
@@ -26,23 +27,11 @@ interface Time{
     }
 }
 
-export default function EditModal({ setModalData, id, name, time: pTime, servings, modalVisible, creationTime}: Props) {
+export default function EditModal({ setModalData, id, name, time: pTime, servings, modalVisible, creationTime, cb}: Props) {
     const [amount, setAmount] = useState<string>(servings)
     const p_time = pTime.split(':')
     const [time, setTime] = useState<Time>({hour: {max: 23, min: 0, value: p_time[0]}, minutes: {max: 59, min: 0, value: p_time[1]}})
-    const updateMeal = async () => {
-        const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
-        try {
-            await axios.patch(`/meals/update-cooked-meal/${id}`, {
-                servings: +amount.replace(/[,-]/g, '.'),
-                creationTime: new Date(t).getTime()
-            })
-            hideModal(false)
-        } catch (error) {
-            console.log({error})
-        }
-    }
-
+    console.log(amount)
     const changeHandler = (text: string, name: string) => {
         const value = text.split(',')
         if(name === 'amount') {
@@ -59,8 +48,8 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
 
     const changePortionAmount = (mark: string) => {
         const expr: Expr = {
-            minus: +amount.replace(/[,-]/g, '.') - 1 <= 0 ? 0 : +amount.replace(/[,-]/g, '.') - 1,
-            plus: +amount.replace(/[,-]/g, '.') + 1
+            minus: +amount.replace(/[,-]/g, '.') - 0.5 <= 0 ? 0 : +amount.replace(/[,-]/g, '.') - 0.5,
+            plus: +amount.replace(/[,-]/g, '.') + 0.5
         }
         setAmount(expr[mark] + '')
     }
@@ -75,11 +64,13 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
     }, [id])
 
     return (
+        
         <Modal
             animationType="fade"
             transparent={true}
             visible={modalVisible}
         >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
         <View style={styles.modalView}>
             <Text style={styles.title}>
@@ -87,7 +78,7 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
             </Text>
             <View>
                 <Text style={{...styles.title, fontSize: Typ.Small, marginBottom: 8, marginTop: 16}}>
-                    Amount portion
+                    Servings portion
                 </Text>
                 <View style={styles.amountContainer}>
                         <TouchableOpacity 
@@ -162,7 +153,7 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
                
                 <View style={styles.modalBtn}>
                     <TouchableOpacity 
-                        onPress={updateMeal} 
+                        onPress={() => cb(creationTime, time, amount, hideModal, id)} 
                         style={{paddingVertical: 5, paddingHorizontal: 5}}
                     >
                         <Text style={{color: Col.Blue, fontWeight: '500', fontSize: Typ.Small}}>
@@ -173,7 +164,9 @@ export default function EditModal({ setModalData, id, name, time: pTime, serving
                 </View>
             </View>
         </View>
+        </TouchableWithoutFeedback>
         </Modal>
+
     )
 }
 

@@ -6,7 +6,7 @@ import {
   NativeScrollEvent,
   Text,
 } from "react-native";
-import axios from "axios";
+import server from '../../server';
 import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import { getDate } from "../../utils/date";
@@ -31,31 +31,24 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
   const getHealthsScore = async () => {
-    try {
-      const {
-        data: { data },
-      } = await axios(`/meals/healthscore-history?offset=${offset.offset}`);
-      const dates: Array<string> = [];
-      const scores: Array<number> = [];
-      data.forEach((el: HealthScore) => {
-        const dateObject = getDate(new Date(el.date));
-        dates.push(`${dateObject.day}-${dateObject.month}`);
-        scores.push(el.healthScore);
-      });
-      setData((value) => ({ ...value, dates, scores }));
-    } catch (error) {
-      console.log({ error });
-    }
+    const response = await server.getHistory(offset.offset)
+    const dates: Array<string> = [];
+    const scores: Array<number> = [];
+    response.data.data.forEach((el: HealthScore) => {
+      const dateObject = getDate(new Date(el.date));
+      dates.push(`${dateObject.day}-${dateObject.month}`);
+      scores.push(el.healthScore);
+    });
+    setData((value) => ({ ...value, dates, scores }));
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    //console.log(event.nativeEvent.contentOffset.x)
-    // console.log(count)
-    if (event.nativeEvent.contentOffset.x > offset.count + 650) {
+    event.persist()
+    if (event?.nativeEvent?.contentOffset?.x > offset.count + 650) {
       setOffset((value) => ({
         ...value,
         count: event.nativeEvent.contentOffset.x,
-        offset: value.offset + 15,
+        offset: value.offset + 10,
       }));
       getHealthsScore();
     }

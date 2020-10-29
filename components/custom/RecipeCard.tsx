@@ -1,16 +1,19 @@
-import React, { FC } from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import React, { FC, useState, useEffect } from "react";
+import { ImageBackground, StyleSheet, View, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Col, Spacing } from "../Config";
 import HealthCircle from "../HealthCircle";
 import SvgMaker from "../SvgMaker";
 import Text from "./Typography";
 import { RecommendedMeals } from '../../components/interfaces'
+import EditModal from '../EditModal';
+import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+
 
 
 const RecipeCard: FC<RecommendedMeals> = (props) => {
-  const { image, title, healthScore, vegetarian, vegan, glutenFree, dairyFree, popular } = props;
-
+  const { image, title, healthScore, vegetarian, vegan, glutenFree, dairyFree, popular, actionHandler } = props;
+  const [state, setState] = useState<boolean>(false)
   const getImage = (vegetarian: boolean, vegan: boolean, glutenFree: boolean, dairyFree: boolean, popular: boolean) : Array<string> => {
     const iconsArray = []
     if(vegetarian) iconsArray.push('vegetarian')
@@ -21,7 +24,12 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
     return iconsArray
   }
 
+  const addFavourMeal = () => {
+    setState(!state)
+  }
+
   return (
+    <TouchableOpacity onPress={() => actionHandler(props)}>
     <View style={styles.container}>
       <ImageBackground style={styles.imageContainer} source={{ uri: image }}>
         <LinearGradient
@@ -33,7 +41,7 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
           }}
         >
           <View style={{ height: 80 }} />
-          <View>
+          <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
             <HealthCircle
               showText
               radius={32}
@@ -41,8 +49,15 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
               textColor="white"
               background="#fff3"
             />
+          {/* <Icon
+          onPress={addFavourMeal}
+          name={!state ? 'heart-outline' : 'heart'}
+          color={!state ? Col.White : Col.Red}
+          size={24}
+        /> */}
           </View>
         </LinearGradient>
+
       </ImageBackground>
       <View style={styles.infoContainer}>
         <Text type="bodyBold2">{title}</Text>
@@ -53,6 +68,7 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
         </View>
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 

@@ -47,14 +47,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     console.log("getCookedMeals => request: ", response.ok);
   };
 
-  useEffect(() => {
-    serveData();
-  }, [date]);
 
-  useEffect(() => {
-    if (modalData.modalVisible || modalData.cancel) return;
-    serveData();
-  }, [modalData.modalVisible]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     const currentDate = selectedDate || date;
@@ -76,10 +69,32 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     serveData()
   }
 
+  const updateMeal = async (creationTime: number, time: object, amount: string, hideModal: (a: boolean) => boolean, id: number) => {
+    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
+    await server.updateCookedMeal(id, {
+        servings: +amount.replace(/[,-]/g, '.'),
+        creationTime: new Date(t).getTime()
+    })
+    hideModal(false)
+}  
+useEffect(() => {
+  let focus = navigation.addListener('focus', () => {
+    serveData();
+  });
+    serveData();
+    () => {
+      focus = null
+    }
+  }, [date]);
+
+useEffect(() => {
+    if (modalData.modalVisible || modalData.cancel) return;
+    serveData();
+}, [modalData.modalVisible]);
 
   return (
     <View style={styles.container}>
-      <EditModal {...modalData} setModalData={setModalData} />
+      <EditModal {...modalData} setModalData={setModalData} cb={updateMeal} />
       <PopUp
         header="Delete?"
         body={`Delete “${select}”?`}

@@ -14,32 +14,30 @@ interface Props {
 
 export default function Chart({ data }: Props) {
   let xLabelValues = 0;
-
   return (
     <View
       style={{
-        width: data.dates.length * 95 || 900,
+        width: data.dates.length * 100 || 600,
         minWidth: Dimensions.get("window").width,
         backgroundColor: "#DCDEDF",
         height: Dimensions.get("window").height / 2,
       }}
     >
-      <LineChart
+      {!!data.scores.length && <LineChart
         data={{
           labels: data.dates,
           datasets: [
             {
               data: data.scores,
-              // color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-              // strokeWidth: 2 // optional
+              
             },
           ],
         }}
-        width={95 * data.dates.length || 900} // from react-native
+        width={100 * data.dates.length || 600} // from react-native
         height={Dimensions.get("window").height / 2}
         formatYLabel={(x) => {
           xLabelValues += 25;
-          return (xLabelValues - 25).toString();
+          return (xLabelValues - 25) + '';
         }}
         yAxisInterval={1} // optional, defaults to 1
         withHorizontalLines={false}
@@ -67,7 +65,7 @@ export default function Chart({ data }: Props) {
           marginVertical: 8,
           borderRadius: 16,
         }}
-      />
+      />}
     </View>
   );
 }
