@@ -21,6 +21,7 @@ import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
 import TestOut from "../screens/TestOut";
+import DrawerLayout from "./common/DrawerLayout";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -200,7 +201,10 @@ export const ProfileStack = () => {
 export const DrawerNavigator = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="homeDrawer">
+      <Drawer.Navigator
+        initialRouteName="homeDrawer"
+        drawerContent={(props) => DrawerLayout(props)}
+      >
         <Drawer.Screen
           options={{ title: "Home" }}
           name="homeDrawer"

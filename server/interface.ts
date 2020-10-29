@@ -1,4 +1,4 @@
-import { AuthProps } from './../components/interfaces/index';
+import { AuthProps } from "./../components/interfaces/index";
 export interface apiProps {
   baseURL: string;
   testURL: string;
@@ -37,14 +37,16 @@ export interface errorProps {
   problem: string;
   status: string;
   config: object;
+  headers: object;
+  data: object;
 }
 
-export interface resProps{
-  ok:string
-  problem:string
-  data:any
-  status:string
-  config:any
+export interface resProps {
+  ok: string;
+  problem: string;
+  data: any;
+  status: string;
+  config: any;
 }
 
-export type AuthFun = (v:AuthProps)=> Promise< boolean|void|object>
+export type AuthFun = (v: AuthProps) => Promise<boolean | void | object>;

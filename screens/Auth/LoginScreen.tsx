@@ -1,6 +1,5 @@
 import React, { FC, useContext, useState } from "react";
-import axios from "axios";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
