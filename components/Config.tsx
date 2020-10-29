@@ -18,6 +18,7 @@ export const Col = {
   Shadow: "rgba(0,0,0,0.3)",
   Header: "#EFF0F4",
   Error: "#FF364F",
+  Ghost: "#6E7882",
 
   Primary: "#107dcb",
   Primary1: "#3096df",

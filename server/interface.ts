@@ -16,6 +16,7 @@ export interface apiProps {
     signIn: string;
     register: string;
     upload: string;
+    refresh:string
   };
   del: {
     cookedMeal: string;

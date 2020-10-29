@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect } from "react";
-import setAxios from "./utils/axios.config";
 import Splash from "./screens/SplashScreen";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { AppContext } from "./components/AppContext";
@@ -24,11 +23,15 @@ export default function App() {
   const [userData, setUserData] = useState<object>({});
 
   const loadUser = async () => {
+    console.log("new log", new Date(), "\n");
+    await server.setup();
     const token = await AsyncStorage.getItem("@token");
+    const user = await AsyncStorage.getItem("@user");
     if (token) {
       setLogged(true);
     }
     await Font.loadAsync(customFonts);
+    if (user) setUserData(JSON.parse(user));
     setLoaded(true);
   };
 
@@ -51,7 +54,6 @@ export default function App() {
   );
 
   useEffect(() => {
-    server.setup();
     loadUser();
   }, [logged]);
 

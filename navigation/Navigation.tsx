@@ -22,6 +22,7 @@ import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
 import TestOut from "../screens/TestOut";
 import DrawerLayout from "./common/DrawerLayout";
+import Success from "../screens/Auth/SuccessScreen";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -39,6 +40,7 @@ export const Auth = () => (
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="register" component={Register} />
       <Stack.Screen name="restore" component={Restore} />
+      <Stack.Screen name="success" component={Success} />
     </Stack.Navigator>
   </NavigationContainer>
 );

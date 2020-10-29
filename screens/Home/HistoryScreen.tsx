@@ -5,6 +5,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Text,
+  View,
 } from "react-native";
 import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
@@ -17,8 +18,8 @@ interface HealthScore {
 }
 
 interface Data {
-  dates: Array<string>;
-  scores: Array<number>;
+  dates: string[];
+  scores: number[];
 }
 
 interface Offset {
@@ -32,22 +33,17 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   const getHealthsScore = async () => {
     const response = await server.getHistory(offset.offset);
+    console.log(response.data.data);
     if (response.ok) {
-      const { data } = response;
-      const dates: Array<string> = [];
-      const scores: Array<number> = [];
-      data.forEach((el: HealthScore) => {
-        const dateObject = getDate(new Date(el.date));
-        dates.push(`${dateObject.day}-${dateObject.month}`);
-        scores.push(el.healthScore);
-      });
+      const historyFeed: HealthScore[] = response.data.data;
+      const dates: string[] = historyFeed.map((el) => `${el.date}`);
+      const scores: number[] = historyFeed.map((el) => el.healthScore);
+      console.log(dates, scores);
       setData((value) => ({ ...value, dates, scores }));
     }
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    //console.log(event.nativeEvent.contentOffset.x)
-    // console.log(count)
     if (event.nativeEvent.contentOffset.x > offset.count + 650) {
       setOffset((value) => ({
         ...value,
@@ -63,25 +59,17 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <>
+    <View>
       <Text
         style={{
           alignSelf: "center",
           marginVertical: 8,
-          fontWeight: "500",
-          fontSize: 20,
         }}
       >
         Your health score
       </Text>
-      <ScrollView
-        horizontal={true}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        {/* <Chart data={data} /> */}
-      </ScrollView>
-    </>
+      {/* <Chart data={data} />{" "} */}
+    </View>
   );
 };
 

@@ -5,22 +5,21 @@ import { Text } from "./custom/Typography";
 
 interface Props {
   name?: string;
-  currentValue?: string;
-  intakeNorm?: string;
+  currentValue?: number;
+  intakeNorm?: number;
   unit?: string;
   child?: boolean;
   children?: React.ReactNode;
 }
 
-const Nutrient: FC<Props> = (data) => {
-  const {
-    name = "",
-    currentValue = "",
-    intakeNorm = "",
-    unit = "",
-    child,
-    children,
-  } = data;
+const Nutrient: FC<Props> = ({
+  name = "",
+  currentValue = "",
+  intakeNorm = "",
+  unit = "",
+  child,
+  children,
+}) => {
   return (
     <View style={styles.container}>
       {child ? (

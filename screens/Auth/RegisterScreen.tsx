@@ -9,6 +9,8 @@ import { Text } from "../../components/custom/Typography";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import server from "../../server";
 import SvgMaker from "../../components/SvgMaker";
+import UID from "../../components/UID";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -20,9 +22,11 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
   const [error, setError] = useState(false);
   const signUp = async (value: AuthProps) => {
     setClicked(true);
-    const response = await server.register(value);
+    const buffer = { ...value, link: `${UID}` };
+    const response = await server.register(buffer);
     if (response.ok) {
-      navigation.navigate("login");
+      navigation.navigate("success");
+      await AsyncStorage.mergeItem("@user", JSON.stringify(buffer));
     } else {
       Alert.alert(JSON.stringify(response.data));
       if (response.status === 400) setError(true);

@@ -19,6 +19,7 @@ const apiConfig: apiProps = {
     signIn: "/auth/sign-in",
     register: "/auth/sign-up",
     upload: "/upload",
+    refresh: "/auth/refresh-token",
   },
   del: {
     cookedMeal: "/meals/cooked-meal/",
@@ -41,6 +42,7 @@ const api = create({
 
 const setToken = async (token: cacheProps) => {
   AsyncStorage.setItem("@token", JSON.stringify(token));
+  api.setHeader("Authorization", `Bearer ${token.accessToken}`);
 };
 const removeToken = async () => {
   AsyncStorage.removeItem("@token");
@@ -51,7 +53,19 @@ const getToken = async () => {
 };
 const getRefresh = async () => {
   const token = await AsyncStorage.getItem("@token");
+  console.log(token);
   return token ? JSON.parse(token).refreshToken : null;
+};
+
+const refreshToken = async () => {
+  console.log("attemp refresh\n----------------------------\n");
+  api.deleteHeader("Authorization");
+  const address = apiConfig.post.refresh;
+  const token = await getRefresh();
+  const response = await api.post(address, { refreshToken: token });
+  console.log(response);
+  //response.ok ? setToken(response.data) : logError(response);
+  return response;
 };
 
 const setHeader = (token: string) => {
@@ -71,12 +85,8 @@ const logError = ({ problem, config, status, headers, data }: errorProps) => {
   console.log(
     "Error------\nproblem => ",
     problem,
-    "\nconfig => ",
-    config,
     "\nstatus => ",
     status,
-    "\nheaders => ",
-    headers,
     "\ndata => ",
     data
   );
@@ -89,7 +99,12 @@ const getCalendar = (value: Date) => {
 const getDailyConsumption = async (date: Date) => {
   const address = apiConfig.get.dailyConsumption + getCalendar(date);
   const response = await api.get(address);
-  if (!response.ok) logError(response);
+  if (!response.ok) {
+    if (response.status === 401) {
+      await refreshToken();
+    }
+    logError(response);
+  }
   return response;
 };
 
@@ -148,12 +163,7 @@ const addCookedMeal = async (payload) => {
 const signIn: AuthFun = async (payload) => {
   const address = apiConfig.post.signIn;
   const response = await api.post(address, payload);
-  if (response.ok) {
-    setToken(response.data);
-    setHeader(response.data.accessToken);
-  } else {
-    logError(response);
-  }
+  response.ok ? setToken(response.data) : logError(response);
   return response.ok;
 };
 
@@ -172,23 +182,26 @@ const upload = async (form: FormData) => {
 };
 
 const delCookedMeal = () => {
-  //
+  return null;
 };
 
-const delUser = () => {
-  //
+const delUser = async () => {
+  const address = apiConfig.del.user;
+  const response = await api.delete(address);
+  response.ok ? removeToken() : logError(response);
+  return response;
 };
 
 const updateIntakeNorms = () => {
-  //
+  return null;
 };
 
 const updateProfile = () => {
-  //
+  return null;
 };
 
 const updatePassword = () => {
-  //
+  return null;
 };
 
 export default {
