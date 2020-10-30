@@ -5,49 +5,49 @@ import RecipeCard from "../../components/custom/RecipeCard";
 import { Memo, RecommendedMeals } from "../../components/interfaces";
 import server from "../../server";
 import { AppContext } from "../../components/AppContext";
-import EditModal from '../../components/EditModal';
+import EditModal from "../../components/EditModal";
 
 interface Props {
   recipe: string;
 }
 
 interface ModalData {
-  id: string
-  name: string
-  time: string
-  servings: string
-  modalVisible: boolean
-  creationTime: number
-  data: object
+  id: string;
+  name: string;
+  time: string;
+  servings: string;
+  modalVisible: boolean;
+  creationTime: number;
+  data: object;
 }
 
 const RecommendedScreen: FC<Props> = (props) => {
   const [feed, setFeed] = useState<Array<RecommendedMeals>>([]);
   const [modalData, setModalData] = useState<ModalData>({
-    id: '',
+    id: "",
     name: "",
     time: "",
     servings: "",
     modalVisible: false,
     creationTime: 0,
-    data: {}
+    data: {},
   });
   const { calendar } = useContext<Memo>(AppContext);
   const { date } = calendar;
 
   const serveData = async () => {
-    // const response = await server.getRecommendedMeals(date);
-    // response.ok
-    //   ? setFeed(response.data)
-    //   : Alert.alert(
-    //       response.status?.toString(),
-    //       `${response.problem}\n${JSON.stringify(response.config)}`
-    //     );
-    // console.log("getRecommendedMeals => request: ", response.ok);
+    const response = await server.getRecommendedMeals(date);
+    response.ok
+      ? setFeed(response.data)
+      : Alert.alert(
+          response.status?.toString(),
+          `${response.problem}\n${JSON.stringify(response.config)}`
+        );
+    console.log("getRecommendedMeals => request: ", response.ok);
   };
 
   const actionHandler = async (props: RecommendedMeals) => {
-    const { actionHandler, ...data } = props
+    const { actionHandler, ...data } = props;
     setModalData({
      id: props.title,
      name: props.title, 
@@ -60,32 +60,45 @@ const RecommendedScreen: FC<Props> = (props) => {
  //serveData()
 }
 
-const addMeal = async (creationTime: number, time: object, amount: string, hideModal: (a: boolean) => boolean, id: number) => {
-
- const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
- //await server.addCookedMeal({ meal: modalData.data, quantity: +amount.replace(/[,-]/g, '.'), date: new Date(t).getTime() })
- hideModal(false)
- props.navigation.navigate('meals')
-}
-
-// useEffect(() => {
-//   if (modalData.modalVisible || modalData.cancel) return;
-//   //serveData();
-// }, [modalData.modalVisible]);
+  const addMeal = async (
+    creationTime: number,
+    time: object,
+    amount: string,
+    hideModal: (a: boolean) => boolean,
+    id: number
+  ) => {
+    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(
+      creationTime
+    ).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${
+      time.minutes.value
+    }`;
+    await server.addCookedMeal({
+      meal: modalData.data,
+      quantity: +amount.replace(/[,-]/g, "."),
+      date: new Date(t).getTime(),
+    });
+    hideModal(false);
+    props.navigation.navigate("meals", { refresh: true });
+  };
 
   useEffect(() => {
-    let focus = props.navigation.addListener('focus', () => {
+    if (modalData.modalVisible || modalData.cancel) return;
+    //serveData();
+  }, [modalData.modalVisible]);
+
+  useEffect(() => {
+    let focus = props.navigation.addListener("focus", () => {
       serveData();
     });
     serveData();
     () => {
-      focus = null
-    }
+      focus = null;
+    };
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
-      <EditModal {...modalData} setModalData={setModalData} cb={addMeal}/>
+      <EditModal {...modalData} setModalData={setModalData} cb={addMeal} />
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (

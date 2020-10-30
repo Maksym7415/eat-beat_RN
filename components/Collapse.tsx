@@ -6,10 +6,15 @@ import SvgMaker from "./SvgMaker";
 import { Text } from "../components/custom/Typography";
 import { Divider } from "./MyComponents";
 
+interface dataArray {
+  name: string;
+  value: number;
+}
+
 interface Props {
   title: string;
   icon_type: string;
-  data: [];
+  data: dataArray[];
   styler?: object;
 }
 

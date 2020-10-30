@@ -6,7 +6,7 @@ import { ErrorMessage } from "./MyComponents";
 import { Col, Spacing } from "./Config";
 import { InputProps } from "./interfaces";
 
-const formikInput: FC<InputProps> = ({ value, label, error }) => {
+const formikInput: FC<InputProps> = ({ value, label, error, maxLength }) => {
   const { handleChange, setFieldTouched, touched, errors } = useFormikContext();
   const [hide, setHide] = useState(true);
   const [focus, setFocus] = useState(false);
@@ -20,6 +20,7 @@ const formikInput: FC<InputProps> = ({ value, label, error }) => {
         ]}
       >
         <TextInput
+          maxLength={maxLength}
           style={styles.input}
           onChangeText={handleChange(value)}
           onBlur={() => {

@@ -1,15 +1,41 @@
-import React, { FC } from "react";
-import { StyleSheet, View, TouchableOpacity, Modal } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Modal,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Spacing, Col } from "./Config";
 import { Text } from "./custom/Typography";
+import AsyncStorage from "@react-native-community/async-storage";
+import doc from "../doc.json";
 
 interface Props {
-  showModal: () => void;
+  label?: string;
+  showModal?: () => void;
   modalVisible: boolean;
+  content: string;
 }
 
-const ModalWindow: FC<Props> = ({ showModal, modalVisible }) => {
+const ModalWindow: FC<Props> = ({
+  label = "",
+  content = "HealthScore",
+  showModal,
+  modalVisible,
+}) => {
+  const [desc, setDesc] = useState("");
+  const getDoc = async () => {
+    const data = await AsyncStorage.getItem("@doc");
+    const text = data ? JSON.parse(data)[`${content}`] : doc[`${content}`];
+    setDesc(text);
+    return data;
+  };
+  useEffect(() => {
+    getDoc();
+  }, []);
   return (
     <Modal
       animationType="fade"
@@ -22,29 +48,24 @@ const ModalWindow: FC<Props> = ({ showModal, modalVisible }) => {
           <TouchableOpacity style={styles.closeButton} onPress={showModal}>
             <Icon name="close" size={24} color={Col.Black} />
           </TouchableOpacity>
-          <Text type="bodyBold" style={{ marginBottom: Spacing.r_small }}>
-            Health score
+          <Text
+            type="bodyBold"
+            style={{ marginBottom: Spacing.r_small, color: Col.Black }}
+          >
+            {label}
           </Text>
-          <Text type="body2">
-            {`Health Score is an integral indicator characterising the
-proximity of the daily nutrient balance to the recommended intake
-norm. The value is calculated per day and includes all registered
-foods/meals.
-
-The maximum value is 100 points, the minimum is 0 points.
-
-When calculating the indicator, the following data are taken into
-account:
-- deviation from the norm for each nutrient
-- importance of nutrients (expert opinion of the project
-nutritionist)`}
-          </Text>
+          <View style={{ flexShrink: 1 }}>
+            <ScrollView>
+              <Text type="body2">{desc}</Text>
+            </ScrollView>
+          </View>
         </View>
       </View>
     </Modal>
   );
 };
 
+const heigh = Dimensions.get("screen").height;
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
@@ -54,6 +75,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.medium,
   },
   modalView: {
+    maxHeight: heigh * 0.7,
     borderRadius: 8,
     shadowColor: "#000",
     padding: Spacing.medium,

@@ -12,6 +12,7 @@ import * as ImageManipulator from "expo-image-manipulator";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
+import AsyncStorage from "@react-native-community/async-storage";
 
 interface Props {
   image: string | null;
@@ -52,7 +53,11 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
     const avBlob = await avResponse.blob();
     const form = new FormData();
     form.append("file", avBlob);
-    server.upload(form);
+    const response = await server.upload(uri);
+
+    // if (response.ok) {
+    //   AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
+    // }
   };
   return (
     <View style={styles.container}>
@@ -70,8 +75,16 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
         </View>
       </TouchableOpacity>
       <View style={styles.detailsContainer}>
-        <TextInput value={name} editable={edit} style={styles.nameInput} />
-        <TextInput value={email} editable={edit} style={styles.emailInput} />
+        <TextInput
+          value={name}
+          editable={edit}
+          style={edit ? styles.editInput : styles.nameInput}
+        />
+        <TextInput
+          value={email}
+          editable={edit}
+          style={edit ? styles.editInput : styles.emailInput}
+        />
       </View>
       <TouchableOpacity onPress={() => setEdit(!edit)} style={styles.button}>
         <Icon name="edit" size={20} color={Col.Black} />
@@ -108,9 +121,15 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   nameInput: {
-    fontFamily: Font,
-    fontWeight: "500",
+    fontFamily: "Inter_500Medium",
     fontSize: 18,
+  },
+  editInput: {
+    fontSize: 16,
+    borderBottomWidth: 1,
+    padding: Spacing.tiny,
+    borderColor: Col.Inactive,
+    fontFamily: "Inter_400Regular",
   },
   emailInput: {
     fontFamily: Font,

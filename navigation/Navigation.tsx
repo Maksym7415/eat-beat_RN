@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React,{ useContext } from "react";
+import React, { useContext } from "react";
 import { Col } from "../components/Config";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -21,8 +21,11 @@ import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
 import TestOut from "../screens/TestOut";
+import DrawerLayout from "./common/DrawerLayout";
+import Success from "../screens/Auth/SuccessScreen";
+import Confirmation from "../screens/Auth/ConfirmationScreen";
 
-import { AppContext } from '../components/AppContext'; 
+import { AppContext } from "../components/AppContext";
 
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 
@@ -42,6 +45,8 @@ export const Auth = () => (
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="register" component={Register} />
       <Stack.Screen name="restore" component={Restore} />
+      <Stack.Screen name="success" component={Success} />
+      <Stack.Screen name="confirm" component={Confirmation} />
     </Stack.Navigator>
   </NavigationContainer>
 );
@@ -74,7 +79,7 @@ const RecipesTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Main,
+        backgroundColor: Col.Green1,
       },
     }}
     initialRouteName="recommended"
@@ -152,44 +157,45 @@ export const RecommendedStack = () => {
     <Stack.Navigator initialRouteName="recommendedPage">
       <Stack.Screen
         options={({ navigation, ...other }) => {
-          const { showModal } = useContext(AppContext)
-          return({
+          const { showModal } = useContext(AppContext);
+          return {
             headerLeft: () => (
               <BurgerIcon
                 name="menuWhite"
-                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+                onPress={() =>
+                  navigation.dispatch(DrawerActions.toggleDrawer())
+                }
               />
             ),
             headerRight: () => {
-
-              if(other?.route?.state?.index === 1) {
+              if (other?.route?.state?.index === 1) {
                 return (
-                 <Icon
-                 style={{marginRight: 16}}
-                 onPress={() => showModal(true)}
-                 name={'search'}
-                 color={Col.White}
-                 size={24}
-               />
-               )
+                  <Icon
+                    style={{ marginRight: 16 }}
+                    onPress={() => showModal(true)}
+                    name={"search"}
+                    color={Col.White}
+                    size={24}
+                  />
+                );
               }
-              return ''
+              return "";
             },
-            
+
             title: "Eating at a Resturant",
             headerStyle: {
               elevation: 0,
-              backgroundColor: Col.Main,
+              backgroundColor: Col.Green1,
             },
             headerTitleStyle: {
               color: "white",
             },
-          })
+          };
         }}
         name="recommendedPage"
         component={RecipesTopNavigator}
       />
-       {/* <Stack.Screen
+      {/* <Stack.Screen
           name="searchScreen"
           options={({ navigation }) => ({
             title: "search" ,
@@ -238,7 +244,10 @@ export const ProfileStack = () => {
 export const DrawerNavigator = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="homeDrawer">
+      <Drawer.Navigator
+        initialRouteName="homeDrawer"
+        drawerContent={(props) => DrawerLayout(props)}
+      >
         <Drawer.Screen
           options={{ title: "Home" }}
           name="homeDrawer"

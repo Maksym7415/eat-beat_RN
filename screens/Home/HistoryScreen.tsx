@@ -5,11 +5,12 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Text,
+  View,
 } from "react-native";
-import server from '../../server';
 import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import { getDate } from "../../utils/date";
+import server from "../../server";
 
 interface HealthScore {
   date: string;
@@ -17,8 +18,8 @@ interface HealthScore {
 }
 
 interface Data {
-  dates: Array<string>;
-  scores: Array<number>;
+  dates: string[];
+  scores: number[];
 }
 
 interface Offset {
@@ -31,19 +32,19 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
   const getHealthsScore = async () => {
-    const response = await server.getHistory(offset.offset)
-    const dates: Array<string> = [];
-    const scores: Array<number> = [];
-    response.data.data.forEach((el: HealthScore) => {
-      const dateObject = getDate(new Date(el.date));
-      dates.push(`${dateObject.day}-${dateObject.month}`);
-      scores.push(el.healthScore);
-    });
-    setData((value) => ({ ...value, dates, scores }));
+    const response = await server.getHistory(offset.offset);
+    console.log(response.data.data);
+    if (response.ok) {
+      const historyFeed: HealthScore[] = response.data.data;
+      const dates: string[] = historyFeed.map((el) => `${el.date}`);
+      const scores: number[] = historyFeed.map((el) => el.healthScore);
+      console.log(dates, scores);
+      setData((value) => ({ ...value, dates, scores }));
+    }
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    event.persist()
+    event.persist();
     if (event?.nativeEvent?.contentOffset?.x > offset.count + 650) {
       setOffset((value) => ({
         ...value,

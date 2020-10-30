@@ -1,10 +1,10 @@
 import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
-import Axios from "axios";
 
 const apiConfig: apiProps = {
-  baseURL: "http://10.4.30.212:8081/api",
+  //baseURL: "http://10.4.30.212:8081/api",
+  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     dailyConsumption: "/meals/daily-consumption?date=",
@@ -15,12 +15,14 @@ const apiConfig: apiProps = {
     recipeByName: "/meals/get-recipes?recipeName=",
     searchSettings: "/user/search-recipe-settings",
     getSearchFilter: "/user/search-recipe-settings",
+    verification: "/auth/verify-account?verificationCode=",
   },
   post: {
     addCookedMeal: "/meals/meal-change-status",
     signIn: "/auth/sign-in",
     register: "/auth/sign-up",
     upload: "/upload",
+    refresh: "/auth/refresh-token",
   },
   del: {
     cookedMeal: "/meals/cooked-meal/",
@@ -30,7 +32,7 @@ const apiConfig: apiProps = {
     intakeNorms: "/user/intake-norms",
     profile: "/user/update-profile",
     password: "/user/update-password",
-    updateCookedMeal: '/meals/update-cooked-meal/'
+    updateCookedMeal: "/meals/update-cooked-meal/",
   },
 };
 
@@ -44,17 +46,33 @@ const api = create({
 
 const setToken = async (token: cacheProps) => {
   AsyncStorage.setItem("@token", JSON.stringify(token));
+  api.setHeader("Authorization", `Bearer ${token.accessToken}`);
 };
+
 const removeToken = async () => {
   AsyncStorage.removeItem("@token");
 };
+
 const getToken = async () => {
   const token = await AsyncStorage.getItem("@token");
   return token ? JSON.parse(token).accessToken : null;
 };
+
 const getRefresh = async () => {
   const token = await AsyncStorage.getItem("@token");
+  console.log(token);
   return token ? JSON.parse(token).refreshToken : null;
+};
+
+const refreshToken = async () => {
+  console.log("attemp refresh\n----------------------------\n");
+  api.deleteHeader("Authorization");
+  const address = apiConfig.post.refresh;
+  const token = await getRefresh();
+  const response = await api.post(address, { refreshToken: token });
+  console.log(response);
+  //response.ok ? setToken(response.data) : logError(response);
+  return response;
 };
 
 const setHeader = (token: string) => {
@@ -69,16 +87,20 @@ const setup = async () => {
   console.log("setup---start\ntoken:", token, "\nsetup---end");
 };
 
-const logError = ({ problem, config, status }: errorProps) => {
+const logError = ({ problem, config, status, headers, data }: errorProps) => {
   //Alert.alert(problem);
+  console.log(config);
+  /*
   console.log(
     "Error------\nproblem => ",
     problem,
-    "\nconfig => ",
-    config,
     "\nstatus => ",
-    status
-  );
+    status,
+    "\ndata => ",
+    data,
+    "\nco => ",
+    config
+  );*/
 };
 
 const getCalendar = (value: Date) => {
@@ -88,7 +110,12 @@ const getCalendar = (value: Date) => {
 const getDailyConsumption = async (date: Date) => {
   const address = apiConfig.get.dailyConsumption + getCalendar(date);
   const response = await api.get(address);
-  if (!response.ok) logError(response);
+  if (!response.ok) {
+    if (response.status === 401) {
+      await refreshToken();
+    }
+    logError(response);
+  }
   return response;
 };
 
@@ -109,35 +136,38 @@ const getCookedMeals = async (date: Date) => {
 const updateCookedMeal = async (id: number, data: object) => {
   const address = apiConfig.put.updateCookedMeal + id;
   const response = await api.patch(address, data);
-  console.log(response)
-  if (!response.ok) logError(response);
-  return response;
-}
-
-const getProfile = async () => {
-  const address = apiConfig.get.profile;
-  const response = await api.get(address);
+  console.log(response);
   if (!response.ok) logError(response);
   return response;
 };
 
-const getHistory = async (offset: number) => {
-  const address = apiConfig.get.history + offset;
-  return api.get(address).then((response) => {
-    if (!response.ok) logError(response);
-    return response;
-  });
+const getProfile = async () => {
+  const address = apiConfig.get.profile;
+  const response = await api.get(address);
+  if (!response.ok) {
+    logError(response);
+  } else {
+    await AsyncStorage.setItem("@user", JSON.stringify(response.data));
+  }
+  return response;
+};
+
+const getHistory = async (days: number) => {
+  const address = apiConfig.get.history + days;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
 };
 
 const getRecipeByName = async (name: string, { intolerances, diets }: object) => {
   //const address = apiConfig.get.recipeByName + name
   const address =`${apiConfig.get.recipeByName}${name}&intolerances=${intolerances}&diets=${diets}`;
    
+
   return api.get(address).then((response) => {
     if (!response.ok) logError(response);
     return response.data;
   });
-
 };
 
 const getSearchSettings = async () => {
@@ -165,48 +195,90 @@ const addCookedMeal = async (payload) => {
 const signIn: AuthFun = async (payload) => {
   const address = apiConfig.post.signIn;
   const response = await api.post(address, payload);
-  if (response.ok) {
-    setToken(response.data);
-    // await Axios.post('https://logisticbrocker.hopto.org/eat-beat/api/auth/refresh-token', {refreshToken: response.data.refreshToken}).then((res) => console.log(res)).catch(e => console.log(e))
-    setHeader(response.data.accessToken);
-  } else {
-    logError(response);
-  }
+  response.ok ? setToken(response.data) : logError(response);
   return response.ok;
 };
 
 const register: AuthFun = async (payload) => {
   const address = apiConfig.post.register;
   const response = await api.post(address, payload);
+  if (response.ok) logError(response);
+  return response;
+};
+
+const upload = async (uri) => {
+  const address = apiConfig.baseURL + apiConfig.post.upload;
+  const token = await getToken();
+  /*
+  const response = await api.post(address, form);
+  if (!response.ok) logError(response);
+  return response.ok;
+  */
+  //---
+  const form = () => {
+    var data = new FormData();
+    data.append(
+      "file",
+      JSON.stringify({
+        uri,
+        name: `avatar-${Date.now()}.jpg`,
+        type: "image/*",
+      })
+    );
+    return data;
+  };
+  try {
+    let response = await fetch(address, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      body: form(),
+    });
+    console.log(response.json());
+  } catch (error) {
+    console.error(error);
+  }
+  //---
+};
+
+const delCookedMeal = () => {
+  return null;
+};
+
+const delUser = async () => {
+  const address = apiConfig.del.user;
+  const response = await api.delete(address);
+  response.ok ? removeToken() : logError(response);
+  return response;
+};
+
+const updateIntakeNorms = () => {
+  return null;
+};
+
+const updateProfile = () => {
+  return null;
+};
+
+const updatePassword = () => {
+  return null;
+};
+
+const resendCode = async () => {
+  const address = apiConfig.post.register;
+  const response = await api.get(address);
   response.ok ? setToken(response.data) : logError(response);
   return response.ok;
 };
 
-const upload = async (form: FormData) => {
-  const address = apiConfig.post.upload;
-  const response = await api.post(address, form);
+const verifyAccount = async (code: number) => {
+  const address = apiConfig.get.verification + code;
+  const response = await api.get(address);
   if (!response.ok) logError(response);
-  return response.ok;
-};
-
-const delCookedMeal = () => {
-  //
-};
-
-const delUser = () => {
-  //
-};
-
-const updateIntakeNorms = () => {
-  //
-};
-
-const updateProfile = () => {
-  //
-};
-
-const updatePassword = () => {
-  //
+  return response;
 };
 
 export default {
@@ -228,5 +300,7 @@ export default {
   updateProfile,
   updatePassword,
   updateCookedMeal,
-  getSearchFilter
+  getSearchFilter,
+  resendCode,
+  verifyAccount,
 };

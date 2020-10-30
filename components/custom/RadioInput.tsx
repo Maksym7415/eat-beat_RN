@@ -28,7 +28,7 @@ const RadioInput: FC<Props> = ({
       <View style={styles.container}>
         <Icon
           name={select ? "radiobox-marked" : "radiobox-blank"}
-          color={disabled ? Col.Inactive : select ? Col.Blue : Col.Grey}
+          color={disabled ? Col.Inactive : select ? Col.Main : Col.Grey}
           size={20}
         />
         <Text

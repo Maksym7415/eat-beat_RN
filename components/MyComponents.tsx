@@ -26,6 +26,7 @@ interface ErrorProps {
 
 interface DividerProps {
   styler?: ViewStyle;
+  style?: ViewStyle;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -67,8 +68,11 @@ export const ErrorMessage: FC<ErrorProps> = ({ error, visible, style }) => {
   );
 };
 
-export const Divider: FC<DividerProps> = ({ styler = styles.divider }) => {
-  return <View style={styler} />;
+export const Divider: FC<DividerProps> = ({
+  styler = styles.divider,
+  style,
+}) => {
+  return <View style={[styler, style]} />;
 };
 
 const styles = StyleSheet.create({

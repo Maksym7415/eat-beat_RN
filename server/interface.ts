@@ -1,4 +1,4 @@
-import { AuthProps } from './../components/interfaces/index';
+import { AuthProps } from "./../components/interfaces/index";
 export interface apiProps {
   baseURL: string;
   testURL: string;
@@ -11,12 +11,14 @@ export interface apiProps {
     recipeByName: string;
     searchSettings: string;
     getSearchFilter: string
+    verification:string
   };
   post: {
     addCookedMeal: string;
     signIn: string;
     register: string;
     upload: string;
+    refresh:string
   };
   del: {
     cookedMeal: string;
@@ -39,14 +41,16 @@ export interface errorProps {
   problem: string;
   status: string;
   config: object;
+  headers: object;
+  data: object;
 }
 
-export interface resProps{
-  ok:string
-  problem:string
-  data:any
-  status:string
-  config:any
+export interface resProps {
+  ok: string;
+  problem: string;
+  data: any;
+  status: string;
+  config: any;
 }
 
-export type AuthFun = (v:AuthProps)=> Promise< boolean|void>
+export type AuthFun = (v: AuthProps) => Promise<boolean | void | object>;

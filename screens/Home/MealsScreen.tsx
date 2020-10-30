@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { Col, Spacing } from "../../components/Config";
@@ -7,21 +7,23 @@ import { Memo, NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
-import EditModal from '../../components/EditModal';
+import EditModal from "../../components/EditModal";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
+import { connect } from "http2";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface ModalData {
-  id: number
-  name: string
-  time: string
-  servings: string
-  modalVisible: boolean
-  creationTime: number
-
+  id: number;
+  name: string;
+  time: string;
+  servings: string;
+  modalVisible: boolean;
+  creationTime: number;
 }
 
-const MealsScreen: FC<NavProps> = ({ navigation }) => {
+const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
+  console.log(route.params);
   const [feed, setFeed] = useState(null);
   const [select, setSelect] = useState(null);
   const [popVisible, setPopVisible] = useState(false);
@@ -31,67 +33,77 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     time: "",
     servings: "",
     modalVisible: false,
-    creationTime: 0
+    creationTime: 0,
   });
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
   const serveData = async () => {
+    console.log("----------------------------\nserve meals");
     const response = await server.getCookedMeals(date);
-    response.ok
-      ? setFeed(response.data)
-      : Alert.alert(
-          response.status?.toString(),
-          `${response.problem}\n${JSON.stringify(response.config)}`
-        );
-    console.log("getCookedMeals => request: ", response.ok);
+    if (response.ok) setFeed(response.data);
   };
-
-
 
   const onChange = (event: Event, selectedDate: Date) => {
     const currentDate = selectedDate || date;
     saveCal({ visible: false, date: currentDate });
   };
 
-  const actionHandler = async (id: number, name: string, time: string, servings: number, creationTime: number) => {
-    if(name) {
+  const actionHandler = async (
+    id: number,
+    name: string,
+    time: string,
+    servings: number,
+    creationTime: number
+  ) => {
+    if (name) {
       return setModalData({
-        id, 
-        name, 
-        time, 
-        servings: servings + '', 
-        modalVisible: true, 
-        creationTime, 
-      })
+        id,
+        name,
+        time,
+        servings: servings + "",
+        modalVisible: true,
+        creationTime,
+      });
     }
-    await axios.delete(`/meals/cooked-meal/${id}`)
-    serveData()
-  }
+    await axios.delete(`/meals/cooked-meal/${id}`);
+    serveData();
+  };
 
-  const updateMeal = async (creationTime: number, time: object, amount: string, hideModal: (a: boolean) => boolean, id: number) => {
-    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(creationTime).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${time.minutes.value}`
+  const updateMeal = async (
+    creationTime: number,
+    time: object,
+    amount: string,
+    hideModal: (a: boolean) => boolean,
+    id: number
+  ) => {
+    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(
+      creationTime
+    ).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${
+      time.minutes.value
+    }`;
     await server.updateCookedMeal(id, {
-        servings: +amount.replace(/[,-]/g, '.'),
-        creationTime: new Date(t).getTime()
-    })
-    hideModal(false)
-}  
-useEffect(() => {
-  let focus = navigation.addListener('focus', () => {
+      servings: +amount.replace(/[,-]/g, "."),
+      creationTime: new Date(t).getTime(),
+    });
+    hideModal(false);
+  };
+  useEffect(() => {
     serveData();
-  });
-    serveData();
-    () => {
-      focus = null
-    }
   }, [date]);
 
-useEffect(() => {
+  useEffect(() => {
     if (modalData.modalVisible || modalData.cancel) return;
     serveData();
-}, [modalData.modalVisible]);
+  }, [modalData.modalVisible]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.refresh) {
+        serveData();
+      }
+    }, [route.params])
+  );
   return (
     <View style={styles.container}>
       <EditModal {...modalData} setModalData={setModalData} cb={updateMeal} />
@@ -149,4 +161,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
 export default MealsScreen;

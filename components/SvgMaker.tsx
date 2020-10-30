@@ -13,32 +13,8 @@ const Icons: IIcons = {
   verify: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" clip-rule="evenodd" d="M3.16637 14.8336C2.47321 14.1405 2.27435 13.0831 2.49173 11.6958C1.35703 10.8685 0.75 9.98028 0.75 9C0.75 8.01972 1.35703 7.13146 2.49173 6.30419C2.27435 4.91686 2.47321 3.85953 3.16637 3.16637C3.85953 2.47321 4.91686 2.27435 6.30419 2.49173C7.13146 1.35703 8.01972 0.75 9 0.75C9.98028 0.75 10.8685 1.35703 11.6958 2.49173C13.0831 2.27435 14.1405 2.47321 14.8336 3.16637C15.5268 3.85953 15.7256 4.91686 15.5083 6.30419C16.643 7.13146 17.25 8.01972 17.25 9C17.25 9.98028 16.643 10.8685 15.5083 11.6958C15.7256 13.0831 15.5268 14.1405 14.8336 14.8336C14.1405 15.5268 13.0831 15.7256 11.6958 15.5083C10.8685 16.643 9.98028 17.25 9 17.25C8.01972 17.25 7.13146 16.643 6.30419 15.5083C4.91686 15.7256 3.85953 15.5268 3.16637 14.8336ZM6.48944 13.9485C6.79388 13.8833 7.10695 14.013 7.27613 14.2743C7.9367 15.295 8.52572 15.75 9 15.75C9.47427 15.75 10.0633 15.295 10.7239 14.2743C10.893 14.013 11.2061 13.8833 11.5106 13.9485C12.6993 14.2031 13.4376 14.1083 13.773 13.773C14.1083 13.4376 14.2031 12.6993 13.9485 11.5106C13.8833 11.2061 14.013 10.893 14.2743 10.7239C15.295 10.0633 15.75 9.47427 15.75 9C15.75 8.52572 15.295 7.9367 14.2743 7.27613C14.013 7.10695 13.8833 6.79388 13.9485 6.48944C14.2031 5.30066 14.1083 4.56239 13.773 4.22703C13.4376 3.89167 12.6993 3.79692 11.5106 4.05151C11.2061 4.11671 10.893 3.98703 10.7239 3.72565C10.0633 2.70504 9.47427 2.25 9 2.25C8.52572 2.25 7.9367 2.70504 7.27613 3.72565C7.10695 3.98703 6.79388 4.11671 6.48944 4.05151C5.30066 3.79692 4.56239 3.89167 4.22703 4.22703C3.89167 4.56239 3.79692 5.30066 4.05151 6.48944C4.11671 6.79388 3.98703 7.10695 3.72565 7.27613C2.70504 7.9367 2.25 8.52572 2.25 9C2.25 9.47427 2.70504 10.0633 3.72565 10.7239C3.98703 10.893 4.11671 11.2061 4.05151 11.5106C3.79692 12.6993 3.89167 13.4376 4.22703 13.773C4.56239 14.1083 5.30066 14.2031 6.48944 13.9485ZM11.4697 6.21965L8.25 9.43932L6.53033 7.71965L5.46967 8.78031L8.25 11.5606L12.5303 7.28031L11.4697 6.21965Z" fill="#5E6CEB"/>
   </svg>`,
-  actionButton: `<svg width="92" height="92" viewBox="0 0 92 92" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g filter="url(#filter0_ddd)">
-  <circle cx="46" cy="45" r="28" fill="#2C98F0"/>
-  <path d="M40.3281 50.6719C41.9219 52.2344 43.8125 53.0156 46 53.0156C48.1875 53.0156 50.0625 52.2344 51.625 50.6719C53.2188 49.0781 54.0156 47.1875 54.0156 45C54.0156 42.8125 53.2188 40.9375 51.625 39.375C50.0625 37.7812 48.1875 36.9844 46 36.9844C43.8125 36.9844 41.9219 37.7812 40.3281 39.375C38.7656 40.9375 37.9844 42.8125 37.9844 45C37.9844 47.1875 38.7656 49.0781 40.3281 50.6719ZM38.9219 37.9688C40.8906 36 43.25 35.0156 46 35.0156C48.75 35.0156 51.0938 36 53.0312 37.9688C55 39.9062 55.9844 42.25 55.9844 45C55.9844 47.75 55 50.1094 53.0312 52.0781C51.0938 54.0156 48.75 54.9844 46 54.9844C43.25 54.9844 40.8906 54.0156 38.9219 52.0781C36.9844 50.1094 36.0156 47.75 36.0156 45C36.0156 42.25 36.9844 39.9062 38.9219 37.9688ZM46.9844 39.9844V44.0156H51.0156V45.9844H46.9844V50.0156H45.0156V45.9844H40.9844V44.0156H45.0156V39.9844H46.9844Z" fill="white"/>
-  </g>
-  <defs>
-  <filter id="filter0_ddd" x="0" y="0" width="92" height="92" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-  <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-  <feOffset dy="3"/>
-  <feGaussianBlur stdDeviation="2.5"/>
-  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
-  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-  <feOffset dy="1"/>
-  <feGaussianBlur stdDeviation="9"/>
-  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
-  <feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
-  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-  <feOffset dy="6"/>
-  <feGaussianBlur stdDeviation="5"/>
-  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0"/>
-  <feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow"/>
-  <feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow" result="shape"/>
-  </filter>
-  </defs>
+  actionButton: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M4.32812 15.6719C5.92188 17.2344 7.8125 18.0156 10 18.0156C12.1875 18.0156 14.0625 17.2344 15.625 15.6719C17.2188 14.0781 18.0156 12.1875 18.0156 10C18.0156 7.8125 17.2188 5.9375 15.625 4.375C14.0625 2.78125 12.1875 1.98438 10 1.98438C7.8125 1.98438 5.92188 2.78125 4.32812 4.375C2.76562 5.9375 1.98438 7.8125 1.98438 10C1.98438 12.1875 2.76562 14.0781 4.32812 15.6719ZM2.92188 2.96875C4.89062 1 7.25 0.015625 10 0.015625C12.75 0.015625 15.0938 1 17.0312 2.96875C19 4.90625 19.9844 7.25 19.9844 10C19.9844 12.75 19 15.1094 17.0312 17.0781C15.0938 19.0156 12.75 19.9844 10 19.9844C7.25 19.9844 4.89062 19.0156 2.92188 17.0781C0.984375 15.1094 0.015625 12.75 0.015625 10C0.015625 7.25 0.984375 4.90625 2.92188 2.96875ZM10.9844 4.98438V9.01562H15.0156V10.9844H10.9844V15.0156H9.01562V10.9844H4.98438V9.01562H9.01562V4.98438H10.9844Z" fill="white"/>
   </svg>`,
   menu: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M3 16H13V14H3V16ZM3 9V11H21V9H3Z" fill="#333942"/>
@@ -97,6 +73,64 @@ const Icons: IIcons = {
   <path d="M293.617 19.1479H302V14.6279H280.765V19.1479H289.243V39.4999H293.617V19.1479Z" fill="#FAFAFA"/>
   </svg>
   `,
+  profile: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <path id="Path_23" data-name="Path 23" d="M28,14A10,10,0,1,0,38,24,10,10,0,0,0,28,14Zm0,3a3,3,0,1,1-3,3A3,3,0,0,1,28,17Zm0,14.2a7.2,7.2,0,0,1-6-3.22c.03-1.99,4-3.08,6-3.08s5.97,1.09,6,3.08A7.2,7.2,0,0,1,28,31.2Z" transform="translate(-18 -14)" fill="#737373"/>
+</svg>`,
+  foodDiary: `<svg xmlns="http://www.w3.org/2000/svg" width="16.402" height="20" viewBox="0 0 16.402 20">
+  <g id="Group_2" data-name="Group 2" transform="translate(-1348.799 -787)">
+    <path id="Path_17" data-name="Path 17" d="M35.615,15.211h-.634a22.225,22.225,0,0,1,.052,3.056l1.168-.294V15.8A.586.586,0,0,0,35.615,15.211Z" transform="translate(1329 773)" fill="#737373"/>
+    <path id="Path_18" data-name="Path 18" d="M35.033,21.783,36.2,21.49V19.182l-1.168.293Z" transform="translate(1329 773)" fill="#737373"/>
+    <path id="Path_19" data-name="Path 19" d="M35.033,25.337l.725-.182a.586.586,0,0,0,.443-.568V22.7l-1.168.293v2.346Z" transform="translate(1329 773)" fill="#737373"/>
+    <path id="Path_20" data-name="Path 20" d="M23.31,17.555h7.031V21.07H23.31Z" transform="translate(1329 773)" fill="#737373"/>
+    <path id="Path_21" data-name="Path 21" d="M26.828,29.273a2.346,2.346,0,0,1,2.344-2.344h4.689V15.758A1.76,1.76,0,0,0,32.1,14H20.385a.586.586,0,0,0-.586.586V33.414a.586.586,0,0,0,.586.586H32.1a1.76,1.76,0,0,0,1.758-1.756v-.627H29.172A2.346,2.346,0,0,1,26.828,29.273Zm-4.689-7.617V16.969a.586.586,0,0,1,.586-.586h8.2a.586.586,0,0,1,.586.586v4.687a.586.586,0,0,1-.586.586h-8.2A.586.586,0,0,1,22.139,21.656Z" transform="translate(1329 773)" fill="#737373"/>
+    <path id="Path_22" data-name="Path 22" d="M28,29.273a1.173,1.173,0,0,0,1.172,1.172h5.861V28.1H29.172A1.173,1.173,0,0,0,28,29.273Zm1.758,0a.586.586,0,1,1-.586-.586A.586.586,0,0,1,29.758,29.271Z" transform="translate(1329 773)" fill="#737373"/>
+  </g>
+</svg>`,
+  recipes: `<svg xmlns="http://www.w3.org/2000/svg" width="16.956" height="20" viewBox="0 0 16.956 20">
+  <g id="Group_1" data-name="Group 1" transform="translate(-1348.522 -723)">
+    <path id="Path_12" data-name="Path 12" d="M20.121,14a.6.6,0,0,0-.6.6V33.4a.6.6,0,0,0,.6.6h1.366V14Z" transform="translate(1329 709)" fill="#737373"/>
+    <path id="Path_13" data-name="Path 13" d="M31.052,25.149h-3.98v1.31h3.98Z" transform="translate(1329 709)" fill="#737373"/>
+    <path id="Path_14" data-name="Path 14" d="M33.638,14H22.661V34H33.638a2.844,2.844,0,0,0,2.841-2.841V16.841A2.844,2.844,0,0,0,33.638,14ZM32.226,25.046v2a.587.587,0,0,1-.587.587H26.486a.587.587,0,0,1-.587-.587V25.059A1.958,1.958,0,0,1,27.01,21.3a2.3,2.3,0,0,1,4.384.388,1.737,1.737,0,0,1,.833,3.354Z" transform="translate(1329 709)" fill="#737373"/>
+    <path id="Path_15" data-name="Path 15" d="M31.639,22.848a.562.562,0,0,0-.383.15h0a.585.585,0,0,1-.985-.427v0h0c0-.059,0-.406,0-.468a1.129,1.129,0,0,0-2.255.066c0,.005,0,.01,0,.016a.593.593,0,0,1-1.031.4.784.784,0,1,0-.5,1.39h5.153a.563.563,0,1,0,0-1.126Z" transform="translate(1329 709)" fill="#737373"/>
+  </g>
+</svg>`,
+  restaurants: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
+  <path id="Path_10" data-name="Path 10" d="M27,21H25V14H23v7H21V14H19v7a3.986,3.986,0,0,0,3.75,3.97V34h2.5V24.97A3.986,3.986,0,0,0,29,21V14H27Zm5-3v8h2.5v8H37V14C34.24,14,32,16.24,32,18Z" transform="translate(-19 -14)" fill="#737373"/>
+</svg>`,
+  snacks: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="21.99" viewBox="0 0 22 21.99">
+  <path id="Path_8" data-name="Path 8" d="M34.06,34.99h1.66a1.652,1.652,0,0,0,1.63-1.46L39,17.05H34V13H32.03v4.05H27.06l.3,2.34a10.251,10.251,0,0,1,4.27,2.26,6.891,6.891,0,0,1,2.43,5.29ZM17,33.99V33H32.03v.99a1,1,0,0,1-1.01,1H18.01A1,1,0,0,1,17,33.99Zm15.03-7c0-8-15.03-8-15.03,0ZM17.02,29h15v2h-15Z" transform="translate(-17 -13)" fill="#737373"/>
+</svg>`,
+  foodStocks: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20">
+  <g id="Group_3" data-name="Group 3" transform="translate(-1351 -916)">
+    <path id="Path_5" data-name="Path 5" d="M22,21.448V32.786a.575.575,0,0,0,.564.586h.644v.042a.564.564,0,1,0,1.128,0v-.042h7.328v.042a.564.564,0,1,0,1.128,0v-.042h.644A.575.575,0,0,0,34,32.786V21.448Zm4.188,2.51H24.98a.586.586,0,0,1,0-1.172h1.208a.586.586,0,0,1,0,1.172Z" transform="translate(1329 902)" fill="#737373"/>
+    <path id="Path_6" data-name="Path 6" d="M34,20.276v-5.69A.575.575,0,0,0,33.436,14H22.564a.575.575,0,0,0-.564.586v5.69Zm-9.02-2.51h1.208a.586.586,0,0,1,0,1.172H24.98a.586.586,0,0,1,0-1.172Z" transform="translate(1329 902)" fill="#737373"/>
+  </g>
+</svg>`,
+  shoppingList: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <path id="Path_3" data-name="Path 3" d="M23,30a2,2,0,1,0,2,2A2,2,0,0,0,23,30ZM17,14v2h2l3.6,7.59-1.35,2.45A1.933,1.933,0,0,0,21,27a2.006,2.006,0,0,0,2,2H35V27H23.42a.248.248,0,0,1-.25-.25l.03-.12L24.1,25h7.45a1.991,1.991,0,0,0,1.75-1.03l3.58-6.49A.977.977,0,0,0,37,17a1,1,0,0,0-1-1H21.21l-.94-2ZM33,30a2,2,0,1,0,2,2A2,2,0,0,0,33,30Z" transform="translate(-17 -14)" fill="#737373"/>
+</svg>`,
+  barcodeScanner: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="Group_4" data-name="Group 4" transform="translate(-1347 -980)">
+    <rect id="Rectangle_2" data-name="Rectangle 2" width="6" height="6" transform="translate(1348 981)" fill="none" stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_3" data-name="Rectangle 3" width="6" height="6" transform="translate(1348 993)" fill="none" stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_4" data-name="Rectangle 4" width="6" height="6" transform="translate(1360 981)" fill="none" stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_5" data-name="Rectangle 5" width="2" height="2" transform="translate(1347 989)" fill="#737373"/>
+    <rect id="Rectangle_6" data-name="Rectangle 6" width="2" height="2" transform="translate(1359 989)" fill="#737373"/>
+    <rect id="Rectangle_7" data-name="Rectangle 7" width="2" height="2" transform="translate(1353 989)" fill="#737373"/>
+    <rect id="Rectangle_8" data-name="Rectangle 8" width="2" height="2" transform="translate(1365 989)" fill="#737373"/>
+    <rect id="Rectangle_9" data-name="Rectangle 9" width="2" height="2" transform="translate(1362 989)" fill="#737373"/>
+    <rect id="Rectangle_10" data-name="Rectangle 10" width="2" height="2" transform="translate(1362 992)" fill="#737373"/>
+    <rect id="Rectangle_11" data-name="Rectangle 11" width="2" height="2" transform="translate(1362 995)" fill="#737373"/>
+    <rect id="Rectangle_12" data-name="Rectangle 12" width="2" height="2" transform="translate(1359 998)" fill="#737373"/>
+    <rect id="Rectangle_13" data-name="Rectangle 13" width="2" height="2" transform="translate(1365 998)" fill="#737373"/>
+    <rect id="Rectangle_14" data-name="Rectangle 14" width="2" height="2" transform="translate(1356 986)" fill="#737373"/>
+    <rect id="Rectangle_15" data-name="Rectangle 15" width="2" height="2" transform="translate(1356 998)" fill="#737373"/>
+    <rect id="Rectangle_16" data-name="Rectangle 16" width="2" height="2" transform="translate(1356 980)" fill="#737373"/>
+    <rect id="Rectangle_17" data-name="Rectangle 17" width="2" height="2" transform="translate(1356 992)" fill="#737373"/>
+    <rect id="Rectangle_18" data-name="Rectangle 18" width="2" height="2" transform="translate(1359 992)" fill="#737373"/>
+    <rect id="Rectangle_19" data-name="Rectangle 19" width="2" height="2" transform="translate(1365 992)" fill="#737373"/>
+  </g>
+</svg>`,
 };
 
 interface Props {
@@ -113,6 +147,14 @@ interface Props {
     | "glutenFree"
     | "dairyFree"
     | "camera"
+    | "profile"
+    | "foodDiary"
+    | "recipes"
+    | "restaurants"
+    | "snacks"
+    | "foodStocks"
+    | "shoppingList"
+    | "barcodeScanner"
     | "logo";
   style?: object;
 }

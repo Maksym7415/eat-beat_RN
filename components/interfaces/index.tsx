@@ -2,6 +2,7 @@ export interface InputProps {
   value: string;
   label: string;
   error?: boolean;
+  maxLength?: number;
 }
 
 export interface AuthProps {
@@ -38,8 +39,8 @@ export interface Memo {
   getData: () => void;
   pushData: () => void;
   isFetching: (value: boolean) => void;
-  showModal: (value: boolean) => void
-  isShow: boolean
+  showModal: (value: boolean) => void;
+  isShow: boolean;
 }
 
 export interface CalendarInterface {
@@ -114,5 +115,49 @@ export interface RecommendedMeals {
   diets: Array<Array<string>>;
   occasions: Array<string>;
   analyzedInstructions: Array<string>;
-  actionHandler: (a:string) => void
+  actionHandler: (a: string) => void;
+}
+
+export interface ConsumptionProps {
+  id: string;
+  date: string;
+  fkUserId: number;
+  healthScore: number;
+  nutrientsData: [
+    {
+      id: number;
+      name: string;
+      synonims: null;
+      shortage: number;
+      overage: number;
+      minCorrection: number;
+      maxCorrection: number;
+      unit: string;
+      defaultValue: number;
+      percenatage: number;
+      color: string;
+      currentValue: number;
+    }
+  ];
+  tooMuchNutrients: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
+  defaultNutrients: [
+    {
+      name: string;
+      intakeNorm: number;
+      unit: string;
+      currentValue: number;
+    }
+  ];
+  notEnough: [
+    {
+      name: string;
+      value: number;
+    }
+  ];
+  totalMeals: number;
 }

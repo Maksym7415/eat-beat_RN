@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect } from "react";
-import setAxios from "./utils/axios.config";
 import Splash from "./screens/SplashScreen";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { AppContext } from "./components/AppContext";
@@ -7,7 +6,6 @@ import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server from "./server";
-import Redux from './components/CustomRedux';
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -26,11 +24,15 @@ export default function App() {
   const [userData, setUserData] = useState<object>({});
 
   const loadUser = async () => {
+    console.log("new log", new Date(), "\n");
+    await server.setup();
     const token = await AsyncStorage.getItem("@token");
+    const user = await AsyncStorage.getItem("@user");
     if (token) {
       setLogged(true);
     }
     await Font.loadAsync(customFonts);
+    if (user) setUserData(JSON.parse(user));
     setLoaded(true);
   };
 
@@ -50,24 +52,21 @@ export default function App() {
       isFetching: (value: boolean) => console.log("hi"),
       showModal: (value: boolean) => {
         //console.log(value)
-        setShow(value)
+        setShow(value);
       },
-      isShow: show
+      isShow: show,
     }),
     [cal, show]
   );
 
   useEffect(() => {
-    server.setup();
     loadUser();
   }, [logged]);
 
   return (
-   
     <AppContext.Provider value={appContext}>
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
     </AppContext.Provider>
-    
   );
 }
 // Reminder Notes

@@ -38,12 +38,12 @@ const ActionModal: FC<Props> = ({ visible, onClick, onClose }) => {
           ))}
           <View style={styles.buttons}>
             <Pressable onPress={onClose}>
-              <Text type="sub" style={{ color: Col.Primary }}>
+              <Text type="sub" style={{ color: Col.Black }}>
                 CANCEL
               </Text>
             </Pressable>
             <Pressable onPress={() => onClick(select)}>
-              <Text type="sub" style={{ color: Col.Primary }}>
+              <Text type="sub" style={{ color: Col.Black }}>
                 ADD
               </Text>
             </Pressable>
@@ -57,6 +57,7 @@ const ActionModal: FC<Props> = ({ visible, onClick, onClose }) => {
 const styles = StyleSheet.create({
   header: {
     padding: Spacing.small,
+    color: Col.Black,
   },
   centeredView: {
     flex: 1,
@@ -67,24 +68,24 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: "100%",
-    backgroundColor: "white",
     borderRadius: 8,
-    padding: Spacing.medium,
     shadowColor: "#000",
+    padding: Spacing.medium,
+    backgroundColor: "white",
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
   },
   buttons: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
     padding: Spacing.small,
     marginTop: Spacing.large,
+    justifyContent: "space-around",
   },
 });
 
