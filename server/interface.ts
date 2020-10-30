@@ -10,6 +10,7 @@ export interface apiProps {
     history: string;
     recipeByName: string;
     searchSettings: string;
+    getSearchFilter: string
   };
   post: {
     addCookedMeal: string;

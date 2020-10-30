@@ -30,8 +30,9 @@ interface Time{
 export default function EditModal({ setModalData, id, name, time: pTime, servings, modalVisible, creationTime, cb}: Props) {
     const [amount, setAmount] = useState<string>(servings)
     const p_time = pTime.split(':')
-    const [time, setTime] = useState<Time>({hour: {max: 23, min: 0, value: p_time[0]}, minutes: {max: 59, min: 0, value: p_time[1]}})
-    console.log(amount)
+    console.log(p_time)
+    const [time, setTime] = useState<Time>({hour: {max: 23, min: 0, value: p_time[0]}, minutes: {max: 59, min: 0, value: p_time[1]?.length === 1 ? '0' + p_time[1]: p_time[1]}})
+
     const changeHandler = (text: string, name: string) => {
         const value = text.split(',')
         if(name === 'amount') {

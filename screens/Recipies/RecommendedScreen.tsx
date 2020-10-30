@@ -36,14 +36,14 @@ const RecommendedScreen: FC<Props> = (props) => {
   const { date } = calendar;
 
   const serveData = async () => {
-    const response = await server.getRecommendedMeals(date);
-    response.ok
-      ? setFeed(response.data)
-      : Alert.alert(
-          response.status?.toString(),
-          `${response.problem}\n${JSON.stringify(response.config)}`
-        );
-    console.log("getRecommendedMeals => request: ", response.ok);
+    // const response = await server.getRecommendedMeals(date);
+    // response.ok
+    //   ? setFeed(response.data)
+    //   : Alert.alert(
+    //       response.status?.toString(),
+    //       `${response.problem}\n${JSON.stringify(response.config)}`
+    //     );
+    // console.log("getRecommendedMeals => request: ", response.ok);
   };
 
   const actionHandler = async (props: RecommendedMeals) => {
@@ -57,7 +57,6 @@ const RecommendedScreen: FC<Props> = (props) => {
      creationTime: new Date().getTime(),
      data
    })
-   console.log(1234)
  //serveData()
 }
 

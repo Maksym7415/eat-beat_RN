@@ -14,6 +14,7 @@ const apiConfig: apiProps = {
     history: "/meals/healthscore-history?offset=",
     recipeByName: "/meals/get-recipes?recipeName=",
     searchSettings: "/user/search-recipe-settings",
+    getSearchFilter: "/user/search-recipe-settings",
   },
   post: {
     addCookedMeal: "/meals/meal-change-status",
@@ -128,9 +129,9 @@ const getHistory = async (offset: number) => {
   });
 };
 
-const getRecipeByName = async (name: string, intolerances: string[]) => {
-  const address = apiConfig.get.recipeByName + name
-    // apiConfig.get.recipeByName + name + "&intolerances=" + intolerances.join();
+const getRecipeByName = async (name: string, { intolerances, diets }: object) => {
+  //const address = apiConfig.get.recipeByName + name
+  const address =`${apiConfig.get.recipeByName}${name}&intolerances=${intolerances}&diets=${diets}`;
    
   return api.get(address).then((response) => {
     if (!response.ok) logError(response);
@@ -146,6 +147,13 @@ const getSearchSettings = async () => {
     return response.data;
   });
 };
+
+const getSearchFilter = async () => {
+  const address = apiConfig.get.getSearchFilter;
+  const response = await api.get(address)
+  if (!response.ok) logError(response);
+  return response.data;
+}
 
 const addCookedMeal = async (payload) => {
   const address = apiConfig.post.addCookedMeal;
@@ -220,4 +228,5 @@ export default {
   updateProfile,
   updatePassword,
   updateCookedMeal,
+  getSearchFilter
 };
