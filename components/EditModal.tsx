@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   Modal,
   StyleSheet,
@@ -9,10 +8,10 @@ import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Col, Typ, Weight, Spacing } from "./Config";
+import Text from "./custom/Typography";
+import { Col, Typ, Spacing } from "./Config";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import server from "../server";
-
+import { Button } from "./MyComponents";
 interface Props {
   id: number;
   name: string;
@@ -114,17 +113,18 @@ export default function EditModal({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
           <View style={styles.modalView}>
-            <Text style={styles.title}>{name}</Text>
+            <Text type="h6" style={{ color: "black" }}>
+              {name}
+            </Text>
             <View>
               <Text
+                type="bodyBold2"
                 style={{
-                  ...styles.title,
-                  fontSize: Typ.Small,
                   marginBottom: 8,
                   marginTop: 16,
                 }}
               >
-                Servings portion
+                Servings
               </Text>
               <View style={styles.amountContainer}>
                 <TouchableOpacity
@@ -168,9 +168,8 @@ export default function EditModal({
             </View>
             <View style={{ marginTop: 12 }}>
               <Text
+                type="bodyBold2"
                 style={{
-                  ...styles.title,
-                  fontSize: Typ.Small,
                   marginBottom: 8,
                 }}
               >
@@ -207,39 +206,21 @@ export default function EditModal({
               </View>
             </View>
             <View style={styles.btnContainer}>
-              <View style={{ width: "55%", alignItems: "flex-end" }}>
-                <TouchableOpacity
-                  onPress={() => hideModal(true)}
-                  style={{ paddingVertical: 5, paddingHorizontal: 5 }}
-                >
-                  <Text
-                    style={{
-                      color: Col.Blue,
-                      fontWeight: "500",
-                      fontSize: Typ.Small,
-                    }}
-                  >
-                    CANCEL
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.modalBtn}>
-                <TouchableOpacity
-                  onPress={() => cb(creationTime, time, amount, hideModal, id)}
-                  style={{ paddingVertical: 5, paddingHorizontal: 5 }}
-                >
-                  <Text
-                    style={{
-                      color: Col.Blue,
-                      fontWeight: "500",
-                      fontSize: Typ.Small,
-                    }}
-                  >
-                    OK
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <View />
+              <Button
+                type="text"
+                label="CANCEL"
+                onPress={() => hideModal(true)}
+                style={{ marginVertical: 0 }}
+                labelStyle={{ color: "black" }}
+              />
+              <Button
+                type="text"
+                label="OK"
+                onPress={() => cb(creationTime, time, amount, hideModal, id)}
+                style={{ marginVertical: 0 }}
+                labelStyle={{ color: "black" }}
+              />
             </View>
           </View>
         </View>
@@ -270,11 +251,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
   },
-  title: {
-    fontWeight: "bold",
-    fontSize: Typ.H3,
-  },
-  label: {},
   amountContainer: {
     display: "flex",
     flexDirection: "row",
@@ -312,15 +288,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 20,
-    marginTop: 32,
-  },
-  modalBtn: {
-    // backgroundColor: 'red',
-    width: "30%",
-    alignItems: "flex-end",
-
-    //marginLeft: '25%'
+    justifyContent: "space-around",
+    marginTop: Spacing.medium,
   },
 });

@@ -53,10 +53,11 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
     const avBlob = await avResponse.blob();
     const form = new FormData();
     form.append("file", avBlob);
-    const response = await server.upload(form);
-    if (response.ok) {
-      AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
-    }
+    const response = await server.upload(uri);
+
+    // if (response.ok) {
+    //   AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
+    // }
   };
   return (
     <View style={styles.container}>

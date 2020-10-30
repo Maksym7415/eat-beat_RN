@@ -2,6 +2,7 @@ export interface InputProps {
   value: string;
   label: string;
   error?: boolean;
+  maxLength?: number;
 }
 
 export interface AuthProps {
@@ -38,8 +39,8 @@ export interface Memo {
   getData: () => void;
   pushData: () => void;
   isFetching: (value: boolean) => void;
-  showModal: (value: boolean) => void
-  isShow: boolean
+  showModal: (value: boolean) => void;
+  isShow: boolean;
 }
 
 export interface CalendarInterface {
@@ -114,7 +115,7 @@ export interface RecommendedMeals {
   diets: Array<Array<string>>;
   occasions: Array<string>;
   analyzedInstructions: Array<string>;
-  actionHandler: (a:string) => void
+  actionHandler: (a: string) => void;
 }
 
 export interface ConsumptionProps {

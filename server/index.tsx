@@ -1,10 +1,10 @@
 import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
-import Axios from "axios";
 
 const apiConfig: apiProps = {
-  baseURL: "http://10.4.30.212:8081/api",
+  //baseURL: "http://10.4.30.212:8081/api",
+  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     dailyConsumption: "/meals/daily-consumption?date=",
@@ -14,6 +14,7 @@ const apiConfig: apiProps = {
     history: "/meals/healthscore-history?offset=",
     recipeByName: "/meals/get-recipes?recipeName=",
     searchSettings: "/user/search-recipe-settings",
+    verification: "/auth/verify-account?verificationCode=",
   },
   post: {
     addCookedMeal: "/meals/meal-change-status",
@@ -46,13 +47,16 @@ const setToken = async (token: cacheProps) => {
   AsyncStorage.setItem("@token", JSON.stringify(token));
   api.setHeader("Authorization", `Bearer ${token.accessToken}`);
 };
+
 const removeToken = async () => {
   AsyncStorage.removeItem("@token");
 };
+
 const getToken = async () => {
   const token = await AsyncStorage.getItem("@token");
   return token ? JSON.parse(token).accessToken : null;
 };
+
 const getRefresh = async () => {
   const token = await AsyncStorage.getItem("@token");
   console.log(token);
@@ -84,14 +88,18 @@ const setup = async () => {
 
 const logError = ({ problem, config, status, headers, data }: errorProps) => {
   //Alert.alert(problem);
+  console.log(config);
+  /*
   console.log(
     "Error------\nproblem => ",
     problem,
     "\nstatus => ",
     status,
     "\ndata => ",
-    data
-  );
+    data,
+    "\nco => ",
+    config
+  );*/
 };
 
 const getCalendar = (value: Date) => {
@@ -135,7 +143,11 @@ const updateCookedMeal = async (id: number, data: object) => {
 const getProfile = async () => {
   const address = apiConfig.get.profile;
   const response = await api.get(address);
-  if (!response.ok) logError(response);
+  if (!response.ok) {
+    logError(response);
+  } else {
+    await AsyncStorage.setItem("@user", JSON.stringify(response.data));
+  }
   return response;
 };
 
@@ -181,15 +193,46 @@ const signIn: AuthFun = async (payload) => {
 const register: AuthFun = async (payload) => {
   const address = apiConfig.post.register;
   const response = await api.post(address, payload);
-  response.ok ? setToken(response.data) : logError(response);
+  if (response.ok) logError(response);
   return response;
 };
 
-const upload = async (form: FormData) => {
-  const address = apiConfig.post.upload;
+const upload = async (uri) => {
+  const address = apiConfig.baseURL + apiConfig.post.upload;
+  const token = await getToken();
+  /*
   const response = await api.post(address, form);
   if (!response.ok) logError(response);
   return response.ok;
+  */
+  //---
+  const form = () => {
+    var data = new FormData();
+    data.append(
+      "file",
+      JSON.stringify({
+        uri,
+        name: `avatar-${Date.now()}.jpg`,
+        type: "image/*",
+      })
+    );
+    return data;
+  };
+  try {
+    let response = await fetch(address, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      body: form(),
+    });
+    console.log(response.json());
+  } catch (error) {
+    console.error(error);
+  }
+  //---
 };
 
 const delCookedMeal = () => {
@@ -215,6 +258,20 @@ const updatePassword = () => {
   return null;
 };
 
+const resendCode = async () => {
+  const address = apiConfig.post.register;
+  const response = await api.get(address);
+  response.ok ? setToken(response.data) : logError(response);
+  return response.ok;
+};
+
+const verifyAccount = async (code: number) => {
+  const address = apiConfig.get.verification + code;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+};
+
 export default {
   setup,
   getDailyConsumption,
@@ -234,4 +291,6 @@ export default {
   updateProfile,
   updatePassword,
   updateCookedMeal,
+  resendCode,
+  verifyAccount,
 };

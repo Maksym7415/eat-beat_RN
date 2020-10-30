@@ -23,9 +23,9 @@ import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [actionBtn, setActionBtn] = useState(false);
-  const [loaded, setLoaded] = useState(0);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [actionBtn, setActionBtn] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<number>(0);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
@@ -75,6 +75,8 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           </View>
         </Pressable>
         <Modal
+          label="Health Score"
+          content="HealthScore"
           modalVisible={modalVisible}
           showModal={() => setModalVisible(false)}
         />
@@ -171,6 +173,8 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         </View>
       </Pressable>
       <Modal
+        label="Health Score"
+        content="HealthScore"
         modalVisible={modalVisible}
         showModal={() => setModalVisible(false)}
       />

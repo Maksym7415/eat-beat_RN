@@ -9,8 +9,8 @@ import { Text } from "../../components/custom/Typography";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import server from "../../server";
 import SvgMaker from "../../components/SvgMaker";
-import UID from "../../components/UID";
-import AsyncStorage from "@react-native-community/async-storage";
+import Modal from "../../components/Modal";
+import CheckBox from "@react-native-community/checkbox";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -20,21 +20,38 @@ const Validation = Yup.object().shape({
 const RegisterScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
   const [error, setError] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [toggleTerms, setToggleTerms] = useState(false);
+  const [doc, setDoc] = useState({
+    label: "Privacy Policy",
+    desc: "PrivacyPolicy",
+  });
+
   const signUp = async (value: AuthProps) => {
     setClicked(true);
-    const buffer = { ...value, link: `${UID}` };
-    const response = await server.register(buffer);
+    const response = await server.register(value);
     if (response.ok) {
-      navigation.navigate("success");
-      await AsyncStorage.mergeItem("@user", JSON.stringify(buffer));
+      navigation.navigate("confirm", { email: value.email });
     } else {
       Alert.alert(JSON.stringify(response.data));
       if (response.status === 400) setError(true);
       setClicked(false);
     }
   };
+
+  const showModal = (label: string, desc: string) => {
+    setDoc({ label, desc });
+    setVisible(true);
+  };
+
   return (
     <View style={styles.container}>
+      <Modal
+        modalVisible={visible}
+        label={doc.label}
+        content={doc.desc}
+        showModal={() => setVisible(false)}
+      />
       <View style={styles.logoContainer}>
         <SvgMaker name="logo" />
       </View>
@@ -56,6 +73,31 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
                 error={`this email is already registered`}
                 style={styles.errorContainer}
               />
+              <View style={styles.termsContainer}>
+                <CheckBox
+                  tintColor={Col.Main}
+                  value={toggleTerms}
+                  onValueChange={(newValue) => setToggleTerms(newValue)}
+                />
+                <Text>
+                  By creating an account, you agree to EatBeat's{" "}
+                  <Text
+                    onPress={() =>
+                      showModal("EAT BEAT Terms of Use", "TermsOfUse")
+                    }
+                    style={{ color: Col.Main }}
+                  >
+                    Conditions of Use{" "}
+                  </Text>
+                  and{" "}
+                  <Text
+                    onPress={() => showModal("Privacy Policy", "PrivacyPolicy")}
+                    style={{ color: Col.Main }}
+                  >
+                    Privacy Notice
+                  </Text>
+                </Text>
+              </View>
               <Button
                 clicked={clicked}
                 onPress={handleSubmit}
@@ -121,6 +163,11 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     marginTop: Spacing.small,
+  },
+  termsContainer: {
+    flexDirection: "row",
+    marginVertical: Spacing.r_small,
+    alignItems: "center",
   },
 });
 export default RegisterScreen;

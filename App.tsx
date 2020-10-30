@@ -6,7 +6,6 @@ import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server from "./server";
-import Redux from './components/CustomRedux';
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -53,9 +52,9 @@ export default function App() {
       isFetching: (value: boolean) => console.log("hi"),
       showModal: (value: boolean) => {
         //console.log(value)
-        setShow(value)
+        setShow(value);
       },
-      isShow: show
+      isShow: show,
     }),
     [cal, show]
   );
@@ -65,11 +64,9 @@ export default function App() {
   }, [logged]);
 
   return (
-   
     <AppContext.Provider value={appContext}>
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
     </AppContext.Provider>
-    
   );
 }
 // Reminder Notes
