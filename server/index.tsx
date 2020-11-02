@@ -1,6 +1,7 @@
 import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
+import Axios from "axios";
 
 const apiConfig: apiProps = {
   //baseURL: "http://10.4.30.212:8081/api",
@@ -143,12 +144,14 @@ const updateCookedMeal = async (id: number, data: object) => {
 
 const getProfile = async () => {
   const address = apiConfig.get.profile;
+  console.log(address)
   const response = await api.get(address);
   if (!response.ok) {
     logError(response);
   } else {
     await AsyncStorage.setItem("@user", JSON.stringify(response.data));
   }
+  console.log(response)
   return response;
 };
 
@@ -209,35 +212,25 @@ const register: AuthFun = async (payload) => {
 const upload = async (uri) => {
   const address = apiConfig.baseURL + apiConfig.post.upload;
   const token = await getToken();
-  /*
-  const response = await api.post(address, form);
-  if (!response.ok) logError(response);
-  return response.ok;
-  */
-  //---
-  const form = () => {
-    var data = new FormData();
-    data.append(
-      "file",
-      JSON.stringify({
-        uri,
-        name: `avatar-${Date.now()}.jpg`,
-        type: "image/*",
-      })
-    );
-    return data;
-  };
+  const uriParts = uri.split('.');
+  const fileType = uriParts[uriParts.length - 1];
+  const formData = new FormData();
+  formData.append('file', {
+      uri,
+      name: `photo.${fileType}`,
+      type: `image/${fileType}`,
+  });
   try {
-    let response = await fetch(address, {
+
+    let response = await Axios(address, {
       method: "POST",
       headers: {
-        Accept: "application/json",
+        Accept: 'application/json',
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
-      body: form(),
+      data: formData,
     });
-    console.log(response.json());
   } catch (error) {
     console.error(error);
   }

@@ -96,9 +96,10 @@ const SearchScreen = (props) => {
   };
 
 const constraintNumber = (filter) => {
+  // console.log(!Object.keys(filter).length)
+  if(!Object.keys(filter).length) return;
   let countConstraint = 0;
   Object.keys(filter).forEach((el) => filter[el]?.forEach((constraint) => constraint.isUsers === true ? countConstraint +=1 : false));
-  console.log(countConstraint)
   return countConstraint
 }
 
@@ -106,7 +107,6 @@ useEffect(() => {
   const getSearchFilter = async () => {
     const data = await server.getSearchFilter();
     setFilter(data)
-    console.log(data)
   }
   getSearchFilter() 
 }, [])
