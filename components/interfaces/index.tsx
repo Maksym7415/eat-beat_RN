@@ -18,6 +18,7 @@ export interface NavProps {
     push: (name: string) => void;
     goBack: () => void;
     setOptions: (props: object) => void;
+    setParams: (props: object) => void;
   };
   route: {
     params?: any;

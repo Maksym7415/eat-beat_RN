@@ -49,16 +49,16 @@ const RecommendedScreen: FC<Props> = (props) => {
   const actionHandler = async (props: RecommendedMeals) => {
     const { actionHandler, ...data } = props;
     setModalData({
-     id: props.title,
-     name: props.title, 
-     time: `${new Date().getHours()}:${new Date().getMinutes()}`, 
-     servings: '0.5', 
-     modalVisible: true, 
-     creationTime: new Date().getTime(),
-     data
-   })
- //serveData()
-}
+      id: props.title,
+      name: props.title,
+      time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+      servings: "0.5",
+      modalVisible: true,
+      creationTime: new Date().getTime(),
+      data,
+    });
+    //serveData()
+  };
 
   const addMeal = async (
     creationTime: number,

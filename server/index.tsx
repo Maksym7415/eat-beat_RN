@@ -221,8 +221,11 @@ const upload = async (uri) => {
   return response;
 };
 
-const delCookedMeal = () => {
-  return null;
+const delCookedMeal = async (id: number) => {
+  const address = apiConfig.del.cookedMeal + id;
+  const response = await api.delete(address);
+  if (response.ok) logError(response);
+  return response;
 };
 
 const delUser = async () => {

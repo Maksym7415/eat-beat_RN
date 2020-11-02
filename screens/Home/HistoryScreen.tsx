@@ -32,12 +32,10 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   const getHealthsScore = async () => {
     const response = await server.getHistory(offset.offset);
-    console.log(response.data.data);
     if (response.ok) {
       const historyFeed: HealthScore[] = response.data.data;
       const dates: string[] = historyFeed.map((el) => `${el.date}`);
       const scores: number[] = historyFeed.map((el) => el.healthScore);
-      console.log(dates, scores);
       setData((value) => ({ ...value, dates, scores }));
     }
   };

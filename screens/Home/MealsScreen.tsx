@@ -1,36 +1,45 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import React, {
+  FC,
+  SyntheticEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import CookedMealCard from "../../components/CookedMealCard";
 import { Memo, NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
-import EditModal from "../../components/EditModal";
+import EditModal from "../../components/newEditModal";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
 import { useFocusEffect } from "@react-navigation/native";
+import ActionButton from "./common/ActionButton";
+import ActionModal from "../../components/ActionModal";
 
 interface ModalData {
   id: number;
   name: string;
-  time: string;
-  servings: string;
+  servings: number;
   modalVisible: boolean;
   creationTime: number;
 }
+
+type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
 
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   console.log(route.params);
   const [feed, setFeed] = useState(null);
   const [select, setSelect] = useState(null);
   const [popVisible, setPopVisible] = useState(false);
+  const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
     name: "",
-    time: "",
-    servings: "",
+    servings: 0,
     modalVisible: false,
     creationTime: 0,
   });
@@ -43,69 +52,68 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     if (response.ok) setFeed(response.data);
   };
 
-  const onChange = (event: Event, selectedDate: Date) => {
+  const onChange = (event: Ev, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || date;
     saveCal({ visible: false, date: currentDate });
   };
 
-  const actionHandler = async (
-    id: number,
-    name: string,
-    time: string,
-    servings: number,
-    creationTime: number
-  ) => {
+  const actionHandler = async (id, name, servings, creationTime) => {
     if (name) {
-      return setModalData({
+      setModalData({
         id,
         name,
-        time,
-        servings: servings + "",
-        modalVisible: true,
+        servings,
         creationTime,
+        modalVisible: true,
       });
+    } else {
+      await server.delCookedMeal(id);
+      serveData();
     }
-    await axios.delete(`/meals/cooked-meal/${id}`);
+  };
+
+  const addRecommended = (value: number) => {
+    setActionBtn(false);
+    navigation.navigate("recommendedDrawer");
+  };
+
+  const updateMeal = async (id, { creationTime, servings }) => {
+    await server.updateCookedMeal(id, {
+      servings,
+      creationTime,
+    });
+    setModalData({ ...modalData, modalVisible: false });
     serveData();
   };
 
-  const updateMeal = async (
-    creationTime: number,
-    time: object,
-    amount: string,
-    hideModal: (a: boolean) => boolean,
-    id: number
-  ) => {
-    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(
-      creationTime
-    ).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${
-      time.minutes.value
-    }`;
-    await server.updateCookedMeal(id, {
-      servings: +amount.replace(/[,-]/g, "."),
-      creationTime: new Date(t).getTime(),
-    });
-    hideModal(false);
-  };
   useEffect(() => {
     serveData();
   }, [date]);
 
-  useEffect(() => {
-    if (modalData.modalVisible || modalData.cancel) return;
-    serveData();
-  }, [modalData.modalVisible]);
-
   useFocusEffect(
     useCallback(() => {
       if (route.params?.refresh) {
+        navigation.setParams({ refresh: false });
         serveData();
       }
     }, [route.params])
   );
   return (
     <View style={styles.container}>
-      <EditModal {...modalData} setModalData={setModalData} cb={updateMeal} />
+      <ActionButton
+        style={styles.actionButton}
+        onPress={() => setActionBtn(!actionBtn)}
+      />
+      <ActionModal
+        visible={actionBtn}
+        onClick={(value: number) => addRecommended(value)}
+        onClose={() => setActionBtn(false)}
+      />
+      <EditModal
+        data={modalData}
+        setData={(id, body) => updateMeal(id, body)}
+        hideModal={() => setModalData({ ...modalData, modalVisible: false })}
+      />
       <PopUp
         header="Delete?"
         body={`Delete “${select}”?`}
@@ -158,6 +166,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  actionButton: {
+    zIndex: 1,
+    position: "absolute",
+    right: Spacing.medium,
+    bottom: Spacing.large,
   },
 });
 

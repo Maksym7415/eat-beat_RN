@@ -31,7 +31,7 @@ interface Props {
   data: dataProps;
 }
 
-const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
+const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
   const { id, name, servings, modalVisible, creationTime } = data;
   const [newTime, setNewTime] = useState({
     hrs: new Date(creationTime).getHours().toString(),
@@ -232,4 +232,4 @@ const styles = StyleSheet.create({
     marginTop: Spacing.medium,
   },
 });
-export default EditModal;
+export default newEditModal;
