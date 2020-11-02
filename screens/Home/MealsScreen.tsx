@@ -10,7 +10,6 @@ import { Text } from "../../components/custom/Typography";
 import EditModal from "../../components/EditModal";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
-import { connect } from "http2";
 import { useFocusEffect } from "@react-navigation/native";
 
 interface ModalData {

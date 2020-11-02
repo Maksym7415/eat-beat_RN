@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
-import { getDate } from "../../utils/date";
 import server from "../../server";
 
 interface HealthScore {
@@ -60,10 +59,8 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <>
-      <Text style={{ alignSelf: "center", marginBottom: 8 }}>
-        Your health score
-      </Text>
+    <View>
+      <Text style={styles.text}>Your health score</Text>
       <ScrollView
         horizontal={true}
         onScroll={handleScroll}
@@ -71,7 +68,7 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
       >
         <Chart data={data} />
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -80,6 +77,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  text: {
+    alignSelf: "center",
+    marginBottom: 8,
   },
 });
 export default HistoryScreen;

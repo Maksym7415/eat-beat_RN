@@ -217,7 +217,6 @@ const upload = async (uri) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log(response);
   if (response.ok) logError(response);
   return response;
 };

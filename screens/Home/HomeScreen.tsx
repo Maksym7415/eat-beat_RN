@@ -5,7 +5,6 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
-  Dimensions,
 } from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
