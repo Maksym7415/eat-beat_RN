@@ -54,7 +54,7 @@ export default function FilterModal({ modalVisible, hideModal, data, saveFilterD
                 <View style={styles.intolerances}>
                     <Text style={styles.intolerances_text}>Intolerances</Text>
                     <View style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginTop: 22}}>  
-                        {data.intolerances && data.intolerances.map((el) => <Chip chipsState={chipsState} setChipsState={setChips} title={el.name} key={el.id}/>)}
+                        {data.intolerances && data.intolerances.map((el) => <Chip chipBgColor={Col.Green} chipsState={chipsState} setChipsState={setChips} title={el.name} key={el.id}/>)}
                     </View>
                 </View>       
                 <Divider styler={styles.divider}/>

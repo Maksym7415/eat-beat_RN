@@ -24,6 +24,7 @@ import TestOut from "../screens/TestOut";
 import DrawerLayout from "./common/DrawerLayout";
 import Success from "../screens/Auth/SuccessScreen";
 import Confirmation from "../screens/Auth/ConfirmationScreen";
+import PersonalDataScreen from '../screens/Profile/PersonalDataScreen';
 
 import { AppContext } from "../components/AppContext";
 
@@ -114,7 +115,7 @@ const ProfileTopNavigator = () => (
     />
     <TopTabs.Screen
       name="personalData"
-      component={SearchScreen}
+      component={PersonalDataScreen}
       options={{ title: "Personal data" }}
     />
     <TopTabs.Screen
