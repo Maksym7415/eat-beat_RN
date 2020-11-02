@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { StyleSheet, View, ScrollView, Alert } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
-import { MaterialIcons as Icon } from "@expo/vector-icons";
 import UserCard from "./common/UserCard";
 import PopUp from "../../components/PopUp";
 import server from "../../server";

@@ -1,17 +1,17 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "../../components/MyComponents";
 import { Col, Spacing } from "../../components/Config";
 import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
-import SvgMaker from "../../components/SvgMaker";
+import { AppContext } from "../../components/AppContext";
+import Logo from "./common/Logo";
 
 const SuccessScreen: FC<NavProps> = ({ navigation }) => {
+  const { login } = useContext(AppContext);
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <SvgMaker name="logo" />
-      </View>
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Successful
@@ -19,11 +19,7 @@ const SuccessScreen: FC<NavProps> = ({ navigation }) => {
         <Text type="body2">
           Your account is ready. You can use the application
         </Text>
-        <Button
-          style={styles.btn}
-          onPress={() => navigation.navigate("login")}
-          label="Go"
-        />
+        <Button style={styles.btn} onPress={() => login()} label="Go" />
       </View>
     </View>
   );

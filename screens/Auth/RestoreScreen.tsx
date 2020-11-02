@@ -8,7 +8,7 @@ import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
-import SvgMaker from "../../components/SvgMaker";
+import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -27,9 +27,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <SvgMaker name="logo" />
-      </View>
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Forgot your password?

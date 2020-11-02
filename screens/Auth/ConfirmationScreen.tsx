@@ -8,7 +8,7 @@ import { Col, Spacing } from "../../components/Config";
 import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
-import SvgMaker from "../../components/SvgMaker";
+import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
   verificationCode: Yup.number().required().min(5).label("verification Code"),
@@ -16,14 +16,16 @@ const Validation = Yup.object().shape({
 
 const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const Email = route.params.email;
+
   const [clicked, setClicked] = useState(false);
   const [resend, setResend] = useState(false);
   const [error, setError] = useState(false);
   const onConfirm = async (value) => {
     setClicked(true);
-    const logged = await server.verifyAccount(value.verificationCode);
-    if (logged) {
-      navigation.navigate("success");
+    const verified = await server.verifyAccount(value.verificationCode);
+    if (verified) {
+      const logged = await server.signIn(route.params);
+      if (logged) navigation.navigate("success");
     } else {
       setClicked(false);
       setError(true);
@@ -43,9 +45,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <SvgMaker name="logo" />
-      </View>
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Confirmation

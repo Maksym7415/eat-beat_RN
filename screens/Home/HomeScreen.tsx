@@ -5,13 +5,13 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
 import Collapse from "../../components/Collapse";
 import Nutrient from "../../components/Nutrient";
-import SvgMaker from "../../components/SvgMaker";
 import Nutrition from "../../components/Nutrition";
 import HealthCircle from "../../components/HealthCircle";
 import { Col, Spacing } from "../../components/Config";
@@ -21,6 +21,7 @@ import { Divider } from "../../components/MyComponents";
 import { AppContext } from "../../components/AppContext";
 import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import ActionButton from "./common/ActionButton";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -29,13 +30,12 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
-
   const serveData = async () => {
     console.log("serve", date);
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
       const len = Object.keys(data).length;
-      setLoaded(len);
+      len > 0 && data.totalMeals > 0 ? setLoaded(len) : setLoaded(0);
       setFeed(data);
     }
   };
@@ -63,17 +63,14 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         <ActivityIndicator size="small" color={Col.Black} />
       </View>
     );
+
   if (loaded > 0)
     return (
       <View style={styles.canvas}>
-        <Pressable
+        <ActionButton
           style={styles.actionButton}
           onPress={() => setActionBtn(!actionBtn)}
-        >
-          <View style={styles.actionContainer}>
-            <SvgMaker name="actionButton" />
-          </View>
-        </Pressable>
+        />
         <Modal
           label="Health Score"
           content="HealthScore"
@@ -164,14 +161,10 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
     );
   return (
     <View style={styles.loading}>
-      <Pressable
+      <ActionButton
         style={styles.actionButton}
         onPress={() => setActionBtn(!actionBtn)}
-      >
-        <View style={styles.actionContainer}>
-          <SvgMaker name="actionButton" />
-        </View>
-      </Pressable>
+      />
       <Modal
         label="Health Score"
         content="HealthScore"
@@ -262,12 +255,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
-  },
-  actionContainer: {
-    borderRadius: 50,
-    padding: 18,
-    backgroundColor: Col.Main,
-    elevation: 5,
   },
 });
 export default HomeScreen;

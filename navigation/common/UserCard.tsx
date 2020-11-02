@@ -3,19 +3,18 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 
-const UserCard = () => {
+const UserCard = (props) => {
   const [user, setUser] = useState({
-    email: "mama@mail.com",
+    email: "",
     avatar:
-      "https://images.unsplash.com/photo-1603723815349-2117d3a5394a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "https://images.unsplash.com/photo-1589329482108-e414c7c6b8c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
   });
   const getAvatar = async () => {
+    console.log(props);
     const data = await AsyncStorage.getItem("@user");
     if (data) setUser(JSON.parse(data));
   };
-  useEffect(() => {
-    getAvatar();
-  }, []);
+  if (user.email === "") getAvatar();
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{ uri: user.avatar }} />

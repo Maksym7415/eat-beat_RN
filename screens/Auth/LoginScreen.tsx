@@ -1,5 +1,10 @@
 import React, { FC, useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
@@ -10,6 +15,7 @@ import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import SvgMaker from "../../components/SvgMaker";
+import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -31,11 +37,16 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
+  const changeBaseURL = async () => {
+    server.changeURL();
+    console.log("hi");
+  };
+
+  console.log(Dimensions.get("screen").height);
+
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <SvgMaker name="logo" />
-      </View>
+      <Logo onLongPress={() => changeBaseURL()} />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Login
@@ -122,10 +133,6 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     marginTop: Spacing.small,
-  },
-  logoContainer: {
-    marginTop: 80,
-    marginBottom: 50,
   },
 });
 

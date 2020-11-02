@@ -62,6 +62,7 @@ const HomeTopNavigator = () => (
       indicatorStyle: {
         backgroundColor: Col.Main,
       },
+      //scrollEnabled: true,
     }}
     initialRouteName="home"
   >
@@ -81,6 +82,7 @@ const RecipesTopNavigator = () => (
       indicatorStyle: {
         backgroundColor: Col.Green1,
       },
+      scrollEnabled: true,
     }}
     initialRouteName="recommended"
   >
@@ -104,6 +106,7 @@ const ProfileTopNavigator = () => (
       indicatorStyle: {
         backgroundColor: Col.Main,
       },
+      scrollEnabled: true,
     }}
     initialRouteName="subscription"
   >

@@ -8,9 +8,9 @@ import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Text } from "../../components/custom/Typography";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import server from "../../server";
-import SvgMaker from "../../components/SvgMaker";
 import Modal from "../../components/Modal";
 import CheckBox from "@react-native-community/checkbox";
+import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -31,7 +31,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     setClicked(true);
     const response = await server.register(value);
     if (response.ok) {
-      navigation.navigate("confirm", { email: value.email });
+      navigation.navigate("confirm", value);
     } else {
       Alert.alert(JSON.stringify(response.data));
       if (response.status === 400) setError(true);
@@ -52,9 +52,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
         content={doc.desc}
         showModal={() => setVisible(false)}
       />
-      <View style={styles.logoContainer}>
-        <SvgMaker name="logo" />
-      </View>
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Create account
@@ -100,6 +98,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
               </View>
               <Button
                 clicked={clicked}
+                deactivate={!toggleTerms}
                 onPress={handleSubmit}
                 label="REGISTER"
               />

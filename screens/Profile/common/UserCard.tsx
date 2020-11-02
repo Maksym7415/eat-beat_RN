@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import SvgMaker from "../../../components/SvgMaker";
-import * as ImageManipulator from "expo-image-manipulator";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
@@ -44,20 +43,10 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
   };
 
   const uploadAvatar = async (uri: string) => {
-    const manipResult = await ImageManipulator.manipulateAsync(
-      uri,
-      [{ resize: { width: 400, height: 400 } }],
-      { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-    );
-    const avResponse = await fetch(uri);
-    const avBlob = await avResponse.blob();
-    const form = new FormData();
-    form.append("file", avBlob);
     const response = await server.upload(uri);
-
-    // if (response.ok) {
-    //   AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
-    // }
+    if (response.ok) {
+      AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
+    }
   };
   return (
     <View style={styles.container}>
@@ -68,7 +57,12 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
         {image === null ? (
           <SvgMaker name="camera" />
         ) : (
-          <Image style={styles.image} source={{ uri: image }} />
+          <Image
+            style={styles.image}
+            source={{
+              uri: "https://logisticbrocker.hopto.org/eat-beat/" + image,
+            }}
+          />
         )}
         <View style={styles.imageEditor}>
           <Icon name="edit" size={16} color={Col.White} />

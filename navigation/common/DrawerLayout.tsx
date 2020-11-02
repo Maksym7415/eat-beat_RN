@@ -14,6 +14,7 @@ const Divider = () => (
 const DrawerLayout = (props) => {
   const { navigation } = props;
   const { navigate } = navigation;
+  console.log(navigation.isFocused());
   return (
     <DrawerContentScrollView {...props}>
       <UserCard />

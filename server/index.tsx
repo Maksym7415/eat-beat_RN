@@ -1,6 +1,8 @@
 import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
+import { Alert } from "react-native";
+import Axios from "axios";
 
 const apiConfig: apiProps = {
   //baseURL: "http://10.4.30.212:8081/api",
@@ -200,39 +202,24 @@ const register: AuthFun = async (payload) => {
 const upload = async (uri) => {
   const address = apiConfig.baseURL + apiConfig.post.upload;
   const token = await getToken();
-  /*
-  const response = await api.post(address, form);
-  if (!response.ok) logError(response);
-  return response.ok;
-  */
-  //---
-  const form = () => {
-    var data = new FormData();
-    data.append(
-      "file",
-      JSON.stringify({
-        uri,
-        name: `avatar-${Date.now()}.jpg`,
-        type: "image/*",
-      })
-    );
-    return data;
-  };
-  try {
-    let response = await fetch(address, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      body: form(),
-    });
-    console.log(response.json());
-  } catch (error) {
-    console.error(error);
-  }
-  //---
+  const uriParts = uri.split(".");
+  const fileType = uriParts[uriParts.length - 1];
+  const formData = new FormData();
+  formData.append("file", {
+    uri,
+    name: `photo.${fileType}`,
+    type: `image/${fileType}`,
+  });
+  const response = await api.post(address, formData, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  console.log(response);
+  if (response.ok) logError(response);
+  return response;
 };
 
 const delCookedMeal = () => {
@@ -272,6 +259,15 @@ const verifyAccount = async (code: number) => {
   return response;
 };
 
+const changeURL = () => {
+  const current = api.getBaseURL();
+  const change =
+    current === apiConfig.testURL ? apiConfig.baseURL : apiConfig.testURL;
+  api.setBaseURL(change);
+  Alert.alert("change", `changed from: ${current}\nto: ${change}`);
+  console.log("changed base url");
+};
+
 export default {
   setup,
   getDailyConsumption,
@@ -293,4 +289,5 @@ export default {
   updateCookedMeal,
   resendCode,
   verifyAccount,
+  changeURL,
 };

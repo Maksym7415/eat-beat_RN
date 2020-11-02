@@ -55,7 +55,7 @@ const ModalWindow: FC<Props> = ({
             {label}
           </Text>
           <View style={{ flexShrink: 1 }}>
-            <ScrollView>
+            <ScrollView fadingEdgeLength={50}>
               <Text type="body2">{desc}</Text>
             </ScrollView>
           </View>

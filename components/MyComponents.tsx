@@ -16,6 +16,7 @@ interface ButtonProps {
   clicked?: boolean;
   style?: object;
   labelStyle?: object;
+  deactivate?: boolean;
 }
 
 interface ErrorProps {
@@ -36,10 +37,18 @@ export const Button: FC<ButtonProps> = ({
   label,
   style,
   labelStyle,
+  deactivate,
 }) => {
   return (
-    <Pressable disabled={clicked} onPress={onPress}>
-      <View style={[styles.button, styles[type], style]}>
+    <Pressable disabled={clicked || deactivate} onPress={onPress}>
+      <View
+        style={[
+          styles.button,
+          styles[type],
+          style,
+          deactivate && styles.deactivate,
+        ]}
+      >
         {clicked ? (
           <ActivityIndicator size="small" color="white" />
         ) : (
@@ -110,5 +119,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: Spacing.small,
     borderBottomColor: Col.Divider,
+  },
+  deactivate: {
+    backgroundColor: Col.Inactive,
   },
 });
