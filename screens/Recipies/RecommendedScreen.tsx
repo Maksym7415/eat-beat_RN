@@ -49,17 +49,16 @@ const RecommendedScreen: FC<Props> = (props) => {
   const actionHandler = async (props: RecommendedMeals) => {
     const { actionHandler, ...data } = props;
     setModalData({
-      id: props.title,
-      name: props.title,
-      time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-      servings: "0.5",
-      modalVisible: true,
-      creationTime: new Date().getTime(),
-      data,
-    });
-    console.log(1234);
-    //serveData()
-  };
+     id: props.title,
+     name: props.title, 
+     time: `${new Date().getHours()}:${new Date().getMinutes()}`, 
+     servings: '0.5', 
+     modalVisible: true, 
+     creationTime: new Date().getTime(),
+     data
+   })
+ //serveData()
+}
 
   const addMeal = async (
     creationTime: number,
@@ -82,10 +81,10 @@ const RecommendedScreen: FC<Props> = (props) => {
     props.navigation.navigate("meals", { refresh: true });
   };
 
-  // useEffect(() => {
-  //   if (modalData.modalVisible || modalData.cancel) return;
-  //   //serveData();
-  // }, [modalData.modalVisible]);
+  useEffect(() => {
+    if (modalData.modalVisible || modalData.cancel) return;
+    //serveData();
+  }, [modalData.modalVisible]);
 
   useEffect(() => {
     let focus = props.navigation.addListener("focus", () => {

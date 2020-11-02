@@ -13,7 +13,7 @@ export default function SearchModal({ modalVisible, hideModal, onChangeHandler, 
             transparent={true}
             visible={modalVisible}
         >
-                <Header hideModal = {hideModal} onChangeHandler={onChangeHandler} value={value} searchHandler = {searchHandler}/>
+                <Header hideModal = {hideModal} onChangeHandler={onChangeHandler} value={value} searchHandler = {searchHandler} showInput={true}/>
             <View style={{height: Dimensions.get('window').height, backgroundColor: Col.White, opacity: 0.7}}> 
             </View>
         </Modal>

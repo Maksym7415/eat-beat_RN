@@ -1,13 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import Header from "../../components/Header";
 import server from "../../server";
 import RecipeCard from "../../components/custom/RecipeCard";
 import EditModal from "../../components/EditModal";
 import { Memo, RecommendedMeals } from "../../components/interfaces";
-import { Spacing } from "../../components/Config";
+import { Col, Spacing, Typ } from "../../components/Config";
 import { AppContext } from "../../components/AppContext";
 import SearchModal from "../../components/SearchModal";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
+import Chip from "../../components/custom/Chip";
+import FilterModal from "../../components/FilterModal";
 
 interface Props {
   recipe: string;
@@ -24,9 +27,13 @@ interface ModalData {
 }
 
 const SearchScreen = (props) => {
-  const [state, setState] = useState<string>("");
-  const [feed, setFeed] = useState<Array<object>>([]);
+  const [state, setState] = useState<string>('')
+  const [feed, setFeed] = useState<Array<object>>([])
+  const [filter, setFilter] = useState<object>({})
+  const [filterConfig, setFilterConfig] = useState<object>({})
+
   const { isShow, showModal } = useContext<Memo>(AppContext);
+  const [showFilterModal, setShowFilterModal] = useState<boolean>(false)
   const [modalData, setModalData] = useState<ModalData>({
     id: "",
     name: "",
@@ -43,10 +50,15 @@ const SearchScreen = (props) => {
   };
 
   const startSearch = async () => {
-    const data = await server.getRecipeByName(state, [""]);
-    showModal(false);
-    setFeed(data);
-  };
+    console.log(filterConfig)
+    const data = await server.getRecipeByName(state, filterConfig)
+    showModal(false)
+    setFeed(data)
+  }
+
+  const saveFilterConfig = (config) => {
+    setFilterConfig(config)
+  }
 
   const actionHandler = async (props: RecommendedMeals) => {
     const { actionHandler, ...data } = props;
@@ -83,17 +95,39 @@ const SearchScreen = (props) => {
     props.navigation.navigate("meals");
   };
 
+const constraintNumber = (filter) => {
+  // console.log(!Object.keys(filter).length)
+  if(!Object.keys(filter).length) return;
+  let countConstraint = 0;
+  Object.keys(filter).forEach((el) => filter[el]?.forEach((constraint) => constraint.isUsers === true ? countConstraint +=1 : false));
+  return countConstraint
+}
+
+useEffect(() => {
+  const getSearchFilter = async () => {
+    const data = await server.getSearchFilter();
+    setFilter(data)
+  }
+  getSearchFilter() 
+}, [])
+
   return (
     <View>
       {/* <Header {...props} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/> */}
-      <EditModal {...modalData} setModalData={setModalData} cb={addMeal} />
-      <SearchModal
-        modalVisible={isShow}
-        hideModal={() => showModal(false)}
-        onChangeHandler={onChangeHandler}
-        value={state}
-        searchHandler={startSearch}
-      />
+      <EditModal {...modalData} setModalData={setModalData} cb={addMeal}/>
+      <SearchModal modalVisible={isShow} hideModal={() => showModal(false)} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/>
+      <FilterModal modalVisible = {showFilterModal} hideModal={() => setShowFilterModal(false)} data={filter} saveFilterData = {saveFilterConfig} constaintNumber = {constraintNumber(filter)}/>
+      <View style={styles.constraint}>
+          <Text style={{color: '#6E7882', fontSize: Typ.Normal}}>
+              Constraint({constraintNumber(filter)})
+          </Text>
+          <Icon
+            onPress={() => setShowFilterModal(true)}
+            name='keyboard-arrow-right'
+            size={22}
+            color='#6E7882'
+          />
+      </View>
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (
@@ -120,4 +154,11 @@ const styles = StyleSheet.create({
   cardContainer: {
     width: "50%",
   },
+  constraint: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: Spacing.r_small,
+    backgroundColor: Col.White
+  }
 });

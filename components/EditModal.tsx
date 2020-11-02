@@ -40,42 +40,24 @@ interface Time {
   };
 }
 
-export default function EditModal({
-  setModalData,
-  id,
-  name,
-  time: pTime,
-  servings,
-  modalVisible,
-  creationTime,
-  cb,
-}: Props) {
-  const [amount, setAmount] = useState<string>(servings);
-  const p_time = pTime.split(":");
-  const [time, setTime] = useState<Time>({
-    hour: { max: 23, min: 0, value: p_time[0] },
-    minutes: { max: 59, min: 0, value: p_time[1] },
-  });
-  console.log(amount);
-  const changeHandler = (text: string, name: string) => {
-    const value = text.split(",");
-    if (name === "amount") {
-      if (value.length === 1) return setAmount(text);
-      if (value[1].length > 1) {
-        return setAmount(value[0] + "," + value[1][0]);
-      }
-      if (+value[1] % 5 !== 0) return setAmount(value[0]);
+export default function EditModal({ setModalData, id, name, time: pTime, servings, modalVisible, creationTime, cb}: Props) {
+    const [amount, setAmount] = useState<string>(servings)
+    const p_time = pTime.split(':')
+    const [time, setTime] = useState<Time>({hour: {max: 23, min: 0, value: p_time[0]}, minutes: {max: 59, min: 0, value: p_time[1]?.length === 1 ? '0' + p_time[1]: p_time[1]}})
 
-      return setAmount(text);
+    const changeHandler = (text: string, name: string) => {
+        const value = text.split(',')
+        if(name === 'amount') {
+            if(value.length === 1) return setAmount(text)
+            if(value[1].length > 1) {
+                return setAmount(value[0] + ',' + value[1][0])
+            }
+            if(+value[1] % 5 !== 0 ) return setAmount(value[0])
+            
+            return setAmount(text)
+        }
+        setTime({...time, [name]: {...time[name], value:  +text >= time[name].min && +text <= time[name].max ? text : '' } })
     }
-    setTime({
-      ...time,
-      [name]: {
-        ...time[name],
-        value: +text >= time[name].min && +text <= time[name].max ? text : "",
-      },
-    });
-  };
 
   const changePortionAmount = (mark: string) => {
     const expr: Expr = {
