@@ -32,6 +32,7 @@ const PopUp: FC<Props> = ({
           </Text>
           <Text type="body2">{body}</Text>
           <View style={styles.btnContainer}>
+            <View />
             <Button
               type="text"
               style={{ paddingHorizontal: Spacing.giant }}
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   leftButton: {
     color: Col.Black,

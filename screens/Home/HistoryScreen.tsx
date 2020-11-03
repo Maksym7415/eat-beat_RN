@@ -4,12 +4,13 @@ import {
   ScrollView,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Text,
   View,
 } from "react-native";
 import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import server from "../../server";
+import { Col, Spacing } from "../../components/Config";
+import Text from "../../components/custom/Typography";
 
 interface HealthScore {
   date: string;
@@ -57,8 +58,10 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <View>
-      <Text style={styles.text}>Your health score</Text>
+    <View style={styles.canvas}>
+      <Text type="h6" style={styles.text}>
+        Your health score
+      </Text>
       <ScrollView
         horizontal={true}
         onScroll={handleScroll}
@@ -71,14 +74,13 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  canvas: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: Col.Background,
   },
   text: {
     alignSelf: "center",
-    marginBottom: 8,
+    marginVertical: Spacing.small,
   },
 });
 export default HistoryScreen;

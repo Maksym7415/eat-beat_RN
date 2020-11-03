@@ -1,28 +1,29 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
-import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
-import { AuthProps, NavProps } from "../../components/interfaces";
+import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import Logo from "./common/Logo";
+import server from "../../server";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
 });
 
+interface AuthProps {
+  email: string;
+}
+
 const RestoreScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
-  const { login } = useContext(AppContext);
-  const signIn = async ({ email }: AuthProps) => {
+  const sendRequest = async (value: AuthProps) => {
     setClicked(true);
-    try {
-    } catch (error) {
-      setClicked(false);
-    }
+    const response = await server.resetPassword(value);
+    response ? navigation.navigate("changePassword", value) : setClicked(false);
   };
 
   return (
@@ -33,9 +34,9 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
           Forgot your password?
         </Text>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "" }}
           validationSchema={Validation}
-          onSubmit={(value) => signIn(value)}
+          onSubmit={(value) => sendRequest(value)}
         >
           {({ handleSubmit }) => (
             <>

@@ -122,6 +122,13 @@ const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
                   <TextInput
                     style={styles.amount}
                     keyboardType="numeric"
+                    onBlur={() => {
+                      if (+newTime.hrs < 9)
+                        setNewTime({
+                          ...newTime,
+                          hrs: `0${parseInt(newTime.hrs)}`,
+                        });
+                    }}
                     value={newTime.hrs}
                     onChangeText={(hrs) => setNewTime({ ...newTime, hrs })}
                   />
@@ -140,6 +147,13 @@ const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
                     keyboardType="numeric"
                     style={styles.amount}
                     value={newTime.min}
+                    onBlur={() => {
+                      if (+newTime.min < 9)
+                        setNewTime({
+                          ...newTime,
+                          min: `0${parseInt(newTime.min)}`,
+                        });
+                    }}
                     onChangeText={(min) => setNewTime({ ...newTime, min })}
                   />
                 </View>

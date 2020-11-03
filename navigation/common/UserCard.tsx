@@ -1,24 +1,14 @@
-import AsyncStorage from "@react-native-community/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
+import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 
-const UserCard = (props) => {
-  const [user, setUser] = useState({
-    email: "",
-    avatar:
-      "https://images.unsplash.com/photo-1589329482108-e414c7c6b8c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-  });
-  const getAvatar = async () => {
-    console.log(props);
-    const data = await AsyncStorage.getItem("@user");
-    if (data) setUser(JSON.parse(data));
-  };
-  if (user.email === "") getAvatar();
+const UserCard = ({ color }) => {
+  const { myData } = useContext(AppContext);
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: user.avatar }} />
-      <Text style={styles.text}>{user.email}</Text>
+    <View style={[styles.container, { backgroundColor: color }]}>
+      <Image style={styles.image} source={{ uri: myData.userAvatar }} />
+      <Text style={styles.text}>{myData.email}</Text>
     </View>
   );
 };
@@ -29,7 +19,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: Spacing.medium,
+    paddingTop: Spacing.giant,
     backgroundColor: Col.Main,
+    marginBottom: 1,
   },
   text: {
     color: Col.White,
@@ -41,5 +33,6 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     overflow: "hidden",
     marginTop: Spacing.large,
+    backgroundColor: Col.White,
   },
 });

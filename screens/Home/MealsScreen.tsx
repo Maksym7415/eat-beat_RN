@@ -33,8 +33,7 @@ type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   console.log(route.params);
   const [feed, setFeed] = useState(null);
-  const [select, setSelect] = useState(null);
-  const [popVisible, setPopVisible] = useState(false);
+  const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
@@ -57,19 +56,20 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     saveCal({ visible: false, date: currentDate });
   };
 
-  const actionHandler = async (id, name, servings, creationTime) => {
-    if (name) {
-      setModalData({
-        id,
-        name,
-        servings,
-        creationTime,
-        modalVisible: true,
-      });
-    } else {
-      await server.delCookedMeal(id);
-      serveData();
-    }
+  const actionHandler = (id, name, servings, creationTime) => {
+    setModalData({
+      id,
+      name,
+      servings,
+      creationTime,
+      modalVisible: true,
+    });
+  };
+
+  const deleteHandler = async () => {
+    await server.delCookedMeal(popAlert.id);
+    setPopAlert({ ...popAlert, visible: false });
+    serveData();
   };
 
   const addRecommended = (value: number) => {
@@ -115,12 +115,12 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
       />
       <PopUp
-        header="Delete?"
-        body={`Delete “${select}”?`}
+        header="Delete"
+        body={`Delete “${popAlert.name}”?`}
         right="DELETE"
-        onLeft={() => setPopVisible(false)}
-        onRight={() => console.log("false")}
-        visible={popVisible}
+        onLeft={() => setPopAlert({ ...popAlert, visible: false })}
+        onRight={deleteHandler}
+        visible={popAlert.visible}
       />
       {visible ? (
         <DateTimePicker
@@ -142,6 +142,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
           <CookedMealCard
             item={item}
             actionHandler={actionHandler}
+            onDelete={(id, name) => setPopAlert({ id, name, visible: true })}
             onClick={(id) => console.log(id)}
           />
         )}

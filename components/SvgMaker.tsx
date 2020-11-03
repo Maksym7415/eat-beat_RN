@@ -73,64 +73,82 @@ const Icons: IIcons = {
   <path d="M293.617 19.1479H302V14.6279H280.765V19.1479H289.243V39.4999H293.617V19.1479Z" fill="#FAFAFA"/>
   </svg>
   `,
-  profile: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <path id="Path_23" data-name="Path 23" d="M28,14A10,10,0,1,0,38,24,10,10,0,0,0,28,14Zm0,3a3,3,0,1,1-3,3A3,3,0,0,1,28,17Zm0,14.2a7.2,7.2,0,0,1-6-3.22c.03-1.99,4-3.08,6-3.08s5.97,1.09,6,3.08A7.2,7.2,0,0,1,28,31.2Z" transform="translate(-18 -14)" fill="#737373"/>
-</svg>`,
-  foodDiary: `<svg xmlns="http://www.w3.org/2000/svg" width="16.402" height="20" viewBox="0 0 16.402 20">
+};
+
+const newIcon = (name = "profile", fill = "#737373") => {
+  switch (name) {
+    case "profile":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <path id="Path_23" data-name="Path 23" d="M28,14A10,10,0,1,0,38,24,10,10,0,0,0,28,14Zm0,3a3,3,0,1,1-3,3A3,3,0,0,1,28,17Zm0,14.2a7.2,7.2,0,0,1-6-3.22c.03-1.99,4-3.08,6-3.08s5.97,1.09,6,3.08A7.2,7.2,0,0,1,28,31.2Z" transform="translate(-18 -14)" fill=${fill}/>
+</svg>`;
+
+    case "foodDiary":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="16.402" height="20" viewBox="0 0 16.402 20">
   <g id="Group_2" data-name="Group 2" transform="translate(-1348.799 -787)">
-    <path id="Path_17" data-name="Path 17" d="M35.615,15.211h-.634a22.225,22.225,0,0,1,.052,3.056l1.168-.294V15.8A.586.586,0,0,0,35.615,15.211Z" transform="translate(1329 773)" fill="#737373"/>
-    <path id="Path_18" data-name="Path 18" d="M35.033,21.783,36.2,21.49V19.182l-1.168.293Z" transform="translate(1329 773)" fill="#737373"/>
-    <path id="Path_19" data-name="Path 19" d="M35.033,25.337l.725-.182a.586.586,0,0,0,.443-.568V22.7l-1.168.293v2.346Z" transform="translate(1329 773)" fill="#737373"/>
-    <path id="Path_20" data-name="Path 20" d="M23.31,17.555h7.031V21.07H23.31Z" transform="translate(1329 773)" fill="#737373"/>
-    <path id="Path_21" data-name="Path 21" d="M26.828,29.273a2.346,2.346,0,0,1,2.344-2.344h4.689V15.758A1.76,1.76,0,0,0,32.1,14H20.385a.586.586,0,0,0-.586.586V33.414a.586.586,0,0,0,.586.586H32.1a1.76,1.76,0,0,0,1.758-1.756v-.627H29.172A2.346,2.346,0,0,1,26.828,29.273Zm-4.689-7.617V16.969a.586.586,0,0,1,.586-.586h8.2a.586.586,0,0,1,.586.586v4.687a.586.586,0,0,1-.586.586h-8.2A.586.586,0,0,1,22.139,21.656Z" transform="translate(1329 773)" fill="#737373"/>
-    <path id="Path_22" data-name="Path 22" d="M28,29.273a1.173,1.173,0,0,0,1.172,1.172h5.861V28.1H29.172A1.173,1.173,0,0,0,28,29.273Zm1.758,0a.586.586,0,1,1-.586-.586A.586.586,0,0,1,29.758,29.271Z" transform="translate(1329 773)" fill="#737373"/>
+    <path id="Path_17" data-name="Path 17" d="M35.615,15.211h-.634a22.225,22.225,0,0,1,.052,3.056l1.168-.294V15.8A.586.586,0,0,0,35.615,15.211Z" transform="translate(1329 773)" fill=${fill}/>
+    <path id="Path_18" data-name="Path 18" d="M35.033,21.783,36.2,21.49V19.182l-1.168.293Z" transform="translate(1329 773)" fill=${fill}/>
+    <path id="Path_19" data-name="Path 19" d="M35.033,25.337l.725-.182a.586.586,0,0,0,.443-.568V22.7l-1.168.293v2.346Z" transform="translate(1329 773)" fill=${fill}/>
+    <path id="Path_20" data-name="Path 20" d="M23.31,17.555h7.031V21.07H23.31Z" transform="translate(1329 773)" fill=${fill}/>
+    <path id="Path_21" data-name="Path 21" d="M26.828,29.273a2.346,2.346,0,0,1,2.344-2.344h4.689V15.758A1.76,1.76,0,0,0,32.1,14H20.385a.586.586,0,0,0-.586.586V33.414a.586.586,0,0,0,.586.586H32.1a1.76,1.76,0,0,0,1.758-1.756v-.627H29.172A2.346,2.346,0,0,1,26.828,29.273Zm-4.689-7.617V16.969a.586.586,0,0,1,.586-.586h8.2a.586.586,0,0,1,.586.586v4.687a.586.586,0,0,1-.586.586h-8.2A.586.586,0,0,1,22.139,21.656Z" transform="translate(1329 773)" fill=${fill}/>
+    <path id="Path_22" data-name="Path 22" d="M28,29.273a1.173,1.173,0,0,0,1.172,1.172h5.861V28.1H29.172A1.173,1.173,0,0,0,28,29.273Zm1.758,0a.586.586,0,1,1-.586-.586A.586.586,0,0,1,29.758,29.271Z" transform="translate(1329 773)" fill=${fill}/>
   </g>
-</svg>`,
-  recipes: `<svg xmlns="http://www.w3.org/2000/svg" width="16.956" height="20" viewBox="0 0 16.956 20">
+</svg>`;
+    case "recipes":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="16.956" height="20" viewBox="0 0 16.956 20">
   <g id="Group_1" data-name="Group 1" transform="translate(-1348.522 -723)">
-    <path id="Path_12" data-name="Path 12" d="M20.121,14a.6.6,0,0,0-.6.6V33.4a.6.6,0,0,0,.6.6h1.366V14Z" transform="translate(1329 709)" fill="#737373"/>
-    <path id="Path_13" data-name="Path 13" d="M31.052,25.149h-3.98v1.31h3.98Z" transform="translate(1329 709)" fill="#737373"/>
-    <path id="Path_14" data-name="Path 14" d="M33.638,14H22.661V34H33.638a2.844,2.844,0,0,0,2.841-2.841V16.841A2.844,2.844,0,0,0,33.638,14ZM32.226,25.046v2a.587.587,0,0,1-.587.587H26.486a.587.587,0,0,1-.587-.587V25.059A1.958,1.958,0,0,1,27.01,21.3a2.3,2.3,0,0,1,4.384.388,1.737,1.737,0,0,1,.833,3.354Z" transform="translate(1329 709)" fill="#737373"/>
-    <path id="Path_15" data-name="Path 15" d="M31.639,22.848a.562.562,0,0,0-.383.15h0a.585.585,0,0,1-.985-.427v0h0c0-.059,0-.406,0-.468a1.129,1.129,0,0,0-2.255.066c0,.005,0,.01,0,.016a.593.593,0,0,1-1.031.4.784.784,0,1,0-.5,1.39h5.153a.563.563,0,1,0,0-1.126Z" transform="translate(1329 709)" fill="#737373"/>
+    <path id="Path_12" data-name="Path 12" d="M20.121,14a.6.6,0,0,0-.6.6V33.4a.6.6,0,0,0,.6.6h1.366V14Z" transform="translate(1329 709)" fill=${fill}/>
+    <path id="Path_13" data-name="Path 13" d="M31.052,25.149h-3.98v1.31h3.98Z" transform="translate(1329 709)" fill=${fill}/>
+    <path id="Path_14" data-name="Path 14" d="M33.638,14H22.661V34H33.638a2.844,2.844,0,0,0,2.841-2.841V16.841A2.844,2.844,0,0,0,33.638,14ZM32.226,25.046v2a.587.587,0,0,1-.587.587H26.486a.587.587,0,0,1-.587-.587V25.059A1.958,1.958,0,0,1,27.01,21.3a2.3,2.3,0,0,1,4.384.388,1.737,1.737,0,0,1,.833,3.354Z" transform="translate(1329 709)" fill=${fill}/>
+    <path id="Path_15" data-name="Path 15" d="M31.639,22.848a.562.562,0,0,0-.383.15h0a.585.585,0,0,1-.985-.427v0h0c0-.059,0-.406,0-.468a1.129,1.129,0,0,0-2.255.066c0,.005,0,.01,0,.016a.593.593,0,0,1-1.031.4.784.784,0,1,0-.5,1.39h5.153a.563.563,0,1,0,0-1.126Z" transform="translate(1329 709)" fill=${fill}/>
   </g>
-</svg>`,
-  restaurants: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
-  <path id="Path_10" data-name="Path 10" d="M27,21H25V14H23v7H21V14H19v7a3.986,3.986,0,0,0,3.75,3.97V34h2.5V24.97A3.986,3.986,0,0,0,29,21V14H27Zm5-3v8h2.5v8H37V14C34.24,14,32,16.24,32,18Z" transform="translate(-19 -14)" fill="#737373"/>
-</svg>`,
-  snacks: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="21.99" viewBox="0 0 22 21.99">
-  <path id="Path_8" data-name="Path 8" d="M34.06,34.99h1.66a1.652,1.652,0,0,0,1.63-1.46L39,17.05H34V13H32.03v4.05H27.06l.3,2.34a10.251,10.251,0,0,1,4.27,2.26,6.891,6.891,0,0,1,2.43,5.29ZM17,33.99V33H32.03v.99a1,1,0,0,1-1.01,1H18.01A1,1,0,0,1,17,33.99Zm15.03-7c0-8-15.03-8-15.03,0ZM17.02,29h15v2h-15Z" transform="translate(-17 -13)" fill="#737373"/>
-</svg>`,
-  foodStocks: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20">
+</svg>`;
+    case "restaurants":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
+  <path id="Path_10" data-name="Path 10" d="M27,21H25V14H23v7H21V14H19v7a3.986,3.986,0,0,0,3.75,3.97V34h2.5V24.97A3.986,3.986,0,0,0,29,21V14H27Zm5-3v8h2.5v8H37V14C34.24,14,32,16.24,32,18Z" transform="translate(-19 -14)" fill=${fill}/>
+</svg>`;
+    case "snacks":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="21.99" viewBox="0 0 22 21.99">
+  <path id="Path_8" data-name="Path 8" d="M34.06,34.99h1.66a1.652,1.652,0,0,0,1.63-1.46L39,17.05H34V13H32.03v4.05H27.06l.3,2.34a10.251,10.251,0,0,1,4.27,2.26,6.891,6.891,0,0,1,2.43,5.29ZM17,33.99V33H32.03v.99a1,1,0,0,1-1.01,1H18.01A1,1,0,0,1,17,33.99Zm15.03-7c0-8-15.03-8-15.03,0ZM17.02,29h15v2h-15Z" transform="translate(-17 -13)" fill=${fill}/>
+</svg>`;
+    case "foodStocks":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20">
   <g id="Group_3" data-name="Group 3" transform="translate(-1351 -916)">
-    <path id="Path_5" data-name="Path 5" d="M22,21.448V32.786a.575.575,0,0,0,.564.586h.644v.042a.564.564,0,1,0,1.128,0v-.042h7.328v.042a.564.564,0,1,0,1.128,0v-.042h.644A.575.575,0,0,0,34,32.786V21.448Zm4.188,2.51H24.98a.586.586,0,0,1,0-1.172h1.208a.586.586,0,0,1,0,1.172Z" transform="translate(1329 902)" fill="#737373"/>
-    <path id="Path_6" data-name="Path 6" d="M34,20.276v-5.69A.575.575,0,0,0,33.436,14H22.564a.575.575,0,0,0-.564.586v5.69Zm-9.02-2.51h1.208a.586.586,0,0,1,0,1.172H24.98a.586.586,0,0,1,0-1.172Z" transform="translate(1329 902)" fill="#737373"/>
+    <path id="Path_5" data-name="Path 5" d="M22,21.448V32.786a.575.575,0,0,0,.564.586h.644v.042a.564.564,0,1,0,1.128,0v-.042h7.328v.042a.564.564,0,1,0,1.128,0v-.042h.644A.575.575,0,0,0,34,32.786V21.448Zm4.188,2.51H24.98a.586.586,0,0,1,0-1.172h1.208a.586.586,0,0,1,0,1.172Z" transform="translate(1329 902)" fill=${fill}/>
+    <path id="Path_6" data-name="Path 6" d="M34,20.276v-5.69A.575.575,0,0,0,33.436,14H22.564a.575.575,0,0,0-.564.586v5.69Zm-9.02-2.51h1.208a.586.586,0,0,1,0,1.172H24.98a.586.586,0,0,1,0-1.172Z" transform="translate(1329 902)" fill=${fill}/>
   </g>
-</svg>`,
-  shoppingList: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <path id="Path_3" data-name="Path 3" d="M23,30a2,2,0,1,0,2,2A2,2,0,0,0,23,30ZM17,14v2h2l3.6,7.59-1.35,2.45A1.933,1.933,0,0,0,21,27a2.006,2.006,0,0,0,2,2H35V27H23.42a.248.248,0,0,1-.25-.25l.03-.12L24.1,25h7.45a1.991,1.991,0,0,0,1.75-1.03l3.58-6.49A.977.977,0,0,0,37,17a1,1,0,0,0-1-1H21.21l-.94-2ZM33,30a2,2,0,1,0,2,2A2,2,0,0,0,33,30Z" transform="translate(-17 -14)" fill="#737373"/>
-</svg>`,
-  barcodeScanner: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+</svg>`;
+    case "shoppingList":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <path id="Path_3" data-name="Path 3" d="M23,30a2,2,0,1,0,2,2A2,2,0,0,0,23,30ZM17,14v2h2l3.6,7.59-1.35,2.45A1.933,1.933,0,0,0,21,27a2.006,2.006,0,0,0,2,2H35V27H23.42a.248.248,0,0,1-.25-.25l.03-.12L24.1,25h7.45a1.991,1.991,0,0,0,1.75-1.03l3.58-6.49A.977.977,0,0,0,37,17a1,1,0,0,0-1-1H21.21l-.94-2ZM33,30a2,2,0,1,0,2,2A2,2,0,0,0,33,30Z" transform="translate(-17 -14)" fill=${fill}/>
+</svg>`;
+    case "barcodeScanner":
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
   <g id="Group_4" data-name="Group 4" transform="translate(-1347 -980)">
-    <rect id="Rectangle_2" data-name="Rectangle 2" width="6" height="6" transform="translate(1348 981)" fill="none" stroke="#737373" stroke-width="2"/>
-    <rect id="Rectangle_3" data-name="Rectangle 3" width="6" height="6" transform="translate(1348 993)" fill="none" stroke="#737373" stroke-width="2"/>
-    <rect id="Rectangle_4" data-name="Rectangle 4" width="6" height="6" transform="translate(1360 981)" fill="none" stroke="#737373" stroke-width="2"/>
-    <rect id="Rectangle_5" data-name="Rectangle 5" width="2" height="2" transform="translate(1347 989)" fill="#737373"/>
-    <rect id="Rectangle_6" data-name="Rectangle 6" width="2" height="2" transform="translate(1359 989)" fill="#737373"/>
-    <rect id="Rectangle_7" data-name="Rectangle 7" width="2" height="2" transform="translate(1353 989)" fill="#737373"/>
-    <rect id="Rectangle_8" data-name="Rectangle 8" width="2" height="2" transform="translate(1365 989)" fill="#737373"/>
-    <rect id="Rectangle_9" data-name="Rectangle 9" width="2" height="2" transform="translate(1362 989)" fill="#737373"/>
-    <rect id="Rectangle_10" data-name="Rectangle 10" width="2" height="2" transform="translate(1362 992)" fill="#737373"/>
-    <rect id="Rectangle_11" data-name="Rectangle 11" width="2" height="2" transform="translate(1362 995)" fill="#737373"/>
-    <rect id="Rectangle_12" data-name="Rectangle 12" width="2" height="2" transform="translate(1359 998)" fill="#737373"/>
-    <rect id="Rectangle_13" data-name="Rectangle 13" width="2" height="2" transform="translate(1365 998)" fill="#737373"/>
-    <rect id="Rectangle_14" data-name="Rectangle 14" width="2" height="2" transform="translate(1356 986)" fill="#737373"/>
-    <rect id="Rectangle_15" data-name="Rectangle 15" width="2" height="2" transform="translate(1356 998)" fill="#737373"/>
-    <rect id="Rectangle_16" data-name="Rectangle 16" width="2" height="2" transform="translate(1356 980)" fill="#737373"/>
-    <rect id="Rectangle_17" data-name="Rectangle 17" width="2" height="2" transform="translate(1356 992)" fill="#737373"/>
-    <rect id="Rectangle_18" data-name="Rectangle 18" width="2" height="2" transform="translate(1359 992)" fill="#737373"/>
-    <rect id="Rectangle_19" data-name="Rectangle 19" width="2" height="2" transform="translate(1365 992)" fill="#737373"/>
+    <rect id="Rectangle_2" data-name="Rectangle 2" width="6" height="6" transform="translate(1348 981)" fill=${fill} stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_3" data-name="Rectangle 3" width="6" height="6" transform="translate(1348 993)" fill=${fill} stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_4" data-name="Rectangle 4" width="6" height="6" transform="translate(1360 981)" fill=${fill} stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_5" data-name="Rectangle 5" width="2" height="2" transform="translate(1347 989)" fill=${fill}/>
+    <rect id="Rectangle_6" data-name="Rectangle 6" width="2" height="2" transform="translate(1359 989)" fill=${fill}/>
+    <rect id="Rectangle_7" data-name="Rectangle 7" width="2" height="2" transform="translate(1353 989)" fill=${fill}/>
+    <rect id="Rectangle_8" data-name="Rectangle 8" width="2" height="2" transform="translate(1365 989)" fill=${fill}/>
+    <rect id="Rectangle_9" data-name="Rectangle 9" width="2" height="2" transform="translate(1362 989)" fill=${fill}/>
+    <rect id="Rectangle_10" data-name="Rectangle 10" width="2" height="2" transform="translate(1362 992)" fill=${fill}/>
+    <rect id="Rectangle_11" data-name="Rectangle 11" width="2" height="2" transform="translate(1362 995)" fill=${fill}/>
+    <rect id="Rectangle_12" data-name="Rectangle 12" width="2" height="2" transform="translate(1359 998)" fill=${fill}/>
+    <rect id="Rectangle_13" data-name="Rectangle 13" width="2" height="2" transform="translate(1365 998)" fill=${fill}/>
+    <rect id="Rectangle_14" data-name="Rectangle 14" width="2" height="2" transform="translate(1356 986)" fill=${fill}/>
+    <rect id="Rectangle_15" data-name="Rectangle 15" width="2" height="2" transform="translate(1356 998)" fill=${fill}/>
+    <rect id="Rectangle_16" data-name="Rectangle 16" width="2" height="2" transform="translate(1356 980)" fill=${fill}/>
+    <rect id="Rectangle_17" data-name="Rectangle 17" width="2" height="2" transform="translate(1356 992)" fill=${fill}/>
+    <rect id="Rectangle_18" data-name="Rectangle 18" width="2" height="2" transform="translate(1359 992)" fill=${fill}/>
+    <rect id="Rectangle_19" data-name="Rectangle 19" width="2" height="2" transform="translate(1365 992)" fill=${fill}/>
   </g>
-</svg>`,
+</svg>`;
+    default:
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+<path id="Path_23" data-name="Path 23" d="M28,14A10,10,0,1,0,38,24,10,10,0,0,0,28,14Zm0,3a3,3,0,1,1-3,3A3,3,0,0,1,28,17Zm0,14.2a7.2,7.2,0,0,1-6-3.22c.03-1.99,4-3.08,6-3.08s5.97,1.09,6,3.08A7.2,7.2,0,0,1,28,31.2Z" transform="translate(-18 -14)" fill=${fill}/>
+</svg>`;
+  }
 };
 
 interface Props {
@@ -147,6 +165,12 @@ interface Props {
     | "glutenFree"
     | "dairyFree"
     | "camera"
+    | "logo";
+  style?: object;
+}
+
+interface IconProps {
+  name:
     | "profile"
     | "foodDiary"
     | "recipes"
@@ -154,13 +178,22 @@ interface Props {
     | "snacks"
     | "foodStocks"
     | "shoppingList"
-    | "barcodeScanner"
-    | "logo";
+    | "barcodeScanner";
   style?: object;
+  fill?: string;
 }
 
 const SvgMaker: React.FC<Props> = ({ name = "default", style }) => {
   return <SvgXml style={style} xml={Icons[name]} />;
+};
+
+export const IconMaker: React.FC<IconProps> = ({
+  name = "default",
+  style,
+  fill,
+}) => {
+  const myIcon = newIcon(name, fill);
+  return <SvgXml style={style} xml={myIcon} />;
 };
 
 export default SvgMaker;

@@ -1,91 +1,80 @@
-import React, { FC, useContext, useState } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import React, { FC, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import * as Yup from "yup";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
-import * as Yup from "yup";
-import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
-import { AuthProps, NavProps } from "../../components/interfaces";
+import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(6).label("Password"),
+  verificationCode: Yup.number().required().min(5).label("verification Code"),
+  password: Yup.string().required().min(6).label("Reset Password"),
 });
 
-const LoginScreen: FC<NavProps> = ({ navigation }) => {
+interface passProps {
+  password: string;
+  verificationCode: string;
+}
+
+const ChangePasswordScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
   const [error, setError] = useState(false);
-  const { login } = useContext(AppContext);
-  const signIn = async (value: AuthProps) => {
+  const changePassword = async (options: passProps) => {
     setClicked(true);
-    const logged = await server.signIn(value);
-    if (logged) {
-      login();
+    const response = await server.updatePassword(options);
+    if (response) {
+      navigation.navigate("resetSuccess");
     } else {
       setClicked(false);
       setError(true);
     }
   };
 
-  const changeBaseURL = async () => {
-    server.changeURL();
-    console.log("hi");
-  };
-
-  console.log(Dimensions.get("screen").height);
-
   return (
     <View style={styles.container}>
-      <Logo onLongPress={() => changeBaseURL()} />
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
-          Login
+          Reset Password
+        </Text>
+        <Text type="body2" style={styles.header}>
+          Please Enter the verification code you recieved via email, then enter
+          your new password.
         </Text>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ password: "", verificationCode: "" }}
           validationSchema={Validation}
-          onSubmit={(value) => signIn(value)}
+          onSubmit={(value) => changePassword(value)}
         >
           {({ handleSubmit }) => (
             <>
-              <FormikInput value="email" label="Email" error={error} />
-              <FormikInput value="password" label="Password" error={error} />
+              <FormikInput
+                value="verificationCode"
+                label="Verification Code"
+                error={error}
+              />
+              <FormikInput
+                value="password"
+                label="Enter new password"
+                error={error}
+              />
               <ErrorMessage
                 visible={error}
-                error="Login or password are not registered"
+                error="Password reset was rejected"
                 style={styles.errorContainer}
               />
               <Button
                 clicked={clicked}
                 onPress={handleSubmit}
-                label="SIGN IN"
+                label="CHANGE PASSWORD"
               />
             </>
           )}
         </Formik>
-        <View style={styles.footer}>
-          <Text type="body2">
-            Don't have an account?
-            <Text
-              type="bodyBold2"
-              style={styles.txtBtn}
-              onPress={() => navigation.navigate("register")}
-            >
-              {"  Create account"}
-            </Text>
-          </Text>
-          <Text
-            type="bodyBold2"
-            style={styles.forgot}
-            onPress={() => navigation.navigate("restore")}
-          >
-            Forgot password?
-          </Text>
-        </View>
       </View>
     </View>
   );
@@ -130,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default ChangePasswordScreen;

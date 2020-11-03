@@ -24,6 +24,8 @@ import TestOut from "../screens/TestOut";
 import DrawerLayout from "./common/DrawerLayout";
 import Success from "../screens/Auth/SuccessScreen";
 import Confirmation from "../screens/Auth/ConfirmationScreen";
+import ChangePassword from "../screens/Auth/ChangePassword";
+import ResetSuccess from "../screens/Auth/ResetSuccessScreen";
 
 import { AppContext } from "../components/AppContext";
 
@@ -47,6 +49,8 @@ export const Auth = () => (
       <Stack.Screen name="restore" component={Restore} />
       <Stack.Screen name="success" component={Success} />
       <Stack.Screen name="confirm" component={Confirmation} />
+      <Stack.Screen name="changePassword" component={ChangePassword} />
+      <Stack.Screen name="resetSuccess" component={ResetSuccess} />
     </Stack.Navigator>
   </NavigationContainer>
 );
@@ -117,12 +121,12 @@ const ProfileTopNavigator = () => (
     />
     <TopTabs.Screen
       name="personalData"
-      component={SearchScreen}
+      component={TechScreen}
       options={{ title: "Personal data" }}
     />
     <TopTabs.Screen
       name="foodPreferences"
-      component={RecipiesScreen}
+      component={TechScreen}
       options={{ title: "Food preferences" }}
     />
   </TopTabs.Navigator>
@@ -265,11 +269,6 @@ export const DrawerNavigator = () => {
           options={{ title: "Profile" }}
           name="profileDrawer"
           component={ProfileStack}
-        />
-        <Drawer.Screen
-          options={{ title: "sign Out" }}
-          name="signOut"
-          component={TestOut}
         />
       </Drawer.Navigator>
     </NavigationContainer>

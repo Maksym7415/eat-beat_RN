@@ -1,5 +1,12 @@
 import { create } from "apisauce";
-import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
+import {
+  apiProps,
+  AuthFun,
+  cacheProps,
+  errorProps,
+  mailAuth,
+  updatePassProps,
+} from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 import Axios from "axios";
@@ -9,29 +16,32 @@ const apiConfig: apiProps = {
   baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
+    profile: "/user/profile-data",
+    cookedMeals: "/meals/cooked-meals?date=",
+    history: "/meals/healthscore-history?offset=",
     dailyConsumption: "/meals/daily-consumption?date=",
     recommendedMeals: "/meals/recommend-meals?date=",
-    cookedMeals: "/meals/cooked-meals?date=",
-    profile: "/user/profile-data",
-    history: "/meals/healthscore-history?offset=",
     recipeByName: "/meals/get-recipes?recipeName=",
     searchSettings: "/user/search-recipe-settings",
+    getSearchFilter: "",
     verification: "/auth/verify-account?verificationCode=",
+    resetPassword: "/auth/reset-password",
   },
   post: {
-    addCookedMeal: "/meals/meal-change-status",
+    upload: "/upload",
     signIn: "/auth/sign-in",
     register: "/auth/sign-up",
-    upload: "/upload",
     refresh: "/auth/refresh-token",
+    addCookedMeal: "/meals/meal-change-status",
+    updatePassword: "/auth/update-password",
   },
   del: {
-    cookedMeal: "/meals/cooked-meal/",
     user: "/user/delete-user",
+    cookedMeal: "/meals/cooked-meal/",
   },
   put: {
-    intakeNorms: "/user/intake-norms",
     profile: "/user/update-profile",
+    intakeNorms: "/user/intake-norms",
     password: "/user/update-password",
     updateCookedMeal: "/meals/update-cooked-meal/",
   },
@@ -243,8 +253,25 @@ const updateProfile = () => {
   return null;
 };
 
-const updatePassword = () => {
-  return null;
+const changePassword = async (options: updatePassProps) => {
+  const address = apiConfig.post.updatePassword;
+  const response = await api.post(address, options);
+  if (!response.ok) logError(response);
+  return response.ok;
+};
+
+const updatePassword = async (options: updatePassProps) => {
+  const address = apiConfig.post.updatePassword;
+  const response = await api.post(address, options);
+  if (!response.ok) logError(response);
+  return response.ok;
+};
+
+const resetPassword = async (email: mailAuth) => {
+  const address = apiConfig.get.resetPassword;
+  const response = await api.patch(address, email);
+  if (!response.ok) logError(response);
+  return response.ok;
 };
 
 const resendCode = async () => {
@@ -288,8 +315,10 @@ export default {
   updateIntakeNorms,
   updateProfile,
   updatePassword,
+  changePassword,
   updateCookedMeal,
   resendCode,
   verifyAccount,
+  resetPassword,
   changeURL,
 };

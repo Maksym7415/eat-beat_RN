@@ -6,6 +6,7 @@ import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server from "./server";
+import { Alert } from "react-native";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -21,7 +22,10 @@ export default function App() {
     visible: false,
     date: new Date(),
   });
-  const [userData, setUserData] = useState<object>({});
+  const [userData, setUserData] = useState<object>({
+    email: "",
+    userAvatar: "",
+  });
 
   const loadUser = async () => {
     console.log("new log", new Date(), "\n");
@@ -41,11 +45,22 @@ export default function App() {
     setLogged(false);
   };
 
+  const loginHandler = async () => {
+    const response = await server.getProfile();
+    const { ok, data } = response;
+    if (ok) {
+      setUserData(data);
+      await AsyncStorage.setItem("@user", JSON.stringify(data));
+    }
+    setLogged(true);
+  };
+
   const appContext = useMemo(
     (): Memo => ({
       calendar: cal,
+      myData: userData,
       saveCal: (value) => setCal(value),
-      login: () => setLogged(true),
+      login: () => loginHandler(),
       signOut: () => removeToken(),
       getData: () => console.log("get data"),
       pushData: () => console.log("push data"),
@@ -56,7 +71,7 @@ export default function App() {
       },
       isShow: show,
     }),
-    [cal, show]
+    [cal, show, userData]
   );
 
   useEffect(() => {

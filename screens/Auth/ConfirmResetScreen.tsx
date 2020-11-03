@@ -1,91 +1,93 @@
-import React, { FC, useContext, useState } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import React, { FC, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
-import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
-import { AuthProps, NavProps } from "../../components/interfaces";
+import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(6).label("Password"),
+  verificationCode: Yup.number().required().min(5).label("verification Code"),
 });
 
-const LoginScreen: FC<NavProps> = ({ navigation }) => {
+const ConfirmResetScreen: FC<NavProps> = ({ navigation, route }) => {
+  const Email = route.params.email;
+
   const [clicked, setClicked] = useState(false);
+  const [resend, setResend] = useState(false);
   const [error, setError] = useState(false);
-  const { login } = useContext(AppContext);
-  const signIn = async (value: AuthProps) => {
+  const onConfirm = async ({ verificationCode }) => {
     setClicked(true);
-    const logged = await server.signIn(value);
-    if (logged) {
-      login();
+    const verified = await server.verifyAccount(verificationCode);
+    if (verified) {
+      navigation.navigate("changePassword", { verificationCode });
     } else {
       setClicked(false);
       setError(true);
     }
   };
 
-  const changeBaseURL = async () => {
-    server.changeURL();
-    console.log("hi");
+  const handleResend = async () => {
+    setResend(true);
+    setTimeout(setResend(false), 60000);
+    const sent = await server.resetPassword(route.params);
+    if (sent) {
+      //
+    } else {
+      //
+    }
   };
-
-  console.log(Dimensions.get("screen").height);
 
   return (
     <View style={styles.container}>
-      <Logo onLongPress={() => changeBaseURL()} />
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
-          Login
+          Confirmation
+        </Text>
+        <Text type="body2" style={styles.header}>
+          Please Enter the verification code you recieved in “{Email}” in order
+          to continue resetting your password.
         </Text>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ verificationCode: "" }}
           validationSchema={Validation}
-          onSubmit={(value) => signIn(value)}
+          onSubmit={(value) => onConfirm(value)}
         >
           {({ handleSubmit }) => (
             <>
-              <FormikInput value="email" label="Email" error={error} />
-              <FormikInput value="password" label="Password" error={error} />
+              <FormikInput
+                value="verificationCode"
+                label="verification Code"
+                error={error}
+                maxLength={5}
+              />
               <ErrorMessage
                 visible={error}
-                error="Login or password are not registered"
+                error="The Code you intered is incorrect"
                 style={styles.errorContainer}
               />
               <Button
                 clicked={clicked}
                 onPress={handleSubmit}
-                label="SIGN IN"
+                label="CONFIRM"
+                style={{ marginTop: Spacing.xlarge }}
+              />
+              <Button
+                type="text"
+                clicked={resend}
+                onPress={handleResend}
+                label="Resend Code"
+                style={{ marginVertical: 0 }}
+                labelStyle={{ color: Col.Ghost }}
               />
             </>
           )}
         </Formik>
-        <View style={styles.footer}>
-          <Text type="body2">
-            Don't have an account?
-            <Text
-              type="bodyBold2"
-              style={styles.txtBtn}
-              onPress={() => navigation.navigate("register")}
-            >
-              {"  Create account"}
-            </Text>
-          </Text>
-          <Text
-            type="bodyBold2"
-            style={styles.forgot}
-            onPress={() => navigation.navigate("restore")}
-          >
-            Forgot password?
-          </Text>
-        </View>
       </View>
     </View>
   );
@@ -128,6 +130,10 @@ const styles = StyleSheet.create({
   errorContainer: {
     marginTop: Spacing.small,
   },
+  logoContainer: {
+    marginTop: 80,
+    marginBottom: 50,
+  },
 });
 
-export default LoginScreen;
+export default ConfirmResetScreen;

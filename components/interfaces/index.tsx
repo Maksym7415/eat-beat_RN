@@ -35,6 +35,7 @@ export interface Memo {
     visible: boolean;
     date: Date;
   };
+  myData: object;
   saveCal: (currentDate: Cal) => void;
   login: () => void;
   signOut: () => void;

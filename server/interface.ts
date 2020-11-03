@@ -12,6 +12,7 @@ export interface apiProps {
     searchSettings: string;
     getSearchFilter: string
     verification:string
+    resetPassword:string
   };
   post: {
     addCookedMeal: string;
@@ -19,6 +20,7 @@ export interface apiProps {
     register: string;
     upload: string;
     refresh:string
+    updatePassword:string
   };
   del: {
     cookedMeal: string;
@@ -51,6 +53,15 @@ export interface resProps {
   data: any;
   status: string;
   config: any;
+}
+
+export interface mailAuth{
+  email:string
+}
+
+export interface updatePassProps{
+  password:string
+  verificationCode:string
 }
 
 export type AuthFun = (v: AuthProps) => Promise<boolean | void | object>;

@@ -29,7 +29,6 @@ const Chart: FC<Props> = ({ data }) => {
           withVerticalLines={false}
           onDataPointClick={({ value }) => console.log(value)}
           chartConfig={{
-            backgroundColor: "#DCDEDF",
             backgroundGradientFrom: "#DCDEDF",
             backgroundGradientTo: "#DCDEDF",
             color: () => `#2C97EE`,

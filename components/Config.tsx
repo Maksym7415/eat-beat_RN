@@ -22,6 +22,9 @@ export const Col = {
   Error: "#FF364F",
   Ghost: "#6E7882",
 
+  Profile: "#616161",
+  Recipes: "#4C9C05",
+
   Primary: "#107dcb",
   Primary1: "#3096df",
   Primary2: "rgba(16, 170, 204, 0.2)",
