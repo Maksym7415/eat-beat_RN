@@ -11,6 +11,8 @@ import SearchModal from "../../components/SearchModal";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import Chip from "../../components/custom/Chip";
 import FilterModal from "../../components/FilterModal";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Console } from "console";
 
 interface Props {
   recipe: string;
@@ -42,20 +44,47 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     data: {},
   });
 
+  const [radioState, setRadioState] = useState<Array<object>>([]);
+  const [chipsState, setChipsState] = useState<Array<object>>([]);
+  const [mealsTypes, setMealsTypes] = useState<Array<object>>([]);
+
   const onChangeHandler = (text: string) => {
-    console.log(text);
     setState(text);
   };
 
   const startSearch = async () => {
-    console.log(filterConfig);
+    if (!Object.keys(filterConfig).length) {
+      let defaultConfig = {
+        intolerances: chipsState
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(" ,"),
+        diets: radioState
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(""),
+      };
+      const data = await server.getRecipeByName(state, defaultConfig);
+      showModal(false);
+      setFeed(data);
+      return;
+    }
     const data = await server.getRecipeByName(state, filterConfig);
     showModal(false);
     setFeed(data);
   };
 
-  const saveFilterConfig = (config) => {
-    setFilterConfig(config);
+  const saveFilterConfig = ({ intolerances, diets, meals }) => {
+    setFilterConfig({
+      intolerances: chipsState
+        .filter((el) => el.isUsers)
+        .map((el) => el.name.toLowerCase())
+        .join(" ,"),
+      diets: radioState
+        .filter((el) => el.isUsers)
+        .map((el) => el.name.toLowerCase())
+        .join(""),
+    });
   };
 
   const actionHandler = (id, name, data) => {
@@ -80,7 +109,6 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   const constraintNumber = (filter) => {
-    // console.log(!Object.keys(filter).length)
     if (!Object.keys(filter).length) return;
     let countConstraint = 0;
     Object.keys(filter).forEach((el) =>
@@ -91,62 +119,69 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     return countConstraint;
   };
 
+  const getFilter = async () => {
+    const data = await server.getSearchFilter();
+    setFilter(data);
+  };
+
   useEffect(() => {
-    const getSearchFilter = async () => {
-      const data = await server.getSearchFilter();
-      setFilter(data);
-    };
-    getSearchFilter();
+    getFilter();
   }, []);
 
+  useEffect(() => {
+    setRadioState(filter.diets);
+    setMealsTypes(filter.mealTypes);
+    setChipsState(filter.intolerances);
+  }, [filter]);
+
   return (
-    <View>
-      <Header
-        {...props}
-        onChangeHandler={onChangeHandler}
-        value={state}
-        searchHandler={startSearch}
-      />
-      <EditModal
-        data={modalData}
-        setData={(id, body) => addMeal(id, body)}
-        hideModal={() => setModalData({ ...modalData, modalVisible: false })}
-      />
-      <SearchModal
-        modalVisible={isShow}
-        hideModal={() => showModal(false)}
-        onChangeHandler={onChangeHandler}
-        value={state}
-        searchHandler={startSearch}
-      />
-      <FilterModal
-        modalVisible={showFilterModal}
-        hideModal={() => setShowFilterModal(false)}
-        data={filter}
-        saveFilterData={saveFilterConfig}
-        constaintNumber={constraintNumber(filter)}
-      />
-      <View style={styles.constraint}>
-        <Text style={{ color: "#6E7882", fontSize: Typ.Normal }}>
-          Constraint({constraintNumber(filter)})
-        </Text>
-        <Icon
-          onPress={() => setShowFilterModal(true)}
-          name="keyboard-arrow-right"
-          size={22}
-          color="#6E7882"
+    <ScrollView>
+      <View>
+        {/* <Header {...props} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/> */}
+        <EditModal
+          data={modalData}
+          setData={(id, body) => addMeal(id, body)}
+          hideModal={() => setModalData({ ...modalData, modalVisible: false })}
         />
+        <SearchModal
+          modalVisible={isShow}
+          hideModal={() => showModal(false)}
+          onChangeHandler={onChangeHandler}
+          value={state}
+          searchHandler={startSearch}
+        />
+        <FilterModal
+          modalVisible={showFilterModal}
+          hideModal={() => setShowFilterModal(false)}
+          data={filter}
+          saveFilterData={saveFilterConfig}
+          constaintNumber={constraintNumber(filter)}
+          radioState={radioState}
+          setRadioState={setRadioState}
+          chipsState={chipsState}
+          setChipsState={setChipsState}
+          mealsTypes={mealsTypes}
+          setMealsTypes={setMealsTypes}
+        />
+        <TouchableOpacity onPress={() => setShowFilterModal(true)}>
+          <View style={styles.constraint}>
+            <Text style={{ color: "#6E7882", fontSize: Typ.Normal }}>
+              Constraint({constraintNumber(filter)})
+            </Text>
+            <Icon name="keyboard-arrow-right" size={22} color="#6E7882" />
+          </View>
+        </TouchableOpacity>
+        <ScrollView>
+          <View style={styles.container}>
+            {feed.map((item, index) => (
+              <View key={`${index}`} style={styles.cardContainer}>
+                <RecipeCard details={item} actionHandler={actionHandler} />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       </View>
-      <ScrollView>
-        <View style={styles.container}>
-          {feed.map((item, index) => (
-            <View key={`${index}`} style={styles.cardContainer}>
-              <RecipeCard details={item} actionHandler={actionHandler} />
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 

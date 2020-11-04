@@ -27,7 +27,10 @@ import Confirmation from "../screens/Auth/ConfirmationScreen";
 import ChangePassword from "../screens/Auth/ChangePassword";
 import ResetSuccess from "../screens/Auth/ResetSuccessScreen";
 
+import PersonalDataScreen from "../screens/Profile/PersonalDataScreen";
+import FoodPreferences from "../screens/Profile/FoodPreferences";
 import { AppContext } from "../components/AppContext";
+import DialyNorm from "../screens/Profile/DailyNorm";
 
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 
@@ -121,12 +124,17 @@ const ProfileTopNavigator = () => (
     />
     <TopTabs.Screen
       name="personalData"
-      component={TechScreen}
+      component={PersonalDataScreen}
       options={{ title: "Personal data" }}
     />
     <TopTabs.Screen
+      name="dailyNorm"
+      component={DialyNorm}
+      options={{ title: "Daily norm" }}
+    />
+    <TopTabs.Screen
       name="foodPreferences"
-      component={TechScreen}
+      component={FoodPreferences}
       options={{ title: "Food preferences" }}
     />
   </TopTabs.Navigator>

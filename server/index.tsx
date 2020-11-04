@@ -11,8 +11,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 
 const apiConfig: apiProps = {
-  //baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
+  // baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -22,7 +22,6 @@ const apiConfig: apiProps = {
     recommendedMeals: "/meals/recommend-meals?date=",
     recipeByName: "/meals/get-recipes?recipeName=",
     searchSettings: "/user/search-recipe-settings",
-    getSearchFilter: "",
     verification: "/auth/verify-account?verificationCode=",
     resetPassword: "/auth/reset-password",
   },
@@ -43,6 +42,8 @@ const apiConfig: apiProps = {
     intakeNorms: "/user/intake-norms",
     password: "/user/update-password",
     updateCookedMeal: "/meals/update-cooked-meal/",
+    updateUserReferences: "/user/update-preferences",
+    updateIntakeNorms: "/user/intake-norms",
   },
 };
 
@@ -148,6 +149,14 @@ const updateCookedMeal = async (id: number, data: object) => {
   return response;
 };
 
+const updateIntakeNorm = async (data: object) => {
+  const address = apiConfig.put.updateIntakeNorms;
+  console.log(data, "gfdfgdfgdf986789546854654659");
+  const response = await api.patch(address, { intakeNorms: data });
+  if (!response.ok) logError(response);
+  return response;
+};
+
 const getProfile = async () => {
   const address = apiConfig.get.profile;
   const response = await api.get(address);
@@ -182,6 +191,13 @@ const getSearchSettings = async () => {
     if (!response.ok) logError(response);
     return response.data;
   });
+};
+
+const getSearchFilter = async () => {
+  const address = apiConfig.get.searchSettings;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response.data;
 };
 
 const addCookedMeal = async (payload) => {
@@ -245,8 +261,11 @@ const updateIntakeNorms = () => {
   return null;
 };
 
-const updateProfile = () => {
-  return null;
+const updateProfile = async (data: object) => {
+  const address = apiConfig.put.profile;
+  console.log(data, "updateProfile");
+  const response = await api.patch(address, data);
+  return response;
 };
 
 const changePassword = async (options: updatePassProps) => {
@@ -268,6 +287,18 @@ const resetPassword = async (email: mailAuth) => {
   const response = await api.patch(address, email);
   if (!response.ok) logError(response);
   return response.ok;
+};
+
+const updateUserReferences = async (data: object) => {
+  console.log(data);
+  const address = apiConfig.put.updateUserReferences;
+  try {
+    const response = await api.put(address, { ...data });
+    const res = await getSearchFilter();
+    return res;
+  } catch (e) {
+    console.log({ e });
+  }
 };
 
 const resendCode = async () => {
@@ -317,4 +348,7 @@ export default {
   verifyAccount,
   resetPassword,
   changeURL,
+  updateUserReferences,
+  updateIntakeNorm,
+  getSearchFilter,
 };

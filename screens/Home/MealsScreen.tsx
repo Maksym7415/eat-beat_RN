@@ -38,7 +38,6 @@ interface editProps {
 type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
 
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
-  console.log(route.params);
   const [feed, setFeed] = useState(null);
   const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
   const [actionBtn, setActionBtn] = useState<boolean>(false);

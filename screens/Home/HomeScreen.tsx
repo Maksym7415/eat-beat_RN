@@ -30,7 +30,6 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
   const serveData = async () => {
-    console.log("serve", date);
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
       const len = Object.keys(data).length;
