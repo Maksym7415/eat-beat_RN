@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, FC } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import Header from "../../components/Header";
 import server from "../../server";
 import RecipeCard from "../../components/custom/RecipeCard";
-import EditModal from "../../components/EditModal";
-import { Memo, RecommendedMeals } from "../../components/interfaces";
+import EditModal from "../../components/newEditModal";
+import { Memo, NavProps, RecommendedMeals } from "../../components/interfaces";
 import { Col, Spacing, Typ } from "../../components/Config";
 import { AppContext } from "../../components/AppContext";
 import SearchModal from "../../components/SearchModal";
@@ -17,17 +17,15 @@ interface Props {
 }
 
 interface ModalData {
-  id: string;
+  id: number;
   name: string;
-  time: string;
-  servings: string;
+  servings: number;
   modalVisible: boolean;
   creationTime: number;
   data: object;
 }
 
-const SearchScreen = (props) => {
-  /*
+const SearchScreen: FC<NavProps> = ({ navigation }) => {
   const [state, setState] = useState<string>("");
   const [feed, setFeed] = useState<Array<object>>([]);
   const [filter, setFilter] = useState<object>({});
@@ -36,10 +34,9 @@ const SearchScreen = (props) => {
   const { isShow, showModal } = useContext<Memo>(AppContext);
   const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
-    id: "",
+    id: 0,
     name: "",
-    time: "",
-    servings: "",
+    servings: 0.5,
     modalVisible: false,
     creationTime: 0,
     data: {},
@@ -61,39 +58,25 @@ const SearchScreen = (props) => {
     setFilterConfig(config);
   };
 
-  const actionHandler = async (props: RecommendedMeals) => {
-    const { actionHandler, ...data } = props;
+  const actionHandler = (id, name, data) => {
     setModalData({
-      id: props.title,
-      name: props.title,
-      time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-      servings: "0.5",
-      modalVisible: true,
-      creationTime: new Date().getTime(),
+      id,
+      name,
       data,
+      servings: 0.5,
+      modalVisible: true,
+      creationTime: new Date(date).getTime(),
     });
-    //serveData()
   };
 
-  const addMeal = async (
-    creationTime: number,
-    time: object,
-    amount: string,
-    hideModal: (a: boolean) => boolean,
-    id: number
-  ) => {
-    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(
-      creationTime
-    ).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${
-      time.minutes.value
-    }`;
+  const addMeal = async (id, { creationTime, servings }) => {
     await server.addCookedMeal({
       meal: modalData.data,
-      quantity: +amount.replace(/[,-]/g, "."),
-      date: new Date(t).getTime(),
+      quantity: servings,
+      date: creationTime,
     });
-    hideModal(false);
-    props.navigation.navigate("meals");
+    setModalData({ ...modalData, modalVisible: false });
+    navigation.navigate("meals", { refresh: true });
   };
 
   const constraintNumber = (filter) => {
@@ -115,33 +98,54 @@ const SearchScreen = (props) => {
     };
     getSearchFilter();
   }, []);
-*/
+
   return (
     <View>
-      {/* <Header {...props} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/> */}
-      {/* <EditModal {...modalData} setModalData={setModalData} cb={addMeal}/>
-      <SearchModal modalVisible={isShow} hideModal={() => showModal(false)} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/>
-      <FilterModal modalVisible = {showFilterModal} hideModal={() => setShowFilterModal(false)} data={filter} saveFilterData = {saveFilterConfig} constaintNumber = {constraintNumber(filter)}/>
+      <Header
+        {...props}
+        onChangeHandler={onChangeHandler}
+        value={state}
+        searchHandler={startSearch}
+      />
+      <EditModal
+        data={modalData}
+        setData={(id, body) => addMeal(id, body)}
+        hideModal={() => setModalData({ ...modalData, modalVisible: false })}
+      />
+      <SearchModal
+        modalVisible={isShow}
+        hideModal={() => showModal(false)}
+        onChangeHandler={onChangeHandler}
+        value={state}
+        searchHandler={startSearch}
+      />
+      <FilterModal
+        modalVisible={showFilterModal}
+        hideModal={() => setShowFilterModal(false)}
+        data={filter}
+        saveFilterData={saveFilterConfig}
+        constaintNumber={constraintNumber(filter)}
+      />
       <View style={styles.constraint}>
-          <Text style={{color: '#6E7882', fontSize: Typ.Normal}}>
-              Constraint({constraintNumber(filter)})
-          </Text>
-          <Icon
-            onPress={() => setShowFilterModal(true)}
-            name='keyboard-arrow-right'
-            size={22}
-            color='#6E7882'
-          />
+        <Text style={{ color: "#6E7882", fontSize: Typ.Normal }}>
+          Constraint({constraintNumber(filter)})
+        </Text>
+        <Icon
+          onPress={() => setShowFilterModal(true)}
+          name="keyboard-arrow-right"
+          size={22}
+          color="#6E7882"
+        />
       </View>
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
-              <RecipeCard {...item} actionHandler={actionHandler} />
+              <RecipeCard details={item} actionHandler={actionHandler} />
             </View>
           ))}
         </View>
-      </ScrollView> */}
+      </ScrollView>
     </View>
   );
 };
