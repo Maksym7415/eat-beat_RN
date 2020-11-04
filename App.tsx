@@ -6,7 +6,6 @@ import { Cal, Memo } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server from "./server";
-import { Alert } from "react-native";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),

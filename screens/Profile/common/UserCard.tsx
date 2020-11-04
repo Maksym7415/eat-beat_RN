@@ -11,7 +11,6 @@ import SvgMaker from "../../../components/SvgMaker";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
-import AsyncStorage from "@react-native-community/async-storage";
 
 interface Props {
   image: string | null;

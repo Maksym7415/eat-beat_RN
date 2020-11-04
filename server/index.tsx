@@ -11,8 +11,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 
 const apiConfig: apiProps = {
-  baseURL: "http://10.4.30.212:8081/api",
-  // baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  //baseURL: "http://10.4.30.212:8081/api",
+  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -81,8 +81,7 @@ const refreshToken = async () => {
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
   const response = await api.post(address, { refreshToken: token });
-  console.log(response);
-  //response.ok ? setToken(response.data) : logError(response);
+  response.ok ? setToken(response.data) : logError(response);
   return response;
 };
 
