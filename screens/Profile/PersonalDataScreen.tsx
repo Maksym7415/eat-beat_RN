@@ -35,10 +35,9 @@ export default function PersonalDataScreen({ navigation } ) {
     const setChips = (name: string, state: boolean) => {
         let newState = {}
         //if(Object.keys(chipsState)[0] === name) return;
-
-        Object.keys(chipsState).forEach((el) => el === name ? newState[name] = true : newState[el] = false)
+        
+        Object.keys(chipsState).forEach((el) => el === name ? newState[name] = state : newState[el] = !state)
             
-      
         setChipsState(newState)
     }
 
@@ -108,7 +107,7 @@ export default function PersonalDataScreen({ navigation } ) {
        if(!gender) {
            return setChipsState({Male: false, Female: false})
        }
-        setChipsState({[gender[0].toUpperCase() + gender.slice(1)]: true})
+        setChipsState({ [gender[0].toUpperCase() + gender.slice(1)]: true, [gender === 'male' ? 'Female' : 'Male']: false })
     }
 
     useEffect(() => {
