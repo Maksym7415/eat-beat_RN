@@ -5,7 +5,6 @@ import { Button, Divider } from "../../components/MyComponents";
 import UserCard from "./common/UserCard";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
-import AsyncStorage from "@react-native-community/async-storage";
 import UserPlan from "./common/UserPlan";
 import EditFeild from "./common/EditFeild";
 import { NavProps } from "../../components/interfaces";
@@ -24,28 +23,30 @@ export default class ProfileScreen extends Component<NavProps> {
       createdAt: "-",
     },
   };
-  constructor(props) {
+  constructor(props: NavProps) {
     super(props);
   }
-  componentDidMount = async () => {
-    const user = await AsyncStorage.getItem("@user");
-    if (user) {
-      this.setState({ data: JSON.parse(user) });
-    } else {
-      const response = await server.getProfile();
-      const { ok, data, status } = response;
-      if (ok) {
-        this.setState({ data });
-        await AsyncStorage.setItem("@user", JSON.stringify(data));
-      } else {
-        Alert.alert(`${status}`, `${JSON.stringify(data)}`);
-      }
-      console.log("getProfile => request: ", ok, data);
-    }
+
+  onUpdate = async () => {
+    const update = await this.context.getData();
+    console.log("updates", update);
+    this.setState({ data: update });
+    //await this.context.login();
+    // const response = await server.getProfile();
+    // const { ok, data, status } = response;
+    // if (ok) {
+    //   this.setState({ data });
+    //   await AsyncStorage.setItem("@user", JSON.stringify(data));
+    // } else {
+    //   Alert.alert(`${status}`, `${JSON.stringify(data)}`);
+    // }
+    // console.log("getProfile => request: ", ok, data);
   };
 
   onLogout = () => {
     this.context.signOut();
+    const data = this.context.myData;
+    this.setState({ data });
   };
 
   onDeleteAccount = async () => {
@@ -58,6 +59,11 @@ export default class ProfileScreen extends Component<NavProps> {
         "Sorry something went wrong while trying to delete your account, please try again!"
       );
     }
+  };
+
+  componentDidMount = async () => {
+    const data = this.context.myData;
+    this.setState({ data });
   };
 
   render() {
@@ -90,7 +96,12 @@ export default class ProfileScreen extends Component<NavProps> {
             }}
           >
             <View>
-              <UserCard name={name} image={userAvatar} email={email} />
+              <UserCard
+                name={name}
+                image={userAvatar}
+                email={email}
+                onUpdate={this.onUpdate}
+              />
               <Divider />
               <View style={styles.planContainer}>
                 <UserPlan userPlan={createdAt} />

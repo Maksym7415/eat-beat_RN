@@ -113,12 +113,11 @@ export interface RecommendedMeals {
   imageType: string;
   nutrition: Nutrition;
   summary: string;
-  cuisines: Array<string>;
-  dishTypes: Array<Array<string>>;
-  diets: Array<Array<string>>;
-  occasions: Array<string>;
-  analyzedInstructions: Array<string>;
-  actionHandler: (a: string) => void;
+  cuisines: string[];
+  dishTypes: [string[]];
+  diets: [string[]];
+  occasions: string[];
+  analyzedInstructions: string[];
 }
 
 export interface ConsumptionProps {

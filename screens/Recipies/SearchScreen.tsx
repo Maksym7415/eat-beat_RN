@@ -27,13 +27,14 @@ interface ModalData {
 }
 
 const SearchScreen = (props) => {
-  const [state, setState] = useState<string>('')
-  const [feed, setFeed] = useState<Array<object>>([])
-  const [filter, setFilter] = useState<object>({})
-  const [filterConfig, setFilterConfig] = useState<object>({})
+  /*
+  const [state, setState] = useState<string>("");
+  const [feed, setFeed] = useState<Array<object>>([]);
+  const [filter, setFilter] = useState<object>({});
+  const [filterConfig, setFilterConfig] = useState<object>({});
 
   const { isShow, showModal } = useContext<Memo>(AppContext);
-  const [showFilterModal, setShowFilterModal] = useState<boolean>(false)
+  const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: "",
     name: "",
@@ -50,15 +51,15 @@ const SearchScreen = (props) => {
   };
 
   const startSearch = async () => {
-    console.log(filterConfig)
-    const data = await server.getRecipeByName(state, filterConfig)
-    showModal(false)
-    setFeed(data)
-  }
+    console.log(filterConfig);
+    const data = await server.getRecipeByName(state, filterConfig);
+    showModal(false);
+    setFeed(data);
+  };
 
   const saveFilterConfig = (config) => {
-    setFilterConfig(config)
-  }
+    setFilterConfig(config);
+  };
 
   const actionHandler = async (props: RecommendedMeals) => {
     const { actionHandler, ...data } = props;
@@ -95,26 +96,30 @@ const SearchScreen = (props) => {
     props.navigation.navigate("meals");
   };
 
-const constraintNumber = (filter) => {
-  // console.log(!Object.keys(filter).length)
-  if(!Object.keys(filter).length) return;
-  let countConstraint = 0;
-  Object.keys(filter).forEach((el) => filter[el]?.forEach((constraint) => constraint.isUsers === true ? countConstraint +=1 : false));
-  return countConstraint
-}
+  const constraintNumber = (filter) => {
+    // console.log(!Object.keys(filter).length)
+    if (!Object.keys(filter).length) return;
+    let countConstraint = 0;
+    Object.keys(filter).forEach((el) =>
+      filter[el]?.forEach((constraint) =>
+        constraint.isUsers === true ? (countConstraint += 1) : false
+      )
+    );
+    return countConstraint;
+  };
 
-useEffect(() => {
-  const getSearchFilter = async () => {
-    const data = await server.getSearchFilter();
-    setFilter(data)
-  }
-  getSearchFilter() 
-}, [])
-
+  useEffect(() => {
+    const getSearchFilter = async () => {
+      const data = await server.getSearchFilter();
+      setFilter(data);
+    };
+    getSearchFilter();
+  }, []);
+*/
   return (
     <View>
       {/* <Header {...props} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/> */}
-      <EditModal {...modalData} setModalData={setModalData} cb={addMeal}/>
+      {/* <EditModal {...modalData} setModalData={setModalData} cb={addMeal}/>
       <SearchModal modalVisible={isShow} hideModal={() => showModal(false)} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/>
       <FilterModal modalVisible = {showFilterModal} hideModal={() => setShowFilterModal(false)} data={filter} saveFilterData = {saveFilterConfig} constaintNumber = {constraintNumber(filter)}/>
       <View style={styles.constraint}>
@@ -136,7 +141,7 @@ useEffect(() => {
             </View>
           ))}
         </View>
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 };
@@ -155,10 +160,10 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   constraint: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: Spacing.r_small,
-    backgroundColor: Col.White
-  }
+    backgroundColor: Col.White,
+  },
 });

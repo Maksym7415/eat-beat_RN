@@ -9,7 +9,6 @@ import {
 } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
-import Axios from "axios";
 
 const apiConfig: apiProps = {
   //baseURL: "http://10.4.30.212:8081/api",
@@ -95,18 +94,15 @@ const setup = async () => {
   if (token) {
     api.setHeader("Authorization", `Bearer ${token}`);
   }
-  console.log("setup---start\ntoken:", token, "\nsetup---end");
 };
 
 const logError = ({ problem, config, status, headers, data }: errorProps) => {
   //Alert.alert(problem);
-  console.log(config);
+  console.log(config, "\nstatus => ", status);
   /*
   console.log(
     "Error------\nproblem => ",
     problem,
-    "\nstatus => ",
-    status,
     "\ndata => ",
     data,
     "\nco => ",
@@ -227,8 +223,8 @@ const upload = async (uri) => {
       "Content-Type": "multipart/form-data",
     },
   });
-  if (response.ok) logError(response);
-  return response;
+  if (!response.ok) logError(response);
+  return response.ok;
 };
 
 const delCookedMeal = async (id: number) => {

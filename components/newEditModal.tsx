@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -29,29 +29,63 @@ interface Props {
   setData: (id: number, body: Body) => void;
   hideModal: () => void;
   data: dataProps;
+  blend?: string;
 }
 
-const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
+const newEditModal: FC<Props> = ({
+  setData,
+  data,
+  hideModal,
+  blend = Col.Green,
+}) => {
   const { id, name, servings, modalVisible, creationTime } = data;
-  const [newTime, setNewTime] = useState({
-    hrs: new Date(creationTime).getHours().toString(),
-    min: new Date(creationTime).getMinutes().toString(),
-    portion: servings.toString(),
-  });
-
+  const handleFetch = () => {
+    const hrs = new Date(creationTime).getHours().toString();
+    const min = new Date(creationTime).getMinutes().toString();
+    return {
+      hrs: hrs.length > 1 ? hrs : "0" + hrs,
+      min: min.length > 1 ? min : "0" + min,
+      portion: servings.toString(),
+    };
+  };
+  const [newTime, setNewTime] = useState(handleFetch());
   const handleEdit = () => {
     const edit: Date = new Date(creationTime);
-    edit.setHours(Math.round(parseInt(newTime.hrs)));
-    edit.setMinutes(Math.round(parseInt(newTime.min)));
+    edit.setHours(Math.round(parseInt(newTime.hrs, 10)));
+    edit.setMinutes(Math.round(parseInt(newTime.min, 10)));
     return edit.getTime();
   };
 
   const handleSubmit = () => {
     setData(id, {
       creationTime: handleEdit(),
-      servings: parseInt(newTime.portion),
+      servings: Number(newTime.portion),
     });
   };
+
+  const editServings = (value: number) => {
+    const initialValue = Number(newTime.portion);
+    setNewTime({
+      ...newTime,
+      portion: `${initialValue + value}`,
+    });
+  };
+
+  const beautifyTime = () => {
+    let h = newTime.hrs.length > 1 ? newTime.hrs : "0" + newTime.hrs;
+    h = +h > 23 || isNaN(+h) ? "23" : h;
+    let m = newTime.min.length > 1 ? newTime.min : "0" + newTime.min;
+    m = +m > 59 || isNaN(+m) ? "59" : m;
+    setNewTime({
+      ...newTime,
+      hrs: h,
+      min: m,
+    });
+  };
+
+  useEffect(() => {
+    setNewTime(handleFetch());
+  }, [data]);
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
@@ -62,49 +96,32 @@ const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
               {name}
             </Text>
             <View>
-              <Text
-                type="bodyBold2"
-                style={{
-                  marginBottom: 8,
-                  marginTop: 16,
-                }}
-              >
+              <Text type="bodyBold2" style={styles.title}>
                 Servings
               </Text>
               <View style={styles.amountContainer}>
                 <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() =>
-                    setNewTime({
-                      ...newTime,
-                      portion: `${+newTime.portion - 0.5}`,
-                    })
-                  }
-                  disabled={newTime.portion === "0.5"}
+                  style={[styles.btn, { borderColor: blend }]}
+                  onPress={() => editServings(-0.5)}
+                  disabled={Number(newTime.portion) < 1}
                 >
-                  <Icon style={{ color: Col.Green }} name="minus" size={24} />
+                  <Icon style={{ color: blend }} name="minus" size={24} />
                 </TouchableOpacity>
-
                 <View style={styles.amountWrapper}>
                   <TextInput
                     style={styles.amount}
                     keyboardType="numeric"
                     value={newTime.portion}
-                    onChangeText={(portion) =>
-                      setNewTime({ ...newTime, portion })
-                    }
+                    onChangeText={(portion) => {
+                      if (!isNaN(+portion)) setNewTime({ ...newTime, portion });
+                    }}
                   />
                 </View>
                 <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() =>
-                    setNewTime({
-                      ...newTime,
-                      portion: `${+newTime.portion + 0.5}`,
-                    })
-                  }
+                  style={[styles.btn, { borderColor: blend }]}
+                  onPress={() => editServings(0.5)}
                 >
-                  <Icon style={{ color: Col.Green }} name="plus" size={24} />
+                  <Icon style={{ color: blend }} name="plus" size={24} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -120,16 +137,11 @@ const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
               <View style={styles.timeContainer}>
                 <View style={[styles.amountWrapper, { width: "48%" }]}>
                   <TextInput
-                    style={styles.amount}
                     keyboardType="numeric"
-                    onBlur={() => {
-                      if (+newTime.hrs < 9)
-                        setNewTime({
-                          ...newTime,
-                          hrs: `0${parseInt(newTime.hrs)}`,
-                        });
-                    }}
+                    style={styles.amount}
                     value={newTime.hrs}
+                    maxLength={2}
+                    onEndEditing={beautifyTime}
                     onChangeText={(hrs) => setNewTime({ ...newTime, hrs })}
                   />
                 </View>
@@ -147,13 +159,8 @@ const newEditModal: FC<Props> = ({ setData, data, hideModal }) => {
                     keyboardType="numeric"
                     style={styles.amount}
                     value={newTime.min}
-                    onBlur={() => {
-                      if (+newTime.min < 9)
-                        setNewTime({
-                          ...newTime,
-                          min: `0${parseInt(newTime.min)}`,
-                        });
-                    }}
+                    maxLength={2}
+                    onEndEditing={beautifyTime}
                     onChangeText={(min) => setNewTime({ ...newTime, min })}
                   />
                 </View>
@@ -205,8 +212,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
   },
+  title: {
+    marginBottom: Spacing.small,
+    marginTop: Spacing.medium,
+  },
   amountContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -215,19 +225,18 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 8,
     backgroundColor: Col.Grey4,
-    borderColor: Col.Green,
     borderWidth: 1.5,
     alignItems: "center",
   },
   amountWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 29,
-    paddingVertical: 6,
+    paddingHorizontal: Spacing.xlarge,
+    paddingVertical: Spacing.small,
     borderRadius: 8,
-    backgroundColor: Col.Grey4,
-    borderColor: Col.Grey3,
     borderWidth: 1.5,
+    borderColor: Col.Grey3,
+    backgroundColor: Col.Background,
   },
   amount: {
     fontSize: Typ.H1,
@@ -235,12 +244,10 @@ const styles = StyleSheet.create({
     color: Col.Grey,
   },
   timeContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   },
   btnContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: Spacing.medium,

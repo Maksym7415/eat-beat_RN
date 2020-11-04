@@ -1,109 +1,87 @@
-import React, { FC, useState, useEffect, useContext } from "react";
+import React, { FC, useState, useEffect, useContext, useCallback } from "react";
 import { StyleSheet, ScrollView, View, Alert } from "react-native";
-import { Spacing } from "../../components/Config";
+import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
-import { Memo, RecommendedMeals } from "../../components/interfaces";
+import { Memo, NavProps, RecommendedMeals } from "../../components/interfaces";
 import server from "../../server";
 import { AppContext } from "../../components/AppContext";
-import EditModal from "../../components/EditModal";
-
-interface Props {
-  recipe: string;
-}
+import EditModal from "../../components/newEditModal";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface ModalData {
-  id: string;
+  id: number;
   name: string;
-  time: string;
-  servings: string;
+  servings: number;
   modalVisible: boolean;
   creationTime: number;
   data: object;
 }
 
-const RecommendedScreen: FC<Props> = (props) => {
-  const [feed, setFeed] = useState<Array<RecommendedMeals>>([]);
-  const [modalData, setModalData] = useState<ModalData>({
-    id: "",
-    name: "",
-    time: "",
-    servings: "",
-    modalVisible: false,
-    creationTime: 0,
-    data: {},
-  });
+const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
   const { calendar } = useContext<Memo>(AppContext);
   const { date } = calendar;
+  const [feed, setFeed] = useState<RecommendedMeals[]>([]);
+  const [modalData, setModalData] = useState<ModalData>({
+    id: 0,
+    name: "",
+    servings: 0.5,
+    modalVisible: false,
+    creationTime: new Date(date).getTime(),
+    data: {},
+  });
 
   const serveData = async () => {
     const response = await server.getRecommendedMeals(date);
     response.ok
       ? setFeed(response.data)
-      : Alert.alert(
-          response.status?.toString(),
-          `${response.problem}\n${JSON.stringify(response.config)}`
-        );
+      : Alert.alert(`${response.status}`, `${response.data}`);
     console.log("getRecommendedMeals => request: ", response.ok);
   };
-
-  const actionHandler = async (props: RecommendedMeals) => {
-    const { actionHandler, ...data } = props;
+  const actionHandler = (id, name, data) => {
     setModalData({
-      id: props.title,
-      name: props.title,
-      time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-      servings: "0.5",
-      modalVisible: true,
-      creationTime: new Date().getTime(),
+      id,
+      name,
       data,
+      servings: 0.5,
+      modalVisible: true,
+      creationTime: new Date(date).getTime(),
     });
-    //serveData()
   };
 
-  const addMeal = async (
-    creationTime: number,
-    time: object,
-    amount: string,
-    hideModal: (a: boolean) => boolean,
-    id: number
-  ) => {
-    const t = `${new Date(creationTime).getMonth() + 1}/${new Date(
-      creationTime
-    ).getDate()}/${new Date(creationTime).getFullYear()} ${time.hour.value}:${
-      time.minutes.value
-    }`;
+  const addMeal = async (id, { creationTime, servings }) => {
     await server.addCookedMeal({
       meal: modalData.data,
-      quantity: +amount.replace(/[,-]/g, "."),
-      date: new Date(t).getTime(),
+      quantity: servings,
+      date: creationTime,
     });
-    hideModal(false);
-    props.navigation.navigate("meals", { refresh: true });
+    setModalData({ ...modalData, modalVisible: false });
+    navigation.navigate("meals", { refresh: true });
   };
 
   useEffect(() => {
-    if (modalData.modalVisible || modalData.cancel) return;
-    //serveData();
-  }, [modalData.modalVisible]);
-
-  useEffect(() => {
-    let focus = props.navigation.addListener("focus", () => {
-      serveData();
-    });
     serveData();
-    () => {
-      focus = null;
-    };
-  }, []);
+  }, [calendar]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params?.refresh) {
+        navigation.setParams({ refresh: false });
+        serveData();
+      }
+    }, [route.params])
+  );
   return (
-    <View style={{ flex: 1 }}>
-      <EditModal {...modalData} setModalData={setModalData} cb={addMeal} />
+    <View style={{ flex: 1, backgroundColor: Col.Background }}>
+      <EditModal
+        data={modalData}
+        setData={(id, body) => addMeal(id, body)}
+        hideModal={() => setModalData({ ...modalData, modalVisible: false })}
+      />
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
-              <RecipeCard {...item} actionHandler={actionHandler} />
+              <RecipeCard details={item} actionHandler={actionHandler} />
             </View>
           ))}
         </View>

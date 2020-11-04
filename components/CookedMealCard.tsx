@@ -5,6 +5,13 @@ import { Col, Spacing, Typ } from "./Config";
 import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
 
+interface editProps {
+  id: number;
+  name: string;
+  servings: number;
+  creationTime: number;
+}
+
 interface Props {
   item: {
     id: number;
@@ -13,13 +20,8 @@ interface Props {
     creationTime: number;
     servings: number;
   };
-  onClick: (id: number) => void;
-  actionHandler: (
-    id: number,
-    name?: string,
-    servings?: number,
-    creationTime?: number
-  ) => void;
+  onClick?: (id: number) => void;
+  actionHandler: (value: editProps) => void;
   onDelete: (id: number, name: string) => void;
 }
 
@@ -63,7 +65,7 @@ const CookedMealCard: FC<Props> = ({
           <Divider styler={styles.verticalDivider} />
           <Icon
             style={{ alignSelf: "flex-end" }}
-            onPress={() => actionHandler(id, name, servings, creationTime)}
+            onPress={() => actionHandler({ id, name, servings, creationTime })}
             name="pencil"
             size={24}
             color={Col.Grey5}
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     marginRight: Spacing.large,
   },
   bodyContainer: {
-    display: "flex",
+    flex: 1,
     justifyContent: "space-around",
   },
   timeStamp: {

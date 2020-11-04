@@ -28,6 +28,13 @@ interface ModalData {
   creationTime: number;
 }
 
+interface editProps {
+  id: number;
+  name: string;
+  servings: number;
+  creationTime: number;
+}
+
 type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
 
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
@@ -54,16 +61,6 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   const onChange = (event: Ev, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || date;
     saveCal({ visible: false, date: currentDate });
-  };
-
-  const actionHandler = (id, name, servings, creationTime) => {
-    setModalData({
-      id,
-      name,
-      servings,
-      creationTime,
-      modalVisible: true,
-    });
   };
 
   const deleteHandler = async () => {
@@ -113,6 +110,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         data={modalData}
         setData={(id, body) => updateMeal(id, body)}
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
+        blend={Col.Main}
       />
       <PopUp
         header="Delete"
@@ -141,9 +139,10 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         renderItem={({ item, index }) => (
           <CookedMealCard
             item={item}
-            actionHandler={actionHandler}
+            actionHandler={(props: editProps) =>
+              setModalData({ ...props, modalVisible: true })
+            }
             onDelete={(id, name) => setPopAlert({ id, name, visible: true })}
-            onClick={(id) => console.log(id)}
           />
         )}
       />

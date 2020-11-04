@@ -28,6 +28,7 @@ export default function App() {
   });
 
   const loadUser = async () => {
+    if (logged) return;
     console.log("new log", new Date(), "\n");
     await server.setup();
     const token = await AsyncStorage.getItem("@token");
@@ -45,13 +46,18 @@ export default function App() {
     setLogged(false);
   };
 
-  const loginHandler = async () => {
+  const getUserData = async () => {
     const response = await server.getProfile();
     const { ok, data } = response;
     if (ok) {
       setUserData(data);
       await AsyncStorage.setItem("@user", JSON.stringify(data));
+      return data;
     }
+  };
+
+  const loginHandler = async () => {
+    await getUserData();
     setLogged(true);
   };
 
@@ -62,7 +68,7 @@ export default function App() {
       saveCal: (value) => setCal(value),
       login: () => loginHandler(),
       signOut: () => removeToken(),
-      getData: () => console.log("get data"),
+      getData: () => getUserData(),
       pushData: () => console.log("push data"),
       isFetching: (value: boolean) => console.log("hi"),
       showModal: (value: boolean) => {

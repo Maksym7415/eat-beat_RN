@@ -17,9 +17,10 @@ interface Props {
   image: string | null;
   name: string;
   email: string;
+  onUpdate: () => void;
 }
 
-const UserCard: FC<Props> = ({ image, name, email }) => {
+const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
   const [edit, setEdit] = useState(false);
   useEffect(() => {
     (async () => {
@@ -44,8 +45,9 @@ const UserCard: FC<Props> = ({ image, name, email }) => {
 
   const uploadAvatar = async (uri: string) => {
     const response = await server.upload(uri);
-    if (response.ok) {
-      AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
+    if (response) {
+      //AsyncStorage.mergeItem("@user", JSON.stringify({ userAvatar: uri }));
+      onUpdate();
     }
   };
   return (
@@ -113,6 +115,8 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
+    borderRadius: 36,
+    overflow: "hidden",
   },
   nameInput: {
     fontFamily: "Inter_500Medium",

@@ -7,7 +7,13 @@ const UserCard = ({ color }) => {
   const { myData } = useContext(AppContext);
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
-      <Image style={styles.image} source={{ uri: myData.userAvatar }} />
+      <Image
+        style={styles.image}
+        source={{
+          uri:
+            "https://logisticbrocker.hopto.org/eat-beat/" + myData.userAvatar,
+        }}
+      />
       <Text style={styles.text}>{myData.email}</Text>
     </View>
   );
