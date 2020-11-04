@@ -9,13 +9,15 @@ interface Props {
   label: string;
   defaultValue: boolean
   newState: object
+  radioBtn: string
 }
 
 const RadioInput: FC<Props> = ({
     defaultValue,
     setSelect,
     label,
-    newState
+    newState,
+    radioBtn
 }) => {
   return (
     <TouchableWithoutFeedback
@@ -23,12 +25,12 @@ const RadioInput: FC<Props> = ({
     >
       <View style={styles.container}>
         <Icon
-          name={defaultValue || newState[label] ? "radiobox-marked" : "radiobox-blank"}
-          color={defaultValue || !newState[label] ? Col.Grey : Col.Green}
+          name={defaultValue ? "radiobox-marked" : "radiobox-blank"}
+          color={!defaultValue ? Col.Grey : radioBtn}
           size={20}
         />
         <Text
-          style={defaultValue || !newState[label] ? styles.off : styles.on}
+          style={!defaultValue ? styles.off : styles.on}
         >
           {label}
         </Text>

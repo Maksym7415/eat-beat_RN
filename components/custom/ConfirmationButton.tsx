@@ -3,10 +3,10 @@ import React from 'react';
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function Button({ title, onClickHandler, bckColor, textColor, fts, ftw, absolute }) {
+export default function Button({ title, onClickHandler, bckColor, textColor, fts, ftw }) {
 
     return (
-        <TouchableOpacity style={{...styles.contanier, backgroundColor: bckColor, bottom: absolute ? 125 : 0, position: absolute ? 'absolute' : 'relative'}} onPress={onClickHandler}>
+        <TouchableOpacity style={{...styles.contanier, backgroundColor: bckColor}} onPress={onClickHandler}>
             <View>
                 <Text style={{color: textColor, fontSize: fts, fontWeight: ftw}}>
                     {title.toUpperCase()}

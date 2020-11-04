@@ -29,6 +29,8 @@ export interface apiProps {
     profile: string;
     password: string;
     updateCookedMeal: string
+    updateUserReferences: string
+    updateIntakeNorms: string
   };
 }
 

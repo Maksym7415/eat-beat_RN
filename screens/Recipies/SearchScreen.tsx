@@ -11,6 +11,8 @@ import SearchModal from "../../components/SearchModal";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import Chip from "../../components/custom/Chip";
 import FilterModal from "../../components/FilterModal";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Console } from "console";
 
 interface Props {
   recipe: string;
@@ -44,20 +46,29 @@ const SearchScreen = (props) => {
     data: {},
   });
 
+  const [radioState, setRadioState] = useState<Array<object>>([])
+  const [chipsState, setChipsState] = useState<Array<object>>([])
+  const [mealsTypes, setMealsTypes] = useState<Array<object>>([])
+
   const onChangeHandler = (text: string) => {
-    console.log(text);
     setState(text);
   };
 
   const startSearch = async () => {
-    console.log(filterConfig)
-    const data = await server.getRecipeByName(state, filterConfig)
+    if(!Object.keys(filterConfig).length) {
+      let defaultConfig = {intolerances: chipsState.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join(' ,'), diets: radioState.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join('')};
+      const data = await server.getRecipeByName(state, defaultConfig);
+      showModal(false)
+      setFeed(data)
+      return;
+    }
+    const data = await server.getRecipeByName(state, filterConfig);
     showModal(false)
     setFeed(data)
   }
 
-  const saveFilterConfig = (config) => {
-    setFilterConfig(config)
+  const saveFilterConfig = ({ intolerances, diets, meals }) => {
+    setFilterConfig({intolerances: chipsState.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join(' ,'), diets: radioState.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join('')})
   }
 
   const actionHandler = async (props: RecommendedMeals) => {
@@ -96,7 +107,6 @@ const SearchScreen = (props) => {
   };
 
 const constraintNumber = (filter) => {
-  // console.log(!Object.keys(filter).length)
   if(!Object.keys(filter).length) return;
   let countConstraint = 0;
   Object.keys(filter).forEach((el) => filter[el]?.forEach((constraint) => constraint.isUsers === true ? countConstraint +=1 : false));
@@ -111,23 +121,43 @@ useEffect(() => {
   getSearchFilter() 
 }, [])
 
+    useEffect(() => {
+      setRadioState(filter.diets)
+      setMealsTypes(filter.mealTypes)
+      setChipsState(filter.intolerances)
+    }, [filter])
+
   return (
+    <ScrollView>
     <View>
       {/* <Header {...props} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/> */}
       <EditModal {...modalData} setModalData={setModalData} cb={addMeal}/>
-      <SearchModal modalVisible={isShow} hideModal={() => showModal(false)} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/>
-      <FilterModal modalVisible = {showFilterModal} hideModal={() => setShowFilterModal(false)} data={filter} saveFilterData = {saveFilterConfig} constaintNumber = {constraintNumber(filter)}/>
+      <SearchModal  modalVisible={isShow} hideModal={() => showModal(false)} onChangeHandler={onChangeHandler} value={state} searchHandler = {startSearch}/>
+      <FilterModal
+        modalVisible={showFilterModal} 
+        hideModal={() => setShowFilterModal(false)} 
+        data={filter} 
+        saveFilterData={saveFilterConfig} 
+        constaintNumber={constraintNumber(filter)}
+        radioState={radioState}
+        setRadioState={setRadioState} 
+        chipsState={chipsState}
+        setChipsState={setChipsState}
+        mealsTypes={mealsTypes}
+        setMealsTypes={setMealsTypes}
+      />
+      <TouchableOpacity  onPress={() => setShowFilterModal(true)}>
       <View style={styles.constraint}>
           <Text style={{color: '#6E7882', fontSize: Typ.Normal}}>
               Constraint({constraintNumber(filter)})
           </Text>
           <Icon
-            onPress={() => setShowFilterModal(true)}
             name='keyboard-arrow-right'
             size={22}
             color='#6E7882'
           />
       </View>
+      </TouchableOpacity>
       <ScrollView>
         <View style={styles.container}>
           {feed.map((item, index) => (
@@ -138,6 +168,7 @@ useEffect(() => {
         </View>
       </ScrollView>
     </View>
+    </ScrollView>
   );
 };
 

@@ -5,16 +5,20 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { title } from 'process';
 import { Col } from '../Config';
 
+// interface Props {
+//     selected: Options
+//     setSelected: (title: string, value: number) => void
+// }
+
 interface Options {
     title: string,
     value: number
 }
 let count = 0
 
-export default function Select() {
+export default function Select({selected, setSelected, isEnabled}) {
 
     const [show, setShow] = useState<string>('none')
-    const [selected, setSelected] = useState<Options>({title: 'BMR', value: 1.2})
     const options: Array<Options> = [
         {title: 'BMR', value: 1.2},
         {title: 'Sedentary', value: 1.375},
@@ -31,7 +35,6 @@ export default function Select() {
     }
     
     const showHandler = () => {
-        console.log(count)
         count+=1;
         if(count % 2) {
             return setShow('none')
@@ -40,9 +43,9 @@ export default function Select() {
     }
 
     return(
-        <View style={{backgroundColor:'pink'}}>
+        <View>
             <TouchableWithoutFeedback onPress={showHandler} >
-                <View style={styles.container}>
+                <View style={{...styles.container, borderColor: !selected.value && isEnabled ? 'red' :  '#DADDDF'}}>
                     <View style={styles.optionContainer}>
                         <Text>
                             {selected.title}    
@@ -77,7 +80,6 @@ const styles = StyleSheet.create({
         paddingVertical: 13,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#DADDDF'
     },
     optionContainer: {
         display: 'flex',
@@ -87,7 +89,6 @@ const styles = StyleSheet.create({
     options: {
         display: 'flex',
         borderRadius: 8,
-        backgroundColor:'pink',
         //borderWidth: 1.5,
         borderColor: '#DADDDF',
     }

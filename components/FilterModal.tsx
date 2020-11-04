@@ -6,74 +6,37 @@ import Chip from './custom/Chip';
 import { Divider } from "./MyComponents";
 import RadioBtn from './Radio';
 import Button from './custom/ConfirmationButton';
+import { ScrollView } from 'react-native-gesture-handler';
+import UserSettings from './UserSettings';
 
-export default function FilterModal({ modalVisible, hideModal, data, saveFilterData, constaintNumber }: any) {
+export default function FilterModal({ modalVisible, hideModal, data, saveFilterData, constaintNumber, radioState, setRadioState, chipsState, setChipsState, mealsTypes, setMealsTypes }: any) {
 
-
-    const [radioState, setRadioState] = useState<object>({})
-    const [chipsState, setChipsState] = useState<object>({})
-
-    const setNewRadioState = (value, name) => {
-        setRadioState((v) => {
-            let newStateObject = {}
-            Object.keys(v).forEach((el) => {
-                if(el[name]) newStateObject[name] = false
-                newStateObject[name] = true
-            })
-            return newStateObject
-        })
+    const saveFilterConfig = ({intolerances, diets, meals}, isClick: boolean) => {
+        saveFilterData({meals: meals.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join(' ,'), intolerances: intolerances.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join(' ,'), diets: diets.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join('')})
+        !isClick && hideModal(true)
     }
-
-    const setChips = (name, state) => {
-        setChipsState((v) => ({...v, [name]: state}))
-    }
-
-    const saveFilterConfig = () => {
-        const intolerancesArray:any = []
-        Object.keys(chipsState).forEach(el => chipsState[el] === true ? intolerancesArray.push(el.toLowerCase()) : false )
-        saveFilterData({intolerances: intolerancesArray.join(' ,'), diets: Object.keys(radioState)[0]})
-        hideModal(true)
-    }
-
-    useEffect(() => {
-        let diets = {}, intolerances = {}
-        data.diets && data.diets.forEach(el => diets[el.name] = el.isUsers)
-        data.intolerances && data.intolerances.forEach(el => el.isUsers === true ?  intolerances[el.name] = true : false)
-        setRadioState(diets)
-        setChipsState(intolerances)
-    }, [data.diets])
-
     return (
         <Modal
             animationType="fade"
             transparent={true}
             visible={modalVisible}
-        >
+        >   
+        
+            <ScrollView>
             <Header hideModal = {hideModal} name={`Constraint(${constaintNumber})`} showInput={false} />
-            <View style={{backgroundColor: Col.Back3, paddingHorizontal: 16, height: Dimensions.get('window').height}}>
-                <View style={styles.intolerances}>
-                    <Text style={styles.intolerances_text}>Intolerances</Text>
-                    <View style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginTop: 22}}>  
-                        {data.intolerances && data.intolerances.map((el) => <Chip chipBgColor={Col.Green} chipsState={chipsState} setChipsState={setChips} title={el.name} key={el.id}/>)}
-                    </View>
-                </View>       
-                <Divider styler={styles.divider}/>
-                <View >
-                    <Text style={styles.intolerances_text}>Diet</Text>
-                    <View style={{ marginTop: 22}}>
-                        {data.diets && data.diets.map((el) => <RadioBtn key={el.id} label={el.name} defaultValue = {el.isUsers} setSelect = {(value, name) => setNewRadioState(value, name)} newState = {radioState}/>)}
-                    </View>
-                </View>
-                <Divider styler={styles.divider}/>
-                <View>
-                    <Text style={styles.intolerances_text}>Meal Types</Text>
-                   <View style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginTop: 22}}>  
-                        {data.mealTypes && data.mealTypes.map((el) => <Chip title={el.name} key={el.id}/> )}
-                    </View>
-                </View>
-                    <Button title={'Save changes'} bckColor={Col.Green} textColor={Col.White} fts={Typ.Small} ftw={'500'} onClickHandler={saveFilterConfig} />
-                
-            </View>
+            <UserSettings  
+                data={data} 
+                saveFilterConfig={saveFilterConfig} 
+                btnColor={Col.Green}
+                chipColor={Col.Green}
+                radioState={radioState}
+                setRadioState={setRadioState} 
+                chipsState={chipsState}
+                setChipsState={setChipsState}
+                mealsTypes={mealsTypes}
+                setMealsTypes={setMealsTypes}
+            />
+            </ScrollView>
         </Modal>
 
     )

@@ -6,18 +6,20 @@ import { Col } from '../Config';
 interface Props{
     title: string
     setChipsState: (title: string, state: boolean) => void
-    chipsState: object
     chipBgColor: string
+    state: boolean
+    isEnabled?: boolean
+    chipsState: object
 }
 
-export default function Chip({ title, setChipsState, chipsState, chipBgColor }: Props) {
-
-    console.log(chipsState)
+export default function Chip({ title, setChipsState, state, chipBgColor, isEnabled, chipsState = {} }: Props) {
+    const { Male, Female } = chipsState
     return (
-        <TouchableOpacity onPress={() => setChipsState(title, !chipsState[title])}>
+        <TouchableOpacity onPress={() => setChipsState(title, !state)}>
+
             <View>
-                <View style={{...styles.container, backgroundColor: !chipsState[title] ? Col.White : chipBgColor}}>
-                    <Text style={{...styles.text, color: !chipsState[title] ? '#7A7A7A' : Col.White}}>
+                <View style={{...styles.container, backgroundColor: !state ? Col.White : chipBgColor, borderColor: isEnabled && Male && Female ? 'red': Col.Back3}}>
+                    <Text style={{...styles.text, color: !state ? '#7A7A7A' : Col.White}}>
                     {title} 
                     </Text>
                 </View>
@@ -33,7 +35,8 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 12,
         marginRight: 6,
-        marginBottom: 8
+        marginBottom: 8,
+        borderWidth: 1
     },
     text: {
         color: Col.White,

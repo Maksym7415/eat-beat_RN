@@ -23,7 +23,6 @@ interface ModalData {
 }
 
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
-  console.log(route.params);
   const [feed, setFeed] = useState(null);
   const [select, setSelect] = useState(null);
   const [popVisible, setPopVisible] = useState(false);

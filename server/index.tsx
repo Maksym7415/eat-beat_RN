@@ -4,8 +4,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import Axios from "axios";
 
 const apiConfig: apiProps = {
-  //baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
+ // baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     dailyConsumption: "/meals/daily-consumption?date=",
@@ -34,6 +34,8 @@ const apiConfig: apiProps = {
     profile: "/user/update-profile",
     password: "/user/update-password",
     updateCookedMeal: "/meals/update-cooked-meal/",
+    updateUserReferences: '/user/update-preferences',
+    updateIntakeNorms: '/user/intake-norms'
   },
 };
 
@@ -142,6 +144,15 @@ const updateCookedMeal = async (id: number, data: object) => {
   return response;
 };
 
+const updateIntakeNorm = async (data: object) => {
+
+  const address = apiConfig.put.updateIntakeNorms;
+  console.log(data, 'gfdfgdfgdf986789546854654659')
+  const response  = await api.patch(address, {intakeNorms: data})
+  if (!response.ok) logError(response);
+  return response;
+} 
+
 const getProfile = async () => {
   const address = apiConfig.get.profile;
   console.log(address)
@@ -185,6 +196,7 @@ const getSearchFilter = async () => {
   const address = apiConfig.get.getSearchFilter;
   const response = await api.get(address)
   if (!response.ok) logError(response);
+  console.log(response.data)
   return response.data;
 }
 
@@ -252,9 +264,26 @@ const updateIntakeNorms = () => {
   return null;
 };
 
-const updateProfile = () => {
-  return null;
+const updateProfile = async (data: object) => {
+  const address = apiConfig.put.profile;
+  console.log(data, 'updateProfile')
+  const response = await api.patch(address, data)
+  return response;
 };
+
+const updateUserReferences = async (data: object) => {
+  console.log(data)
+  const address = apiConfig.put.updateUserReferences;
+  try{
+    const response = await api.put(address, {...data})
+    const res = await getSearchFilter()
+    return res;
+  }catch(e) {
+    console.log({e})
+  }
+
+
+}
 
 const updatePassword = () => {
   return null;
@@ -296,4 +325,6 @@ export default {
   getSearchFilter,
   resendCode,
   verifyAccount,
+  updateUserReferences,
+  updateIntakeNorm
 };
