@@ -36,10 +36,19 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
     console.log("hi");
   };
 
-  console.log(Dimensions.get("screen").height);
-
   return (
     <View style={styles.container}>
+      <Text
+        style={{
+          position: "absolute",
+          left: 10,
+          bottom: 10,
+          color: "white",
+          fontSize: 14,
+        }}
+      >
+        v 0.1.2
+      </Text>
       <Logo onLongPress={() => changeBaseURL()} />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>

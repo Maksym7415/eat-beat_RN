@@ -1,295 +1,161 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, FC, useContext } from "react";
+import { View, Switch, StyleSheet, ScrollView } from "react-native";
+import Text from "../../components/custom/Typography";
+import server from "../../server";
+import Select from "../../components/custom/Select";
+import { Col, Spacing } from "../../components/Config";
+import { Memo, NavProps, ProfileProps } from "../../components/interfaces";
+import { Button, Divider } from "../../components/MyComponents";
+import ToggleChip from "../../components/custom/ToggleChip";
+import { AppContext } from "../../components/AppContext";
+import InputFeild from "./common/InputFeild";
 
-import { View, Text, Switch, StyleSheet, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native';
-import { Col, Spacing } from '../../components/Config';
-import { Divider } from '../../components/MyComponents';
-import Chip from '../../components/custom/Chip';
-import { Picker } from '@react-native-picker/picker';
-import Select from '../../components/custom/Select';
-import Input from '../../components/custom/Input';
-import Button from '../../components/custom/ConfirmationButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import server from '../../server';
-import Nutrition from '../../components/Nutrition';
+const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
+  const { myData } = useContext<Memo>(AppContext);
+  const [feed, setFeed] = useState<ProfileProps>(myData);
+  const [selected, setSelected] = useState<number>(0);
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [chips, setChips] = useState<string>("male");
 
-interface Options {
-    title: string,
-    value: number
-}
+  const enableEditing = () => {
+    setDisabled(!disabled);
+  };
 
-export default function PersonalDataScreen({ navigation } ) {
-
-    const [selected, setSelected] = useState<Options>({title: 'Choose activity', value: 0})
-    const [initialState, setInitialState] = useState<object>({
-        personalData: {},
-        activity: {},
-        gender: {}
-
-    })
-    const [feed, setFeed] = useState<object>({})
-    const [isEnabled, setIsEnabled] = useState<boolean>(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    const [chipsState, setChipsState] = useState<object>({Male: false, Female: false});
-
-    const [personalData, setPersonalData] = useState<object>({})
-    const setChips = (name: string, state: boolean) => {
-        let newState = {}
-        //if(Object.keys(chipsState)[0] === name) return;
-
-        Object.keys(chipsState).forEach((el) => el === name ? newState[name] = true : newState[el] = false)
-            
-      
-        setChipsState(newState)
-    }
-
-    const personalChangeHandler = (value: string, name: string) => {
-        setPersonalData((v: any) => ({...v, [name]: {...v[name], value}}))
-    }
-
-    const onEditHandler = (name: string) => {
-        setPersonalData((v:any) => ({...v, [name]: {...v[name], edit: true}}))
-    }
-
-    const onPressHandler = (name: string) => {
-        setPersonalData((v:any) => ({...v, [name]: {...v[name], edit: false}}))
-    }
-
-    const blurHandler = (name: string) => {
-        setPersonalData((v:any) => ({...v, [name]: {...v[name], edit: false}}))
-    }
-
-    const savePersonalDataHandler = async () => {
-        let personalObject = {
-            gender: Object.keys(chipsState)[0].toLowerCase(),
-            age: +personalData['Age'].value,
-            height: +personalData['Height'].value,
-            currentWeight: +personalData['Weight'].value,
-            preferences: isEnabled,
-            activity: selected.value,
-        }
-        Object.keys(personalObject).forEach((el) => {
-            if(el !== 'preferences' && (!personalObject[el] || personalObject[el] === '-----')) {
-                delete personalObject[el]
-            }
-        })
-        await server.updateProfile(personalObject)
-        await getProfileData();
-    }
-
-    const getProfileData = async () => {
-        const { data: { gender, activity, preferences, ...other } } = await server.getProfile();
-        const personalParams = {};
-        const __editiablePersonalParams = ['age', 'height', 'currentWeight'];
-        const units = ['years', 'cm', 'kg'];
-        let unit = -1
-        Object.keys(other).forEach((el) => {
-            if(__editiablePersonalParams.includes(el)) {
-                unit+=1
-                if(el === 'currentWeight') {
-                    return personalParams['Weight'] = {
-                        title: 'Weight',
-                        value: other[el] || '-----',
-                        unit: units[unit],
-                        edit: false
-                    }
-                }
-                personalParams[el[0].toUpperCase() + el.slice(1)] = {
-                    title: el[0].toUpperCase() + el.slice(1),
-                    value: other[el] || '-----',
-                    unit: units[unit],
-                    edit: false
-                }
-            }
-        })
-        setInitialState({personalParams: personalParams, gender: {[gender && gender[0].toUpperCase() + gender.slice(1)]: true}, isEnabled: preferences})
-        setPersonalData(personalParams)
-        setIsEnabled(preferences)
-       // setSelected(activity)
-       if(!gender) {
-           return setChipsState({Male: false, Female: false})
-       }
-        setChipsState({[gender[0].toUpperCase() + gender.slice(1)]: true})
-    }
-
-    useEffect(() => {
-        
-        getProfileData();
-    }, [])
-
-    useEffect(() => {
-        let focus = navigation.addListener("blur", () => {
-            
-            setPersonalData(initialState.personalParams);
-            setIsEnabled(initialState.isEnabled)
-            if(Object.keys(initialState.gender)[0] === 'null') {
-                return setChipsState({Male: false, Female: false})
-            }
-            setChipsState(initialState.gender);
-        });
-        () => {
-          focus = null;
-        };
-      }, [personalData]);
-
-    return (
-        <View style={{flex: 1, backgroundColor: Col.Back3}}>
-        <ScrollView>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View style={styles.container}>
-                
-                    <View style={styles.toggleContainer}>
-                        <Text style={styles.toggleText}>
-                            Use individual infake 
-                            recommendations
-                        </Text>
-                        <Switch
-                            trackColor={{ false: "#767577", true: "#616161" }}
-                            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                            ios_backgroundColor="#DADDDF"
-                            onValueChange={toggleSwitch}
-                            value={isEnabled}
-                        />
-                    </View>
-                    <Divider styler={styles.divider}/>
-                        <View style={styles.personalContainer}>
-                            <View style={styles.genderContainer}>
-                                <Text>
-                                    Gender
-                                </Text>
-                                <View style={styles.chipsConatainer}>
-                                    <Chip
-                                        state={chipsState.Male}
-                                        setChipsState={setChips} 
-                                        chipsState={chipsState} 
-                                        title={'Male'}
-                                        chipBgColor={'#616161'}
-                                        isEnabled={isEnabled}
-                                    />
-                                    <Chip
-                                        state={chipsState.Female}
-                                        setChipsState={setChips} 
-                                        chipsState={chipsState} 
-                                        title={'Female'}
-                                        chipBgColor={'#616161'}
-                                        isEnabled={isEnabled}
-                                    />
-                                </View>
-                            
-                            </View>
-                            {Object.keys(personalData).map((el) => (
-                                <View style={styles.ageContainer}>
-                                    <Text style={styles.ageText}>
-                                        {personalData[el].title}
-                                    </Text>
-                                    <View style={styles.yearsContainer}>
-                                    {personalData[el].edit ? <Input
-                                        label={personalData[el].title}
-                                        type={'numeric'}
-                                        value={personalData[el].value}
-                                        onChange={personalChangeHandler}
-                                        onPressHandler={onPressHandler}
-                                        onBlur={blurHandler}
-                                        defaultIcon={false}
-                                        defaultIconSize={16}
-                                        additionalIcon={false}
-                                    /> 
-                                    : 
-                                    <TouchableOpacity onPress={() => onEditHandler(personalData[el].title)}>
-                                        <Text style={{color: personalData[el].value === '-----' && isEnabled ? 'red': Col.Black}}>
-                                            {personalData[el].value}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    }
-                                    <Text>
-                                        {personalData[el].unit}
-                                    </Text>
-                                    </View>
-                                    
-                                </View>
-                            ))}
-                            <View style={styles.ageContainer}>
-                                <Text style={styles.activityText}>
-                                Activity
-                                </Text>
-                                <View style={{width: '50%'}}>
-                                    <Select
-                                        isEnabled={isEnabled}
-                                        selected={selected}
-                                        setSelected={setSelected}
-                                    />
-
-                                </View>
-                            </View>
-                        </View>      
-                </View>
-            </TouchableWithoutFeedback>
-        </ScrollView>
-        <View style={{paddingHorizontal: 16, position: 'absolute', width: '100%', bottom: 46}}>
-            <Button 
-                title={'Save changes'} 
-                onClickHandler={savePersonalDataHandler} 
-                bckColor={'#616161'}
-                textColor={Col.White}
-                fts={14}
-                ftw={'500'}
-                absolute={false}
-            />
+  const savePersonalDataHandler = async () => {
+    const personalObject = {
+      gender: chips,
+      age: feed.age,
+      height: feed.height,
+      currentWeight: feed.currentWeight,
+      preferences: disabled,
+      activity: selected,
+    };
+    await server.updateProfile(personalObject);
+  };
+  return (
+    <View style={styles.canvas}>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <View style={styles.toggleContainer}>
+          <Text type="body" style={styles.wide}>
+            Use individual infake recommendations
+          </Text>
+          <Switch
+            trackColor={{ false: Col.Inactive, true: Col.Lemon }}
+            thumbColor={Col.White}
+            ios_backgroundColor="#DADDDF"
+            onValueChange={enableEditing}
+            value={disabled}
+          />
         </View>
+        <Divider />
+        <View style={styles.personalContainer}>
+          <View style={styles.genderContainer}>
+            <Text type="body">Gender</Text>
+            <View style={[styles.row, styles.wide]}>
+              <ToggleChip
+                title={"Male"}
+                disabled={!disabled}
+                state={chips === "male"}
+                onPress={() => setChips("male")}
+              />
+              <ToggleChip
+                title={"Female"}
+                disabled={!disabled}
+                state={chips === "female"}
+                onPress={() => setChips("female")}
+              />
+            </View>
+          </View>
+          <InputFeild
+            label="Age"
+            onChange={(value) => setFeed({ ...feed, age: Number(value) })}
+            input={feed.age}
+            disabled={disabled}
+            suffix="years"
+          />
+          <InputFeild
+            label="Height"
+            onChange={(value) => setFeed({ ...feed, height: Number(value) })}
+            input={feed.height}
+            disabled={disabled}
+            suffix="cm"
+          />
+          <InputFeild
+            label="Weight"
+            onChange={(value) =>
+              setFeed({ ...feed, currentWeight: Number(value) })
+            }
+            input={feed.currentWeight}
+            disabled={disabled}
+            suffix="kg"
+          />
+          <View style={styles.genderContainer}>
+            <Text type="body" style={styles.activityText}>
+              Activity
+            </Text>
+            <View style={{ width: "50%" }}>
+              <Select
+                disabled={disabled}
+                selected={selected}
+                onSelect={(value) => setSelected(value)}
+              />
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+      <View
+        style={{
+          padding: Spacing.medium,
+        }}
+      >
+        <Button
+          label="SAVE CHANGES"
+          onPress={savePersonalDataHandler}
+          style={styles.saveBtn}
+        />
+      </View>
     </View>
-    )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-    position: 'relative'
-    },
-    toggleContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginVertical: 16,
-        paddingHorizontal: 16,
-    },
-    toggleText: {
-        width: 150
-    },
-    divider: {
-        borderBottomWidth: 1,
-        //marginVertical: Spacing.small,
-        borderBottomColor: Col.Divider,
-      },
-    personalContainer: {
-        marginVertical: 16,
-        paddingHorizontal: 16,
-    },
-    genderContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 5
-    },
-    chipsConatainer: {
-        display: 'flex',
-        flexDirection: 'row',
-
-    },
-    ageContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginBottom: 27,
-    },
-    ageText: {
-        width: '50%'
-    },
-    yearsContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        width: '50%',
-    },
-    activityText: {
-        width: '50%',
-        alignSelf: 'flex-start',
-        paddingTop: 15
-    },
-  });
+  canvas: {
+    flex: 1,
+    backgroundColor: Col.White,
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: Spacing.medium,
+    paddingHorizontal: Spacing.medium,
+  },
+  wide: {
+    width: "50%",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  select: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  personalContainer: {
+    marginVertical: Spacing.medium,
+    paddingHorizontal: Spacing.medium,
+  },
+  genderContainer: {
+    marginBottom: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  activityText: {
+    width: "50%",
+    paddingTop: Spacing.medium,
+  },
+  saveBtn: {
+    backgroundColor: Col.Grey,
+  },
+});
+export default PersonalDataScreen;

@@ -14,6 +14,7 @@ let customFonts = {
 };
 
 export default function App() {
+  //AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);

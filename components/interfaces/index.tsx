@@ -35,7 +35,7 @@ export interface Memo {
     visible: boolean;
     date: Date;
   };
-  myData: object;
+  myData: ProfileProps | object;
   saveCal: (currentDate: Cal) => void;
   login: () => void;
   signOut: () => void;
@@ -162,4 +162,55 @@ export interface ConsumptionProps {
     }
   ];
   totalMeals: number;
+}
+
+export interface ProfileProps {
+  id: number;
+  fkDietId: number;
+  userAvatar: string;
+  gender: string;
+  age: number | null;
+  height: number | null;
+  currentWeight: number | null;
+  targetWeight: number;
+  preferences: true;
+  activity: number;
+  name: string;
+  email: string;
+  createdAt: string;
+  intakeNorms: {
+    Calories: number;
+    "Total Fat": number;
+    Protein: number;
+    Carbs: number;
+    Sugar: number;
+    Cholesterol: number;
+    Alcohol: number;
+    Caffeine: number;
+    Sodium: number;
+    Fiber: number;
+    "Vitamin A": number;
+    "Vitamin B1": number;
+    "Vitamin B2": number;
+    "Vitamin B3": number;
+    "Vitamin B5": number;
+    "Vitamin B6": number;
+    "Vitamin B12": number;
+    "Vitamin C": number;
+    "Vitamin D": number;
+    "Vitamin E": number;
+    "Vitamin K": number;
+    Calcium: number;
+    Copper: number;
+    Fluoride: number;
+    Iron: number;
+    Magnesium: number;
+    Manganese: number;
+    Phosphorus: number;
+    Potassium: number;
+    Selenium: number;
+    Zinc: number;
+    Choline: number;
+    Folate: number;
+  };
 }

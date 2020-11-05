@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 32,
     overflow: "hidden",
-    marginTop: Spacing.large,
     backgroundColor: Col.White,
   },
 });

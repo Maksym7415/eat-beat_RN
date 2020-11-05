@@ -10,7 +10,6 @@ export interface apiProps {
     history: string;
     recipeByName: string;
     searchSettings: string;
-    getSearchFilter: string
     verification:string
     resetPassword:string
   };

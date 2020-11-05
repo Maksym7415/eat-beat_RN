@@ -10,6 +10,7 @@ export const Col = {
   DarkGreen: "#397504",
   Green: "#2DAF0C",
   Green1: "#4C9C05",
+  Lemon: "#ADEA4F",
   LightGreen: "#D8FCCF",
   Red: "#EB665E",
   DarkBlue: "#1C6995",
@@ -50,7 +51,6 @@ export const Col = {
   Grey5: "#ADB4BB",
   Info: "#5E6CEB",
   c: "#3B990F",
-  a: "#ADEA4F",
 };
 
 export const Typ = {
@@ -79,161 +79,4 @@ export const Weight = {
   Bold: "bold",
   Normal: "normal",
   Normal1: "500",
-};
-
-export const mapItems = [
-  {
-    id: "123",
-    image: "https://unsplash.com/photos/Q9Cw7EzsxSw/download?force=true&w=640",
-    location: "USA",
-    label: "dudu",
-  },
-  {
-    id: "124",
-    image: "https://unsplash.com/photos/Q9Cw7EzsxSw/download?force=true&w=640",
-    location: "USA",
-    label: "dada",
-  },
-];
-export const Database = {
-  home: [
-    {
-      nutrition_title: "sugar",
-      nutrition_measure: 19,
-      nutrition_unit: "g",
-      nutrition_number: 80,
-      color: "#EB665E",
-    },
-    {
-      nutrition_title: "Fiber",
-      nutrition_measure: 7,
-      nutrition_unit: "g",
-      nutrition_number: 25,
-      color: "#2DAF0C",
-    },
-    {
-      nutrition_title: "Vitamin A",
-      nutrition_measure: 3500,
-      nutrition_unit: "IU",
-      nutrition_number: 3500,
-      color: "#EDDE5D",
-    },
-  ],
-  feed: {
-    date: "2020-01-01",
-    fkUserId: 1,
-    healthScore: 75,
-    id: 1,
-    totalMeals: 3,
-    defaultNutrients: [
-      {
-        title: "Calories",
-        unit: "kcal",
-        currentSize: 1318,
-        maxSize: 1800,
-      },
-      {
-        title: "Protein",
-        unit: "g",
-        currentSize: 43,
-        maxSize: 30,
-      },
-      {
-        title: "Fat",
-        unit: "g",
-        currentSize: 57,
-        maxSize: 50,
-      },
-      {
-        title: "Carbs",
-        unit: "g",
-        currentSize: 57,
-        maxSize: 50,
-      },
-    ],
-    tooMuchNutrients: [],
-    notEnough: [],
-    nutrientsData: [
-      {
-        nutrition_title: "sugar",
-        nutrition_measure: 19,
-        nutrition_unit: "g",
-        nutrition_number: 80,
-        color: "#EB665E",
-      },
-      {
-        nutrition_title: "Fiber",
-        nutrition_measure: 7,
-        nutrition_unit: "g",
-        nutrition_number: 25,
-        color: "#2DAF0C",
-      },
-      {
-        nutrition_title: "Vitamin A",
-        nutrition_measure: 3500,
-        nutrition_unit: "IU",
-        nutrition_number: 3500,
-        color: "#EDDE5D",
-      },
-    ],
-    nutrientsUnits: {
-      Alcohol: "g",
-      Caffeine: "mg",
-      Calcium: "mg",
-      Calories: "kcal",
-      Carbs: "g",
-      Cholesterol: "mg",
-      Copper: "mg",
-      Fiber: "g",
-      Folate: "ug",
-      Iron: "mg",
-      Magnesium: "mg",
-      Manganese: "mg",
-      Phosphorus: "mg",
-      Potassium: "mg",
-      Protein: "g",
-      Selenium: "ug",
-      Sodium: "mg",
-      Sugar: "g",
-      "Total Fat": "g",
-      "Vitamin A": "IU",
-      "Vitamin B1": "mg",
-      "Vitamin B12": "ug",
-      "Vitamin B2": "mg",
-      "Vitamin B3": "mg",
-      "Vitamin B5": "mg",
-      "Vitamin B6": "mg",
-      "Vitamin C": "mg",
-      "Vitamin D": "ug",
-      "Vitamin E": "mg",
-      "Vitamin K": "ug",
-      Zinc: "mg",
-    },
-  },
-  meals: [
-    {
-      id: 0,
-      title: "Amaranth Breakfast",
-      image:
-        "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 1,
-      title: "Black coffee without sugar",
-      image:
-        "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 2,
-      title: "Black coffee without sugar",
-      image:
-        "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 3,
-      title: "Black ",
-      image:
-        "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-  ],
 };

@@ -59,9 +59,9 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.canvas}>
-      <Text type="h6" style={styles.text}>
-        Your health score
-      </Text>
+      <View style={styles.header}>
+        <Text type="h6">Your health score</Text>
+      </View>
       <ScrollView
         horizontal={true}
         onScroll={handleScroll}
@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Col.Background,
   },
-  text: {
-    alignSelf: "center",
-    marginVertical: Spacing.small,
+  header: {
+    backgroundColor: Col.White,
+    padding: Spacing.large,
   },
 });
 export default HistoryScreen;

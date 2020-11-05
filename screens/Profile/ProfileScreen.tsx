@@ -31,16 +31,6 @@ export default class ProfileScreen extends Component<NavProps> {
     const update = await this.context.getData();
     console.log("updates", update);
     this.setState({ data: update });
-    //await this.context.login();
-    // const response = await server.getProfile();
-    // const { ok, data, status } = response;
-    // if (ok) {
-    //   this.setState({ data });
-    //   await AsyncStorage.setItem("@user", JSON.stringify(data));
-    // } else {
-    //   Alert.alert(`${status}`, `${JSON.stringify(data)}`);
-    // }
-    // console.log("getProfile => request: ", ok, data);
   };
 
   onLogout = () => {
@@ -90,54 +80,44 @@ export default class ProfileScreen extends Component<NavProps> {
           right="Yes"
         />
         <ScrollView>
-          <View
-            style={{
-              justifyContent: "space-between",
-            }}
-          >
-            <View>
-              <UserCard
-                name={name}
-                image={userAvatar}
-                email={email}
-                onUpdate={this.onUpdate}
-              />
-              <Divider />
-              <View style={styles.planContainer}>
-                <UserPlan userPlan={createdAt} />
-                <Button
-                  type="outline"
-                  label="SEE MORE PLANS"
-                  onPress={() => console.log("hi")}
-                  style={styles.button}
-                  labelStyle={styles.btnLabel}
-                />
-              </View>
-              <Divider />
-              <EditFeild
-                label="Password"
-                input="123456"
-                onEdit={(v) =>
-                  this.setState({ data: { ...data, password: v } })
-                }
-              />
-            </View>
-            <View>
-              <Button
-                type="text"
-                label="Logout"
-                style={styles.authBtn}
-                labelStyle={styles.logoutBtn}
-                onPress={() => this.setState({ logoutPopup: !logoutPopup })}
-              />
-              <Button
-                type="text"
-                label="Delete account"
-                style={styles.authBtn}
-                labelStyle={styles.deleteBtn}
-                onPress={() => this.setState({ delPopup: !delPopup })}
-              />
-            </View>
+          <UserCard
+            name={name}
+            image={userAvatar}
+            email={email}
+            onUpdate={this.onUpdate}
+          />
+          <Divider />
+          <View style={styles.planContainer}>
+            <UserPlan userPlan={createdAt} />
+            <Button
+              type="outline"
+              label="SEE MORE PLANS"
+              onPress={() => console.log("hi")}
+              style={styles.button}
+              labelStyle={styles.btnLabel}
+            />
+          </View>
+          <Divider />
+          <EditFeild
+            label="Password"
+            input="123456"
+            onEdit={(v) => this.setState({ data: { ...data, password: v } })}
+          />
+          <View style={styles.bottom}>
+            <Button
+              type="text"
+              label="Logout"
+              style={styles.authBtn}
+              labelStyle={styles.logoutBtn}
+              onPress={() => this.setState({ logoutPopup: !logoutPopup })}
+            />
+            <Button
+              type="text"
+              label="Delete account"
+              style={styles.authBtn}
+              labelStyle={styles.deleteBtn}
+              onPress={() => this.setState({ delPopup: !delPopup })}
+            />
           </View>
         </ScrollView>
       </View>
@@ -189,5 +169,8 @@ const styles = StyleSheet.create({
   deleteBtn: {
     fontSize: 16,
     color: Col.Error,
+  },
+  bottom: {
+    marginVertical: Spacing.medium,
   },
 });

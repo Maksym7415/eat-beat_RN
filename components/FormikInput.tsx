@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     borderColor: Col.Contrast,
     marginVertical: Spacing.tiny,
     justifyContent: "space-between",
+    alignItems: "center",
   },
   input: {
     flex: 1,
