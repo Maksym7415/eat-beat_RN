@@ -2,6 +2,7 @@ import { create } from "apisauce";
 import { apiProps, AuthFun, cacheProps, errorProps } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
 import Axios from "axios";
+import { stringify } from "querystring";
 
 const apiConfig: apiProps = {
   baseURL: "http://10.4.30.212:8081/api",
@@ -17,6 +18,7 @@ const apiConfig: apiProps = {
     searchSettings: "/user/search-recipe-settings",
     getSearchFilter: "/user/search-recipe-settings",
     verification: "/auth/verify-account?verificationCode=",
+    rescipeInfo: '/recipe/'
   },
   post: {
     addCookedMeal: "/meals/meal-change-status",
@@ -24,6 +26,8 @@ const apiConfig: apiProps = {
     register: "/auth/sign-up",
     upload: "/upload",
     refresh: "/auth/refresh-token",
+    addRecipe: '/recipe/add-own-recipe',
+    addRecipeAvatar: ''
   },
   del: {
     cookedMeal: "/meals/cooked-meal/",
@@ -202,10 +206,32 @@ const getSearchFilter = async () => {
 
 const addCookedMeal = async (payload) => {
   const address = apiConfig.post.addCookedMeal;
-  api.post(address, payload).then((response) => {
-    if (!response.ok) logError(response);
-  });
+  const response = await api.post(address, payload)
+  if (!response.ok) logError(response);
+  return response
 };
+
+const getRecipeInfo = async (id: number) => {
+  const address = apiConfig.get.recipeInfo+id
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response
+}
+
+const addRecipe = async (data: any)=> {
+  const address = apiConfig.post.addRecipe;
+  const response = await api.post(address, data);
+  console.log(response)
+  if (!response.ok) logError(response);
+  return response
+}
+
+const addRecipeAvatar = async (formData: FormData) => {
+  const address = apiConfig.post.addCookedMeal;
+  const response = await api(address, formData)
+  if (!response.ok) logError(response);
+  return response
+}
 
 const signIn: AuthFun = async (payload) => {
   const address = apiConfig.post.signIn;
@@ -326,5 +352,8 @@ export default {
   resendCode,
   verifyAccount,
   updateUserReferences,
-  updateIntakeNorm
+  updateIntakeNorm,
+  addRecipe,
+  addRecipeAvatar,
+  getRecipeInfo,
 };

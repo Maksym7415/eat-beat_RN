@@ -28,8 +28,12 @@ import PersonalDataScreen from '../screens/Profile/PersonalDataScreen';
 import FoodPreferences from '../screens/Profile/FoodPreferences';
 import { AppContext } from "../components/AppContext";
 import DialyNorm from '../screens/Profile/DailyNorm';
+import UserRecipes from '../screens/Recipies/UserRecipe';
 
 import { MaterialIcons as Icon } from "@expo/vector-icons";
+// import NewRecipe from "../screens/Recipies/CreateRecipes";
+import NewRecipe from '../screens/Recipies/CreateRecipesScreen';
+import RecipeInfoScreen from '../screens/Recipies/RecipeInfoScreen';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -73,6 +77,29 @@ const HomeTopNavigator = () => (
   </TopTabs.Navigator>
 );
 
+const EditRecipeTopNAvigator = () => (
+  <TopTabs.Navigator
+  tabBarOptions={{
+    style: {
+      backgroundColor: Col.Header,
+      elevation: 0,
+    },
+    indicatorStyle: {
+      backgroundColor: Col.Green1,
+    },
+  }}
+  initialRouteName="edit"
+>
+  <TopTabs.Screen name="info" component={RecipeInfoScreen} />
+  <TopTabs.Screen name="ingradients" component={SearchScreen} />
+  <TopTabs.Screen
+    name="instruction"
+    component={RecipiesScreen}
+    // options={{ title: "my recipies" }}
+  />
+</TopTabs.Navigator>
+)
+
 const RecipesTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
@@ -89,8 +116,8 @@ const RecipesTopNavigator = () => (
     <TopTabs.Screen name="recommended" component={RecommendedScreen} />
     <TopTabs.Screen name="search" component={SearchScreen} />
     <TopTabs.Screen
-      name="recipies"
-      component={RecipiesScreen}
+      name="user_recipies"
+      component={UserRecipes}
       options={{ title: "my recipies" }}
     />
   </TopTabs.Navigator>
@@ -202,22 +229,57 @@ export const RecommendedStack = () => {
         name="recommendedPage"
         component={RecipesTopNavigator}
       />
-      {/* <Stack.Screen
-          name="searchScreen"
+      <Stack.Screen
+          name="new"
           options={({ navigation }) => ({
-            title: "search" ,
+            title: "Recipe creation" ,
             //headerShown: false,
             headerStyle: {
               elevation: 0,
-              backgroundColor: Col.Main,
+              backgroundColor: Col.Green1,
             },
             headerTitleStyle: {
               color: "white",
             },
+            headerLeft: () => (
+              <Icon
+              style={{marginLeft: 16}}
+              onPress={() => navigation.navigate('user_recipies')}
+              name={'arrow-back'}
+              color={Col.White}
+              size={24}
+            />
+            ), 
           })}
-          component={SearchScreen}
-        /> */}
+          component={NewRecipe}
+        />
+        <Stack.Screen
+          name="user_recipe"
+          options={({ navigation, route }) => ({
+            title: route.params.title ,
+            //headerShown: false,
+            headerStyle: {
+              elevation: 0,
+              backgroundColor: Col.Green1,
+            },
+            headerTitleStyle: {
+              color: "white",
+            },
+            // headerLeft: () => (
+            //   <Icon
+            //   style={{marginLeft: 16}}
+            //   onPress={() => console.log(route, navigation)}
+            //   name={'arrow-back'}
+            //   color={Col.White}
+            //   size={24}
+            // />
+            // ),
+            headerLeft: null
+          })}
+          component={EditRecipeTopNAvigator}
+        />
     </Stack.Navigator>
+    
   );
 };
 

@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
-
-import { View, Text, StyleSheet, TouchableWithoutFeedback, ScrollView } from 'react-native';
-import { MaterialIcons as Icon } from "@expo/vector-icons";
-import { Col } from '../Config';
-
-// interface Props {
-//     selected: Options
-//     setSelected: (title: string, value: number) => void
-// }
+import { MaterialIcons,  } from "@expo/vector-icons";
+import { View, TouchableWithoutFeedback, Text, ScrollView, StyleSheet } from 'react-native';
+import { Col } from '../../../components/Config';
 
 interface Options {
     title: string,
@@ -15,7 +9,7 @@ interface Options {
 }
 let count = 0
 
-export default function Select({selected, setSelected, isEnabled}) {
+export default function Select({selected = {}, setSelected, isEnabled}) {
 
     const [show, setShow] = useState<string>('none')
     const options: Array<Options> = [
@@ -46,10 +40,10 @@ export default function Select({selected, setSelected, isEnabled}) {
             <TouchableWithoutFeedback onPress={showHandler} >
                 <View style={{...styles.container, borderColor: !selected.value && isEnabled ? 'red' :  '#DADDDF'}}>
                     <View style={styles.optionContainer}>
-                        <Text>
+                        <Text style={{color: Col.Grey2, opacity: 0.5, paddingBottom: 7}}>
                             {selected.title}    
                         </Text>
-                        <Icon name="arrow-drop-down" size={20}/>
+                        <MaterialIcons name="arrow-drop-down" size={20} color={Col.Grey2}/>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -78,12 +72,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 18,
         paddingVertical: 13,
         borderRadius: 8,
-        borderWidth: 1,
     },
     optionContainer: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingBottom: 2,
+        borderBottomWidth: 1,
+        borderColor: Col.Grey2
     },
     options: {
         display: 'flex',
@@ -91,4 +87,4 @@ const styles = StyleSheet.create({
         //borderWidth: 1.5,
         borderColor: '#DADDDF',
     }
-}) 
+})

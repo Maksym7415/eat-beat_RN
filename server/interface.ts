@@ -12,6 +12,7 @@ export interface apiProps {
     searchSettings: string;
     getSearchFilter: string
     verification:string
+    recipeInfo: string
   };
   post: {
     addCookedMeal: string;
@@ -19,6 +20,8 @@ export interface apiProps {
     register: string;
     upload: string;
     refresh:string
+    addRecipe: string
+    addRecipeAvatar: string
   };
   del: {
     cookedMeal: string;
