@@ -11,6 +11,24 @@ export interface AuthProps {
   password: string;
 }
 
+export interface UserData {
+  id: number;
+  fkDietId: number;
+  userAvatar: string;
+  gender: string;
+  age: number | null;
+  height: number | null;
+  currentWeight: number | null;
+  targetWeight: number;
+  preferences: boolean;
+  activity: number;
+  name: string;
+  email: string;
+  createdAt: string;
+  intakeNorms: intakeProps;
+  fkActivityId: number;
+}
+
 export interface NavProps {
   navigation: {
     navigate: (name: string, params?: object) => void;
@@ -35,7 +53,7 @@ export interface Memo {
     visible: boolean;
     date: Date;
   };
-  myData: ProfileProps | object;
+  myData: UserData;
   saveCal: (currentDate: Cal) => void;
   login: () => void;
   signOut: () => void;
@@ -207,10 +225,23 @@ export interface ProfileProps {
   height: number | null;
   currentWeight: number | null;
   targetWeight: number;
-  preferences: true;
+  preferences: boolean;
   activity: number;
   name: string;
   email: string;
   createdAt: string;
   intakeNorms: intakeProps;
+  fkActivityId: number;
+}
+
+export interface settings {
+  id: number;
+  name: string;
+  isUsers: boolean;
+}
+
+export interface recipeSettings {
+  intolerances: settings[];
+  diets: settings[];
+  mealTypes: settings[];
 }

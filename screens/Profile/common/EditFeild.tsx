@@ -38,7 +38,6 @@ const EditFeild: FC<Props> = ({ label, input, onEdit }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",

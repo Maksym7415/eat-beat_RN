@@ -5,7 +5,12 @@ import { Col, Spacing } from "../../components/Config";
 import { Button } from "../../components/MyComponents";
 import { AppContext } from "../../components/AppContext";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { intakeProps, Memo, NavProps } from "../../components/interfaces";
+import {
+  intakeProps,
+  Memo,
+  NavProps,
+  ProfileProps,
+} from "../../components/interfaces";
 import IntakeSlot from "./common/IntakeSlot";
 
 interface Options {
@@ -19,8 +24,9 @@ interface Feed {
   edit: boolean;
 }
 
-const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
+const DailyNorm: FC<NavProps> = ({ navigation }) => {
   const { myData } = useContext<Memo>(AppContext);
+  const { preferences }: ProfileProps = myData;
   const [norms, setNorms] = useState<intakeProps>(myData.intakeNorms);
   const feed = useState<Options>({
     labels: Object.keys(myData.intakeNorms),
@@ -29,7 +35,6 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   const [intakes, setIntakes] = useState<Feed[]>([
     { label: "Calories (kcal)", value: 0, edit: false },
   ]);
-  console.log(norms);
   const saveHandler = async () => {
     const update = {
       Calories: norms.Calories,
@@ -69,15 +74,21 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
         </Text>
         {intakes.map((item, index) => (
           <IntakeSlot
+            key={item.label}
             item={item}
+            editable={!preferences}
             onEdit={(key, val) => setNorms({ ...norms, [key]: val })}
           />
         ))}
-        <Button
-          label={"Save changes"}
-          onPress={saveHandler}
-          style={styles.saveBtn}
-        />
+        {preferences ? (
+          <View />
+        ) : (
+          <Button
+            label={"Save changes"}
+            onPress={saveHandler}
+            style={styles.saveBtn}
+          />
+        )}
       </View>
     </ScrollView>
   );
@@ -110,4 +121,4 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.medium,
   },
 });
-export default PersonalDataScreen;
+export default DailyNorm;

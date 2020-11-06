@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -18,10 +18,16 @@ interface Options {
 interface Props {
   selected: number;
   onSelect: (value: number) => void;
-  disabled: boolean;
+  disabled?: boolean;
+  required?: boolean;
 }
 
-const Select: FC<Props> = ({ selected, onSelect, disabled }) => {
+const Select: FC<Props> = ({
+  selected,
+  onSelect,
+  disabled = false,
+  required = false,
+}) => {
   const [show, setShow] = useState(false);
   const [item, setItem] = useState<Options>({
     title: "Choose Activity",
@@ -29,13 +35,13 @@ const Select: FC<Props> = ({ selected, onSelect, disabled }) => {
   });
 
   const options: Options[] = [
-    { title: "BMR", value: 1.2 },
-    { title: "Sedentary", value: 1.375 },
-    { title: "Light", value: 1.46 },
-    { title: "Moderate", value: 1.55 },
-    { title: "Active", value: 1.64 },
-    { title: "Very active", value: 1.72 },
-    { title: "Extra active", value: 1.9 },
+    { title: "BMR", value: 1 },
+    { title: "Sedentary", value: 2 },
+    { title: "Light", value: 3 },
+    { title: "Moderate", value: 4 },
+    { title: "Active", value: 5 },
+    { title: "Very active", value: 6 },
+    { title: "Extra active", value: 7 },
   ];
 
   const changeHanlder = (title: string, value: number) => {
@@ -43,16 +49,24 @@ const Select: FC<Props> = ({ selected, onSelect, disabled }) => {
       onSelect(value);
       setItem({ title, value });
     }
+    console.log(value);
     setShow(!show);
   };
 
+  useEffect(() => {
+    if (selected) {
+      const res = options.filter((val) => val.value == selected);
+      if (res.length) setItem({ ...res[0] });
+    }
+  }, []);
+
   return (
     <View>
-      <Pressable disabled={!disabled} onPress={() => setShow(!show)}>
+      <Pressable disabled={disabled} onPress={() => setShow(!show)}>
         <View
           style={[
             styles.container,
-            { borderColor: !selected && disabled ? Col.Error : Col.Inactive },
+            { borderColor: !selected && required ? Col.Error : Col.Inactive },
           ]}
         >
           <Text type="body2">{item.title}</Text>
@@ -62,9 +76,9 @@ const Select: FC<Props> = ({ selected, onSelect, disabled }) => {
       {show ? (
         <View style={styles.options}>
           <ScrollView>
-            {options.map(({ title, value }) => (
+            {options.map(({ title, value }, index) => (
               <TouchableOpacity
-                key={title}
+                key={title + index}
                 onPress={() => changeHanlder(title, value)}
                 style={{
                   backgroundColor: value === selected ? Col.Grey : Col.White,

@@ -1,52 +1,51 @@
-import React, { useEffect, useState } from "react";
-
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
-import { Col, Spacing, Typ } from "./Config";
-import Chip from "./custom/Chip";
-import RadioBtn from "./Radio";
+import React, { FC, useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Button, Divider } from "./MyComponents";
+import { Col, Spacing } from "./Config";
+import Chip from "./custom/ToggleChip";
 import Text from "./custom/Typography";
+import RadioInput from "./custom/RadioInput";
+import { recipeSettings } from "./interfaces";
 
 interface Props {
-  data: Array<object>;
-  saveFilterConfig: (chipsState: object, radioState: object) => void;
-  btnColor: string;
-  chipColor: string;
-  radioBtn: string;
+  data: recipeSettings;
+  onSave: (value: recipeSettings) => void;
+  blend: string;
+  showMealsTypes: boolean;
 }
 
-export default function UserSettings({
-  radioState,
-  setRadioState,
-  chipsState,
-  setChipsState,
-  mealsTypes,
-  setMealsTypes,
-  data,
-  saveFilterConfig,
-  btnColor,
-  chipColor,
-  radioBtn,
-}: Props) {
-  const setNewRadioState = (value, name) => {
-    setRadioState((v) =>
-      v.map((el) =>
-        el.name === name ? { ...el, isUsers: true } : { ...el, isUsers: false }
-      )
-    );
+const UserSettings: FC<Props> = ({ data, onSave, blend, showMealsTypes }) => {
+  const { diets, intolerances, mealTypes } = data;
+  if (!diets || !intolerances || !mealTypes) return <View />;
+  const [diet, setDiet] = useState(0);
+  const [intole, setIntole] = useState(intolerances);
+  const [types, setTypes] = useState(mealTypes);
+
+  const getRadioState = () => {
+    const arr = [...diets];
+    arr.forEach((item) => {
+      item.id == diet ? (item.isUsers = true) : (item.isUsers = false);
+    });
+    return arr;
   };
 
-  const setChips = (name, state) => {
-    setChipsState((v) =>
-      v.map((el) => (el.name === name ? { ...el, isUsers: state } : el))
-    );
+  const updateIntole = (index: number) => {
+    const arr = [...intole];
+    arr[index].isUsers = !arr[index].isUsers;
+    setIntole(arr);
   };
 
-  const setMeals = (name, state) => {
-    setMealsTypes((v) =>
-      v.map((el) => (el.name === name ? { ...el, isUsers: state } : el))
-    );
+  const updateTypes = (index: number) => {
+    const arr = [...types];
+    arr[index].isUsers = !arr[index].isUsers;
+    setTypes(arr);
   };
+
+  useEffect(() => {
+    diets.forEach((el) => {
+      if (el.isUsers) setDiet(el.id);
+    });
+  }, []);
 
   return (
     <View style={styles.canvas}>
@@ -55,82 +54,65 @@ export default function UserSettings({
           <View style={styles.intolerances}>
             <Text type="h6">Intolerances</Text>
             <View style={styles.chipsContainer}>
-              {chipsState &&
-                chipsState.map((el) => (
-                  <Chip
-                    chipBgColor={chipColor}
-                    setChipsState={setChips}
-                    title={el.name}
-                    state={el.isUsers}
-                    key={el.id}
-                  />
-                ))}
+              {intole.map(({ id, name, isUsers }, index) => (
+                <Chip
+                  key={id + name}
+                  title={name}
+                  state={isUsers}
+                  selectedColor={blend}
+                  onPress={() => updateIntole(index)}
+                />
+              ))}
             </View>
           </View>
-          <Divider styler={styles.divider} />
+          <Divider />
           <View>
             <Text type="h6">Diet</Text>
             <View style={{ marginTop: 22 }}>
-              {radioState &&
-                radioState.map((item) => (
-                  <RadioInput
-              key={item.value}
-              value={item.value}
-              label={item.name}
-              disabled={item.disabled}
-              selected={select}
-              onSelect={(value) => setSelect(value)}
-            />
-                  <RadioBtn
-                    radioColor={radioBtn}
-                    key={el.id}
-                    label={el.name}
-                    defaultValue={el.isUsers}
-                    setSelect={(value, name) => setNewRadioState(value, name)}
-                    newState={radioState}
-                  />
-                ))}
+              {diets.map(({ id, name, isUsers }) => (
+                <RadioInput
+                  key={id + name}
+                  value={id}
+                  label={name}
+                  selected={diet}
+                  disabled={false}
+                  onSelect={() => setDiet(id)}
+                  blend={Col.Grey}
+                />
+              ))}
             </View>
           </View>
-          {mealsTypes && !!mealsTypes.length && (
+          {showMealsTypes ? (
             <>
-              <Divider styler={styles.divider} />
+              <Divider />
               <View>
-                <Text style={styles.intolerances_text}>Meal Types</Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    marginTop: 22,
-                    marginBottom: 46,
-                  }}
-                >
-                  {mealsTypes &&
-                    mealsTypes.map((el) => (
-                      <Chip
-                        chipBgColor={chipColor}
-                        setChipsState={setMeals}
-                        state={el.isUsers}
-                        title={el.name}
-                        key={el.id}
-                      />
-                    ))}
+                <Text type="h6">Meal Types</Text>
+                <View style={styles.typesContainer}>
+                  {types.map(({ id, name, isUsers }, index) => (
+                    <Chip
+                      key={id + name}
+                      title={name}
+                      state={isUsers}
+                      selectedColor={blend}
+                      onPress={() => updateTypes(index)}
+                    />
+                  ))}
                 </View>
               </View>
             </>
+          ) : (
+            <View />
           )}
+        </View>
+        <View style={{ padding: Spacing.medium }}>
           <Button
             label="SAVE CHANGES"
             onPress={() =>
-              saveFilterConfig(
-                {
-                  intolerances: chipsState,
-                  diets: radioState,
-                  meals: mealsTypes,
-                },
-                false
-              )
+              onSave({
+                intolerances: intole,
+                diets: getRadioState(),
+                mealTypes: types,
+              })
             }
             style={styles.saveBtn}
           />
@@ -138,7 +120,7 @@ export default function UserSettings({
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   intolerances: {
@@ -152,10 +134,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: Spacing.medium,
   },
-  intolerances_text: {
-    fontWeight: "500",
-    fontSize: 20,
-  },
   divider: {
     borderBottomWidth: 1,
     borderBottomColor: Col.Divider,
@@ -165,9 +143,15 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Grey,
   },
   chipsContainer: {
-    display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
     marginTop: 22,
   },
+  typesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 22,
+    marginBottom: 46,
+  },
 });
+export default UserSettings;

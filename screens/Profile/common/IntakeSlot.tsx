@@ -2,7 +2,6 @@ import React, { FC, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Col, Font, Spacing } from "../../../components/Config";
 import Text from "../../../components/custom/Typography";
-import { MaterialIcons as Icon } from "@expo/vector-icons";
 
 interface Props {
   item: {
@@ -11,17 +10,18 @@ interface Props {
     edit: boolean;
   };
   onEdit: (key: string, val: number) => void;
+  editable: boolean;
 }
 
-const IntakeSlot: FC<Props> = ({ item, onEdit }) => {
+const IntakeSlot: FC<Props> = ({ item, onEdit, editable }) => {
   const { label, value, edit } = item;
-  const [digit, setDigit] = useState(value.toString());
+  const [digit, setDigit] = useState(value ? `${value}` : "");
   const suffix = label === "Calories" ? " (kcal)" : edit ? " (g)" : "";
   return (
     <View style={styles.container}>
       <Text type="body2">{label + suffix}</Text>
       <View style={styles.inputContainer}>
-        {edit ? (
+        {edit && editable ? (
           <TextInput
             value={digit}
             keyboardType="number-pad"
@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: Spacing.tiny,
     justifyContent: "space-between",
+    alignItems: "center",
   },
   label: {
     //

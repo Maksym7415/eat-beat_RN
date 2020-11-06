@@ -11,27 +11,39 @@ import { AppContext } from "../../components/AppContext";
 import InputFeild from "./common/InputFeild";
 
 const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
-  const { myData } = useContext<Memo>(AppContext);
+  const { myData, getData } = useContext<Memo>(AppContext);
   const [feed, setFeed] = useState<ProfileProps>(myData);
-  const [selected, setSelected] = useState<number>(0);
-  const [disabled, setDisabled] = useState<boolean>(false);
-  const [chips, setChips] = useState<string>("male");
+  const [selected, setSelected] = useState<number>(myData.fkActivityId);
+  const [disabled, setDisabled] = useState<boolean>(myData.preferences);
+  const [chips, setChips] = useState<string>(myData.gender);
 
   const enableEditing = () => {
     setDisabled(!disabled);
   };
 
   const savePersonalDataHandler = async () => {
+    console.log(disabled);
+    const { age, height, currentWeight } = feed;
     const personalObject = {
       gender: chips,
-      age: feed.age,
-      height: feed.height,
-      currentWeight: feed.currentWeight,
       preferences: disabled,
-      activity: selected,
     };
-    await server.updateProfile(personalObject);
+
+    if (age) Object.assign(personalObject, { age });
+    if (height) Object.assign(personalObject, { height });
+    if (currentWeight) Object.assign(personalObject, { currentWeight });
+    if (selected) Object.assign(personalObject, { fkActivityId: selected });
+    if (disabled) {
+      if (age && height && currentWeight) {
+        const res = await server.updateProfile(personalObject);
+        if (res) getData();
+      }
+    } else {
+      const res = await server.updateProfile(personalObject);
+      if (res) getData();
+    }
   };
+
   return (
     <View style={styles.canvas}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
@@ -54,13 +66,11 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             <View style={[styles.row, styles.wide]}>
               <ToggleChip
                 title={"Male"}
-                disabled={!disabled}
                 state={chips === "male"}
                 onPress={() => setChips("male")}
               />
               <ToggleChip
                 title={"Female"}
-                disabled={!disabled}
                 state={chips === "female"}
                 onPress={() => setChips("female")}
               />
@@ -70,14 +80,14 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             label="Age"
             onChange={(value) => setFeed({ ...feed, age: Number(value) })}
             input={feed.age}
-            disabled={disabled}
+            required={disabled}
             suffix="years"
           />
           <InputFeild
             label="Height"
             onChange={(value) => setFeed({ ...feed, height: Number(value) })}
             input={feed.height}
-            disabled={disabled}
+            required={disabled}
             suffix="cm"
           />
           <InputFeild
@@ -86,7 +96,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
               setFeed({ ...feed, currentWeight: Number(value) })
             }
             input={feed.currentWeight}
-            disabled={disabled}
+            required={disabled}
             suffix="kg"
           />
           <View style={styles.genderContainer}>
@@ -95,19 +105,15 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             </Text>
             <View style={{ width: "50%" }}>
               <Select
-                disabled={disabled}
                 selected={selected}
+                required={disabled}
                 onSelect={(value) => setSelected(value)}
               />
             </View>
           </View>
         </View>
       </ScrollView>
-      <View
-        style={{
-          padding: Spacing.medium,
-        }}
-      >
+      <View style={{ padding: Spacing.medium }}>
         <Button
           label="SAVE CHANGES"
           onPress={savePersonalDataHandler}

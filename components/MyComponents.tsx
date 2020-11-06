@@ -32,12 +32,12 @@ interface DividerProps {
 
 export const Button: FC<ButtonProps> = ({
   type = "fill",
-  clicked,
+  clicked = false,
   onPress,
   label,
   style,
   labelStyle,
-  deactivate,
+  deactivate = false,
 }) => {
   return (
     <Pressable disabled={clicked || deactivate} onPress={onPress}>

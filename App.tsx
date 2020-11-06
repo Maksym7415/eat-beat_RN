@@ -2,10 +2,11 @@ import React, { useState, useMemo, useEffect } from "react";
 import Splash from "./screens/SplashScreen";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { AppContext } from "./components/AppContext";
-import { Cal, Memo } from "./components/interfaces";
+import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server from "./server";
+import { ProfileData } from "./components/Config";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -22,10 +23,7 @@ export default function App() {
     visible: false,
     date: new Date(),
   });
-  const [userData, setUserData] = useState<object>({
-    email: "",
-    userAvatar: "",
-  });
+  const [userData, setUserData] = useState<UserData>(ProfileData);
 
   const loadUser = async () => {
     if (logged) return;
@@ -50,9 +48,11 @@ export default function App() {
     const response = await server.getProfile();
     const { ok, data } = response;
     if (ok) {
-      setUserData(data);
+      setUserData(data as ProfileProps);
       await AsyncStorage.setItem("@user", JSON.stringify(data));
       return data;
+    } else {
+      return userData;
     }
   };
 

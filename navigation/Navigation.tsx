@@ -154,7 +154,8 @@ export const MainStack = () => {
           headerRight: () => <CalendarButton />,
           title: "Food Diary",
           headerStyle: {
-            elevation: 0,
+            elevation: 1,
+            backgroundColor: Col.Background,
           },
           headerTitleStyle: {
             alignSelf: "center",
@@ -199,7 +200,7 @@ export const RecommendedStack = () => {
 
             title: "Eating at a Resturant",
             headerStyle: {
-              elevation: 0,
+              elevation: 1,
               backgroundColor: Col.Green1,
             },
             headerTitleStyle: {

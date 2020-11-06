@@ -98,7 +98,7 @@ const setup = async () => {
 
 const logError = ({ problem, config, status, headers, data }: errorProps) => {
   //Alert.alert(problem);
-  console.log(config, "\nstatus => ", status);
+  console.log(config, "\nstatus => ", status, "\ndata => ", data);
   /*
   console.log(
     "Error------\nproblem => ",
@@ -264,7 +264,7 @@ const updateProfile = async (data: object) => {
   const address = apiConfig.put.profile;
   console.log(data, "updateProfile");
   const response = await api.patch(address, data);
-  return response;
+  return response.ok;
 };
 
 const changePassword = async (options: updatePassProps) => {
@@ -289,15 +289,10 @@ const resetPassword = async (email: mailAuth) => {
 };
 
 const updateUserReferences = async (data: object) => {
-  console.log(data);
   const address = apiConfig.put.updateUserReferences;
-  try {
-    const response = await api.put(address, { ...data });
-    const res = await getSearchFilter();
-    return res;
-  } catch (e) {
-    console.log({ e });
-  }
+  const response = await api.put(address, data);
+  if (!response.ok) logError(response);
+  return response.ok;
 };
 
 const resendCode = async () => {

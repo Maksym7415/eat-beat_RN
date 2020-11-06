@@ -9,6 +9,7 @@ interface Props {
   onChange: (value: string) => void;
   disabled?: boolean;
   suffix?: string;
+  required?: boolean;
 }
 
 const InputFeild: FC<Props> = ({
@@ -17,6 +18,7 @@ const InputFeild: FC<Props> = ({
   input,
   suffix = "",
   disabled = false,
+  required = false,
 }) => {
   const [value, setValue] = useState(input);
   const handleChange = () => {
@@ -24,19 +26,17 @@ const InputFeild: FC<Props> = ({
   };
   return (
     <View style={styles.container}>
-      <Text type="body" style={{ color: disabled ? "black" : Col.Grey }}>
-        {label}
-      </Text>
+      <Text type="body">{label}</Text>
       <View style={styles.chipsConatainer}>
         <TextInput
           value={value?.toString()}
-          editable={disabled}
+          editable={!disabled}
           maxLength={3}
           keyboardType="number-pad"
           placeholder={value ? value?.toString() : "---"}
           onChangeText={(value) => setValue(value)}
           onEndEditing={handleChange}
-          placeholderTextColor={disabled || value ? Col.Error : Col.Black}
+          placeholderTextColor={required || value ? Col.Error : Col.Black}
           style={styles.input}
         />
         <Text type="body2">{suffix}</Text>

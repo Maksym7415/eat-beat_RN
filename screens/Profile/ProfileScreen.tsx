@@ -79,30 +79,32 @@ export default class ProfileScreen extends Component<NavProps> {
           left="No"
           right="Yes"
         />
-        <ScrollView>
-          <UserCard
-            name={name}
-            image={userAvatar}
-            email={email}
-            onUpdate={this.onUpdate}
-          />
-          <Divider />
-          <View style={styles.planContainer}>
-            <UserPlan userPlan={createdAt} />
-            <Button
-              type="outline"
-              label="SEE MORE PLANS"
-              onPress={() => console.log("hi")}
-              style={styles.button}
-              labelStyle={styles.btnLabel}
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ flex: 1 }}>
+            <UserCard
+              name={name}
+              image={userAvatar}
+              email={email}
+              onUpdate={this.onUpdate}
+            />
+            <Divider />
+            <View style={styles.planContainer}>
+              <UserPlan userPlan={createdAt} />
+              <Button
+                type="outline"
+                label="SEE MORE PLANS"
+                onPress={() => console.log("hi")}
+                style={styles.button}
+                labelStyle={styles.btnLabel}
+              />
+            </View>
+            <Divider />
+            <EditFeild
+              label="Password"
+              input="123456"
+              onEdit={(v) => this.setState({ data: { ...data, password: v } })}
             />
           </View>
-          <Divider />
-          <EditFeild
-            label="Password"
-            input="123456"
-            onEdit={(v) => this.setState({ data: { ...data, password: v } })}
-          />
           <View style={styles.bottom}>
             <Button
               type="text"

@@ -2,51 +2,48 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import server from "../../server";
 import UserSettings from "../../components/UserSettings";
+import { recipeSettings } from "../../components/interfaces";
+import { Col } from "../../components/Config";
 
 export default function FoodPreferences() {
-  const [filter, setFilter] = useState<object>({});
-  const [radioState, setRadioState] = useState<object>([]);
-  const [chipsState, setChipsState] = useState<object>([]);
-  const [mealsTypes, setMealsTypes] = useState<object>([]);
-  const saveFilterConfig = async ({ intolerances, diets }) => {
+  const [filter, setFilter] = useState<recipeSettings | null>(null);
+
+  const getSearchFilter = async () => {
+    const data = await server.getSearchFilter();
+    setFilter(data);
+  };
+
+  const saveFilterConfig = async ({ intolerances, diets }: recipeSettings) => {
     const response = await server.updateUserReferences({
       intolerances: intolerances.filter((el) => el.isUsers).map((el) => el.id),
       diet: diets.filter((el) => el.isUsers)[0].id,
     });
-    setFilter(response);
+    if (response) getSearchFilter();
   };
 
   useEffect(() => {
-    const getSearchFilter = async () => {
-      const data = await server.getSearchFilter();
-      setFilter(data);
-    };
     getSearchFilter();
   }, []);
 
-  useEffect(() => {
-    setRadioState(filter.diets);
-    setChipsState(filter.intolerances);
-  }, [filter]);
-
   return (
-    <View style={{ flex: 1 }}>
-      <UserSettings
-        data={filter}
-        saveFilterConfig={saveFilterConfig}
-        btnColor={"#616161"}
-        chipColor={"#616161"}
-        radioBtn={"#616161"}
-        saveFilterData={saveFilterConfig}
-        radioState={radioState}
-        setRadioState={setRadioState}
-        chipsState={chipsState}
-        setChipsState={setChipsState}
-        mealsTypes={mealsTypes}
-        setMealsTypes={setMealsTypes}
-      />
+    <View style={styles.container}>
+      {filter ? (
+        <UserSettings
+          data={filter}
+          blend={Col.Grey}
+          onSave={saveFilterConfig}
+          showMealsTypes={false}
+        />
+      ) : (
+        <View />
+      )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Col.Background,
+  },
+});

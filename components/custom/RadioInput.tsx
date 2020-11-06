@@ -10,6 +10,7 @@ interface Props {
   selected: number;
   value: number;
   disabled: boolean;
+  blend?: string;
 }
 
 const RadioInput: FC<Props> = ({
@@ -18,6 +19,7 @@ const RadioInput: FC<Props> = ({
   disabled,
   onSelect,
   label,
+  blend = Col.Main,
 }) => {
   const select = selected === value;
   return (
@@ -28,7 +30,7 @@ const RadioInput: FC<Props> = ({
       <View style={styles.container}>
         <Icon
           name={select ? "radiobox-marked" : "radiobox-blank"}
-          color={disabled ? Col.Inactive : select ? Col.Main : Col.Grey}
+          color={disabled ? Col.Inactive : select ? blend : Col.Grey}
           size={20}
         />
         <Text
