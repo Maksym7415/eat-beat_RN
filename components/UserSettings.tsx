@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { Col, Spacing, Typ } from "./Config";
 import Chip from "./custom/Chip";
 import RadioBtn from "./Radio";
-import { Divider } from "./MyComponents";
-import Button from "./custom/ConfirmationButton";
+import { Button, Divider } from "./MyComponents";
+import Text from "./custom/Typography";
 
 interface Props {
   data: Array<object>;
@@ -49,25 +49,12 @@ export default function UserSettings({
   };
 
   return (
-    <View>
-      <ScrollView>
-        <View
-          style={{
-            backgroundColor: Col.Back3,
-            paddingHorizontal: 16,
-            height: Dimensions.get("window").height,
-          }}
-        >
+    <View style={styles.canvas}>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <View style={styles.container}>
           <View style={styles.intolerances}>
-            <Text style={styles.intolerances_text}>Intolerances</Text>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                marginTop: 22,
-              }}
-            >
+            <Text type="h6">Intolerances</Text>
+            <View style={styles.chipsContainer}>
               {chipsState &&
                 chipsState.map((el) => (
                   <Chip
@@ -82,10 +69,18 @@ export default function UserSettings({
           </View>
           <Divider styler={styles.divider} />
           <View>
-            <Text style={styles.intolerances_text}>Diet</Text>
+            <Text type="h6">Diet</Text>
             <View style={{ marginTop: 22 }}>
               {radioState &&
-                radioState.map((el) => (
+                radioState.map((item) => (
+                  <RadioInput
+              key={item.value}
+              value={item.value}
+              label={item.name}
+              disabled={item.disabled}
+              selected={select}
+              onSelect={(value) => setSelect(value)}
+            />
                   <RadioBtn
                     radioColor={radioBtn}
                     key={el.id}
@@ -125,34 +120,22 @@ export default function UserSettings({
               </View>
             </>
           )}
+          <Button
+            label="SAVE CHANGES"
+            onPress={() =>
+              saveFilterConfig(
+                {
+                  intolerances: chipsState,
+                  diets: radioState,
+                  meals: mealsTypes,
+                },
+                false
+              )
+            }
+            style={styles.saveBtn}
+          />
         </View>
       </ScrollView>
-      <View
-        style={{
-          paddingHorizontal: 16,
-          position: "absolute",
-          width: "100%",
-          bottom: 46,
-        }}
-      >
-        <Button
-          title={"Save changes"}
-          bckColor={btnColor}
-          textColor={Col.White}
-          fts={Typ.Small}
-          ftw={"500"}
-          onClickHandler={() =>
-            saveFilterConfig(
-              {
-                intolerances: chipsState,
-                diets: radioState,
-                meals: mealsTypes,
-              },
-              false
-            )
-          }
-        />
-      </View>
     </View>
   );
 }
@@ -160,6 +143,14 @@ export default function UserSettings({
 const styles = StyleSheet.create({
   intolerances: {
     marginTop: 26,
+  },
+  canvas: {
+    flex: 1,
+    backgroundColor: Col.White,
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: Spacing.medium,
   },
   intolerances_text: {
     fontWeight: "500",
@@ -169,5 +160,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Col.Divider,
     marginVertical: Spacing.r_small,
+  },
+  saveBtn: {
+    backgroundColor: Col.Grey,
+  },
+  chipsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 22,
   },
 });

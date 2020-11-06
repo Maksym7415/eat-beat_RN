@@ -163,7 +163,41 @@ export interface ConsumptionProps {
   ];
   totalMeals: number;
 }
-
+export interface intakeProps {
+  Calories: number;
+  "Total Fat": number;
+  Protein: number;
+  Carbs: number;
+  Sugar: number;
+  Cholesterol: number;
+  Alcohol: number;
+  Caffeine: number;
+  Sodium: number;
+  Fiber: number;
+  "Vitamin A": number;
+  "Vitamin B1": number;
+  "Vitamin B2": number;
+  "Vitamin B3": number;
+  "Vitamin B5": number;
+  "Vitamin B6": number;
+  "Vitamin B12": number;
+  "Vitamin C": number;
+  "Vitamin D": number;
+  "Vitamin E": number;
+  "Vitamin K": number;
+  Calcium: number;
+  Copper: number;
+  Fluoride: number;
+  Iron: number;
+  Magnesium: number;
+  Manganese: number;
+  Phosphorus: number;
+  Potassium: number;
+  Selenium: number;
+  Zinc: number;
+  Choline: number;
+  Folate: number;
+}
 export interface ProfileProps {
   id: number;
   fkDietId: number;
@@ -178,39 +212,5 @@ export interface ProfileProps {
   name: string;
   email: string;
   createdAt: string;
-  intakeNorms: {
-    Calories: number;
-    "Total Fat": number;
-    Protein: number;
-    Carbs: number;
-    Sugar: number;
-    Cholesterol: number;
-    Alcohol: number;
-    Caffeine: number;
-    Sodium: number;
-    Fiber: number;
-    "Vitamin A": number;
-    "Vitamin B1": number;
-    "Vitamin B2": number;
-    "Vitamin B3": number;
-    "Vitamin B5": number;
-    "Vitamin B6": number;
-    "Vitamin B12": number;
-    "Vitamin C": number;
-    "Vitamin D": number;
-    "Vitamin E": number;
-    "Vitamin K": number;
-    Calcium: number;
-    Copper: number;
-    Fluoride: number;
-    Iron: number;
-    Magnesium: number;
-    Manganese: number;
-    Phosphorus: number;
-    Potassium: number;
-    Selenium: number;
-    Zinc: number;
-    Choline: number;
-    Folate: number;
-  };
+  intakeNorms: intakeProps;
 }

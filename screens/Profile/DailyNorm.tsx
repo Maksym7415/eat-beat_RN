@@ -1,216 +1,96 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import { Col, Spacing } from "../../components/Config";
-import { Divider } from "../../components/MyComponents";
-import Chip from "../../components/custom/Chip";
-import Select from "../../components/custom/Select";
-import Input from "../../components/custom/Input";
-import Button from "../../components/custom/ConfirmationButton";
+import React, { useState, useEffect, FC, useContext } from "react";
 import server from "../../server";
+import Text from "../../components/custom/Typography";
+import { Col, Spacing } from "../../components/Config";
+import { Button } from "../../components/MyComponents";
+import { AppContext } from "../../components/AppContext";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { intakeProps, Memo, NavProps } from "../../components/interfaces";
+import IntakeSlot from "./common/IntakeSlot";
 
 interface Options {
-  title: string;
-  value: number;
+  labels: string[];
+  values: number[];
 }
 
-export default function PersonalDataScreen({ navigation }) {
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+interface Feed {
+  label: string;
+  value: number;
+  edit: boolean;
+}
 
-  const [personalData, setPersonalData] = useState<object>({
-    Age: {
-      title: "Age",
-      value: "23",
-      unit: "years",
-      edit: false,
-    },
-    Height: {
-      title: "Height",
-      value: "175",
-      unit: "cm",
-      edit: false,
-    },
-    Weight: {
-      title: "Weight",
-      value: "75",
-      unit: "kg",
-      edit: false,
-    },
-  });
-  const [intakeNorm, setIntakeNorm] = useState({
-    Calories: {
-      title: "Calories (kcal)",
-      value: "",
-    },
-    Proteins: {
-      title: "Proteins (g)",
-      value: "",
-    },
-    Fats: {
-      title: "Total fats (g)",
-      value: "",
-    },
-    Carbs: {
-      title: "Total Carbs (g)",
-      value: "",
-    },
-  });
-
-  const onChangeHandler = (value: string, name: string) => {
-    setIntakeNorm((v: any) => ({ ...v, [name]: { ...v[name], value } }));
-  };
-
-  const blurHandler = (name: string) => {
-    if (Object.keys(intakeNorm).includes(name)) return;
-    setPersonalData((v: any) => ({
-      ...v,
-      [name]: { ...v[name], edit: false },
-    }));
-  };
-
-  const savePersonalDataHandler = async () => {
-    let personalObject = {
-      Calories: +intakeNorm["Calories"].value,
-      Protein: +intakeNorm["Protein"].value,
-      "Total Fat": +intakeNorm["Total Fat"].value,
-      Carbs: +intakeNorm["Carbs"].value,
+const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
+  const { myData } = useContext<Memo>(AppContext);
+  const [norms, setNorms] = useState<intakeProps>(myData.intakeNorms);
+  const feed = useState<Options>({
+    labels: Object.keys(myData.intakeNorms),
+    values: Object.values(myData.intakeNorms),
+  })[0];
+  const [intakes, setIntakes] = useState<Feed[]>([
+    { label: "Calories (kcal)", value: 0, edit: false },
+  ]);
+  console.log(norms);
+  const saveHandler = async () => {
+    const update = {
+      Calories: norms.Calories,
+      Protein: norms.Protein,
+      "Total Fat": norms["Total Fat"],
+      Carbs: norms.Carbs,
     };
-    await server.updateIntakeNorm(personalObject);
+    await server.updateIntakeNorm(update);
   };
 
-  const getProfileData = async () => {
-    const {
-      data: { intakeNorms: norms, preferences },
-    } = await server.getProfile();
-    const transitonalObj = {};
-    const __editiableNutrient = ["Calories", "Total Fat", "Protein", "Carbs"];
-    Object.keys(norms).map((el) => {
-      if (__editiableNutrient.includes(el)) {
-        transitonalObj[el] = {
-          title: el,
-          value: norms[el],
-          editable: true,
-        };
+  const sortData = () => {
+    const newIntake = [];
+    const edit = ["Calories", "Protein", "Total Fat", "Carbs"];
+    feed.labels.map((el, index) => {
+      if (edit.includes(el)) {
+        newIntake.unshift({
+          label: el,
+          value: feed.values[index],
+          edit: true,
+        });
       } else {
-        transitonalObj[el] = {
-          title: el,
-          value: norms[el],
-          editable: false,
-        };
+        newIntake.push({ label: el, value: feed.values[index], edit: false });
       }
     });
-    setIsEnabled(preferences);
-    setIntakeNorm(transitonalObj);
+    setIntakes(newIntake);
   };
 
   useEffect(() => {
-    getProfileData();
-  }, []);
-
-  useEffect(() => {
-    let focus = navigation.addListener("focus", () => {
-      getProfileData();
-    });
-    () => {
-      focus = null;
-    };
+    sortData();
   }, []);
 
   return (
-    <View>
-      <ScrollView>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.container}>
-            <View style={styles.intakeNormContainer}>
-              <Text style={styles.intakeNormText}>Daily intake norm</Text>
-              {console.log(isEnabled, "dsgdfgfdgfdgdfjgi34")}
-              <View>
-                {Object.keys(intakeNorm)
-                  .sort((a, b) =>
-                    intakeNorm[a].editable < intakeNorm[b].editable ? 1 : -1
-                  )
-                  .map((el: string) => (
-                    <View style={styles.normItemContainer}>
-                      <Text>{intakeNorm[el].title}</Text>
-                      {!intakeNorm[el].editable ? (
-                        <View
-                          style={{
-                            paddingVertical: 11,
-                            width: "50%",
-                            paddingHorizontal: 19,
-                          }}
-                        >
-                          <Text>{intakeNorm[el].value}</Text>
-                        </View>
-                      ) : (
-                        <Input
-                          label={el}
-                          value={intakeNorm[el].value}
-                          type={"numeric"}
-                          onPressHandler={() => console.log("ex")}
-                          onChange={(value, name) =>
-                            onChangeHandler(value, name)
-                          }
-                          defaultIcon={
-                            intakeNorm[el].editable
-                              ? "keyboard-arrow-up"
-                              : undefined
-                          }
-                          onBlur={blurHandler}
-                          defaultIconSize={21}
-                          additionalIcon={
-                            intakeNorm[el].editable
-                              ? "keyboard-arrow-down"
-                              : undefined
-                          }
-                          editable={intakeNorm[el].editable}
-                          isEnabled={isEnabled}
-                        />
-                      )}
-                    </View>
-                  ))}
-              </View>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </ScrollView>
-      <View
-        style={{
-          paddingHorizontal: 16,
-          position: "absolute",
-          width: "100%",
-          bottom: 46,
-        }}
-      >
+    <ScrollView>
+      <View style={styles.container}>
+        <Text type="h6" style={styles.intakeNormText}>
+          Daily intake norm
+        </Text>
+        {intakes.map((item, index) => (
+          <IntakeSlot
+            item={item}
+            onEdit={(key, val) => setNorms({ ...norms, [key]: val })}
+          />
+        ))}
         <Button
-          title={"Save changes"}
-          onClickHandler={savePersonalDataHandler}
-          bckColor={"#616161"}
-          textColor={Col.White}
-          fts={14}
-          ftw={"500"}
-          absolute={false}
+          label={"Save changes"}
+          onPress={saveHandler}
+          style={styles.saveBtn}
         />
       </View>
-    </View>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Col.Back3,
     flex: 1,
+    backgroundColor: Col.White,
+    padding: Spacing.medium,
   },
-  intakeNormContainer: {
-    marginTop: 16,
-    paddingHorizontal: 16,
+  saveBtn: {
+    backgroundColor: Col.Grey,
   },
   normItemContainer: {
     display: "flex",
@@ -220,8 +100,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   intakeNormText: {
-    fontWeight: "500",
-    fontSize: 20,
+    marginBottom: Spacing.medium,
   },
   nutritionContainer: {
     borderRadius: 8,
@@ -231,3 +110,4 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.medium,
   },
 });
+export default PersonalDataScreen;
