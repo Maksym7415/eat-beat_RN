@@ -1,10 +1,5 @@
 import React, { FC } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import SvgMaker from "../../../components/SvgMaker";
 
 interface Props {
@@ -21,12 +16,10 @@ const Logo: FC<Props> = ({ onLongPress }) => {
   );
 };
 
-const ScrHight = Dimensions.get("screen").height;
-
 const styles = StyleSheet.create({
   logoContainer: {
-    marginTop: Math.round(ScrHight * 0.09),
-    marginBottom: Math.round(ScrHight * 0.05),
+    marginTop: "15%",
+    marginBottom: "15%",
   },
 });
 export default Logo;

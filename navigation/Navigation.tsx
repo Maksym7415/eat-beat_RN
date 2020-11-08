@@ -87,7 +87,7 @@ const RecipesTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green1,
+        backgroundColor: Col.Recipes,
       },
       scrollEnabled: true,
     }}

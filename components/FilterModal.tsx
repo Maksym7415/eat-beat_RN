@@ -1,60 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import Header from './Header';
-import { View, Modal, Dimensions, Text, StyleSheet } from 'react-native';
-import { Col, Spacing, Typ } from './Config';
-import Chip from './custom/Chip';
-import { Divider } from "./MyComponents";
-import RadioBtn from './Radio';
-import Button from './custom/ConfirmationButton';
-import { ScrollView } from 'react-native-gesture-handler';
-import UserSettings from './UserSettings';
+import React, { FC } from "react";
+import Header from "./Header";
+import { Modal } from "react-native";
+import { Col } from "./Config";
+import { ScrollView } from "react-native-gesture-handler";
+import UserSettings from "./UserSettings";
+import { recipeSettings } from "./interfaces";
 
-export default function FilterModal({ modalVisible, hideModal, data, saveFilterData, constaintNumber, radioState, setRadioState, chipsState, setChipsState, mealsTypes, setMealsTypes }: any) {
-
-    const saveFilterConfig = ({intolerances, diets, meals}, isClick: boolean) => {
-        saveFilterData({meals: meals.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join(' ,'), intolerances: intolerances.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join(' ,'), diets: diets.filter((el) => el.isUsers).map((el) => el.name.toLowerCase()).join('')})
-        !isClick && hideModal(true)
-    }
-    return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-        >   
-        
-            <ScrollView>
-            <Header hideModal = {hideModal} name={`Constraint(${constaintNumber})`} showInput={false} />
-            <UserSettings  
-                data={data} 
-                saveFilterConfig={saveFilterConfig} 
-                btnColor={Col.Green}
-                chipColor={Col.Green}
-                radioState={radioState}
-                setRadioState={setRadioState} 
-                chipsState={chipsState}
-                setChipsState={setChipsState}
-                mealsTypes={mealsTypes}
-                setMealsTypes={setMealsTypes}
-            />
-            </ScrollView>
-        </Modal>
-
-    )
+interface Filter {
+  meals: string;
+  diets: string;
+  intolerances: string;
 }
 
-const styles = StyleSheet.create({
-    intolerances: {
-        marginTop: 26
-    },
-    intolerances_text: {
-        fontWeight: '500',
-        fontSize: 20,
+interface Props {
+  data: recipeSettings;
+  modalVisible: boolean;
+  constaintNumber: number;
+  hideModal: (value: boolean) => void;
+  saveFilterData: (value: Filter) => void;
+}
 
-    },
-    divider: {
-        borderBottomWidth: 1,
-        borderBottomColor: Col.Divider,
-        marginVertical: Spacing.r_small,
-    }
+const FilterModal: FC<Props> = ({
+  modalVisible,
+  hideModal,
+  data,
+  saveFilterData,
+  constaintNumber,
+}) => {
+  const saveFilterConfig = ({
+    intolerances,
+    diets,
+    mealTypes,
+  }: recipeSettings) => {
+    saveFilterData({
+      meals: mealTypes
+        .filter((el) => el.isUsers)
+        .map((el) => el.name.toLowerCase())
+        .join(" ,"),
+      intolerances: intolerances
+        .filter((el) => el.isUsers)
+        .map((el) => el.name.toLowerCase())
+        .join(" ,"),
+      diets: diets
+        .filter((el) => el.isUsers)
+        .map((el) => el.name.toLowerCase())
+        .join(""),
+    });
+    hideModal(true);
+  };
+  return (
+    <Modal animationType="fade" transparent={true} visible={modalVisible}>
+      <ScrollView>
+        {/* <Header
+          hideModal={hideModal}
+          name={`Constraint(${constaintNumber})`}
+          showInput={false}
+        /> */}
+        <UserSettings
+          data={data}
+          blend={Col.Green}
+          onSave={saveFilterConfig}
+          showMealsTypes={false}
+        />
+      </ScrollView>
+    </Modal>
+  );
+};
 
-})
+export default FilterModal;
