@@ -25,14 +25,17 @@ const apiConfig: apiProps = {
     searchSettings: "/user/search-recipe-settings",
     verification: "/auth/verify-account?verificationCode=",
     resetPassword: "/auth/reset-password",
+    recipeInfo: "/recipe/my-recipes/",
   },
   post: {
-    upload: "/upload",
     signIn: "/auth/sign-in",
     register: "/auth/sign-up",
-    refresh: "/auth/refresh-token",
     addCookedMeal: "/meals/meal-change-status",
     updatePassword: "/auth/update-password",
+    upload: "/upload/avatar",
+    refresh: "/auth/refresh-token",
+    addRecipe: "/recipe/add-own-recipe",
+    addRecipeAvatar: "/upload/recipe-image/",
   },
   del: {
     user: "/user/delete-user",
@@ -45,6 +48,7 @@ const apiConfig: apiProps = {
     updateCookedMeal: "/meals/update-cooked-meal/",
     updateUserReferences: "/user/update-preferences",
     updateIntakeNorms: "/user/intake-norms",
+    updateRecipe: "​/recipe/update-recipe/",
   },
 };
 
@@ -151,7 +155,6 @@ const updateCookedMeal = async (id: number, data: object) => {
 
 const updateIntakeNorm = async (data: object) => {
   const address = apiConfig.put.updateIntakeNorms;
-  console.log(data, "gfdfgdfgdf986789546854654659");
   const response = await api.patch(address, { intakeNorms: data });
   if (!response.ok) logError(response);
   return response;
@@ -199,9 +202,58 @@ const getSearchFilter = async () => {
 
 const addCookedMeal = async (payload) => {
   const address = apiConfig.post.addCookedMeal;
-  api.post(address, payload).then((response) => {
-    if (!response.ok) logError(response);
-  });
+  const response = await api.post(address, payload);
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const getRecipeInfo = async (id: number) => {
+  const address = apiConfig.get.recipeInfo + id;
+
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const getRecipes = async () => {
+  const address = apiConfig.get.recipeInfo;
+  const response = await api.get(address);
+
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const addRecipe = async (data: any) => {
+  const address = apiConfig.post.addRecipe;
+  const response = await api.post(address, data);
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const updateRecipe = async (
+  id: number,
+  { avatar, title, ingredientList, instruction }
+) => {
+  // const address = apiConfig.put.updateRecipe + id;
+  const params = { title, ingredientList, instruction };
+  const bodyParams = {};
+  Object.keys(params).forEach((el) =>
+    params[el] ? (bodyParams[el] = params[el]) : el
+  );
+  const response = await api.patch(
+    `http://10.4.30.212:8081/api/recipe/update-recipe/${id}`,
+    bodyParams
+  );
+  console.log(response, "fdgdfgdfgdfgdfgd");
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const addRecipeAvatar = async (formData: FormData, id: number) => {
+  const address = apiConfig.post.addRecipeAvatar + id;
+  const response = await api.post(address, formData);
+  if (!response.ok) logError(response);
+  return response;
 };
 
 const signIn: AuthFun = async (payload) => {
@@ -343,4 +395,9 @@ export default {
   updateUserReferences,
   updateIntakeNorm,
   getSearchFilter,
+  addRecipe,
+  addRecipeAvatar,
+  getRecipeInfo,
+  getRecipes,
+  updateRecipe,
 };

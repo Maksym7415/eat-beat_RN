@@ -10,16 +10,19 @@ export interface apiProps {
     history: string;
     recipeByName: string;
     searchSettings: string;
-    verification:string
-    resetPassword:string
+    verification: string;
+    resetPassword: string;
+    recipeInfo: string;
   };
   post: {
     addCookedMeal: string;
     signIn: string;
     register: string;
     upload: string;
-    refresh:string
-    updatePassword:string
+    refresh: string;
+    updatePassword: string;
+    addRecipe: string;
+    addRecipeAvatar: string;
   };
   del: {
     cookedMeal: string;
@@ -29,9 +32,10 @@ export interface apiProps {
     intakeNorms: string;
     profile: string;
     password: string;
-    updateCookedMeal: string
-    updateUserReferences: string
-    updateIntakeNorms: string
+    updateCookedMeal: string;
+    updateUserReferences: string;
+    updateIntakeNorms: string;
+    updateRecipe: string;
   };
 }
 
@@ -56,17 +60,17 @@ export interface resProps {
   config: any;
 }
 
-export interface mailAuth{
-  email:string
+export interface mailAuth {
+  email: string;
 }
 
-export interface updatePassProps{
-  password:string
-  verificationCode:string
+export interface updatePassProps {
+  password: string;
+  verificationCode: string;
 }
-export interface changePassProps{
-  oldPassword:string
-  newPassword:string
+export interface changePassProps {
+  oldPassword: string;
+  newPassword: string;
 }
 
 export type AuthFun = (v: AuthProps) => Promise<boolean | void | object>;

@@ -30,8 +30,14 @@ import PersonalDataScreen from "../screens/Profile/PersonalDataScreen";
 import FoodPreferences from "../screens/Profile/FoodPreferences";
 import { AppContext } from "../components/AppContext";
 import DialyNorm from "../screens/Profile/DailyNorm";
+import UserRecipes from "../screens/Recipies/UserRecipe";
 
 import { MaterialIcons as Icon } from "@expo/vector-icons";
+// import NewRecipe from "../screens/Recipies/CreateRecipes";
+import NewRecipe from "../screens/Recipies/CreateRecipesScreen";
+import RecipeInfoScreen from "../screens/Recipies/RecipeInfoScreen";
+import IngradientScreen from "../screens/Recipies/IngradientsScreen";
+import InstructionScreen from "../screens/Recipies/InstructionScreen";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -78,6 +84,29 @@ const HomeTopNavigator = () => (
   </TopTabs.Navigator>
 );
 
+const EditRecipeTopNAvigator = () => (
+  <TopTabs.Navigator
+    tabBarOptions={{
+      style: {
+        backgroundColor: Col.Header,
+        elevation: 0,
+      },
+      indicatorStyle: {
+        backgroundColor: Col.Green1,
+      },
+    }}
+    initialRouteName="edit"
+  >
+    <TopTabs.Screen name="info" component={RecipeInfoScreen} />
+    <TopTabs.Screen name="ingradients" component={IngradientScreen} />
+    <TopTabs.Screen
+      name="instruction"
+      component={InstructionScreen}
+      // options={{ title: "my recipies" }}
+    />
+  </TopTabs.Navigator>
+);
+
 const RecipesTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
@@ -95,8 +124,8 @@ const RecipesTopNavigator = () => (
     <TopTabs.Screen name="recommended" component={RecommendedScreen} />
     <TopTabs.Screen name="search" component={SearchScreen} />
     <TopTabs.Screen
-      name="recipies"
-      component={RecipiesScreen}
+      name="user_recipies"
+      component={UserRecipes}
       options={{ title: "my recipies" }}
     />
   </TopTabs.Navigator>
@@ -210,21 +239,70 @@ export const RecommendedStack = () => {
         name="recommendedPage"
         component={RecipesTopNavigator}
       />
-      {/* <Stack.Screen
-          name="searchScreen"
-          options={({ navigation }) => ({
-            title: "search" ,
+      <Stack.Screen
+        name="new"
+        options={({ navigation }) => ({
+          title: "Recipe creation",
+          //headerShown: false,
+          headerStyle: {
+            elevation: 0,
+            backgroundColor: Col.Green1,
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerLeft: () => (
+            <Icon
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.navigate("user_recipies")}
+              name={"arrow-back"}
+              color={Col.White}
+              size={24}
+            />
+          ),
+        })}
+        component={NewRecipe}
+      />
+      <Stack.Screen
+        name="user_recipe"
+        options={({ navigation, route }) => {
+          const { toggleEdit, editMode } = useContext(AppContext);
+          const editing = {
+            edit: true,
+            close: false,
+          };
+          return {
+            title: route.params.title,
             //headerShown: false,
             headerStyle: {
               elevation: 0,
-              backgroundColor: Col.Main,
+              backgroundColor: Col.Green1,
             },
             headerTitleStyle: {
               color: "white",
             },
-          })}
-          component={SearchScreen}
-        /> */}
+            headerLeft: () => (
+              <Icon
+                style={{ marginLeft: 16 }}
+                onPress={() => navigation.navigate("user_recipies")}
+                name={"arrow-back"}
+                color={Col.White}
+                size={24}
+              />
+            ),
+            headerRight: () => (
+              <Icon
+                style={{ marginRight: 16 }}
+                onPress={() => toggleEdit(!editMode)}
+                name={!editMode ? "edit" : "close"}
+                color={Col.White}
+                size={24}
+              />
+            ),
+          };
+        }}
+        component={EditRecipeTopNAvigator}
+      />
     </Stack.Navigator>
   );
 };

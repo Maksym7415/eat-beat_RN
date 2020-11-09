@@ -8,10 +8,11 @@ interface Props {
     unit: string;
     defaultValue: number;
     percenatage: number;
+    recipe: boolean
   };
 }
 const NutritionItem: FC<Props> = ({ item }) => {
-  const { name, currentValue, unit, defaultValue, percenatage = 0 } = item;
+  const { name, currentValue, unit, defaultValue, percenatage = 0, recipe } = item;
   // const precent = Math.round((nutrition_measure / nutrition_number) * 100);
   const color =
     percenatage < 100
@@ -24,11 +25,11 @@ const NutritionItem: FC<Props> = ({ item }) => {
       <Text style={{ width: "25%" }}>{name}</Text>
       <Text style={{ width: "15%" }}>{unit}</Text>
       <Text style={{ width: "20%" }}>{currentValue}/</Text>
-      <Text style={{ width: "15%" }}>{defaultValue}</Text>
-      <Text style={{ width: "15%" }}>{`${percenatage || 0} %`}</Text>
-      <View
+     {!recipe &&<Text style={{ width: "15%" }}>{defaultValue}</Text>}
+      {!recipe &&<Text style={{ width: "15%" }}>{`${percenatage || 0} %`}</Text>}
+      {!recipe && <View
         style={{ width: "8%", backgroundColor: color, borderRadius: 20 }}
-      ></View>
+      ></View>}
     </View>
   );
 };

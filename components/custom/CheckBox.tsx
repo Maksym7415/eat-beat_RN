@@ -4,10 +4,11 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 
 interface Props {
   value?: boolean;
-  onCheck?: () => void;
+  onCheck: (name: string, value: boolean) => void;
   blend?: string;
   size?: number;
   checkColor?: string;
+  name: string;
 }
 
 const CheckBox: FC<Props> = ({
@@ -16,9 +17,10 @@ const CheckBox: FC<Props> = ({
   value = false,
   blend = "white",
   checkColor = "white",
+  name,
 }) => {
   return (
-    <Pressable onPress={onCheck}>
+    <Pressable onPress={() => onCheck(name, !value)}>
       <View
         style={{
           justifyContent: "center",
