@@ -53,13 +53,14 @@ export interface Memo {
     visible: boolean;
     date: Date;
   };
+  refresh: number;
   myData: UserData;
   saveCal: (currentDate: Cal) => void;
   login: () => void;
   signOut: () => void;
   getData: () => void;
   pushData: () => void;
-  isFetching: (value: boolean) => void;
+  isFetching: () => void;
   showModal: (value: boolean) => void;
   isShow: boolean;
 }

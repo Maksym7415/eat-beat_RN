@@ -1,5 +1,11 @@
 import React, { FC, useState, useEffect, useContext, useCallback } from "react";
-import { StyleSheet, ScrollView, View, Alert } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
 import { Memo, NavProps, RecommendedMeals } from "../../components/interfaces";
@@ -7,6 +13,7 @@ import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { useFocusEffect } from "@react-navigation/native";
+import { Button } from "../../components/MyComponents";
 
 interface ModalData {
   id: number;
@@ -17,8 +24,15 @@ interface ModalData {
   data: object;
 }
 
+interface AddMealsProps {
+  creationTime: number;
+  servings: number;
+}
+
+type AddMealsFun = (id: number, props: AddMealsProps) => void;
+
 const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
-  const { calendar } = useContext<Memo>(AppContext);
+  const { calendar, isFetching } = useContext<Memo>(AppContext);
   const { date } = calendar;
   const [feed, setFeed] = useState<RecommendedMeals[]>([]);
   const [modalData, setModalData] = useState<ModalData>({
@@ -35,11 +49,10 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
     response.ok
       ? setFeed(response.data)
       : Alert.alert(`${response.status}`, `${response.data}`);
-    console.log("getRecommendedMeals => request: ", response.ok);
   };
-  const actionHandler = (id, name, data) => {
+  const actionHandler = (id: string, name: string, data: object) => {
     setModalData({
-      id,
+      id: Number(id),
       name,
       data,
       servings: 0.5,
@@ -48,14 +61,15 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
     });
   };
 
-  const addMeal = async (id, { creationTime, servings }) => {
+  const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     await server.addCookedMeal({
       meal: modalData.data,
       quantity: servings,
       date: creationTime,
     });
     setModalData({ ...modalData, modalVisible: false });
-    navigation.navigate("meals", { refresh: true });
+    navigation.navigate("meals");
+    isFetching();
   };
 
   useEffect(() => {
@@ -70,14 +84,14 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
       }
     }, [route.params])
   );
-  return (
+  return feed.length ? (
     <View style={{ flex: 1, backgroundColor: Col.Background }}>
       <EditModal
         data={modalData}
         setData={(id, body) => addMeal(id, body)}
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
       />
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
@@ -86,6 +100,17 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
           ))}
         </View>
       </ScrollView>
+      <View style={styles.button}>
+        <Button
+          label="SHOW MORE"
+          onPress={() => console.log("show more")}
+          style={{ backgroundColor: Col.Recipes }}
+        />
+      </View>
+    </View>
+  ) : (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
     </View>
   );
 };
@@ -99,6 +124,16 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: "50%",
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.medium,
+    backgroundColor: Col.Background,
+  },
+  button: {
+    paddingHorizontal: Spacing.medium,
   },
 });
 

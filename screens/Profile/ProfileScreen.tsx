@@ -6,9 +6,9 @@ import UserCard from "./common/UserCard";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
 import UserPlan from "./common/UserPlan";
-import EditFeild from "./common/EditFeild";
 import { NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
+import EditPassword from "./common/EditPassword";
 
 export default class ProfileScreen extends Component<NavProps> {
   static contextType = AppContext;
@@ -29,7 +29,6 @@ export default class ProfileScreen extends Component<NavProps> {
 
   onUpdate = async () => {
     const update = await this.context.getData();
-    console.log("updates", update);
     this.setState({ data: update });
   };
 
@@ -49,6 +48,16 @@ export default class ProfileScreen extends Component<NavProps> {
         "Sorry something went wrong while trying to delete your account, please try again!"
       );
     }
+  };
+
+  onChangePassword = async (oldPassword: string, newPassword: string) => {
+    const response = await server.changePassword({ oldPassword, newPassword });
+    Alert.alert(
+      "Change Password",
+      response.ok
+        ? "You have successfully changed you password"
+        : `${response.data.message}`
+    );
   };
 
   componentDidMount = async () => {
@@ -93,17 +102,13 @@ export default class ProfileScreen extends Component<NavProps> {
               <Button
                 type="outline"
                 label="SEE MORE PLANS"
-                onPress={() => console.log("hi")}
+                onPress={() => console.log("SEE MORE PLANS")}
                 style={styles.button}
                 labelStyle={styles.btnLabel}
               />
             </View>
             <Divider />
-            <EditFeild
-              label="Password"
-              input="123456"
-              onEdit={(v) => this.setState({ data: { ...data, password: v } })}
-            />
+            <EditPassword label="Password" onEdit={this.onChangePassword} />
           </View>
           <View style={styles.bottom}>
             <Button

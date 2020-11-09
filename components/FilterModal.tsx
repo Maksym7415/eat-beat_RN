@@ -1,23 +1,17 @@
 import React, { FC } from "react";
-import Header from "./Header";
-import { Modal } from "react-native";
-import { Col } from "./Config";
-import { ScrollView } from "react-native-gesture-handler";
+import { Modal, View, StyleSheet } from "react-native";
+import { Col, Spacing } from "./Config";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 import UserSettings from "./UserSettings";
 import { recipeSettings } from "./interfaces";
-
-interface Filter {
-  meals: string;
-  diets: string;
-  intolerances: string;
-}
+import Text from "./custom/Typography";
 
 interface Props {
   data: recipeSettings;
   modalVisible: boolean;
   constaintNumber: number;
-  hideModal: (value: boolean) => void;
-  saveFilterData: (value: Filter) => void;
+  hideModal: () => void;
+  saveFilterData: (value: recipeSettings) => void;
 }
 
 const FilterModal: FC<Props> = ({
@@ -27,44 +21,53 @@ const FilterModal: FC<Props> = ({
   saveFilterData,
   constaintNumber,
 }) => {
-  const saveFilterConfig = ({
-    intolerances,
-    diets,
-    mealTypes,
-  }: recipeSettings) => {
-    saveFilterData({
-      meals: mealTypes
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(" ,"),
-      intolerances: intolerances
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(" ,"),
-      diets: diets
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(""),
-    });
-    hideModal(true);
+  const saveFilterConfig = (value: recipeSettings) => {
+    saveFilterData(value);
+    hideModal();
   };
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
-      <ScrollView>
-        {/* <Header
-          hideModal={hideModal}
-          name={`Constraint(${constaintNumber})`}
-          showInput={false}
-        /> */}
-        <UserSettings
-          data={data}
-          blend={Col.Green}
-          onSave={saveFilterConfig}
-          showMealsTypes={false}
+      <View style={styles.container}>
+        <Icon
+          onPress={hideModal}
+          name={"arrow-back"}
+          color={Col.White}
+          size={24}
         />
-      </ScrollView>
+        <Text
+          type="h6"
+          style={styles.text}
+        >{`Constraint(${constaintNumber})`}</Text>
+      </View>
+      <UserSettings
+        data={data}
+        blend={Col.Recipes}
+        onSave={saveFilterConfig}
+        showMealsTypes={true}
+        backgroundColor={Col.Background}
+      />
     </Modal>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: Col.Recipes,
+    padding: Spacing.medium,
+  },
+  input: {
+    width: "60%",
+    color: Col.White,
+    borderBottomColor: Col.White,
+    borderBottomWidth: 1,
+  },
+  text: {
+    width: "80%",
+    color: Col.White,
+    alignSelf: "center",
+  },
+});
 
 export default FilterModal;

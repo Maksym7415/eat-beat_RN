@@ -37,7 +37,7 @@ interface editProps {
 
 type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
 
-const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
+const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const [feed, setFeed] = useState(null);
   const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
   const [actionBtn, setActionBtn] = useState<boolean>(false);
@@ -48,11 +48,10 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     modalVisible: false,
     creationTime: 0,
   });
-  const { calendar, saveCal } = useContext<Memo>(AppContext);
+  const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
   const serveData = async () => {
-    console.log("----------------------------\nserve meals");
     const response = await server.getCookedMeals(date);
     if (response.ok) setFeed(response.data);
   };
@@ -84,16 +83,17 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     serveData();
-  }, [date]);
+  }, [date, refresh]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (route.params?.refresh) {
-        navigation.setParams({ refresh: false });
-        serveData();
-      }
-    }, [route.params])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (route.params?.refresh) {
+  //       navigation.setParams({ refresh: false });
+  //       saveCal(calendar);
+  //       serveData();
+  //     }
+  //   }, [route.params])
+  // );
   return (
     <View style={styles.container}>
       <ActionButton
@@ -151,7 +151,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
 const EmptyList: FC = () => (
   <View style={styles.emptyList}>
-    <Text>Nothing to display</Text>
+    <Text>nothing to display</Text>
   </View>
 );
 
@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Background,
   },
   emptyList: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },

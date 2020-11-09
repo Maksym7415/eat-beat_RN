@@ -9,8 +9,8 @@ export default function FoodPreferences() {
   const [filter, setFilter] = useState<recipeSettings | null>(null);
 
   const getSearchFilter = async () => {
-    const data = await server.getSearchFilter();
-    setFilter(data);
+    const response = await server.getSearchFilter();
+    if (response.ok) setFilter(response.data);
   };
 
   const saveFilterConfig = async ({ intolerances, diets }: recipeSettings) => {
@@ -44,6 +44,6 @@ export default function FoodPreferences() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Col.Background,
+    backgroundColor: Col.White,
   },
 });

@@ -27,7 +27,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<number>(0);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
-  const { calendar, saveCal } = useContext<Memo>(AppContext);
+  const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
@@ -37,12 +37,13 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
       setFeed(data);
     }
   };
-
   useEffect(() => {
     serveData();
-  }, [date]);
+  }, [date, refresh]);
 
   const onChange = (event: Event, selectedDate: Date) => {
+    if (event.type === "dismissed")
+      return saveCal({ visible: false, date: date });
     if (selectedDate && selectedDate !== date) {
       setFeed(null);
       const currentDate = selectedDate || date;
@@ -62,7 +63,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
       </View>
     );
 
-  if (loaded > 0)
+  if (loaded > 0) {
     return (
       <View style={styles.canvas}>
         <ActionButton
@@ -157,39 +158,41 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         </ScrollView>
       </View>
     );
-  return (
-    <View style={styles.loading}>
-      <ActionButton
-        style={styles.actionButton}
-        onPress={() => setActionBtn(!actionBtn)}
-      />
-      <Modal
-        label="Health Score"
-        content="HealthScore"
-        modalVisible={modalVisible}
-        showModal={() => setModalVisible(false)}
-      />
-      <ActionModal
-        visible={actionBtn}
-        onClick={(value: number) => addRecommended(value)}
-        onClose={() => setActionBtn(false)}
-      />
-      {visible && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={(ev, d) => onChange(ev, d)}
-          style={{ shadowColor: "pink" }}
+  } else {
+    return (
+      <View style={styles.loading}>
+        <ActionButton
+          style={styles.actionButton}
+          onPress={() => setActionBtn(!actionBtn)}
         />
-      )}
-      <Text type="h6" style={{ textAlign: "center" }}>
-        {`Sorry, there is nothing here yet.\nAdd your first meal`}
-      </Text>
-    </View>
-  );
+        <Modal
+          label="Health Score"
+          content="HealthScore"
+          modalVisible={modalVisible}
+          showModal={() => setModalVisible(false)}
+        />
+        <ActionModal
+          visible={actionBtn}
+          onClick={(value: number) => addRecommended(value)}
+          onClose={() => setActionBtn(false)}
+        />
+        {visible && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="date"
+            is24Hour={true}
+            display="default"
+            onChange={(ev, d) => onChange(ev, d)}
+            style={{ shadowColor: "pink" }}
+          />
+        )}
+        <Text type="h6" style={{ textAlign: "center" }}>
+          {`Sorry, there is nothing here yet.\nAdd your first meal`}
+        </Text>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

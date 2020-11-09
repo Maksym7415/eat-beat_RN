@@ -109,6 +109,7 @@ const newEditModal: FC<Props> = ({
                 </TouchableOpacity>
                 <View style={styles.amountWrapper}>
                   <TextInput
+                    maxLength={4}
                     style={styles.amount}
                     keyboardType="numeric"
                     value={newTime.portion}

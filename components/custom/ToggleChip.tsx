@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, StyleSheet, ViewStyle, Pressable } from "react-native";
+import { StyleSheet, ViewStyle, Pressable } from "react-native";
 import Text from "./Typography";
 import { Col, Spacing } from "../Config";
 
@@ -32,7 +32,7 @@ const ToggleChip: FC<Props> = ({
         style,
       ]}
     >
-      <Text type="body2" style={{ color: state ? Col.White : selectedColor }}>
+      <Text type="body2" style={{ color: state ? Col.White : Col.Grey }}>
         {title}
       </Text>
     </Pressable>
@@ -45,8 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     paddingVertical: Spacing.tiny,
     paddingHorizontal: Spacing.medium,
-    marginVertical: Spacing.small,
-    marginHorizontal: Spacing.tiny,
+    margin: Spacing.tiny,
     borderWidth: 1,
     borderColor: Col.Divider,
     alignItems: "center",

@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   TextInput,
@@ -11,6 +12,7 @@ import SvgMaker from "../../../components/SvgMaker";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
+import Text from "../../../components/custom/Typography";
 
 interface Props {
   image: string | null;
@@ -21,6 +23,7 @@ interface Props {
 
 const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
   const [edit, setEdit] = useState(false);
+  const [userName, setUserName] = useState(name);
   useEffect(() => {
     (async () => {
       const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -29,6 +32,23 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
       }
     })();
   }, []);
+
+  const checkPermission = async () => {
+    const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
+    if (granted) {
+      pickAvatar();
+    } else {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status === "granted") {
+        pickAvatar();
+      } else {
+        Alert.alert(
+          "Access Permission",
+          "Sorry, we need camera roll permissions to make this work!"
+        );
+      }
+    }
+  };
 
   const pickAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -49,10 +69,23 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
       onUpdate();
     }
   };
+
+  const submitChange = async () => {
+    setEdit(!edit);
+    if (userName !== name) {
+      const response = await server.updateProfile({ name: userName });
+      response ? onUpdate() : setUserName(name);
+    }
+  };
+
+  useEffect(() => {
+    setUserName(name);
+  }, [name]);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={pickAvatar}
+        onPress={checkPermission}
         style={styles.imagePickerContainer}
       >
         {image === null ? (
@@ -71,17 +104,15 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
       </TouchableOpacity>
       <View style={styles.detailsContainer}>
         <TextInput
-          value={name}
+          autoFocus={edit}
+          value={userName}
           editable={edit}
           style={edit ? styles.editInput : styles.nameInput}
+          onChangeText={(val) => setUserName(val)}
         />
-        <TextInput
-          value={email}
-          editable={edit}
-          style={edit ? styles.editInput : styles.emailInput}
-        />
+        <Text type="body2">{email}</Text>
       </View>
-      <TouchableOpacity onPress={() => setEdit(!edit)} style={styles.button}>
+      <TouchableOpacity onPress={submitChange} style={styles.button}>
         <Icon name="edit" size={20} color={Col.Black} />
       </TouchableOpacity>
     </View>
@@ -118,10 +149,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   nameInput: {
+    color: Col.Black,
     fontFamily: "Inter_500Medium",
     fontSize: 18,
   },
   editInput: {
+    color: Col.Black,
     fontSize: 16,
     borderBottomWidth: 1,
     padding: Spacing.tiny,

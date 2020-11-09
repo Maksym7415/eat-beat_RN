@@ -22,7 +22,6 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   const savePersonalDataHandler = async () => {
-    console.log(disabled);
     const { age, height, currentWeight } = feed;
     const personalObject = {
       gender: chips,

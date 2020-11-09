@@ -23,7 +23,8 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const onConfirm = async (value) => {
     setClicked(true);
     const verified = await server.verifyAccount(value.verificationCode);
-    if (verified) {
+
+    if (verified.ok) {
       const logged = await server.signIn(route.params);
       if (logged) navigation.navigate("success");
     } else {

@@ -64,5 +64,9 @@ export interface updatePassProps{
   password:string
   verificationCode:string
 }
+export interface changePassProps{
+  oldPassword:string
+  newPassword:string
+}
 
 export type AuthFun = (v: AuthProps) => Promise<boolean | void | object>;

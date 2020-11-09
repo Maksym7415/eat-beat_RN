@@ -19,6 +19,7 @@ export default function App() {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<number>(0);
   const [cal, setCal] = useState<Cal>({
     visible: false,
     date: new Date(),
@@ -65,19 +66,21 @@ export default function App() {
     (): Memo => ({
       calendar: cal,
       myData: userData,
+      refresh: fetching,
       saveCal: (value) => setCal(value),
       login: () => loginHandler(),
       signOut: () => removeToken(),
       getData: () => getUserData(),
       pushData: () => console.log("push data"),
-      isFetching: (value: boolean) => console.log("hi"),
+      isFetching: () => setFetching(fetching + 1),
+
       showModal: (value: boolean) => {
         //console.log(value)
         setShow(value);
       },
       isShow: show,
     }),
-    [cal, show, userData]
+    [cal, show, userData, fetching]
   );
 
   useEffect(() => {

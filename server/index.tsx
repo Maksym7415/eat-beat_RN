@@ -3,6 +3,7 @@ import {
   apiProps,
   AuthFun,
   cacheProps,
+  changePassProps,
   errorProps,
   mailAuth,
   updatePassProps,
@@ -174,14 +175,11 @@ const getHistory = async (days: number) => {
   return response;
 };
 
-const getRecipeByName = async (name: string, intolerances: string[]) => {
-  const address = apiConfig.get.recipeByName + name;
-  // apiConfig.get.recipeByName + name + "&intolerances=" + intolerances.join();
-
-  return api.get(address).then((response) => {
-    if (!response.ok) logError(response);
-    return response.data;
-  });
+const getRecipeByName = async (name: string, config: string) => {
+  const address = apiConfig.get.recipeByName + name + config;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
 };
 
 const getSearchSettings = async () => {
@@ -196,7 +194,7 @@ const getSearchFilter = async () => {
   const address = apiConfig.get.searchSettings;
   const response = await api.get(address);
   if (!response.ok) logError(response);
-  return response.data;
+  return response;
 };
 
 const addCookedMeal = async (payload) => {
@@ -267,11 +265,11 @@ const updateProfile = async (data: object) => {
   return response.ok;
 };
 
-const changePassword = async (options: updatePassProps) => {
-  const address = apiConfig.post.updatePassword;
-  const response = await api.post(address, options);
+const changePassword = async (options: changePassProps) => {
+  const address = apiConfig.put.password;
+  const response = await api.patch(address, options);
   if (!response.ok) logError(response);
-  return response.ok;
+  return response;
 };
 
 const updatePassword = async (options: updatePassProps) => {

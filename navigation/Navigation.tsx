@@ -20,7 +20,6 @@ import CalendarButton from "./common/CalendarButton";
 import BurgerIcon from "./common/BurgerIcon";
 import RecommendedScreen from "../screens/Recipies/RecommendedScreen";
 import SearchScreen from "../screens/Recipies/SearchScreen";
-import TestOut from "../screens/TestOut";
 import DrawerLayout from "./common/DrawerLayout";
 import Success from "../screens/Auth/SuccessScreen";
 import Confirmation from "../screens/Auth/ConfirmationScreen";
@@ -111,7 +110,7 @@ const ProfileTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Main,
+        backgroundColor: Col.Grey,
       },
       scrollEnabled: true,
     }}

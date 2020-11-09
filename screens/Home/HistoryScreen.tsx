@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -6,11 +6,12 @@ import {
   NativeScrollEvent,
   View,
 } from "react-native";
-import { NavProps } from "../../components/interfaces";
+import { Memo, NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import server from "../../server";
 import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
+import { AppContext } from "../../components/AppContext";
 
 interface HealthScore {
   date: string;
@@ -28,6 +29,7 @@ interface Offset {
 }
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
+  const { refresh } = useContext<Memo>(AppContext);
   const [data, setData] = useState<Data>({ dates: [], scores: [] });
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
@@ -55,7 +57,7 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   useEffect(() => {
     getHealthsScore();
-  }, []);
+  }, [refresh]);
 
   return (
     <View style={styles.canvas}>

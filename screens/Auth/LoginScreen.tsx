@@ -84,7 +84,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
               style={styles.txtBtn}
               onPress={() => navigation.navigate("register")}
             >
-              {"  Create account"}
+              {"  Sign up"}
             </Text>
           </Text>
           <Text

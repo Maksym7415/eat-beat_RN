@@ -12,9 +12,16 @@ interface Props {
   onSave: (value: recipeSettings) => void;
   blend: string;
   showMealsTypes: boolean;
+  backgroundColor?: string;
 }
 
-const UserSettings: FC<Props> = ({ data, onSave, blend, showMealsTypes }) => {
+const UserSettings: FC<Props> = ({
+  data,
+  onSave,
+  blend,
+  showMealsTypes,
+  backgroundColor,
+}) => {
   const { diets, intolerances, mealTypes } = data;
   if (!diets || !intolerances || !mealTypes) return <View />;
   const [diet, setDiet] = useState(0);
@@ -48,62 +55,58 @@ const UserSettings: FC<Props> = ({ data, onSave, blend, showMealsTypes }) => {
   }, []);
 
   return (
-    <View style={styles.canvas}>
+    <View style={[styles.canvas, { backgroundColor }]}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
         <View style={styles.container}>
-          <View style={styles.intolerances}>
-            <Text type="h6">Intolerances</Text>
-            <View style={styles.chipsContainer}>
-              {intole.map(({ id, name, isUsers }, index) => (
-                <Chip
-                  key={id + name}
-                  title={name}
-                  state={isUsers}
-                  selectedColor={blend}
-                  onPress={() => updateIntole(index)}
-                />
-              ))}
-            </View>
+          <Text type="h6">Intolerances</Text>
+          <View style={styles.chipsContainer}>
+            {intole.map(({ id, name, isUsers }, index) => (
+              <Chip
+                key={id + name}
+                title={name}
+                state={isUsers}
+                selectedColor={blend}
+                onPress={() => updateIntole(index)}
+              />
+            ))}
           </View>
-          <Divider />
-          <View>
-            <Text type="h6">Diet</Text>
-            <View style={{ marginTop: 22 }}>
-              {diets.map(({ id, name, isUsers }) => (
-                <RadioInput
-                  key={id + name}
-                  value={id}
-                  label={name}
-                  selected={diet}
-                  disabled={false}
-                  onSelect={() => setDiet(id)}
-                  blend={Col.Grey}
-                />
-              ))}
-            </View>
-          </View>
-          {showMealsTypes ? (
-            <>
-              <Divider />
-              <View>
-                <Text type="h6">Meal Types</Text>
-                <View style={styles.typesContainer}>
-                  {types.map(({ id, name, isUsers }, index) => (
-                    <Chip
-                      key={id + name}
-                      title={name}
-                      state={isUsers}
-                      selectedColor={blend}
-                      onPress={() => updateTypes(index)}
-                    />
-                  ))}
-                </View>
-              </View>
-            </>
-          ) : (
-            <View />
-          )}
         </View>
+        <Divider />
+        <View style={styles.container}>
+          <Text type="h6">Diet</Text>
+          {diets.map(({ id, name, isUsers }) => (
+            <RadioInput
+              key={id + name}
+              value={id}
+              label={name}
+              selected={diet}
+              disabled={false}
+              onSelect={() => setDiet(id)}
+              blend={blend}
+            />
+          ))}
+        </View>
+        {showMealsTypes ? (
+          <>
+            <Divider />
+            <View style={styles.container}>
+              <Text type="h6">Meal Types</Text>
+              <View style={styles.chipsContainer}>
+                {types.map(({ id, name, isUsers }, index) => (
+                  <Chip
+                    key={id + name}
+                    title={name}
+                    state={isUsers}
+                    selectedColor={blend}
+                    onPress={() => updateTypes(index)}
+                  />
+                ))}
+              </View>
+            </View>
+          </>
+        ) : (
+          <View />
+        )}
         <View style={{ padding: Spacing.medium }}>
           <Button
             label="SAVE CHANGES"
@@ -114,7 +117,7 @@ const UserSettings: FC<Props> = ({ data, onSave, blend, showMealsTypes }) => {
                 mealTypes: types,
               })
             }
-            style={styles.saveBtn}
+            style={{ backgroundColor: blend }}
           />
         </View>
       </ScrollView>
@@ -123,35 +126,18 @@ const UserSettings: FC<Props> = ({ data, onSave, blend, showMealsTypes }) => {
 };
 
 const styles = StyleSheet.create({
-  intolerances: {
-    marginTop: 26,
-  },
   canvas: {
     flex: 1,
     backgroundColor: Col.White,
   },
   container: {
-    flex: 1,
+    marginTop: Spacing.medium,
     paddingHorizontal: Spacing.medium,
-  },
-  divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: Col.Divider,
-    marginVertical: Spacing.r_small,
-  },
-  saveBtn: {
-    backgroundColor: Col.Grey,
   },
   chipsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 22,
-  },
-  typesContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 22,
-    marginBottom: 46,
+    marginVertical: Spacing.small,
   },
 });
 export default UserSettings;
