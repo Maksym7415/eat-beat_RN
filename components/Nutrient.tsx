@@ -10,6 +10,8 @@ interface Props {
   unit?: string;
   child?: boolean;
   children?: React.ReactNode;
+  recipe: boolean
+  isUnit: boolean
 }
 
 const Nutrient: FC<Props> = ({
@@ -19,23 +21,25 @@ const Nutrient: FC<Props> = ({
   unit = "",
   child,
   children,
+  recipe,
+  isUnit
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={recipe ? styles.container1 : styles.container}>
       {child ? (
         children
       ) : (
         <View>
-          <Text style={styles.nutrient_title}>{`${name} (${unit})`}</Text>
+          <Text style={styles.nutrient_title}>{`${name} ${!isUnit ? `(${unit})` : ''}`}</Text>
           <View style={styles.nutrient_numbers}>
             <Text type="h6" style={styles.unit}>
               {currentValue}
             </Text>
-            <View style={styles.maxCount}>
+            {!recipe && <View style={styles.maxCount}>
               <Text type="cap" style={styles.maxCountText}>
                 {`of ${intakeNorm}`}
               </Text>
-            </View>
+            </View>}
           </View>
         </View>
       )}
@@ -47,6 +51,12 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     margin: Spacing.tiny,
+    padding: Spacing.small,
+    backgroundColor: Col.White,
+  },
+  container1: {
+    borderRadius: 8,
+    marginBottom: 10,
     padding: Spacing.small,
     backgroundColor: Col.White,
   },

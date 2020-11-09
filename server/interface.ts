@@ -34,6 +34,7 @@ export interface apiProps {
     updateCookedMeal: string
     updateUserReferences: string
     updateIntakeNorms: string
+    updateRecipe: string
   };
 }
 

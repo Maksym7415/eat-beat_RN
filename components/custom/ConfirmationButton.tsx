@@ -3,12 +3,12 @@ import React from 'react';
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function Button({ title, onClickHandler, bckColor, textColor, fts, ftw, border = {} }) {
+export default function Button({ title, onClickHandler, bckColor, textColor, fts, ftw, border = {}, disabled }) {
 
     return (
-        <TouchableOpacity style={{...styles.contanier, backgroundColor: bckColor, ...border}} onPress={onClickHandler}>
+        <TouchableOpacity style={{...styles.contanier, backgroundColor: disabled ? '#E5E5E5' : bckColor, ...border}} onPress={onClickHandler}>
             <View>
-                <Text style={{color: textColor, fontSize: fts, fontWeight: ftw}}>
+                <Text style={{color: disabled ? '#CDD1D6' :  textColor, fontSize: fts, fontWeight: ftw}}>
                     {title}
                 </Text>
             </View>

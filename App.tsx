@@ -22,6 +22,8 @@ export default function App() {
     date: new Date(),
   });
   const [userData, setUserData] = useState<object>({});
+  const [recipeId, setRecipeId] = useState<number>(0);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   const loadUser = async () => {
     console.log("new log", new Date(), "\n");
@@ -41,6 +43,11 @@ export default function App() {
     setLogged(false);
   };
 
+  const getId = (id) => {
+    setRecipeId(id)
+    console.log(id, 1234567890987654321)
+  }
+
   const appContext = useMemo(
     (): Memo => ({
       calendar: cal,
@@ -54,9 +61,13 @@ export default function App() {
         //console.log(value)
         setShow(value);
       },
+      recipeId,
+      getRecipeId: getId,
       isShow: show,
+      editMode,
+      toggleEdit: (v: boolean) => setEditMode(v)
     }),
-    [cal, show]
+    [cal, show, recipeId, editMode]
   );
 
   useEffect(() => {

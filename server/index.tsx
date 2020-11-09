@@ -18,16 +18,16 @@ const apiConfig: apiProps = {
     searchSettings: "/user/search-recipe-settings",
     getSearchFilter: "/user/search-recipe-settings",
     verification: "/auth/verify-account?verificationCode=",
-    rescipeInfo: '/recipe/'
+    recipeInfo: '/recipe/my-recipes/',
   },
   post: {
     addCookedMeal: "/meals/meal-change-status",
     signIn: "/auth/sign-in",
     register: "/auth/sign-up",
-    upload: "/upload",
+    upload: "/upload/avatar",
     refresh: "/auth/refresh-token",
     addRecipe: '/recipe/add-own-recipe',
-    addRecipeAvatar: ''
+    addRecipeAvatar: '/upload/recipe-image/'
   },
   del: {
     cookedMeal: "/meals/cooked-meal/",
@@ -39,7 +39,8 @@ const apiConfig: apiProps = {
     password: "/user/update-password",
     updateCookedMeal: "/meals/update-cooked-meal/",
     updateUserReferences: '/user/update-preferences',
-    updateIntakeNorms: '/user/intake-norms'
+    updateIntakeNorms: '/user/intake-norms',
+    updateRecipe: '​/recipe/update-recipe/'
   },
 };
 
@@ -151,7 +152,6 @@ const updateCookedMeal = async (id: number, data: object) => {
 const updateIntakeNorm = async (data: object) => {
 
   const address = apiConfig.put.updateIntakeNorms;
-  console.log(data, 'gfdfgdfgdf986789546854654659')
   const response  = await api.patch(address, {intakeNorms: data})
   if (!response.ok) logError(response);
   return response;
@@ -212,8 +212,17 @@ const addCookedMeal = async (payload) => {
 };
 
 const getRecipeInfo = async (id: number) => {
-  const address = apiConfig.get.recipeInfo+id
+  const address = apiConfig.get.recipeInfo+id  
+  
   const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response
+}
+
+const getRecipes = async () => {
+  const address = apiConfig.get.recipeInfo
+  const response = await api.get(address);
+
   if (!response.ok) logError(response);
   return response
 }
@@ -221,14 +230,25 @@ const getRecipeInfo = async (id: number) => {
 const addRecipe = async (data: any)=> {
   const address = apiConfig.post.addRecipe;
   const response = await api.post(address, data);
-  console.log(response)
   if (!response.ok) logError(response);
   return response
 }
 
-const addRecipeAvatar = async (formData: FormData) => {
-  const address = apiConfig.post.addCookedMeal;
-  const response = await api(address, formData)
+const updateRecipe = async (id:number, {avatar, title, ingredientList, instruction}) => {
+  // const address = apiConfig.put.updateRecipe + id;
+  const params = {title, ingredientList, instruction};
+  const bodyParams = {}
+  Object.keys(params).forEach((el) => params[el] ? bodyParams[el] = params[el] : el)
+  const response = await api.patch(`http://10.4.30.212:8081/api/recipe/update-recipe/${id}`, bodyParams);
+  console.log(response, 'fdgdfgdfgdfgdfgd')
+  if (!response.ok) logError(response);
+  return response
+}
+
+const addRecipeAvatar = async (formData: FormData, id: number) => {
+  console.log(id, 'sgnkdfgjdfgjdfjg58946785467854786754')
+  const address = apiConfig.post.addRecipeAvatar + id;
+  const response = await api.post(address, formData)
   if (!response.ok) logError(response);
   return response
 }
@@ -356,4 +376,6 @@ export default {
   addRecipe,
   addRecipeAvatar,
   getRecipeInfo,
+  getRecipes,
+  updateRecipe,
 };

@@ -12,7 +12,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 
 
 const RecipeCard: FC<RecommendedMeals> = (props) => {
-  const { image, title, healthScore, vegetarian, vegan, glutenFree, dairyFree, popular, actionHandler } = props;
+  const { image, title, healthScore, vegetarian, vegan, glutenFree, dairyFree, popular, actionHandler, id, recipe } = props;
   const [state, setState] = useState<boolean>(false)
   const getImage = (vegetarian: boolean, vegan: boolean, glutenFree: boolean, dairyFree: boolean, popular: boolean) : Array<string> => {
     const iconsArray = []
@@ -31,6 +31,7 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
   return (
     <TouchableOpacity onPress={() => actionHandler(props)}>
     <View style={styles.container}>
+      {console.log(image)}
       <ImageBackground style={styles.imageContainer} source={{ uri: image }}>
         <LinearGradient
           start={[0, 0]}
@@ -42,13 +43,13 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
         >
           <View style={{ height: 80 }} />
           <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-            <HealthCircle
+            {recipe ? <View style={{width: 64, height: 64}}></View> : <HealthCircle
               showText
               radius={32}
               percentage={healthScore}
               textColor="white"
               background="#fff3"
-            />
+            />}
           {/* <Icon
           onPress={addFavourMeal}
           name={!state ? 'heart-outline' : 'heart'}
@@ -62,9 +63,9 @@ const RecipeCard: FC<RecommendedMeals> = (props) => {
       <View style={styles.infoContainer}>
         <Text type="bodyBold2">{title}</Text>
         <View style={styles.catagoryContainer}>
-          {getImage(vegetarian, vegan, glutenFree, dairyFree, popular).map((icon: string, index: number) => 
+          {/* {getImage(vegetarian, vegan, glutenFree, dairyFree, popular).map((icon: string, index: number) => 
             <SvgMaker key={index} style={styles.icons} name={icon} />
-           )}
+           )} */}
         </View>
       </View>
     </View>

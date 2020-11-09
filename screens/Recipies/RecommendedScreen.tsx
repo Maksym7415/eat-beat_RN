@@ -43,7 +43,7 @@ const RecommendedScreen: FC<Props> = (props) => {
           response.status?.toString(),
           `${response.problem}\n${JSON.stringify(response.config)}`
         );
-    console.log("getRecommendedMeals => request: ", response.ok);
+    // console.log("getRecommendedMeals => request: ", response.ok);
   };
 
   const actionHandler = async (props: RecommendedMeals) => {

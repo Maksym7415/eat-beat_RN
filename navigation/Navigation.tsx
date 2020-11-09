@@ -34,6 +34,8 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 // import NewRecipe from "../screens/Recipies/CreateRecipes";
 import NewRecipe from '../screens/Recipies/CreateRecipesScreen';
 import RecipeInfoScreen from '../screens/Recipies/RecipeInfoScreen';
+import IngradientScreen from "../screens/Recipies/IngradientsScreen";
+import InstructionScreen from "../screens/Recipies/InstructionScreen";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -91,10 +93,10 @@ const EditRecipeTopNAvigator = () => (
   initialRouteName="edit"
 >
   <TopTabs.Screen name="info" component={RecipeInfoScreen} />
-  <TopTabs.Screen name="ingradients" component={SearchScreen} />
+  <TopTabs.Screen name="ingradients" component={IngradientScreen} />
   <TopTabs.Screen
     name="instruction"
-    component={RecipiesScreen}
+    component={InstructionScreen}
     // options={{ title: "my recipies" }}
   />
 </TopTabs.Navigator>
@@ -249,13 +251,19 @@ export const RecommendedStack = () => {
               color={Col.White}
               size={24}
             />
-            ), 
+            ),
           })}
           component={NewRecipe}
         />
         <Stack.Screen
           name="user_recipe"
-          options={({ navigation, route }) => ({
+          options={({ navigation, route }) => {
+            const { toggleEdit, editMode } = useContext(AppContext);
+            const editing = {
+              edit: true,
+              close: false
+            }
+          return {
             title: route.params.title ,
             //headerShown: false,
             headerStyle: {
@@ -265,17 +273,25 @@ export const RecommendedStack = () => {
             headerTitleStyle: {
               color: "white",
             },
-            // headerLeft: () => (
-            //   <Icon
-            //   style={{marginLeft: 16}}
-            //   onPress={() => console.log(route, navigation)}
-            //   name={'arrow-back'}
-            //   color={Col.White}
-            //   size={24}
-            // />
-            // ),
-            headerLeft: null
-          })}
+            headerLeft: () => (
+              <Icon
+                style={{marginLeft: 16}}
+                onPress={() => navigation.navigate('user_recipies')}
+                name={'arrow-back'}
+                color={Col.White}
+                size={24}
+            />
+            ),
+            headerRight: () => (
+              <Icon
+                style={{marginRight: 16}}
+                onPress={() => toggleEdit(!editMode)}
+                name={!editMode ? 'edit' : 'close'}
+                color={Col.White}
+                size={24}
+            />
+            )
+          }}}
           component={EditRecipeTopNAvigator}
         />
     </Stack.Navigator>

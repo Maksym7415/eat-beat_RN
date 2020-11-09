@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { AppContext } from "../../components/AppContext";
 import { MaterialCommunityIcons as Icon, } from "@expo/vector-icons";
 import { Col, Spacing, Typ } from '../../components/Config';
 import Button from '../../components/custom/ConfirmationButton';
@@ -22,6 +23,7 @@ interface Data {
 
 export default function CreateRecipeScreen({ navigation }) {
 
+    const { getRecipeId } = useContext(AppContext);
     const [image, setImage] = useState<null>(null);
     const [data, setData] = useState<Data>({
         title: {
@@ -90,14 +92,14 @@ export default function CreateRecipeScreen({ navigation }) {
         })
         if(error) return;
         try{
-            const { data: id } = await server.addRecipe({
+            const { data: { id } } = await server.addRecipe({
                 title: data.title.value,
                 instruction: data.instruction.value,
                 ingredientList: data.ingredients.value
             })
-            //await server.addRecipeAvatar();
+            await server.addRecipeAvatar(formData, id);
+            getRecipeId(id)
             navigation.navigate('user_recipe', {
-                id,
                 title: data.title.value 
             })
         }catch(error){
@@ -218,8 +220,8 @@ const styles = StyleSheet.create({
     image: {
         width: '100%', 
         height: '100%',
-        borderTopEndRadius: 8,
-        borderTopStartRadius: 8,
+        // borderTopEndRadius: 8,
+        // borderTopStartRadius: 8,
     },
     editContainer: {
         minHeight: 109,
