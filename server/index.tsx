@@ -11,6 +11,9 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 
+
+  //process.env.ENVIRONMENT === 'production' ? process.env.API_BASE_PROD : process.env.ENVIRONMENT === 'development' ? process.env.API_BASE_DEV : process.env.API_BASE_TEST,
+
 const apiConfig: apiProps = {
   //baseURL: "http://10.4.30.212:8081/api",
   baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
@@ -57,7 +60,7 @@ const api = create({
   headers: {
     Accept: "application/vnd.github.v3+json",
   },
-  timeout: 10000,
+  timeout: 20000,
 });
 
 const setToken = async (token: cacheProps) => {
@@ -103,6 +106,7 @@ const setup = async () => {
 
 const logError = ({ problem, config, status, headers, data }: errorProps) => {
   //Alert.alert(problem);
+  Alert.alert('error',data?.message);
   console.log(config, "\nstatus => ", status, "\ndata => ", data);
   /*
   console.log(
@@ -234,14 +238,12 @@ const updateRecipe = async (
   id: number,
   { avatar, title, ingredientList, instruction }
 ) => {
-  const address = apiConfig.put.updateRecipe + id;
-  console.log(address);
   const params = { title, ingredientList, instruction };
   const bodyParams = {};
   Object.keys(params).forEach((el) =>
     params[el] ? (bodyParams[el] = params[el]) : el
   );
-  const response = await api.patch(address, bodyParams);
+  const response = await api.patch(`https://logisticbrocker.hopto.org/eat-beat/api/recipe/update-recipe/${id}`, bodyParams);
   if (!response.ok) logError(response);
   return response;
 };

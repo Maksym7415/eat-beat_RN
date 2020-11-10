@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing, Typ } from "../../components/Config";
@@ -37,7 +37,7 @@ export default function UserRecipes({ navigation }) {
     });
   };
 
-  return (
+  return feed.length ?  (
     <ScrollView>
       <View style={styles.container}>
         {feed.map((el, index) => (
@@ -61,6 +61,10 @@ export default function UserRecipes({ navigation }) {
         ftw={"500"}
       />
     </ScrollView>
+  ) : (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
+    </View>
   );
 }
 
@@ -73,5 +77,12 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: "50%",
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.medium,
+    backgroundColor: Col.Background,
   },
 });
