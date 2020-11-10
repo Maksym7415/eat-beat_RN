@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing, Typ } from "../../components/Config";
@@ -15,22 +15,24 @@ export default function IngradientScreen({ navigation }) {
   const [value, setValue] = useState<string>("");
 
   const getRecipeInfo = useCallback(async () => {
-    const { data } = await server.getRecipeInfo(recipeId);
-    // console.log(data, 'dsfdsjfdkjsfsdfkjskj234234124782784358458734875458934')
-    setFeed({
-      title: data.title,
-      instruction: data.instruction,
-      mainNutrients: data.nutrition.nutrients.filter(
-        (el) =>
-          el.title === "Calories" ||
-          el.title === "Protein" ||
-          el.title === "Fat" ||
-          el.title === "Carbs"
-      ),
-      nutrients: data.nutrition.nutrients,
-      servings: data.servings,
-      ingredients: data.nutrition.ingredients,
-    });
+    const { data, ok } = await server.getRecipeInfo(recipeId);
+    if(ok) {
+        setFeed({
+            title: data.title,
+            instruction: data.instruction,
+            mainNutrients: data.nutrition.nutrients.filter(
+              (el) =>
+                el.title === "Calories" ||
+                el.title === "Protein" ||
+                el.title === "Fat" ||
+                el.title === "Carbs"
+            ),
+            nutrients: data.nutrition.nutrients,
+            servings: data.servings,
+            ingredients: data.nutrition.ingredients,
+        });
+    }
+    
   }, [recipeId]);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function IngradientScreen({ navigation }) {
     toggleEdit(false);
   };
 
-  return (
+  return Object.keys(feed).length ? (
     <ScrollView contentContainerStyle={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         {!editMode ? (
@@ -149,6 +151,10 @@ export default function IngradientScreen({ navigation }) {
         )}
       </View>
     </ScrollView>
+  ) : (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
+    </View>
   );
 }
 
@@ -172,5 +178,12 @@ const styles = StyleSheet.create({
   },
   btnConatiner: {
     paddingHorizontal: 16,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.medium,
+    backgroundColor: Col.Background,
   },
 });

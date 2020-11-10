@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
@@ -30,6 +31,10 @@ interface Data {
 export default function CreateRecipeScreen({ navigation }) {
   const { getRecipeId } = useContext(AppContext);
   const [image, setImage] = useState<null>(null);
+  const [loading, setLoading] = useState<object>({
+      loading: false,
+      disabled: false
+  });
   const [data, setData] = useState<Data>({
     title: {
       title: "title",
@@ -104,23 +109,28 @@ export default function CreateRecipeScreen({ navigation }) {
       return obj;
     });
     if (error) return;
-    try {
+    setLoading({...loading, loading: true, disabled: true});
       const {
         data: { id },
+        ok
       } = await server.addRecipe({
         title: data.title.value,
         instruction: data.instruction.value,
         ingredientList: data.ingredients.value,
       });
-      console.log(id);
-      await server.addRecipeAvatar(formData, id);
-      getRecipeId(id);
-      navigation.navigate("user_recipe", {
-        title: data.title.value,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      if(ok) 
+        {
+            
+            const res = await server.addRecipeAvatar(formData, id);
+            getRecipeId(id);
+            setLoading({...loading, loading: false, disabled: false});
+            navigation.navigate("user_recipe", {
+                title: data.title.value,
+        });
+      }
+    
+      setLoading({...loading, loading: false, disabled: false});
+
   };
 
   return (
@@ -162,6 +172,11 @@ export default function CreateRecipeScreen({ navigation }) {
             ) : null}
           </View>
         </View>
+        {loading.loading && (
+            <View style={styles.loading}>
+            <ActivityIndicator size="large" color={Col.Black} />
+            </View>
+        )}
         <View style={styles.editContainer}>
           <Text style={{ marginBottom: 10 }}>Ingradients*</Text>
           <TextInput
@@ -197,14 +212,16 @@ export default function CreateRecipeScreen({ navigation }) {
           textColor={Col.White}
           fts={Typ.Small}
           ftw={"500"}
+          disabled={loading.disabled}
         />
         <Button
           title={"Cancel"}
-          onClickHandler={() => console.log(2)}
+          onClickHandler={() => navigation.navigate('user_recipies')}
           bckColor={""}
           textColor={"#7A7A7A"}
           fts={Typ.Small}
           ftw={"500"}
+          disabled={loading.disabled}
         />
       </View>
     </ScrollView>
@@ -259,4 +276,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   iconEdit: {},
+  loading: {
+        flex: 1,
+        zIndex: 10,
+        position: 'absolute',
+        top: '50%',
+        right: '45%',
+        justifyContent: "center",
+        alignItems: "center",
+        padding: Spacing.medium,
+        // backgroundColor: Col.Background,
+    },
 });

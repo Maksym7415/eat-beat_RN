@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, FC } from "react";
-import { ScrollView, StyleSheet, View, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import server from "../../server";
 import RecipeCard from "../../components/custom/RecipeCard";
 import EditModal from "../../components/newEditModal";
@@ -35,7 +35,7 @@ type AddMealsFun = (id: number, props: AddMealsProps) => void;
 const SearchScreen: FC<NavProps> = ({ navigation }) => {
   const { isShow, showModal, calendar } = useContext<Memo>(AppContext);
   const [state, setState] = useState<string>("");
-  const [feed, setFeed] = useState<RecommendedMeals[]>([]);
+  const [feed, setFeed] = useState<RecommendedMeals[] | null>(null);
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
     diets: [],
@@ -67,8 +67,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
+      setFeed([]);
+      showModal(false);
     const response = await server.getRecipeByName(state, config);
-    showModal(false);
     if (response.ok) setFeed(response.data);
   };
 
@@ -166,13 +167,20 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <ScrollView>
-        <View style={styles.container}>
+        {feed?.length ? <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
               <RecipeCard details={item} actionHandler={actionHandler} />
             </View>
           ))}
-        </View>
+        </View> 
+        : feed && 
+        (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color={Col.Black} />
+          </View>
+        )
+        }
       </ScrollView>
     </View>
   );
@@ -198,5 +206,12 @@ const styles = StyleSheet.create({
     padding: Spacing.r_small,
     backgroundColor: Col.White,
   },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.medium,
+    backgroundColor: Col.Background,
+},
 });
 export default SearchScreen;
