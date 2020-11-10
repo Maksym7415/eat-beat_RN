@@ -9,7 +9,7 @@ import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 
 export default function UserRecipes({ navigation }) {
-  const [feed, setFeed] = useState([]);
+  const [feed, setFeed] = useState(null);
   const { getRecipeId } = useContext(AppContext);
 
   const getData = async () => {
@@ -37,20 +37,21 @@ export default function UserRecipes({ navigation }) {
     });
   };
 
-  return feed.length ?  (
+  return feed !== null ? (
     <ScrollView>
       <View style={styles.container}>
-        {feed.map((el, index) => (
-          <View key={`${index}`} style={styles.cardContainer}>
-            <CreatedRecipeCard
-              title={el.title}
-              actionHandler={actionHandler}
-              id={el.id}
-              image={`https://logisticbrocker.hopto.org/eat-beat/${el.recipe.image}`}
-              recipe={true}
-            />
-          </View>
-        ))}
+        {feed &&
+          feed.map((el, index) => (
+            <View key={`${index}`} style={styles.cardContainer}>
+              <CreatedRecipeCard
+                title={el.title}
+                actionHandler={actionHandler}
+                id={el.id}
+                image={`https://logisticbrocker.hopto.org/eat-beat/${el.recipe.image}`}
+                recipe={true}
+              />
+            </View>
+          ))}
       </View>
       <Button
         title={"NEW RECIPE"}

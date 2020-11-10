@@ -110,8 +110,7 @@ const DrawerLayout = (props) => {
         />
         <View
           style={{
-            flexGrow: 1,
-            justifyContent: "center",
+            flex: 1,
             alignItems: "center",
           }}
         >
