@@ -62,7 +62,11 @@ export interface Memo {
   pushData: () => void;
   isFetching: () => void;
   showModal: (value: boolean) => void;
+  recipeId: number;
+  getRecipeId: (id: number) => void;
   isShow: boolean;
+  editMode: boolean;
+  toggleEdit: (v: boolean) => void;
 }
 
 export interface CalendarInterface {

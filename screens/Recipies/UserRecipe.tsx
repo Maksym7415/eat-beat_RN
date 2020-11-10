@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
-import { Col, Spacing, Typ } from "../../components/Config";
-import Button from "../../components/custom/ConfirmationButton";
+import { Col, Spacing } from "../../components/Config";
+import { Memo } from "../../components/interfaces";
+import { Button } from "../../components/MyComponents";
 import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 
 export default function UserRecipes({ navigation }) {
-  const [feed, setFeed] = useState(null);
-  const { getRecipeId } = useContext(AppContext);
+  const [feed, setFeed] = useState<null | []>(null);
+  const { getRecipeId } = useContext<Memo>(AppContext);
 
   const getData = async () => {
     const { data, ok } = await server.getRecipes();
@@ -30,6 +31,12 @@ export default function UserRecipes({ navigation }) {
     };
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
+
   const actionHandler = ({ id, title }) => {
     getRecipeId(id);
     navigation.navigate("user_recipe", {
@@ -38,30 +45,34 @@ export default function UserRecipes({ navigation }) {
   };
 
   return feed !== null ? (
-    <ScrollView>
-      <View style={styles.container}>
-        {feed &&
-          feed.map((el, index) => (
-            <View key={`${index}`} style={styles.cardContainer}>
-              <CreatedRecipeCard
-                title={el.title}
-                actionHandler={actionHandler}
-                id={el.id}
-                image={`https://logisticbrocker.hopto.org/eat-beat/${el.recipe.image}`}
-                recipe={true}
-              />
-            </View>
-          ))}
+    <View style={{ flex: 1, backgroundColor: Col.Background }}>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <View style={styles.container}>
+          {feed ? (
+            feed.map(({ id, title, recipe }, index) => (
+              <View key={`${index + title}`} style={styles.cardContainer}>
+                <CreatedRecipeCard
+                  id={id}
+                  recipe={true}
+                  title={title}
+                  actionHandler={actionHandler}
+                  image={`https://logisticbrocker.hopto.org/eat-beat/${recipe.image}`}
+                />
+              </View>
+            ))
+          ) : (
+            <View />
+          )}
+        </View>
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <Button
+          label="NEW RECIPE"
+          onPress={() => navigation.navigate("new")}
+          style={{ backgroundColor: Col.Recipes }}
+        />
       </View>
-      <Button
-        title={"NEW RECIPE"}
-        onClickHandler={() => navigation.navigate("new")}
-        bckColor={Col.Green1}
-        textColor={Col.White}
-        fts={Typ.Small}
-        ftw={"500"}
-      />
-    </ScrollView>
+    </View>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
@@ -85,5 +96,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
+  },
+  buttonContainer: {
+    padding: Spacing.medium,
   },
 });

@@ -82,7 +82,6 @@ const getToken = async () => {
 
 const getRefresh = async () => {
   const token = await AsyncStorage.getItem("@token");
-  console.log(token);
   return token ? JSON.parse(token).refreshToken : null;
 };
 
@@ -115,18 +114,8 @@ const setup = async () => {
 };
 
 const logError = ({ problem, config, status, headers, data }: errorProps) => {
-  //Alert.alert(problem);
-  Alert.alert("error", data?.message);
+  //Alert.alert("error", data?.message);
   console.log(config, "\nstatus => ", status, "\ndata => ", data);
-  /*
-  console.log(
-    "Error------\nproblem => ",
-    problem,
-    "\ndata => ",
-    data,
-    "\nco => ",
-    config
-  );*/
 };
 
 const getCalendar = (value: Date) => {
@@ -319,7 +308,6 @@ const updateIntakeNorms = () => {
 
 const updateProfile = async (data: object) => {
   const address = apiConfig.put.profile;
-  console.log(data, "updateProfile");
   const response = await api.patch(address, data);
   return response.ok;
 };
@@ -379,7 +367,6 @@ const changeURL = () => {
     current === apiConfig.testURL ? apiConfig.baseURL : apiConfig.testURL;
   api.setBaseURL(change);
   Alert.alert("change", `changed from: ${current}\nto: ${change}`);
-  console.log("changed base url");
 };
 
 export default {

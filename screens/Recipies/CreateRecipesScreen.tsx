@@ -3,19 +3,19 @@ import * as ImagePicker from "expo-image-picker";
 import {
   StyleSheet,
   View,
-  Text,
-  TouchableOpacity,
   Image,
   ScrollView,
   ActivityIndicator,
+  Alert,
+  Pressable,
 } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { Col, Spacing, Typ } from "../../components/Config";
-import Button from "../../components/custom/ConfirmationButton";
-import { Divider } from "../../components/MyComponents";
+import { Col, Spacing } from "../../components/Config";
+import { Button, Divider } from "../../components/MyComponents";
 import { TextInput } from "react-native-gesture-handler";
 import server from "../../server";
+import Text from "../../components/custom/Typography";
 
 interface Item {
   title: string;
@@ -28,12 +28,17 @@ interface Data {
   [key: string]: Item;
 }
 
+interface Loading {
+  loading: boolean;
+  disabled: boolean;
+}
+
 export default function CreateRecipeScreen({ navigation }) {
   const { getRecipeId } = useContext(AppContext);
   const [image, setImage] = useState<null>(null);
-  const [loading, setLoading] = useState<object>({
-      loading: false,
-      disabled: false
+  const [loading, setLoading] = useState<Loading>({
+    loading: false,
+    disabled: false,
   });
   const [data, setData] = useState<Data>({
     title: {
@@ -55,6 +60,23 @@ export default function CreateRecipeScreen({ navigation }) {
       error: "",
     },
   });
+
+  const checkPermission = async () => {
+    const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
+    if (granted) {
+      pickAvatar();
+    } else {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status === "granted") {
+        pickAvatar();
+      } else {
+        Alert.alert(
+          "Access Permission",
+          "Sorry, we need camera roll permissions to make this work!"
+        );
+      }
+    }
+  };
 
   const pickAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -95,12 +117,10 @@ export default function CreateRecipeScreen({ navigation }) {
         type: `image/${fileType}`,
       });
     }
-
     let error = false;
     setData((state) => {
       const obj: Data = {};
       Object.values(state).forEach((item: Item) => {
-        console.log(item);
         if (!item.value && item.title !== "instruction") {
           obj[item.title] = { ...item, error: "This field can not be empty" };
           error = true;
@@ -109,89 +129,80 @@ export default function CreateRecipeScreen({ navigation }) {
       return obj;
     });
     if (error) return;
-    setLoading({...loading, loading: true, disabled: true});
-      const {
-        data: { id },
-        ok
-      } = await server.addRecipe({
+    setLoading({ ...loading, loading: true, disabled: true });
+    const {
+      data: { id },
+      ok,
+    } = await server.addRecipe({
+      title: data.title.value,
+      instruction: data.instruction.value,
+      ingredientList: data.ingredients.value,
+    });
+    if (ok) {
+      const res = await server.addRecipeAvatar(formData, id);
+      getRecipeId(id);
+      setLoading({ ...loading, loading: false, disabled: false });
+      navigation.navigate("user_recipe", {
         title: data.title.value,
-        instruction: data.instruction.value,
-        ingredientList: data.ingredients.value,
       });
-      if(ok) 
-        {
-            
-            const res = await server.addRecipeAvatar(formData, id);
-            getRecipeId(id);
-            setLoading({...loading, loading: false, disabled: false});
-            navigation.navigate("user_recipe", {
-                title: data.title.value,
-        });
-      }
-    
-      setLoading({...loading, loading: false, disabled: false});
-
+    }
+    setLoading({ ...loading, loading: false, disabled: false });
   };
 
+  if (loading.loading)
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
+
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scroll}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <View style={styles.imageContainer}>
-            <View
-              style={{
-                position: "absolute",
-                left: "40%",
-                top: "35%",
-                zIndex: 10,
-                opacity: 0.5,
-              }}
-            >
-              <TouchableOpacity onPress={pickAvatar}>
-                <Icon name={"camera-plus"} color={Col.Grey1} size={58} />
-              </TouchableOpacity>
+          <Pressable onPress={checkPermission}>
+            <View style={styles.imageContainer}>
+              {image ? (
+                <Image source={{ uri: image }} style={styles.image} />
+              ) : (
+                <Icon name={"camera-plus"} color={Col.White} size={58} />
+              )}
             </View>
-            {image && <Image source={{ uri: image }} style={styles.image} />}
-          </View>
-          <Divider styler={styles.divider} />
-          <View style={{ paddingHorizontal: 16 }}>
+          </Pressable>
+          <Divider />
+          <View style={{ paddingHorizontal: Spacing.medium }}>
             <Text style={{ marginBottom: 10 }}>Title*</Text>
             <TextInput
               value={data.title.value}
               onChangeText={(text) => onCnangeHandler(text, "title")}
               placeholder={"Add recipe title"}
               style={{
-                borderColor: data.title.error ? "#FF364F" : Col.Grey2,
+                borderColor: data.title.error ? Col.Error : Col.Grey2,
                 borderBottomWidth: 1,
               }}
             />
             {data.title.error ? (
-              <Text style={{ color: "#FF364F", marginTop: 10 }}>
-                {data.title.error}{" "}
+              <Text style={{ color: Col.Error, marginTop: 10 }}>
+                {data.title.error}
               </Text>
             ) : null}
           </View>
         </View>
-        {loading.loading && (
-            <View style={styles.loading}>
-            <ActivityIndicator size="large" color={Col.Black} />
-            </View>
-        )}
         <View style={styles.editContainer}>
           <Text style={{ marginBottom: 10 }}>Ingradients*</Text>
           <TextInput
             value={data.ingredients.value}
             onChangeText={(text) => onCnangeHandler(text, "ingredients")}
             style={{
-              borderColor: data.ingredients.error ? "#FF364F" : Col.Grey2,
+              borderColor: data.ingredients.error ? Col.Error : Col.Grey2,
               borderBottomWidth: 1,
             }}
             placeholder={"One ingredient per line"}
             multiline
           />
           {data.ingredients.error ? (
-            <Text style={{ color: "#FF364F", marginTop: 10 }}>
-              {data.ingredients.error}{" "}
+            <Text style={{ color: Col.Error, marginTop: 10 }}>
+              {data.ingredients.error}
             </Text>
           ) : null}
         </View>
@@ -205,23 +216,19 @@ export default function CreateRecipeScreen({ navigation }) {
             multiline
           />
         </View>
+      </View>
+      <View style={styles.buttonContainer}>
         <Button
-          title={"SAVE"}
-          onClickHandler={saveChanges}
-          bckColor={Col.Green1}
-          textColor={Col.White}
-          fts={Typ.Small}
-          ftw={"500"}
-          disabled={loading.disabled}
+          label="SAVE"
+          onPress={saveChanges}
+          style={{ backgroundColor: Col.Recipes }}
         />
         <Button
-          title={"Cancel"}
-          onClickHandler={() => navigation.navigate('user_recipies')}
-          bckColor={""}
-          textColor={"#7A7A7A"}
-          fts={Typ.Small}
-          ftw={"500"}
-          disabled={loading.disabled}
+          label="CANCEL"
+          type="text"
+          onPress={() => navigation.navigate("user_recipies")}
+          style={{ marginVertical: 0 }}
+          labelStyle={{ color: Col.Grey }}
         />
       </View>
     </ScrollView>
@@ -229,9 +236,14 @@ export default function CreateRecipeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: Col.Background,
+  },
   container: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    flexGrow: 1,
+    paddingHorizontal: Spacing.medium,
+    paddingVertical: Spacing.r_small,
   },
   border: {
     borderColor: Col.Grey2,
@@ -239,14 +251,9 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: Col.White,
-    paddingBottom: 23,
+    paddingBottom: Spacing.large,
     borderRadius: 8,
-    marginBottom: 12,
-  },
-  divider: {
-    borderBottomWidth: 1,
-    marginVertical: Spacing.small,
-    borderBottomColor: Col.Divider,
+    marginBottom: Spacing.r_small,
   },
   imageContainer: {
     height: 194,
@@ -255,36 +262,39 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopEndRadius: 8,
     borderTopStartRadius: 8,
+    overflow: "hidden",
   },
   image: {
     width: "100%",
     height: "100%",
-    // borderTopEndRadius: 8,
-    // borderTopStartRadius: 8,
   },
   editContainer: {
     minHeight: 109,
     backgroundColor: Col.White,
     borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginBottom: 12,
+    paddingHorizontal: Spacing.medium,
+    paddingVertical: Spacing.r_small,
+    marginBottom: Spacing.r_small,
   },
   editText: {
     width: "90%",
     fontWeight: "500",
     fontSize: 20,
   },
-  iconEdit: {},
   loading: {
-        flex: 1,
-        zIndex: 10,
-        position: 'absolute',
-        top: '50%',
-        right: '45%',
-        justifyContent: "center",
-        alignItems: "center",
-        padding: Spacing.medium,
-        // backgroundColor: Col.Background,
-    },
+    flex: 1,
+    zIndex: 10,
+    position: "absolute",
+    top: "50%",
+    right: "45%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Spacing.medium,
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    paddingHorizontal: Spacing.medium,
+    paddingBottom: Spacing.medium,
+  },
 });

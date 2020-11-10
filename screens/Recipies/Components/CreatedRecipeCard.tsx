@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -8,28 +8,21 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Col, Spacing } from "../../../components/Config";
 import Text from "../../../components/custom/Typography";
-import { RecommendedMeals } from "../../../components/interfaces";
 
-const CreatedRecipeCard: FC<RecommendedMeals> = (props) => {
-  const {
-    image,
-    title,
-    healthScore,
-    vegetarian,
-    vegan,
-    glutenFree,
-    dairyFree,
-    popular,
-    actionHandler,
-    id,
-    recipe,
-  } = props;
-  const [state, setState] = useState<boolean>(false);
+interface Props {
+  id: number;
+  recipe: boolean;
+  image: string;
+  title: string;
+  actionHandler: (props: Props) => void;
+}
+
+const CreatedRecipeCard: FC<Props> = (props) => {
+  const { id, recipe, image, title, actionHandler } = props;
 
   return (
     <TouchableOpacity onPress={() => actionHandler(props)}>
       <View style={styles.container}>
-        {console.log(image)}
         <ImageBackground style={styles.imageContainer} source={{ uri: image }}>
           <LinearGradient
             start={[0, 0]}

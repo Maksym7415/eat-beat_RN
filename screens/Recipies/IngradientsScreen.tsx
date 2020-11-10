@@ -2,9 +2,8 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
-import { Col, Spacing, Typ } from "../../components/Config";
-import Button from "../../components/custom/ConfirmationButton";
-import { Divider } from "../../components/MyComponents";
+import { Col, Spacing } from "../../components/Config";
+import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
 import IngradientRow from "./Components/IngradientRow";
 
@@ -16,23 +15,23 @@ export default function IngradientScreen({ navigation }) {
 
   const getRecipeInfo = useCallback(async () => {
     const { data, ok } = await server.getRecipeInfo(recipeId);
-    if(ok) {
-        setFeed({
-            title: data.title,
-            instruction: data.instruction,
-            mainNutrients: data.nutrition.nutrients.filter(
-              (el) =>
-                el.title === "Calories" ||
-                el.title === "Protein" ||
-                el.title === "Fat" ||
-                el.title === "Carbs"
-            ),
-            nutrients: data.nutrition.nutrients,
-            servings: data.servings,
-            ingredients: data.nutrition.ingredients,
-        });
+    if (ok) {
+      const { title, instruction, servings, nutrition } = data;
+      setFeed({
+        title,
+        servings,
+        instruction,
+        nutrients: nutrition.nutrients,
+        ingredients: nutrition.ingredients,
+        mainNutrients: nutrition.nutrients.filter(
+          (el) =>
+            el.title === "Calories" ||
+            el.title === "Protein" ||
+            el.title === "Fat" ||
+            el.title === "Carbs"
+        ),
+      });
     }
-    
   }, [recipeId]);
 
   useEffect(() => {
@@ -91,27 +90,18 @@ export default function IngradientScreen({ navigation }) {
             </View>
             <View style={{ ...styles.btnConatiner, marginTop: 8 }}>
               <Button
-                title={"Add selected products to My Shoppping List"}
-                onClickHandler={() => toggleEdit(!editMode)}
-                bckColor={Col.Green1}
-                textColor={Col.White}
-                fts={Typ.Small}
-                ftw={"500"}
-                disabled={
-                  !Object.values(checked).filter((el) => el).length
-                    ? true
-                    : false
-                }
+                label="Add selected products to My Shoppping List"
+                onPress={() => toggleEdit(!editMode)}
+                style={{ backgroundColor: Col.Recipes }}
+                deactivate={!Object.values(checked).filter((el) => el).length}
               />
             </View>
             <View style={styles.btnConatiner}>
               <Button
-                title={"Add recipe to my meals"}
-                onClickHandler={() => toggleEdit(!editMode)}
-                bckColor={Col.Green1}
-                textColor={Col.White}
-                fts={Typ.Small}
-                ftw={"500"}
+                label="Add recipe to my meals"
+                onPress={() => toggleEdit(!editMode)}
+                style={{ backgroundColor: Col.Recipes }}
+                deactivate={!Object.values(checked).filter((el) => el).length}
               />
             </View>
           </View>
@@ -129,22 +119,16 @@ export default function IngradientScreen({ navigation }) {
 
               <Divider styler={styles.divider} />
             </View>
-            <View>
+            <View style={styles.buttonContainer}>
               <Button
-                title={"SAVE"}
-                onClickHandler={saveChanges}
-                bckColor={Col.Green1}
-                textColor={Col.White}
-                fts={Typ.Small}
-                ftw={"500"}
+                label="SAVE"
+                onPress={() => toggleEdit(!editMode)}
+                style={{ backgroundColor: Col.Recipes }}
               />
               <Button
-                title={"Cancel"}
-                onClickHandler={() => toggleEdit(!editMode)}
-                bckColor={""}
-                textColor={"#7A7A7A"}
-                fts={Typ.Small}
-                ftw={"500"}
+                label="CANCEL"
+                onPress={() => toggleEdit(!editMode)}
+                style={{ backgroundColor: Col.Recipes }}
               />
             </View>
           </View>
@@ -185,5 +169,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
+  },
+  buttonContainer: {
+    flex: 1,
+    padding: Spacing.medium,
   },
 });

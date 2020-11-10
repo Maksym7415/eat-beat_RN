@@ -107,7 +107,7 @@ const UserSettings: FC<Props> = ({
         ) : (
           <View />
         )}
-        <View style={{ padding: Spacing.medium }}>
+        <View style={styles.buttonContainer}>
           <Button
             label="SAVE CHANGES"
             onPress={() =>
@@ -138,6 +138,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginVertical: Spacing.small,
+  },
+  buttonContainer: {
+    flex: 1,
+    padding: Spacing.medium,
+    justifyContent: "flex-end",
   },
 });
 export default UserSettings;

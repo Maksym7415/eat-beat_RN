@@ -1,19 +1,17 @@
 import "react-native-gesture-handler";
 import React, { useContext } from "react";
 import { Col } from "../components/Config";
+import { AppContext } from "../components/AppContext";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer, DrawerActions } from "@react-navigation/native";
-import DiaryScreen from "../screens/Diary/DiaryScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
-import RecipiesScreen from "../screens/Recipies/RecipiesScreen";
-import TechScreen from "../screens/Tech/TechScreen";
 import Register from "../screens/Auth/RegisterScreen";
 import Login from "../screens/Auth/LoginScreen";
 import Restore from "../screens/Auth/RestoreScreen";
 import HomeScreen from "../screens/Home/HomeScreen";
-
 import MealsScreen from "../screens/Home/MealsScreen";
 import HistoryScreen from "../screens/Home/HistoryScreen";
 import CalendarButton from "./common/CalendarButton";
@@ -25,15 +23,10 @@ import Success from "../screens/Auth/SuccessScreen";
 import Confirmation from "../screens/Auth/ConfirmationScreen";
 import ChangePassword from "../screens/Auth/ChangePassword";
 import ResetSuccess from "../screens/Auth/ResetSuccessScreen";
-
 import PersonalDataScreen from "../screens/Profile/PersonalDataScreen";
 import FoodPreferences from "../screens/Profile/FoodPreferences";
-import { AppContext } from "../components/AppContext";
 import DialyNorm from "../screens/Profile/DailyNorm";
 import UserRecipes from "../screens/Recipies/UserRecipe";
-
-import { MaterialIcons as Icon } from "@expo/vector-icons";
-// import NewRecipe from "../screens/Recipies/CreateRecipes";
 import NewRecipe from "../screens/Recipies/CreateRecipesScreen";
 import RecipeInfoScreen from "../screens/Recipies/RecipeInfoScreen";
 import IngradientScreen from "../screens/Recipies/IngradientsScreen";
@@ -74,7 +67,6 @@ const HomeTopNavigator = () => (
       indicatorStyle: {
         backgroundColor: Col.Main,
       },
-      //scrollEnabled: true,
     }}
     initialRouteName="home"
   >
@@ -92,18 +84,14 @@ const EditRecipeTopNAvigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Green1,
+        backgroundColor: Col.Recipes,
       },
     }}
-    initialRouteName="edit"
+    initialRouteName="info"
   >
     <TopTabs.Screen name="info" component={RecipeInfoScreen} />
     <TopTabs.Screen name="ingradients" component={IngradientScreen} />
-    <TopTabs.Screen
-      name="instruction"
-      component={InstructionScreen}
-      // options={{ title: "my recipies" }}
-    />
+    <TopTabs.Screen name="instruction" component={InstructionScreen} />
   </TopTabs.Navigator>
 );
 
@@ -197,6 +185,7 @@ export const MainStack = () => {
 };
 
 export const RecommendedStack = () => {
+  const { toggleEdit, editMode } = useContext(AppContext);
   return (
     <Stack.Navigator initialRouteName="recommendedPage">
       <Stack.Screen
@@ -225,11 +214,10 @@ export const RecommendedStack = () => {
               }
               return "";
             },
-
-            title: "Eating at a Resturant",
+            title: "Recipes",
             headerStyle: {
               elevation: 1,
-              backgroundColor: Col.Green1,
+              backgroundColor: Col.Recipes,
             },
             headerTitleStyle: {
               color: "white",
@@ -246,7 +234,7 @@ export const RecommendedStack = () => {
           //headerShown: false,
           headerStyle: {
             elevation: 0,
-            backgroundColor: Col.Green1,
+            backgroundColor: Col.Recipes,
           },
           headerTitleStyle: {
             color: "white",
@@ -265,42 +253,34 @@ export const RecommendedStack = () => {
       />
       <Stack.Screen
         name="user_recipe"
-        options={({ navigation, route }) => {
-          const { toggleEdit, editMode } = useContext(AppContext);
-          const editing = {
-            edit: true,
-            close: false,
-          };
-          return {
-            title: route.params.title,
-            //headerShown: false,
-            headerStyle: {
-              elevation: 0,
-              backgroundColor: Col.Green1,
-            },
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerLeft: () => (
-              <Icon
-                style={{ marginLeft: 16 }}
-                onPress={() => navigation.navigate("user_recipies")}
-                name={"arrow-back"}
-                color={Col.White}
-                size={24}
-              />
-            ),
-            headerRight: () => (
-              <Icon
-                style={{ marginRight: 16 }}
-                onPress={() => toggleEdit(!editMode)}
-                name={!editMode ? "edit" : "close"}
-                color={Col.White}
-                size={24}
-              />
-            ),
-          };
-        }}
+        options={({ navigation, route }) => ({
+          title: route.params.title,
+          headerStyle: {
+            elevation: 0,
+            backgroundColor: Col.Recipes,
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerLeft: () => (
+            <Icon
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.navigate("user_recipies")}
+              name={"arrow-back"}
+              color={Col.White}
+              size={24}
+            />
+          ),
+          headerRight: () => (
+            <Icon
+              style={{ marginRight: 16 }}
+              onPress={() => toggleEdit(!editMode)}
+              name={!editMode ? "edit" : "close"}
+              color={Col.White}
+              size={24}
+            />
+          ),
+        })}
         component={EditRecipeTopNAvigator}
       />
     </Stack.Navigator>

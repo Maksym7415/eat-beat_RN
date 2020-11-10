@@ -70,7 +70,7 @@ export default function App() {
     setLogged(true);
   };
 
-  const getId = (id) => {
+  const getId = (id: number) => {
     setRecipeId(id);
   };
 
@@ -85,7 +85,6 @@ export default function App() {
       getData: () => getUserData(),
       pushData: () => console.log("push data"),
       isFetching: () => setFetching(fetching + 1),
-
       showModal: (value: boolean) => {
         setShow(value);
       },

@@ -58,36 +58,37 @@ export default function RecipeInfoScreen({ navigation }) {
   };
 
   const onCnangeHandler = (text: string, name: string) => {
-    setData((state) => ({
-      ...state,
+    setData({
+      ...data,
       [name]: {
-        ...state[name],
+        ...data[name],
         value: text,
         error:
-          text.length > state[name].max
-            ? `Title length can not be more than ${state[name].max} symbols`
+          text.length > data[name].max
+            ? `Title length can not be more than ${data[name].max} symbols`
             : "",
       },
-    }));
+    });
   };
 
   const getRecipeInfo = useCallback(async () => {
-    const { data, ok } = await server.getRecipeInfo(recipeId);
-    if (ok) {
+    const response = await server.getRecipeInfo(recipeId);
+    if (response.ok) {
+      const { title, instruction, nutrition, servings, image } = response.data;
       setFeed({
-        title: data.title,
-        instruction: data.instruction,
-        mainNutrients: data.nutrition.nutrients.filter(
+        title,
+        instruction,
+        mainNutrients: nutrition.nutrients.filter(
           (el) =>
             el.title === "Calories" ||
             el.title === "Protein" ||
             el.title === "Fat" ||
             el.title === "Carbs"
         ),
-        nutrients: data.nutrition.nutrients,
-        servings: data.servings,
-        ingredients: data.nutrition.ingredient,
-        uri: data.image,
+        nutrients: nutrition.nutrients,
+        servings,
+        ingredients: nutrition.ingredient,
+        uri: image,
       });
     }
   }, [recipeId]);
