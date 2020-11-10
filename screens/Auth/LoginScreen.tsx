@@ -31,11 +31,6 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
-  const changeBaseURL = async () => {
-    server.changeURL();
-    console.log("hi");
-  };
-
   return (
     <View style={styles.container}>
       <Text
@@ -47,9 +42,9 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           fontSize: 14,
         }}
       >
-        v 0.1.2
+        v 0.1.4
       </Text>
-      <Logo onLongPress={() => changeBaseURL()} />
+      <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Login

@@ -14,10 +14,12 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
   const [newValue, setNewValue] = useState("");
   const [edit, setEdit] = useState(false);
   const onSubmit = () => {
-    value.length > 5 && value !== newValue && newValue.length > 5
-      ? onEdit(value, newValue)
-      : setValue("");
+    if (value.length > 5 && value !== newValue && newValue.length > 5) {
+      onEdit(value, newValue);
+    }
     setEdit(!edit);
+    setValue("");
+    setNewValue("");
   };
   return (
     <View style={styles.container}>

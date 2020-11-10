@@ -59,6 +59,12 @@ export default function App() {
     }
   };
 
+  const loadDocs = async () => {
+    const response = await server.getDocs();
+    if (response.ok)
+      await AsyncStorage.mergeItem("@doc", JSON.stringify(response.data.data));
+  };
+
   const loginHandler = async () => {
     await getUserData();
     setLogged(true);
@@ -66,7 +72,6 @@ export default function App() {
 
   const getId = (id) => {
     setRecipeId(id);
-    console.log(id, 1234567890987654321);
   };
 
   const appContext = useMemo(
@@ -82,7 +87,6 @@ export default function App() {
       isFetching: () => setFetching(fetching + 1),
 
       showModal: (value: boolean) => {
-        //console.log(value)
         setShow(value);
       },
       recipeId,
@@ -96,6 +100,7 @@ export default function App() {
 
   useEffect(() => {
     loadUser();
+    loadDocs();
   }, [logged]);
 
   return (

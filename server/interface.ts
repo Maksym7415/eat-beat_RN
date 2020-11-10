@@ -13,6 +13,8 @@ export interface apiProps {
     verification: string;
     resetPassword: string;
     recipeInfo: string;
+    docs: string
+    userAcitvities:string
   };
   post: {
     addCookedMeal: string;

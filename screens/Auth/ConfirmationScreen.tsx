@@ -64,7 +64,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
             <>
               <FormikInput
                 value="verificationCode"
-                label="verification Code"
+                label="Enter your code"
                 error={error}
                 maxLength={5}
               />
@@ -83,7 +83,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
                 type="text"
                 clicked={resend}
                 onPress={handleResend}
-                label="Resend Again"
+                label="Resend me again"
                 style={{ marginVertical: 0 }}
                 labelStyle={{ color: Col.Ghost }}
               />

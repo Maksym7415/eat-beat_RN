@@ -10,6 +10,7 @@ interface Props {
   disabled?: boolean;
   suffix?: string;
   required?: boolean;
+  limit?: number[];
 }
 
 const InputFeild: FC<Props> = ({
@@ -19,10 +20,16 @@ const InputFeild: FC<Props> = ({
   suffix = "",
   disabled = false,
   required = false,
+  limit = [0, 1],
 }) => {
   const [value, setValue] = useState(input);
   const handleChange = () => {
-    onChange(value);
+    if (value === "") return;
+    let newVal: number = isNaN(Number(value)) ? 18 : Number(value);
+    if (newVal < limit[0]) newVal = limit[0];
+    if (newVal > limit[1]) newVal = limit[1];
+    setValue(`${newVal}`);
+    onChange(`${newVal}`);
   };
   return (
     <View style={styles.container}>

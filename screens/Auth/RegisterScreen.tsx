@@ -33,7 +33,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     if (response.ok) {
       navigation.navigate("confirm", value);
     } else {
-      Alert.alert(JSON.stringify(response.data));
+      Alert.alert("Error", `${response.data.message}`);
       if (response.status === 400) setError(true);
       setClicked(false);
     }

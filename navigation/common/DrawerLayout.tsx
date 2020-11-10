@@ -108,57 +108,17 @@ const DrawerLayout = (props) => {
           label="Barcode Scanner"
           onPress={() => console.log("hi")}
         />
+        <View
+          style={{
+            flexGrow: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text>v 0.1.4</Text>
+        </View>
       </ScrollView>
     );
-  /*
-  return (
-    <DrawerContentScrollView {...props}>
-      <UserCard />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="profile" />}
-        label="Profile"
-        onPress={() => navigate("profileDrawer")}
-      />
-      <Divider />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="foodDiary" />}
-        label="Food Diary"
-        onPress={() => navigate("homeDrawer")}
-      />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="recipes" />}
-        label="Recipes"
-        onPress={() => navigate("recommendedDrawer")}
-      />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="restaurants" />}
-        label="Restaurants"
-        onPress={() => console.log("hi")}
-      />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="snacks" />}
-        label="Snacks"
-        onPress={() => console.log("hi")}
-      />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="foodStocks" />}
-        label="Food stocks"
-        onPress={() => console.log("hi")}
-      />
-      <Divider />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="shoppingList" />}
-        label="Shopping List"
-        onPress={() => console.log("hi")}
-      />
-      <Divider />
-      <DrawerItem
-        icon={({ color, size }) => <SvgMaker name="barcodeScanner" />}
-        label="Barcode Scanner"
-        onPress={() => console.log("hi")}
-      />
-    </DrawerContentScrollView>
-  );*/
 };
 const styles = StyleSheet.create({
   cont: {

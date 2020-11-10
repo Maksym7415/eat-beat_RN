@@ -10,6 +10,8 @@ import {
 } from "./interface";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
+import { useContext } from "react";
+import { AppContext } from "../components/AppContext";
 
 const apiConfig: apiProps = {
   //baseURL: "http://10.4.30.212:8081/api",
@@ -26,6 +28,8 @@ const apiConfig: apiProps = {
     verification: "/auth/verify-account?verificationCode=",
     resetPassword: "/auth/reset-password",
     recipeInfo: "/recipe/my-recipes/",
+    docs: "/main/terms-of-use",
+    userAcitvities: "/main/user-activities",
   },
   post: {
     signIn: "/auth/sign-in",
@@ -80,13 +84,20 @@ const getRefresh = async () => {
   return token ? JSON.parse(token).refreshToken : null;
 };
 
+const onFailedToRefreshToken = (response) => {
+  const { signOut } = useContext(AppContext);
+  signOut();
+  logError(response);
+};
+
 const refreshToken = async () => {
   console.log("attemp refresh\n----------------------------\n");
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
   const response = await api.post(address, { refreshToken: token });
-  response.ok ? setToken(response.data) : logError(response);
+  response.ok ? setToken(response.data) : onFailedToRefreshToken(response);
+
   return response;
 };
 
@@ -209,7 +220,6 @@ const addCookedMeal = async (payload) => {
 
 const getRecipeInfo = async (id: number) => {
   const address = apiConfig.get.recipeInfo + id;
-
   const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
@@ -218,7 +228,6 @@ const getRecipeInfo = async (id: number) => {
 const getRecipes = async () => {
   const address = apiConfig.get.recipeInfo;
   const response = await api.get(address);
-
   if (!response.ok) logError(response);
   return response;
 };
@@ -234,14 +243,12 @@ const updateRecipe = async (
   id: number,
   { avatar, title, ingredientList, instruction }
 ) => {
-  const address = apiConfig.put.updateRecipe + id;
-  console.log(address);
   const params = { title, ingredientList, instruction };
   const bodyParams = {};
   Object.keys(params).forEach((el) =>
     params[el] ? (bodyParams[el] = params[el]) : el
   );
-  const response = await api.patch(address, bodyParams);
+  const response = await api.patch(`/recipe/update-recipe/${id}`, bodyParams);
   if (!response.ok) logError(response);
   return response;
 };
@@ -356,6 +363,13 @@ const verifyAccount = async (code: number) => {
   return response;
 };
 
+const getDocs = async () => {
+  const address = apiConfig.get.docs;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+};
+
 const changeURL = () => {
   const current = api.getBaseURL();
   const change =
@@ -397,4 +411,5 @@ export default {
   getRecipeInfo,
   getRecipes,
   updateRecipe,
+  getDocs,
 };

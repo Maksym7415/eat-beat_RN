@@ -78,12 +78,14 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
           <InputFeild
             label="Age"
             onChange={(value) => setFeed({ ...feed, age: Number(value) })}
+            limit={[18, 120]}
             input={feed.age}
             required={disabled}
             suffix="years"
           />
           <InputFeild
             label="Height"
+            limit={[130, 220]}
             onChange={(value) => setFeed({ ...feed, height: Number(value) })}
             input={feed.height}
             required={disabled}
@@ -91,6 +93,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
           />
           <InputFeild
             label="Weight"
+            limit={[30, 200]}
             onChange={(value) =>
               setFeed({ ...feed, currentWeight: Number(value) })
             }
