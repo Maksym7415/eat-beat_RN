@@ -234,17 +234,14 @@ const updateRecipe = async (
   id: number,
   { avatar, title, ingredientList, instruction }
 ) => {
-  // const address = apiConfig.put.updateRecipe + id;
+  const address = apiConfig.put.updateRecipe + id;
+  console.log(address);
   const params = { title, ingredientList, instruction };
   const bodyParams = {};
   Object.keys(params).forEach((el) =>
     params[el] ? (bodyParams[el] = params[el]) : el
   );
-  const response = await api.patch(
-    `${apiConfig.put.updateRecipe}/${id}`,
-    bodyParams
-  );
-  console.log(response, "fdgdfgdfgdfgdfgd");
+  const response = await api.patch(address, bodyParams);
   if (!response.ok) logError(response);
   return response;
 };

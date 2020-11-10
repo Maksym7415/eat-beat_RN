@@ -5,7 +5,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing, Typ } from "../../components/Config";
 import Button from "../../components/custom/ConfirmationButton";
-import RecipeCard from "../../components/custom/RecipeCard";
 import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 
@@ -15,7 +14,6 @@ export default function UserRecipes({ navigation }) {
 
   const getData = async () => {
     const { data, ok } = await server.getRecipes();
-    console.log("-----------------\n", data, "\n-----------------");
     if (ok) setFeed(data);
   };
 

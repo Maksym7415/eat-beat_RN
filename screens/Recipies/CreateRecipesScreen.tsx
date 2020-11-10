@@ -14,7 +14,6 @@ import { Col, Spacing, Typ } from "../../components/Config";
 import Button from "../../components/custom/ConfirmationButton";
 import { Divider } from "../../components/MyComponents";
 import { TextInput } from "react-native-gesture-handler";
-import Ingradients from "./Components/Ingradients";
 import server from "../../server";
 
 interface Item {
@@ -163,7 +162,6 @@ export default function CreateRecipeScreen({ navigation }) {
             ) : null}
           </View>
         </View>
-
         <View style={styles.editContainer}>
           <Text style={{ marginBottom: 10 }}>Ingradients*</Text>
           <TextInput
@@ -262,10 +260,3 @@ const styles = StyleSheet.create({
   },
   iconEdit: {},
 });
-{
-  /* { [
-                    { id: 0, uri: 'https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg', servings: 2, title: 'slice', name: 'bred', unit: '(160 g)'},
-                    { id: 1, uri: 'https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg', servings: 4, title: 'small', name: 'apple', unit: '(40 g)'}
-                    
-                ].map(el => <IngradientRow {...el}/> )} */
-}
