@@ -241,7 +241,7 @@ const updateRecipe = async (
     params[el] ? (bodyParams[el] = params[el]) : el
   );
   const response = await api.patch(
-    `http://10.4.30.212:8081/api/recipe/update-recipe/${id}`,
+    `${apiConfig.put.updateRecipe}/${id}`,
     bodyParams
   );
   console.log(response, "fdgdfgdfgdfgdfgd");
