@@ -1,7 +1,6 @@
 import React, {
   FC,
   SyntheticEvent,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -16,7 +15,6 @@ import { Text } from "../../components/custom/Typography";
 import EditModal from "../../components/newEditModal";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
-import { useFocusEffect } from "@react-navigation/native";
 import ActionButton from "./common/ActionButton";
 import ActionModal from "../../components/ActionModal";
 
@@ -48,7 +46,9 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
     modalVisible: false,
     creationTime: 0,
   });
-  const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
+  const { calendar, saveCal, refresh, isFetching } = useContext<Memo>(
+    AppContext
+  );
   const { visible, date } = calendar;
 
   const serveData = async () => {
@@ -64,7 +64,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
   const deleteHandler = async () => {
     await server.delCookedMeal(popAlert.id);
     setPopAlert({ ...popAlert, visible: false });
-    serveData();
+    isFetching();
   };
 
   const addRecommended = (value: number) => {
@@ -78,22 +78,13 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
       creationTime,
     });
     setModalData({ ...modalData, modalVisible: false });
-    serveData();
+    isFetching();
   };
 
   useEffect(() => {
     serveData();
   }, [date, refresh]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (route.params?.refresh) {
-  //       navigation.setParams({ refresh: false });
-  //       saveCal(calendar);
-  //       serveData();
-  //     }
-  //   }, [route.params])
-  // );
   return (
     <View style={styles.container}>
       <ActionButton

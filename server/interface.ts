@@ -48,7 +48,7 @@ export interface cacheProps {
 
 export interface errorProps {
   problem: string;
-  status: string;
+  status: number;
   config: object;
   headers: object;
   data: object;
