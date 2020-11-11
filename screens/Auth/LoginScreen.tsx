@@ -22,10 +22,11 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
   const { login } = useContext(AppContext);
   const signIn = async (value: AuthProps) => {
     setClicked(true);
-    const logged = await server.signIn(value);
-    if (logged) {
+    const response = await server.signIn(value);
+    if (response.ok) {
       login();
     } else {
+      if (response.status === 111) navigation.navigate("confirm", value);
       setClicked(false);
       setError(true);
     }
@@ -42,7 +43,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           fontSize: 14,
         }}
       >
-        v 0.1.4
+        v 0.1.4+
       </Text>
       <Logo />
       <View style={styles.boxContainer}>

@@ -25,18 +25,17 @@ import ActionButton from "./common/ActionButton";
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
-  const [loaded, setLoaded] = useState<number>(0);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
   const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
+
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
-      const len = Object.keys(data).length;
-      len > 0 && data.totalMeals > 0 ? setLoaded(len) : setLoaded(0);
       setFeed(data);
     }
   };
+
   useEffect(() => {
     serveData();
   }, [date, refresh]);
@@ -63,7 +62,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
       </View>
     );
 
-  if (loaded > 0) {
+  if (Object.keys(feed).length) {
     return (
       <View style={styles.canvas}>
         <ActionButton
@@ -164,12 +163,6 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         <ActionButton
           style={styles.actionButton}
           onPress={() => setActionBtn(!actionBtn)}
-        />
-        <Modal
-          label="Health Score"
-          content="HealthScore"
-          modalVisible={modalVisible}
-          showModal={() => setModalVisible(false)}
         />
         <ActionModal
           visible={actionBtn}

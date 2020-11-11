@@ -12,6 +12,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Alert } from "react-native";
 import { useContext } from "react";
 import { AppContext } from "../components/AppContext";
+import Axios from "axios";
+import GetOut from "./GetOut";
+import { AuthProps } from "../components/interfaces";
 
 //process.env.ENVIRONMENT === 'production' ? process.env.API_BASE_PROD : process.env.ENVIRONMENT === 'development' ? process.env.API_BASE_DEV : process.env.API_BASE_TEST,
 
@@ -66,6 +69,16 @@ const api = create({
   timeout: 20000,
 });
 
+const resendRequest = async (response) => {
+  await refreshToken();
+  Axios.request(response.config);
+};
+
+api.addResponseTransform((response) => {
+  if (response.status === 401) resendRequest(response);
+  if (response.status === 402) GetOut();
+});
+
 const setToken = async (token: cacheProps) => {
   AsyncStorage.setItem("@token", JSON.stringify(token));
   api.setHeader("Authorization", `Bearer ${token.accessToken}`);
@@ -86,8 +99,7 @@ const getRefresh = async () => {
 };
 
 const onFailedToRefreshToken = (response) => {
-  const { signOut } = useContext(AppContext);
-  signOut();
+  GetOut();
   logError(response);
 };
 
@@ -98,7 +110,6 @@ const refreshToken = async () => {
   const token = await getRefresh();
   const response = await api.post(address, { refreshToken: token });
   response.ok ? setToken(response.data) : onFailedToRefreshToken(response);
-
   return response;
 };
 
@@ -113,7 +124,13 @@ const setup = async () => {
   }
 };
 
-const logError = ({ problem, config, status, headers, data }: errorProps) => {
+const logError = async ({
+  problem,
+  config,
+  status,
+  headers,
+  data,
+}: errorProps) => {
   //Alert.alert("error", data?.message);
   console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
@@ -252,14 +269,14 @@ const addRecipeAvatar = async (formData: FormData, id: number) => {
   return response;
 };
 
-const signIn: AuthFun = async (payload) => {
+const signIn = async (payload: AuthProps) => {
   const address = apiConfig.post.signIn;
   const response = await api.post(address, payload);
   response.ok ? setToken(response.data) : logError(response);
-  return response.ok;
+  return response;
 };
 
-const register: AuthFun = async (payload) => {
+const register = async (payload: AuthProps) => {
   const address = apiConfig.post.register;
   const response = await api.post(address, payload);
   if (response.ok) logError(response);

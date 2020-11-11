@@ -74,7 +74,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     serveData();
-  }, [calendar]);
+  }, [date]);
 
   useFocusEffect(
     useCallback(() => {

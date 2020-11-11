@@ -53,7 +53,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
         </Text>
         <Text type="body2" style={styles.header}>
           Thanks for registration. You'll recieve a verification code in “
-          {Email}” in order to activeate your account.
+          {Email}” in order to activate your account.
         </Text>
         <Formik
           initialValues={{ verificationCode: "" }}
@@ -70,7 +70,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
               />
               <ErrorMessage
                 visible={error}
-                error="The Code you intered is incorrect"
+                error="The Code you Entered is incorrect"
                 style={styles.errorContainer}
               />
               <Button

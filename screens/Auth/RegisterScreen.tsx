@@ -9,8 +9,8 @@ import { Text } from "../../components/custom/Typography";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import server from "../../server";
 import Modal from "../../components/Modal";
-import CheckBox from "@react-native-community/checkbox";
 import Logo from "./common/Logo";
+import CheckBox from "../../components/custom/CheckBox";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -33,7 +33,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     if (response.ok) {
       navigation.navigate("confirm", value);
     } else {
-      Alert.alert("Error", `${response.data.message}`);
+      //Alert.alert("Error", `${response.data.message}`);
       if (response.status === 400) setError(true);
       setClicked(false);
     }
@@ -73,28 +73,29 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
               />
               <View style={styles.termsContainer}>
                 <CheckBox
-                  tintColor={Col.Main}
+                  blend={Col.Main}
                   value={toggleTerms}
-                  onValueChange={(newValue) => setToggleTerms(newValue)}
+                  name={"reg"}
+                  onCheck={(name, newValue) => setToggleTerms(newValue)}
                 />
-                <Text>
-                  By creating an account, you agree to EatBeat's{" "}
+                <View style={styles.textContainer}>
+                  <Text>By creating an account, you agree to EatBeat's</Text>
                   <Text
                     onPress={() =>
                       showModal("EAT BEAT Terms of Use", "TermsOfUse")
                     }
                     style={{ color: Col.Main }}
                   >
-                    Conditions of Use{" "}
+                    Conditions of Use
                   </Text>
-                  and{" "}
+                  <Text> and </Text>
                   <Text
                     onPress={() => showModal("Privacy Policy", "PrivacyPolicy")}
                     style={{ color: Col.Main }}
                   >
                     Privacy Notice
                   </Text>
-                </Text>
+                </View>
               </View>
               <Button
                 clicked={clicked}
@@ -167,6 +168,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: Spacing.r_small,
     alignItems: "center",
+  },
+  textContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginLeft: Spacing.medium,
   },
 });
 export default RegisterScreen;
