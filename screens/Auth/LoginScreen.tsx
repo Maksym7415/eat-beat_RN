@@ -23,10 +23,11 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
   const signIn = async (value: AuthProps) => {
     setClicked(true);
     const response = await server.signIn(value);
+    console.log(response.status);
     if (response.ok) {
       login();
     } else {
-      if (response.status === 111) navigation.navigate("confirm", value);
+      if (response.status === 401) navigation.navigate("confirm", value);
       setClicked(false);
       setError(true);
     }

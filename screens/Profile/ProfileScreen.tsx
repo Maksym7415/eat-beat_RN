@@ -34,8 +34,8 @@ export default class ProfileScreen extends Component<NavProps> {
 
   onLogout = () => {
     this.context.signOut();
-    const data = this.context.myData;
-    this.setState({ data });
+    // const data = this.context.myData;
+    // this.setState({ data });
   };
 
   onDeleteAccount = async () => {
@@ -62,7 +62,11 @@ export default class ProfileScreen extends Component<NavProps> {
 
   componentDidMount = async () => {
     const data = this.context.myData;
-    this.setState({ data });
+    data.id === 0 ? this.onUpdate() : this.setState({ data });
+  };
+
+  componentWillUnmount = () => {
+    //
   };
 
   render() {

@@ -32,13 +32,13 @@ interface AddMealsProps {
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 
 const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
-  const { calendar, isFetching } = useContext<Memo>(AppContext);
+  const { calendar, isFetching, myData } = useContext<Memo>(AppContext);
   const { date } = calendar;
   const [feed, setFeed] = useState<RecommendedMeals[]>([]);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
     name: "",
-    servings: 0.5,
+    servings: 1,
     modalVisible: false,
     creationTime: new Date(date).getTime(),
     data: {},
@@ -55,7 +55,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
       id: Number(id),
       name,
       data,
-      servings: 0.5,
+      servings: 1,
       modalVisible: true,
       creationTime: new Date(date).getTime(),
     });
@@ -74,7 +74,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     serveData();
-  }, [date]);
+  }, [date, myData]);
 
   useFocusEffect(
     useCallback(() => {
