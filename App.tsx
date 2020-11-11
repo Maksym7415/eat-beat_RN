@@ -15,7 +15,7 @@ let customFonts = {
 };
 
 export default function App() {
-  //AsyncStorage.clear();
+  // AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
   const [getRecommend, setGetrecommend] = useState<boolean>(false);
@@ -95,7 +95,7 @@ export default function App() {
       editMode,
       toggleEdit: (v: boolean) => setEditMode(v),
       getRecommend,
-      getRecomendation: (v: boolean) => setGetrecommend(v) 
+      getRecomendation: (v: boolean) => setGetrecommend(v),
     }),
     [cal, show, userData, fetching, recipeId, editMode, getRecommend]
   );

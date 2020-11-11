@@ -96,6 +96,7 @@ export const ProfileData = {
   email: "",
   createdAt: "2020-01-01",
   fkActivityId: 0,
+  gmt: 0,
   intakeNorms: {
     Calories: 0,
     "Total Fat": 0,

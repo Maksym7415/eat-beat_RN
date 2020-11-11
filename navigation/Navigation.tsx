@@ -253,8 +253,8 @@ export const RecommendedStack = () => {
       />
       <Stack.Screen
         name="user_recipe"
-        options={({ navigation, route }) => ({
-          title: route.params.title,
+        options={({ navigation }) => ({
+          title: "",
           headerStyle: {
             elevation: 0,
             backgroundColor: Col.Recipes,
@@ -319,7 +319,7 @@ export const DrawerNavigator = () => {
     <NavigationContainer>
       <Drawer.Navigator
         initialRouteName="homeDrawer"
-        drawerContent={(props) => DrawerLayout(props)}     
+        drawerContent={(props) => DrawerLayout(props)}
       >
         <Drawer.Screen
           options={{ title: "Home" }}
@@ -329,7 +329,6 @@ export const DrawerNavigator = () => {
         <Drawer.Screen
           options={{ title: "Recommended" }}
           name="recommendedDrawer"
-
           component={RecommendedStack}
         />
         <Drawer.Screen

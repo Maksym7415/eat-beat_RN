@@ -1,11 +1,5 @@
-import React, { FC, useState, useEffect, useContext, useCallback } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import React, { FC, useState, useEffect, useContext } from "react";
+import { StyleSheet, ScrollView, View, Alert } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
 import {
@@ -17,7 +11,6 @@ import {
 import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
-import { useFocusEffect } from "@react-navigation/native";
 import { Button } from "../../components/MyComponents";
 
 interface ModalData {
@@ -151,6 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     padding: Spacing.r_small,
+    backgroundColor: Col.Background,
   },
   button: {
     paddingHorizontal: Spacing.medium,

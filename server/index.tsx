@@ -17,8 +17,8 @@ import { AuthProps } from "../components/interfaces";
 
 // console.log(Device, )
 const apiConfig: apiProps = {
-  baseURL: "http://10.4.30.212:8081/api",
-  //baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  //baseURL: "http://10.4.30.212:8081/api",
+  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -129,7 +129,7 @@ const logError = async ({
   headers,
   data,
 }: errorProps) => {
-  //Alert.alert("error", data?.message);
+  Alert.alert("error", data?.message);
   console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
 
@@ -173,7 +173,10 @@ const updateCookedMeal = async (id: number, data: object) => {
 
 const updateIntakeNorm = async (data: object) => {
   const address = apiConfig.put.updateIntakeNorms;
-  const response = await api.patch(address, data);
+  const response = await api.patch(address, {
+    ...data,
+    gmt: (new Date().getTimezoneOffset() / 60) * -1,
+  });
   if (!response.ok) logError(response);
   return response;
 };
@@ -328,7 +331,10 @@ const updateIntakeNorms = () => {
 
 const updateProfile = async (data: object) => {
   const address = apiConfig.put.profile;
-  const response = await api.patch(address, data);
+  const response = await api.patch(address, {
+    ...data,
+    gmt: (new Date().getTimezoneOffset() / 60) * -1,
+  });
   return response.ok;
 };
 

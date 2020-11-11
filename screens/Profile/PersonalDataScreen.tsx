@@ -1,14 +1,20 @@
-import React, { useState, FC, useContext } from "react";
+import React, { useState, FC, useContext, useCallback } from "react";
 import { View, Switch, StyleSheet, ScrollView } from "react-native";
 import Text from "../../components/custom/Typography";
 import server from "../../server";
 import Select from "../../components/custom/Select";
 import { Col, Spacing } from "../../components/Config";
-import { Memo, NavProps, ProfileProps } from "../../components/interfaces";
+import {
+  Fetching,
+  Memo,
+  NavProps,
+  ProfileProps,
+} from "../../components/interfaces";
 import { Button, Divider } from "../../components/MyComponents";
 import ToggleChip from "../../components/custom/ToggleChip";
 import { AppContext } from "../../components/AppContext";
 import InputFeild from "./common/InputFeild";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   const { myData, getData } = useContext<Memo>(AppContext);
@@ -16,6 +22,10 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   const [selected, setSelected] = useState<number>(myData.fkActivityId);
   const [disabled, setDisabled] = useState<boolean>(myData.preferences);
   const [chips, setChips] = useState<string>(myData.gender);
+  const [fetching, setFetching] = useState<Fetching>({
+    clicked: false,
+    deactivate: false,
+  });
 
   const enableEditing = () => {
     setDisabled(!disabled);
@@ -34,15 +44,33 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     if (selected) Object.assign(personalObject, { fkActivityId: selected });
     if (disabled) {
       if (age && height && currentWeight) {
+        setFetching({ clicked: true, deactivate: true });
         const res = await server.updateProfile(personalObject);
-        if (res) getData();
+        if (res) {
+          setFetching({ clicked: false, deactivate: false });
+          getData();
+        }
       }
     } else {
+      setFetching({ clicked: true, deactivate: true });
       const res = await server.updateProfile(personalObject);
-      if (res) getData();
+      if (res) {
+        setFetching({ clicked: false, deactivate: false });
+        getData();
+      }
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setFeed(myData);
+      setChips(myData.gender);
+      setDisabled(myData.preferences);
+      setSelected(myData.fkActivityId);
+    }, [])
+  );
+
+  console.log(feed.age);
   return (
     <View style={styles.canvas}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
@@ -118,6 +146,8 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
       <View style={{ padding: Spacing.medium }}>
         <Button
           label="SAVE CHANGES"
+          deactivate={fetching.deactivate}
+          clicked={fetching.clicked}
           onPress={savePersonalDataHandler}
           style={styles.saveBtn}
         />

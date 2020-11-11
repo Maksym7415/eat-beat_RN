@@ -13,7 +13,7 @@ interface Props {
   blend: string;
   showMealsTypes: boolean;
   backgroundColor?: string;
-  fetching: Fetching
+  fetching: Fetching;
 }
 
 const UserSettings: FC<Props> = ({

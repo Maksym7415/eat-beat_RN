@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext, useCallback, FC } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { AppContext } from "../../components/AppContext";
 import {
@@ -18,6 +18,7 @@ import server from "../../server";
 import Button from "../../components/custom/ConfirmationButton";
 import Nutrient from "../../components/Nutrient";
 import NutritionItem from "../../components/Nutrition";
+import { NavProps } from "../../components/interfaces";
 
 interface Item {
   title: string;
@@ -30,7 +31,7 @@ interface Data {
   [key: string]: Item;
 }
 
-export default function RecipeInfoScreen({ navigation }) {
+const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   const { recipeId, editMode, toggleEdit } = useContext(AppContext);
   const [feed, setFeed] = useState<object>({});
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -43,7 +44,6 @@ export default function RecipeInfoScreen({ navigation }) {
       error: "",
     },
   });
-
   const pickAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -274,7 +274,7 @@ export default function RecipeInfoScreen({ navigation }) {
       <ActivityIndicator size="large" color={Col.Black} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -349,3 +349,4 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
 });
+export default RecipeInfoScreen;

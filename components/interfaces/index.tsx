@@ -27,6 +27,7 @@ export interface UserData {
   createdAt: string;
   intakeNorms: intakeProps;
   fkActivityId: number;
+  gmt: number;
 }
 
 export interface NavProps {
@@ -237,6 +238,7 @@ export interface ProfileProps {
   createdAt: string;
   intakeNorms: intakeProps;
   fkActivityId: number;
+  gmt: number;
 }
 
 export interface settings {
@@ -252,6 +254,6 @@ export interface recipeSettings {
 }
 
 export interface Fetching {
-  clicked: boolean
-  deactivate: boolean
+  clicked: boolean;
+  deactivate: boolean;
 }

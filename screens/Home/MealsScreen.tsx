@@ -83,7 +83,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     serveData();
-  }, [date, route?.params?.refresh, refresh]);
+  }, [date, refresh]);
 
   return (
     <View style={styles.container}>

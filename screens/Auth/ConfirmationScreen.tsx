@@ -11,7 +11,11 @@ import server from "../../server";
 import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
-  verificationCode: Yup.number().required().min(5).label("verification Code"),
+  verificationCode: Yup.number()
+    .required()
+    .min(5)
+    .label("verification Code")
+    .typeError("Code must be a number"),
 });
 
 const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {

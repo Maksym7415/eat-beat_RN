@@ -31,8 +31,8 @@ export default CalendarButton;
 
 const styles = StyleSheet.create({
   container: {
-    width: 42,
-    height: 42,
+    width: 48,
+    height: 48,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
