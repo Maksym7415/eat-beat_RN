@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
-import { Memo, NavProps, RecommendedMeals } from "../../components/interfaces";
+import { Fetching, Memo, NavProps, RecommendedMeals } from "../../components/interfaces";
 import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
@@ -31,8 +31,12 @@ interface AddMealsProps {
 
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 
-const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
-  const { calendar, isFetching } = useContext<Memo>(AppContext);
+const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
+  const { calendar, isFetching, getRecommend, getRecomendation } = useContext<Memo>(AppContext);
+  const [fetching, setFetching] = useState<Fetching>({
+    clicked: false,
+    deactivate: false
+  })
   const { date } = calendar;
   const [feed, setFeed] = useState<RecommendedMeals[]>([]);
   const [modalData, setModalData] = useState<ModalData>({
@@ -45,10 +49,14 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
   });
 
   const serveData = async () => {
+    setFetching({clicked: true, deactivate: true})
     const response = await server.getRecommendedMeals(date);
-    response.ok
-      ? setFeed(response.data)
-      : Alert.alert(`${response.status}`, `${response.data}`);
+    if(response.ok) {
+      getRecomendation(false)
+      setFetching({clicked: false, deactivate: false});
+      return setFeed(response.data)
+    }
+    Alert.alert(`${response.status}`, `${response.data}`);
   };
   const actionHandler = (id: string, name: string, data: object) => {
     setModalData({
@@ -57,7 +65,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
       data,
       servings: 0.5,
       modalVisible: true,
-      creationTime: new Date(date).getTime(),
+      creationTime: new Date().getTime(),
     });
   };
 
@@ -71,19 +79,20 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
     navigation.navigate("meals");
     isFetching();
   };
-
+  
   useEffect(() => {
-    serveData();
-  }, [date]);
+    // let focus = navigation.addListener("focus", () => {
+    //   setFeed([])
+    // });
+    // () => {
+    //   focus = null;
+    // };
+    if(getRecommend) {
+      setFeed([])
+    }
+    
+  }, [getRecommend]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (route.params?.refresh) {
-        navigation.setParams({ refresh: false });
-        serveData();
-      }
-    }, [route.params])
-  );
   return feed.length ? (
     <View style={{ flex: 1, backgroundColor: Col.Background }}>
       <EditModal
@@ -108,11 +117,15 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route }) => {
         />
       </View>
     </View>
-  ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+  ) : <View style={styles.btnContainer}>
+        <Button
+          label="GET RECOMMENDATION"
+          onPress={serveData}
+          deactivate={fetching.deactivate}
+          clicked={fetching.clicked}
+          style={{ backgroundColor: Col.Recipes }}
+        />
+      </View>
 };
 
 const styles = StyleSheet.create({
@@ -131,6 +144,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
+  },
+  btnContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    padding: Spacing.r_small
   },
   button: {
     paddingHorizontal: Spacing.medium,

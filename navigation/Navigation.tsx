@@ -90,7 +90,7 @@ const EditRecipeTopNAvigator = () => (
     initialRouteName="info"
   >
     <TopTabs.Screen name="info" component={RecipeInfoScreen} />
-    <TopTabs.Screen name="ingradients" component={IngradientScreen} />
+    <TopTabs.Screen name="ingredients" component={IngradientScreen} />
     <TopTabs.Screen name="instruction" component={InstructionScreen} />
   </TopTabs.Navigator>
 );
@@ -319,7 +319,7 @@ export const DrawerNavigator = () => {
     <NavigationContainer>
       <Drawer.Navigator
         initialRouteName="homeDrawer"
-        drawerContent={(props) => DrawerLayout(props)}
+        drawerContent={(props) => DrawerLayout(props)}     
       >
         <Drawer.Screen
           options={{ title: "Home" }}
@@ -329,6 +329,7 @@ export const DrawerNavigator = () => {
         <Drawer.Screen
           options={{ title: "Recommended" }}
           name="recommendedDrawer"
+
           component={RecommendedStack}
         />
         <Drawer.Screen

@@ -40,8 +40,8 @@ const newEditModal: FC<Props> = ({
 }) => {
   const { id, name, servings, modalVisible, creationTime } = data;
   const handleFetch = () => {
-    const hrs = new Date(creationTime).getHours().toString();
-    const min = new Date(creationTime).getMinutes().toString();
+    const hrs = new Date().getHours().toString();
+    const min = new Date().getMinutes().toString();
     return {
       hrs: hrs.length > 1 ? hrs : "0" + hrs,
       min: min.length > 1 ? min : "0" + min,
@@ -50,7 +50,7 @@ const newEditModal: FC<Props> = ({
   };
   const [newTime, setNewTime] = useState(handleFetch());
   const handleEdit = () => {
-    const edit: Date = new Date(creationTime);
+    const edit: Date = new Date();
     edit.setHours(Math.round(parseInt(newTime.hrs, 10)));
     edit.setMinutes(Math.round(parseInt(newTime.min, 10)));
     return edit.getTime();

@@ -4,6 +4,7 @@ import server from "../../server";
 import RecipeCard from "../../components/custom/RecipeCard";
 import EditModal from "../../components/newEditModal";
 import {
+  Fetching,
   Memo,
   NavProps,
   recipeSettings,
@@ -35,6 +36,11 @@ type AddMealsFun = (id: number, props: AddMealsProps) => void;
 const SearchScreen: FC<NavProps> = ({ navigation }) => {
   const { isShow, showModal, calendar } = useContext<Memo>(AppContext);
   const [state, setState] = useState<string>("");
+  const [fetching, setFetching] = useState<Fetching>({
+    clicked: false,
+    deactivate: false,
+    isFetching: false
+  })
   const [feed, setFeed] = useState<RecommendedMeals[] | null>(null);
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
@@ -67,10 +73,12 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
-      setFeed([]);
+      setFeed(null);
       showModal(false);
+      setFetching({...fetching, isFetching: true})
     const response = await server.getRecipeByName(state, config);
     if (response.ok) setFeed(response.data);
+    setFetching({...fetching, isFetching: false})
   };
 
   const saveFilterConfig = ({
@@ -112,7 +120,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       date: creationTime,
     });
     setModalData({ ...modalData, modalVisible: false });
-    navigation.navigate("meals", { refresh: true });
+    navigation.navigate("meals", { refresh: id+creationTime+servings });
   };
 
   const constraintNumber: constNum = () => {
@@ -159,6 +167,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         saveFilterData={saveFilterConfig}
         hideModal={() => setShowFilterModal(false)}
         constaintNumber={constraintNumber()}
+        fetching={fetching}
       />
       <TouchableOpacity onPress={() => setShowFilterModal(true)}>
         <View style={styles.constraint}>
@@ -167,14 +176,14 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <ScrollView>
-        {feed?.length ? <View style={styles.container}>
-          {feed.map((item, index) => (
+        {!fetching.isFetching ?  <View style={styles.container}>
+          {feed?.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
               <RecipeCard details={item} actionHandler={actionHandler} />
             </View>
           ))}
         </View> 
-        : feed && 
+        :
         (
           <View style={styles.loading}>
             <ActivityIndicator size="large" color={Col.Black} />

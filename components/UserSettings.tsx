@@ -5,7 +5,7 @@ import { Col, Spacing } from "./Config";
 import Chip from "./custom/ToggleChip";
 import Text from "./custom/Typography";
 import RadioInput from "./custom/RadioInput";
-import { recipeSettings } from "./interfaces";
+import { recipeSettings, Fetching } from "./interfaces";
 
 interface Props {
   data: recipeSettings;
@@ -13,6 +13,7 @@ interface Props {
   blend: string;
   showMealsTypes: boolean;
   backgroundColor?: string;
+  fetching: Fetching
 }
 
 const UserSettings: FC<Props> = ({
@@ -21,6 +22,7 @@ const UserSettings: FC<Props> = ({
   blend,
   showMealsTypes,
   backgroundColor,
+  fetching,
 }) => {
   const { diets, intolerances, mealTypes } = data;
   if (!diets || !intolerances || !mealTypes) return <View />;
@@ -47,12 +49,6 @@ const UserSettings: FC<Props> = ({
     arr[index].isUsers = !arr[index].isUsers;
     setTypes(arr);
   };
-
-  useEffect(() => {
-    diets.forEach((el) => {
-      if (el.isUsers) setDiet(el.id);
-    });
-  }, []);
 
   return (
     <View style={[styles.canvas, { backgroundColor }]}>
@@ -109,6 +105,8 @@ const UserSettings: FC<Props> = ({
         )}
         <View style={styles.buttonContainer}>
           <Button
+            deactivate={fetching.deactivate}
+            clicked={fetching.clicked}
             label="SAVE CHANGES"
             onPress={() =>
               onSave({

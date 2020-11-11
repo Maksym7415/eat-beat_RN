@@ -35,7 +35,7 @@ interface editProps {
 
 type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
 
-const MealsScreen: FC<NavProps> = ({ navigation }) => {
+const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   const [feed, setFeed] = useState(null);
   const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
   const [actionBtn, setActionBtn] = useState<boolean>(false);
@@ -83,7 +83,7 @@ const MealsScreen: FC<NavProps> = ({ navigation }) => {
 
   useEffect(() => {
     serveData();
-  }, [date, refresh]);
+  }, [date, route?.params?.refresh, refresh]);
 
   return (
     <View style={styles.container}>

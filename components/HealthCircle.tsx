@@ -83,7 +83,7 @@ const HealthCircle: FC<Props> = ({
         <Defs>
           <LinearGradient id="linear" x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor={colors['10']} />
-            <Stop offset="1" stopColor={percentage < 10 ? '#fa0000' : colors[String(percentage)[0]]} />
+            <Stop offset="1" stopColor={percentage < 10 ? '#fa0000' : percentage === 100 ? '#2ee526' : colors[String(percentage)[0]]} />
           </LinearGradient>
         </Defs>
         <G rotation="90" origin={`${halfCircle},${halfCircle}`}>
