@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Modal, View, StyleSheet } from "react-native";
 import { Col, Spacing } from "./Config";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
@@ -20,11 +20,13 @@ const FilterModal: FC<Props> = ({
   data,
   saveFilterData,
   constaintNumber,
+  fetching,
 }) => {
   const saveFilterConfig = (value: recipeSettings) => {
     saveFilterData(value);
     hideModal();
   };
+
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <View style={styles.container}>
@@ -45,6 +47,7 @@ const FilterModal: FC<Props> = ({
         onSave={saveFilterConfig}
         showMealsTypes={true}
         backgroundColor={Col.Background}
+        fetching={fetching}
       />
     </Modal>
   );

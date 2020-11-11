@@ -91,7 +91,7 @@ export default function IngradientScreen({ navigation }) {
             <View style={{ ...styles.btnConatiner, marginTop: 8 }}>
               <Button
                 label="Add selected products to My Shoppping List"
-                onPress={() => toggleEdit(!editMode)}
+                // onPress={() => toggleEdit(!editMode)}
                 style={{ backgroundColor: Col.Recipes }}
                 deactivate={!Object.values(checked).filter((el) => el).length}
               />
@@ -99,7 +99,7 @@ export default function IngradientScreen({ navigation }) {
             <View style={styles.btnConatiner}>
               <Button
                 label="Add recipe to my meals"
-                onPress={() => toggleEdit(!editMode)}
+                //onPress={() => toggleEdit(!editMode)}
                 style={{ backgroundColor: Col.Recipes }}
                 deactivate={!Object.values(checked).filter((el) => el).length}
               />
@@ -122,12 +122,12 @@ export default function IngradientScreen({ navigation }) {
             <View style={styles.buttonContainer}>
               <Button
                 label="SAVE"
-                onPress={() => toggleEdit(!editMode)}
+                onPress={saveChanges}
                 style={{ backgroundColor: Col.Recipes }}
               />
               <Button
                 label="CANCEL"
-                onPress={() => toggleEdit(!editMode)}
+                onPress={() => toggleEdit(false)}
                 style={{ backgroundColor: Col.Recipes }}
               />
             </View>
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: Spacing.small,
     borderBottomColor: "rgba(0, 0, 0, 0.6)",
+    marginBottom: '75%'
   },
   btnConatiner: {
     paddingHorizontal: 16,
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Background,
   },
   buttonContainer: {
-    flex: 1,
+    // flex: 1,
     padding: Spacing.medium,
+    //justifyContent: 'flex-end'
   },
 });

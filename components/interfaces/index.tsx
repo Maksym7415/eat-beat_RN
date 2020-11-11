@@ -250,3 +250,8 @@ export interface recipeSettings {
   diets: settings[];
   mealTypes: settings[];
 }
+
+export interface Fetching {
+  clicked: boolean
+  deactivate: boolean
+}

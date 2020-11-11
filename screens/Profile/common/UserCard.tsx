@@ -94,7 +94,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
           <Image
             style={styles.image}
             source={{
-              uri: "https://logisticbrocker.hopto.org/eat-beat/" + image,
+              uri: "http://10.4.30.212:8081/" + image,
             }}
           />
         )}

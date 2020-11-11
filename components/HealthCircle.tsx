@@ -6,6 +6,19 @@ import { Col } from "./Config";
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
+const colors =  {
+  1: '#fa0000',
+  2: '#dd4606',
+  3: '#df6d04',
+  4: '#dfa004',
+  5: '#d0ce0b',
+  6: '#c0d00b',
+  7: '#79a517',
+  8: '#5fa517',
+  9: '#1da517',
+  10: '#2ee526',
+}
+
 interface Props {
   percentage?: number;
   radius?: number;
@@ -69,8 +82,8 @@ const HealthCircle: FC<Props> = ({
       >
         <Defs>
           <LinearGradient id="linear" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0" stopColor="#ADEA4F" />
-            <Stop offset="1" stopColor="#3B990F" />
+            <Stop offset="0" stopColor={colors['10']} />
+            <Stop offset="1" stopColor={percentage < 10 ? '#fa0000' : percentage === 100 ? '#2ee526' : colors[String(percentage)[0]]} />
           </LinearGradient>
         </Defs>
         <G rotation="90" origin={`${halfCircle},${halfCircle}`}>

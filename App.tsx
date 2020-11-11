@@ -18,6 +18,7 @@ export default function App() {
   //AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
+  const [getRecommend, setGetrecommend] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const [fetching, setFetching] = useState<number>(0);
   const [cal, setCal] = useState<Cal>({
@@ -93,8 +94,10 @@ export default function App() {
       isShow: show,
       editMode,
       toggleEdit: (v: boolean) => setEditMode(v),
+      getRecommend,
+      getRecomendation: (v: boolean) => setGetrecommend(v) 
     }),
-    [cal, show, userData, fetching, recipeId, editMode]
+    [cal, show, userData, fetching, recipeId, editMode, getRecommend]
   );
 
   useEffect(() => {
