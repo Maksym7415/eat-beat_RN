@@ -8,16 +8,18 @@ import {
   mailAuth,
   updatePassProps,
 } from "./interface";
+import * as Device from 'expo-device';
 import AsyncStorage from "@react-native-community/async-storage";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 import { useContext } from "react";
 import { AppContext } from "../components/AppContext";
 
 //process.env.ENVIRONMENT === 'production' ? process.env.API_BASE_PROD : process.env.ENVIRONMENT === 'development' ? process.env.API_BASE_DEV : process.env.API_BASE_TEST,
 
+// console.log(Device, )
 const apiConfig: apiProps = {
-  //baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
+  //baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -62,6 +64,7 @@ const api = create({
   baseURL: apiConfig.baseURL,
   headers: {
     Accept: "application/vnd.github.v3+json",
+    'User-Agent': Platform.OS === 'ios' ?  `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}` : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
   },
   timeout: 20000,
 });
@@ -114,7 +117,7 @@ const setup = async () => {
 };
 
 const logError = ({ problem, config, status, headers, data }: errorProps) => {
-  //Alert.alert("error", data?.message);
+   //Alert.alert("error", data?.message);
   console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
 
