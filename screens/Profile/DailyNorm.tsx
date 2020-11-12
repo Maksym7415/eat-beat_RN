@@ -12,6 +12,7 @@ import {
   ProfileProps,
 } from "../../components/interfaces";
 import IntakeSlot from "./common/IntakeSlot";
+import { getDate } from "../../utils/date";
 
 interface Options {
   labels: string[];
@@ -25,13 +26,13 @@ interface Feed {
 }
 
 const DailyNorm: FC<NavProps> = ({ navigation }) => {
-  const { myData } = useContext<Memo>(AppContext);
+  const { myData, getData } = useContext<Memo>(AppContext);
   const { preferences }: ProfileProps = myData;
   const [norms, setNorms] = useState<intakeProps>(myData.intakeNorms);
-  const feed = useState<Options>({
+  const [feed, setFeed] = useState<Options>({
     labels: Object.keys(myData.intakeNorms),
     values: Object.values(myData.intakeNorms),
-  })[0];
+  });
   const [intakes, setIntakes] = useState<Feed[]>([
     { label: "Calories (kcal)", value: 0, edit: false },
   ]);
@@ -43,6 +44,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
       Carbs: norms.Carbs,
     };
     await server.updateIntakeNorm(update);
+    getData();
   };
 
   const sortData = () => {
@@ -64,7 +66,11 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
 
   useEffect(() => {
     sortData();
-  }, []);
+    setFeed({
+      labels: Object.keys(myData.intakeNorms),
+      values: Object.values(myData.intakeNorms),
+    });
+  }, [myData]);
 
   return (
     <ScrollView>

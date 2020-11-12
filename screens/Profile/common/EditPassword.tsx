@@ -14,6 +14,7 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
   const [newValue, setNewValue] = useState("");
   const [edit, setEdit] = useState(false);
   const onSubmit = () => {
+    console.log(value.length > 5 && value !== newValue && newValue.length > 5);
     if (value.length > 5 && value !== newValue && newValue.length > 5) {
       onEdit(value, newValue);
     }
@@ -26,6 +27,7 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
       <View style={styles.infoContainer}>
         <Text>{label}</Text>
         <TextInput
+          maxLength={50}
           value={value}
           editable={edit}
           style={edit ? styles.editInput : styles.textInput}
@@ -35,6 +37,7 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
         />
         {edit ? (
           <TextInput
+            maxLength={50}
             value={newValue}
             style={edit ? styles.editInput : styles.textInput}
             secureTextEntry={!edit}

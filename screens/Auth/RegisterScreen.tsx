@@ -65,7 +65,7 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
           {({ handleSubmit }) => (
             <>
               <FormikInput value="email" label="Email" />
-              <FormikInput value="password" label="Password" />
+              <FormikInput value="password" label="Password" maxLength={50} />
               <ErrorMessage
                 visible={error}
                 error={`this email is already registered`}

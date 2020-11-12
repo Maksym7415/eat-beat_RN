@@ -1,28 +1,24 @@
 import { create } from "apisauce";
 import {
   apiProps,
-  AuthFun,
   cacheProps,
   changePassProps,
   errorProps,
   mailAuth,
   updatePassProps,
 } from "./interface";
-import * as Device from 'expo-device';
+import * as Device from "expo-device";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert, Platform } from "react-native";
-import { useContext } from "react";
-import { AppContext } from "../components/AppContext";
 import Axios from "axios";
-import GetOut from "./GetOut";
 import { AuthProps } from "../components/interfaces";
 
 //process.env.ENVIRONMENT === 'production' ? process.env.API_BASE_PROD : process.env.ENVIRONMENT === 'development' ? process.env.API_BASE_DEV : process.env.API_BASE_TEST,
 
 // console.log(Device, )
 const apiConfig: apiProps = {
-  baseURL: "http://10.4.30.212:8081/api",
-  //baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  //baseURL: "http://10.4.30.212:8081/api",
+  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -37,6 +33,8 @@ const apiConfig: apiProps = {
     recipeInfo: "/recipe/my-recipes/",
     docs: "/main/terms-of-use",
     userAcitvities: "/main/user-activities",
+    resendVerificationCode: "/auth/resend-verification-code?email=",
+    resendResetPasswordCode: "/auth/resend-reset-password-code?email=",
   },
   post: {
     signIn: "/auth/sign-in",
@@ -63,23 +61,16 @@ const apiConfig: apiProps = {
   },
 };
 
-const api = create({
+export const api = create({
   baseURL: apiConfig.baseURL,
   headers: {
-    Accept: "application/vnd.github.v3+json",
-    'User-Agent': Platform.OS === 'ios' ?  `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}` : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+    Accept: "application/json",
+    "User-Agent":
+      Platform.OS === "ios"
+        ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+        : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`,
   },
   timeout: 20000,
-});
-
-const resendRequest = async (response) => {
-  await refreshToken();
-  Axios.request(response.config);
-};
-
-api.addResponseTransform((response) => {
-  if (response.status === 401) resendRequest(response);
-  if (response.status === 402) GetOut();
 });
 
 const setToken = async (token: cacheProps) => {
@@ -101,18 +92,13 @@ const getRefresh = async () => {
   return token ? JSON.parse(token).refreshToken : null;
 };
 
-const onFailedToRefreshToken = (response) => {
-  GetOut();
-  logError(response);
-};
-
 const refreshToken = async () => {
   console.log("attemp refresh\n----------------------------\n");
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
   const response = await api.post(address, { refreshToken: token });
-  response.ok ? setToken(response.data) : onFailedToRefreshToken(response);
+  if (response.ok) setToken(response.data);
   return response;
 };
 
@@ -127,7 +113,6 @@ const setup = async () => {
   }
 };
 
-
 const logError = async ({
   problem,
   config,
@@ -135,8 +120,8 @@ const logError = async ({
   headers,
   data,
 }: errorProps) => {
-  //Alert.alert("error", data?.message);
-  console.log(config, "\nstatus => ", status, "\ndata => ", data);
+  Alert.alert("error", data?.message);
+  //console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
 
 const getCalendar = (value: Date) => {
@@ -146,12 +131,7 @@ const getCalendar = (value: Date) => {
 const getDailyConsumption = async (date: Date) => {
   const address = apiConfig.get.dailyConsumption + getCalendar(date);
   const response = await api.get(address);
-  if (!response.ok) {
-    if (response.status === 401) {
-      await refreshToken();
-    }
-    logError(response);
-  }
+  if (!response.ok) logError(response);
   return response;
 };
 
@@ -179,7 +159,10 @@ const updateCookedMeal = async (id: number, data: object) => {
 
 const updateIntakeNorm = async (data: object) => {
   const address = apiConfig.put.updateIntakeNorms;
-  const response = await api.patch(address, { intakeNorms: data });
+  const response = await api.patch(address, {
+    ...data,
+    gmt: (new Date().getTimezoneOffset() / 60) * -1,
+  });
   if (!response.ok) logError(response);
   return response;
 };
@@ -276,14 +259,15 @@ const addRecipeAvatar = async (formData: FormData, id: number) => {
 const signIn = async (payload: AuthProps) => {
   const address = apiConfig.post.signIn;
   const response = await api.post(address, payload);
-  response.ok ? setToken(response.data) : logError(response);
+  if (response.ok) {
+    setToken(response.data);
+  }
   return response;
 };
 
 const register = async (payload: AuthProps) => {
   const address = apiConfig.post.register;
   const response = await api.post(address, payload);
-  if (response.ok) logError(response);
   return response;
 };
 
@@ -329,7 +313,10 @@ const updateIntakeNorms = () => {
 
 const updateProfile = async (data: object) => {
   const address = apiConfig.put.profile;
-  const response = await api.patch(address, data);
+  const response = await api.patch(address, {
+    ...data,
+    gmt: (new Date().getTimezoneOffset() / 60) * -1,
+  });
   return response.ok;
 };
 
@@ -361,10 +348,16 @@ const updateUserReferences = async (data: object) => {
   return response.ok;
 };
 
-const resendCode = async () => {
-  const address = apiConfig.post.register;
+const resendCode = async (Email: string) => {
+  const address = apiConfig.get.resendVerificationCode + Email;
   const response = await api.get(address);
-  response.ok ? setToken(response.data) : logError(response);
+  return response.ok;
+};
+1;
+
+const resendPasswordCode = async (Email: string) => {
+  const address = apiConfig.get.resendResetPasswordCode + Email;
+  const response = await api.get(address);
   return response.ok;
 };
 
@@ -391,6 +384,7 @@ const changeURL = () => {
 };
 
 export default {
+  api,
   setup,
   getDailyConsumption,
   getRecommendedMeals,
@@ -411,6 +405,7 @@ export default {
   changePassword,
   updateCookedMeal,
   resendCode,
+  resendPasswordCode,
   verifyAccount,
   resetPassword,
   changeURL,
@@ -423,4 +418,5 @@ export default {
   getRecipes,
   updateRecipe,
   getDocs,
+  refreshToken,
 };

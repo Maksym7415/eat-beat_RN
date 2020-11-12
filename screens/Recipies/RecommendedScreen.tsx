@@ -1,18 +1,16 @@
-import React, { FC, useState, useEffect, useContext, useCallback } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import React, { FC, useState, useEffect, useContext } from "react";
+import { StyleSheet, ScrollView, View, Alert } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
-import { Fetching, Memo, NavProps, RecommendedMeals } from "../../components/interfaces";
+import {
+  Fetching,
+  Memo,
+  NavProps,
+  RecommendedMeals,
+} from "../../components/interfaces";
 import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
-import { useFocusEffect } from "@react-navigation/native";
 import { Button } from "../../components/MyComponents";
 
 interface ModalData {
@@ -32,29 +30,31 @@ interface AddMealsProps {
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 
 const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
-  const { calendar, isFetching, getRecommend, getRecomendation } = useContext<Memo>(AppContext);
+  const { calendar, isFetching, getRecommend, getRecomendation } = useContext<
+    Memo
+  >(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
-    deactivate: false
-  })
+    deactivate: false,
+  });
   const { date } = calendar;
   const [feed, setFeed] = useState<RecommendedMeals[]>([]);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
     name: "",
-    servings: 0.5,
+    servings: 1,
     modalVisible: false,
     creationTime: new Date(date).getTime(),
     data: {},
   });
 
   const serveData = async () => {
-    setFetching({clicked: true, deactivate: true})
+    setFetching({ clicked: true, deactivate: true });
     const response = await server.getRecommendedMeals(date);
-    if(response.ok) {
-      getRecomendation(false)
-      setFetching({clicked: false, deactivate: false});
-      return setFeed(response.data)
+    if (response.ok) {
+      getRecomendation(false);
+      setFetching({ clicked: false, deactivate: false });
+      return setFeed(response.data);
     }
     Alert.alert(`${response.status}`, `${response.data}`);
   };
@@ -63,7 +63,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       id: Number(id),
       name,
       data,
-      servings: 0.5,
+      servings: 1,
       modalVisible: true,
       creationTime: new Date().getTime(),
     });
@@ -79,18 +79,11 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     navigation.navigate("meals");
     isFetching();
   };
-  
+
   useEffect(() => {
-    // let focus = navigation.addListener("focus", () => {
-    //   setFeed([])
-    // });
-    // () => {
-    //   focus = null;
-    // };
-    if(getRecommend) {
-      setFeed([])
+    if (getRecommend) {
+      setFeed([]);
     }
-    
   }, [getRecommend]);
 
   return feed.length ? (
@@ -117,15 +110,17 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
         />
       </View>
     </View>
-  ) : <View style={styles.btnContainer}>
-        <Button
-          label="GET RECOMMENDATION"
-          onPress={serveData}
-          deactivate={fetching.deactivate}
-          clicked={fetching.clicked}
-          style={{ backgroundColor: Col.Recipes }}
-        />
-      </View>
+  ) : (
+    <View style={styles.btnContainer}>
+      <Button
+        label="GET RECOMMENDATION"
+        onPress={serveData}
+        deactivate={fetching.deactivate}
+        clicked={fetching.clicked}
+        style={{ backgroundColor: Col.Recipes }}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -147,8 +142,9 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    padding: Spacing.r_small
+    justifyContent: "flex-end",
+    padding: Spacing.r_small,
+    backgroundColor: Col.Background,
   },
   button: {
     paddingHorizontal: Spacing.medium,

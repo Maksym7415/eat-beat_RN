@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
@@ -11,7 +11,11 @@ import server from "../../server";
 import Logo from "./common/Logo";
 
 const Validation = Yup.object().shape({
-  verificationCode: Yup.number().required().min(5).label("verification Code"),
+  verificationCode: Yup.number()
+    .required()
+    .min(5)
+    .label("verification Code")
+    .typeError("Code must be a number"),
 });
 
 const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
@@ -23,7 +27,6 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const onConfirm = async (value) => {
     setClicked(true);
     const verified = await server.verifyAccount(value.verificationCode);
-
     if (verified.ok) {
       const logged = await server.signIn(route.params);
       if (logged) navigation.navigate("success");
@@ -36,11 +39,17 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const handleResend = async () => {
     setResend(true);
     setTimeout(setResend(false), 60000);
-    const sent = await server.resendCode();
+    const sent = await server.resendCode(Email);
     if (sent) {
-      //
+      Alert.alert(
+        "Verification",
+        "Please Check your Email for the Verification Code"
+      );
     } else {
-      //
+      Alert.alert(
+        "Error",
+        "Sorry!\nSomething went wrong while trying to get a new code, please try again later."
+      );
     }
   };
 

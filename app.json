@@ -2,7 +2,7 @@
   "expo": {
     "name": "eat-beat",
     "slug": "eat-beat",
-    "version": "0.0.3",
+    "version": "0.1.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -11,6 +11,7 @@
       "backgroundColor": "#F7F7FB"
     },
     "updates": {
+      "enabled": false,
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],

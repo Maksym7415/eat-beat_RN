@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button } from "../../components/MyComponents";
+import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
@@ -20,10 +20,16 @@ interface AuthProps {
 
 const RestoreScreen: FC<NavProps> = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
+  const [error, setError] = useState(false);
   const sendRequest = async (value: AuthProps) => {
     setClicked(true);
     const response = await server.resetPassword(value);
-    response ? navigation.navigate("changePassword", value) : setClicked(false);
+    if (response) {
+      navigation.navigate("changePassword", value);
+    } else {
+      setError(true);
+      setClicked(false);
+    }
   };
 
   return (
@@ -40,7 +46,16 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
         >
           {({ handleSubmit }) => (
             <>
-              <FormikInput value="email" label="Enter your e-mail" />
+              <FormikInput
+                value="email"
+                label="Enter your e-mail"
+                error={error}
+              />
+              <ErrorMessage
+                visible={error}
+                error="This Email is not registered"
+                style={styles.errorContainer}
+              />
               <Button
                 clicked={clicked}
                 onPress={handleSubmit}
@@ -110,6 +125,9 @@ const styles = StyleSheet.create({
   logoContainer: {
     marginTop: 80,
     marginBottom: 50,
+  },
+  errorContainer: {
+    marginTop: Spacing.small,
   },
 });
 

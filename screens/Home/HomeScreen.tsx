@@ -62,7 +62,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
       </View>
     );
 
-  if (Object.keys(feed).length) {
+  if (Object.keys(feed).length && feed?.totalMeals > 0) {
     return (
       <View style={styles.canvas}>
         <ActionButton

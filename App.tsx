@@ -5,8 +5,9 @@ import { AppContext } from "./components/AppContext";
 import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
-import server from "./server";
+import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
+import { apisAreAvailable } from "expo";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -29,6 +30,17 @@ export default function App() {
   const [recipeId, setRecipeId] = useState<number>(0);
   const [editMode, setEditMode] = useState<boolean>(false);
 
+  const ApiInterceptor = async () => {
+    api.addAsyncResponseTransform(async ({ status, data }) => {
+      console.log(status);
+      if (status === 401) {
+        const res = await server.refreshToken();
+        if (res.status === 401) removeToken();
+      }
+      if (status === 403 && data.code === 120) removeToken();
+    });
+  };
+
   const loadUser = async () => {
     if (logged) return;
     console.log("new log", new Date(), "\n");
@@ -36,6 +48,7 @@ export default function App() {
     const token = await AsyncStorage.getItem("@token");
     const user = await AsyncStorage.getItem("@user");
     if (token) {
+      ApiInterceptor();
       setLogged(true);
     }
     await Font.loadAsync(customFonts);
@@ -67,6 +80,7 @@ export default function App() {
   };
 
   const loginHandler = async () => {
+    ApiInterceptor();
     await getUserData();
     setLogged(true);
   };
@@ -95,7 +109,7 @@ export default function App() {
       editMode,
       toggleEdit: (v: boolean) => setEditMode(v),
       getRecommend,
-      getRecomendation: (v: boolean) => setGetrecommend(v) 
+      getRecomendation: (v: boolean) => setGetrecommend(v),
     }),
     [cal, show, userData, fetching, recipeId, editMode, getRecommend]
   );

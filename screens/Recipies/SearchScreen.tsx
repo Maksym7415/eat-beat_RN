@@ -1,5 +1,11 @@
 import React, { useState, useContext, useEffect, FC } from "react";
-import { ScrollView, StyleSheet, View, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import server from "../../server";
 import RecipeCard from "../../components/custom/RecipeCard";
 import EditModal from "../../components/newEditModal";
@@ -34,13 +40,15 @@ interface AddMealsProps {
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 
 const SearchScreen: FC<NavProps> = ({ navigation }) => {
-  const { isShow, showModal, calendar } = useContext<Memo>(AppContext);
+  const { isShow, showModal, calendar, isFetching } = useContext<Memo>(
+    AppContext
+  );
   const [state, setState] = useState<string>("");
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
     deactivate: false,
-    isFetching: false
-  })
+    myFetching: false,
+  });
   const [feed, setFeed] = useState<RecommendedMeals[] | null>(null);
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
@@ -73,12 +81,12 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
-      setFeed(null);
-      showModal(false);
-      setFetching({...fetching, isFetching: true})
+    setFeed(null);
+    showModal(false);
+    setFetching({ ...fetching, myFetching: true });
     const response = await server.getRecipeByName(state, config);
     if (response.ok) setFeed(response.data);
-    setFetching({...fetching, isFetching: false})
+    setFetching({ ...fetching, myFetching: false });
   };
 
   const saveFilterConfig = ({
@@ -107,7 +115,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       id: Number(id),
       name,
       data,
-      servings: 0.5,
+      servings: 1,
       modalVisible: true,
       creationTime: new Date(calendar.date).getTime(),
     });
@@ -120,7 +128,8 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       date: creationTime,
     });
     setModalData({ ...modalData, modalVisible: false });
-    navigation.navigate("meals", { refresh: id+creationTime+servings });
+    navigation.navigate("meals");
+    isFetching();
   };
 
   const constraintNumber: constNum = () => {
@@ -176,20 +185,19 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <ScrollView>
-        {!fetching.isFetching ?  <View style={styles.container}>
-          {feed?.map((item, index) => (
-            <View key={`${index}`} style={styles.cardContainer}>
-              <RecipeCard details={item} actionHandler={actionHandler} />
-            </View>
-          ))}
-        </View> 
-        :
-        (
+        {!fetching.myFetching ? (
+          <View style={styles.container}>
+            {feed?.map((item, index) => (
+              <View key={`${index}`} style={styles.cardContainer}>
+                <RecipeCard details={item} actionHandler={actionHandler} />
+              </View>
+            ))}
+          </View>
+        ) : (
           <View style={styles.loading}>
             <ActivityIndicator size="large" color={Col.Black} />
           </View>
-        )
-        }
+        )}
       </ScrollView>
     </View>
   );
@@ -221,6 +229,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
-},
+  },
 });
 export default SearchScreen;

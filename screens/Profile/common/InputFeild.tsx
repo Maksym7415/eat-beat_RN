@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Col, Spacing } from "../../../components/Config";
 import Text from "../../../components/custom/Typography";
@@ -31,6 +31,9 @@ const InputFeild: FC<Props> = ({
     setValue(`${newVal}`);
     onChange(`${newVal}`);
   };
+  useEffect(() => {
+    setValue(input);
+  }, [input]);
   return (
     <View style={styles.container}>
       <Text type="body">{label}</Text>
