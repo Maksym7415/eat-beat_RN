@@ -297,7 +297,7 @@ const upload = async (uri) => {
 const delCookedMeal = async (id: number) => {
   const address = apiConfig.del.cookedMeal + id;
   const response = await api.delete(address);
-  if (response.ok) logError(response);
+  if (!response.ok) logError(response);
   return response;
 };
 
