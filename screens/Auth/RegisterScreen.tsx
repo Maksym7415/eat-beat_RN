@@ -86,14 +86,14 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
                     }
                     style={{ color: Col.Main }}
                   >
-                    Conditions of Use
+                    Terms of Use
                   </Text>
                   <Text> and </Text>
                   <Text
                     onPress={() => showModal("Privacy Policy", "PrivacyPolicy")}
                     style={{ color: Col.Main }}
                   >
-                    Privacy Notice
+                    Privacy Policy
                   </Text>
                 </View>
               </View>

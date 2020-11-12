@@ -97,7 +97,9 @@ const refreshToken = async () => {
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
+  console.log(token, address)
   const response = await api.post(address, { refreshToken: token });
+  console.log(response)
   if (response.ok) setToken(response.data);
   return response;
 };
@@ -281,6 +283,7 @@ const upload = async (uri) => {
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
   });
+  console.log(address)
   const response = await api.post(address, formData, {
     headers: {
       Accept: "application/json",
@@ -295,7 +298,7 @@ const upload = async (uri) => {
 const delCookedMeal = async (id: number) => {
   const address = apiConfig.del.cookedMeal + id;
   const response = await api.delete(address);
-  if (response.ok) logError(response);
+  if (!response.ok) logError(response);
   return response;
 };
 

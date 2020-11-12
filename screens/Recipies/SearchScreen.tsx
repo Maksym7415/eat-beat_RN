@@ -160,6 +160,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     <View style={styles.canvas}>
       <EditModal
         data={modalData}
+        date={calendar.date}
         setData={(id, body) => addMeal(id, body)}
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
       />

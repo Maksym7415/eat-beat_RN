@@ -6,6 +6,7 @@ import { Button } from "../../components/MyComponents";
 import { AppContext } from "../../components/AppContext";
 import { View, StyleSheet, ScrollView } from "react-native";
 import {
+  Fetching,
   intakeProps,
   Memo,
   NavProps,
@@ -28,6 +29,10 @@ interface Feed {
 const DailyNorm: FC<NavProps> = ({ navigation }) => {
   const { myData, getData } = useContext<Memo>(AppContext);
   const { preferences }: ProfileProps = myData;
+  const [fetching, setFetching] = useState<Fetching>({
+    clicked: false,
+    deactivate: false
+  })
   const [norms, setNorms] = useState<intakeProps>(myData.intakeNorms);
   const [feed, setFeed] = useState<Options>({
     labels: Object.keys(myData.intakeNorms),
@@ -37,6 +42,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
     { label: "Calories (kcal)", value: 0, edit: false },
   ]);
   const saveHandler = async () => {
+    setFetching({clicked: true, deactivate: true})
     const update = {
       Calories: norms.Calories,
       Protein: norms.Protein,
@@ -44,6 +50,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
       Carbs: norms.Carbs,
     };
     await server.updateIntakeNorm(update);
+    setFetching({clicked: false, deactivate: false})
     getData();
   };
 
@@ -90,6 +97,8 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
           <View />
         ) : (
           <Button
+            deactivate={fetching.deactivate}
+            clicked={fetching.clicked}
             label={"Save changes"}
             onPress={saveHandler}
             style={styles.saveBtn}
