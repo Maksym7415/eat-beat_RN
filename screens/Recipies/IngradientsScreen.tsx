@@ -68,73 +68,75 @@ export default function IngradientScreen({ navigation }) {
   };
 
   return Object.keys(feed).length ? (
-    <ScrollView contentContainerStyle={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        {!editMode ? (
-          <View>
-            <View>
-              {feed.ingredients &&
-                feed.ingredients.map((el, index) => {
-                  return (
-                    <IngradientRow
-                      key={index}
-                      checkHandler={checkHandler}
-                      checked={checked}
-                      name={el.name}
-                      unit={el.unit}
-                      title={el.unit}
-                      servings={el.amount}
-                    />
-                  );
-                })}
-            </View>
-            <View style={{ ...styles.btnConatiner, marginTop: 8 }}>
-              <Button
-                label="Add selected products to My Shoppping List"
-                // onPress={() => toggleEdit(!editMode)}
-                style={{ backgroundColor: Col.Recipes }}
-                deactivate={!Object.values(checked).filter((el) => el).length}
-              />
-            </View>
-            <View style={styles.btnConatiner}>
-              <Button
-                label="Add recipe to my meals"
-                //onPress={() => toggleEdit(!editMode)}
-                style={{ backgroundColor: Col.Recipes }}
-                deactivate={!Object.values(checked).filter((el) => el).length}
-              />
-            </View>
-          </View>
-        ) : (
-          <View>
-            <View style={styles.ingradientContainer}>
-              <Text style={styles.ingradientTitle}>Ingredients</Text>
-              <View style={styles.ingradientTextField}>
-                <TextInput
-                  multiline
-                  value={value}
-                  onChangeText={changeHandler}
+    <View style={{ flex: 1, backgroundColor: Col.Background }}>
+      <ScrollView>
+        <View style={{ flexGrow: 1 }}>
+          {!editMode ? (
+            <>
+              <View>
+                {feed.ingredients &&
+                  feed.ingredients.map((el, index) => {
+                    return (
+                      <IngradientRow
+                        key={index}
+                        checkHandler={checkHandler}
+                        checked={checked}
+                        name={el.name}
+                        unit={el.unit}
+                        title={el.unit}
+                        servings={el.amount}
+                      />
+                    );
+                  })}
+              </View>
+              <View style={styles.btnConatiner}>
+                <Button
+                  label="Add selected products to My Shoppping List"
+                  onPress={() => console.log("")}
+                  style={{ backgroundColor: Col.Recipes }}
+                  deactivate={!Object.values(checked).filter((el) => el).length}
+                />
+                <Button
+                  label="Add recipe to my meals"
+                  onPress={() => toggleEdit(!editMode)}
+                  style={{ backgroundColor: Col.Recipes }}
+                  deactivate={Object.values(checked).filter((el) => el).length}
                 />
               </View>
+            </>
+          ) : (
+            <View style={{ flexGrow: 1 }}>
+              <View style={styles.ingradientContainer}>
+                <Text style={styles.ingradientTitle}>Ingredients</Text>
+                <View style={styles.ingradientTextField}>
+                  <TextInput
+                    multiline
+                    value={value}
+                    onChangeText={changeHandler}
+                  />
+                </View>
 
-              <Divider styler={styles.divider} />
+                <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  label="SAVE"
+                  onPress={saveChanges}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+                <Button
+                  label="CANCEL"
+                  type="text"
+                  onPress={() => toggleEdit(false)}
+                  labelStyle={{ color: Col.Grey }}
+                  style={{ marginVertical: 0 }}
+                />
+              </View>
             </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                label="SAVE"
-                onPress={saveChanges}
-                style={{ backgroundColor: Col.Recipes }}
-              />
-              <Button
-                label="CANCEL"
-                onPress={() => toggleEdit(false)}
-                style={{ backgroundColor: Col.Recipes }}
-              />
-            </View>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
@@ -154,12 +156,6 @@ const styles = StyleSheet.create({
   ingradientTextField: {
     paddingHorizontal: 16,
     paddingTop: 22,
-  },
-  divider: {
-    borderBottomWidth: 1,
-    marginVertical: Spacing.small,
-    borderBottomColor: "rgba(0, 0, 0, 0.6)",
-    marginBottom: '75%'
   },
   btnConatiner: {
     paddingHorizontal: 16,

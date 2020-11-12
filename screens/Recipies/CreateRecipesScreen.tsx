@@ -87,7 +87,6 @@ export default function CreateRecipeScreen({ navigation }) {
     });
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.uri);
     }
   };
 
@@ -106,17 +105,6 @@ export default function CreateRecipeScreen({ navigation }) {
   };
 
   const saveChanges = async () => {
-    let formData;
-    if (image) {
-      formData = new FormData();
-      const part = image.split(".");
-      const fileType = part[part.length - 1];
-      formData.append("file", {
-        uri: image,
-        name: `photo.${fileType}`,
-        type: `image/${fileType}`,
-      });
-    }
     let error = false;
     setData((state) => {
       const obj: Data = {};
@@ -139,7 +127,18 @@ export default function CreateRecipeScreen({ navigation }) {
       ingredientList: data.ingredients.value,
     });
     if (ok) {
-      const res = await server.addRecipeAvatar(formData, id);
+      let formData;
+      if (image) {
+        formData = new FormData();
+        const part = image.split(".");
+        const fileType = part[part.length - 1];
+        formData.append("file", {
+          uri: image,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        });
+        await server.addRecipeAvatar(formData, id);
+      }
       getRecipeId(id);
       setLoading({ ...loading, loading: false, disabled: false });
       navigation.navigate("user_recipe", {
