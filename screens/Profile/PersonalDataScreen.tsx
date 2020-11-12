@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext } from "react";
+import React, { useState, FC, useContext, useEffect, useCallback } from "react";
 import { View, Switch, StyleSheet, ScrollView } from "react-native";
 import Text from "../../components/custom/Typography";
 import server from "../../server";
@@ -9,6 +9,7 @@ import { Button, Divider } from "../../components/MyComponents";
 import ToggleChip from "../../components/custom/ToggleChip";
 import { AppContext } from "../../components/AppContext";
 import InputFeild from "./common/InputFeild";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   const { myData, getData } = useContext<Memo>(AppContext);
@@ -43,6 +44,20 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setFeed(myData);
+      setChips(myData.gender);
+      setDisabled(myData.preferences);
+      setSelected(myData.fkActivityId);
+    }, [])
+  );
+
+    useEffect(() => {
+      getData();
+    }, [])
+
+  console.log(feed.age);
   return (
     <View style={styles.canvas}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>

@@ -237,7 +237,7 @@ export default function CreateRecipeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   scroll: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: Col.Background,
   },
   container: {
