@@ -61,7 +61,7 @@ const apiConfig: apiProps = {
   },
 };
 
-const api = create({
+export const api = create({
   baseURL: apiConfig.baseURL,
   headers: {
     Accept: "application/json",
@@ -72,11 +72,6 @@ const api = create({
   },
   timeout: 20000,
 });
-
-const resendRequest = async (response) => {
-  await refreshToken();
-  //Axios.request(response.config);
-};
 
 const setToken = async (token: cacheProps) => {
   AsyncStorage.setItem("@token", JSON.stringify(token));
@@ -97,17 +92,13 @@ const getRefresh = async () => {
   return token ? JSON.parse(token).refreshToken : null;
 };
 
-const onFailedToRefreshToken = (response) => {
-  logError(response);
-};
-
 const refreshToken = async () => {
   console.log("attemp refresh\n----------------------------\n");
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
   const response = await api.post(address, { refreshToken: token });
-  response.ok ? setToken(response.data) : onFailedToRefreshToken(response);
+  if (response.ok) setToken(response.data);
   return response;
 };
 
@@ -130,7 +121,7 @@ const logError = async ({
   data,
 }: errorProps) => {
   Alert.alert("error", data?.message);
-  console.log(config, "\nstatus => ", status, "\ndata => ", data);
+  //console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
 
 const getCalendar = (value: Date) => {
@@ -140,12 +131,7 @@ const getCalendar = (value: Date) => {
 const getDailyConsumption = async (date: Date) => {
   const address = apiConfig.get.dailyConsumption + getCalendar(date);
   const response = await api.get(address);
-  if (!response.ok) {
-    if (response.status === 401) {
-      await refreshToken();
-    }
-    logError(response);
-  }
+  if (!response.ok) logError(response);
   return response;
 };
 
@@ -275,10 +261,6 @@ const signIn = async (payload: AuthProps) => {
   const response = await api.post(address, payload);
   if (response.ok) {
     setToken(response.data);
-    api.addResponseTransform((response) => {
-      if (response.status === 401) resendRequest(response);
-      if (response.status === 402) logError(response);
-    });
   }
   return response;
 };
@@ -402,6 +384,7 @@ const changeURL = () => {
 };
 
 export default {
+  api,
   setup,
   getDailyConsumption,
   getRecommendedMeals,
@@ -435,4 +418,5 @@ export default {
   getRecipes,
   updateRecipe,
   getDocs,
+  refreshToken,
 };
