@@ -28,8 +28,8 @@ const UserSettings: FC<Props> = ({
   const { diets, intolerances, mealTypes } = data;
   if (!diets || !intolerances || !mealTypes) return <View />;
   const [diet, setDiet] = useState(diets.filter((item) => item.isUsers)[0].id);
-  const [intole, setIntole] = useState([...intolerances]);
-  const [types, setTypes] = useState([...mealTypes]);
+  const [intole, setIntole] = useState(intolerances.map((el) => ({ ...el })));
+  const [types, setTypes] = useState(mealTypes.map((el) => ({ ...el })));
 
   const getRadioState = () => {
     const arr = [...diets];
@@ -53,16 +53,14 @@ const UserSettings: FC<Props> = ({
 
   const refreshPage = () => {
     setDiet(diets.filter((item) => item.isUsers)[0].id);
-    setIntole([...intolerances]);
-    setTypes([...mealTypes]);
+    setIntole(intolerances.map((el) => ({ ...el })));
+    setTypes(mealTypes.map((el) => ({ ...el })));
   };
 
   const isFocused = useIsFocused();
   useEffect(() => {
-    isFocused ? refreshPage() : origin;
+    if (!isFocused) refreshPage();
   }, [isFocused]);
-
-  console.log("------\n", intole[0].isUsers, intolerances[0].isUsers);
 
   return (
     <View style={[styles.canvas, { backgroundColor }]}>

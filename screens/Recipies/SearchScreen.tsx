@@ -22,6 +22,7 @@ import SearchModal from "../../components/SearchModal";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import FilterModal from "../../components/FilterModal";
 import Text from "../../components/custom/Typography";
+import { useIsFocused } from "@react-navigation/native";
 
 type constNum = () => number;
 
@@ -152,9 +153,10 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
+  const isFocused = useIsFocused();
   useEffect(() => {
-    getFilter();
-  }, []);
+    if (isFocused) getFilter();
+  }, [isFocused]);
 
   return (
     <View style={styles.canvas}>

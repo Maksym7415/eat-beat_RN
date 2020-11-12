@@ -114,7 +114,7 @@ const DrawerLayout = (props) => {
             alignItems: "center",
           }}
         >
-          <Text>v 0.1.4</Text>
+          <Text>v 0.1.5</Text>
         </View>
       </ScrollView>
     );

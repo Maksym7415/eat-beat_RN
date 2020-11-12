@@ -37,7 +37,7 @@ const newEditModal: FC<Props> = ({
   data,
   hideModal,
   blend = Col.Green,
-  date
+  date,
 }) => {
   const { id, name, servings, modalVisible, creationTime } = data;
   const handleFetch = (creationTime) => {
@@ -57,10 +57,17 @@ const newEditModal: FC<Props> = ({
     return edit.getTime();
   };
 
-  const handleSubmit = () => { 
+  const handleSubmit = () => {
+    const d = new Date(date);
+    const hours = `${newTime.hrs}:${newTime.min}`;
+    const times = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
+      .split("/")
+      .map((el) => (el.length === 1 ? "0" + el : el))
+      .join("/");
+    const format = new Date(times + " " + hours).getTime();
 
     setData(id, {
-      creationTime: new Date(date).getTime() || handleEdit(),
+      creationTime: format,
       servings: Number(newTime.portion),
     });
   };
