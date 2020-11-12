@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { Button, Divider } from "./MyComponents";
 import { Col, Spacing } from "./Config";
@@ -6,6 +6,7 @@ import Chip from "./custom/ToggleChip";
 import Text from "./custom/Typography";
 import RadioInput from "./custom/RadioInput";
 import { recipeSettings, Fetching } from "./interfaces";
+import { useIsFocused } from "@react-navigation/native";
 
 interface Props {
   data: recipeSettings;
@@ -26,9 +27,9 @@ const UserSettings: FC<Props> = ({
 }) => {
   const { diets, intolerances, mealTypes } = data;
   if (!diets || !intolerances || !mealTypes) return <View />;
-  const [diet, setDiet] = useState(0);
-  const [intole, setIntole] = useState(intolerances);
-  const [types, setTypes] = useState(mealTypes);
+  const [diet, setDiet] = useState(diets.filter((item) => item.isUsers)[0].id);
+  const [intole, setIntole] = useState([...intolerances]);
+  const [types, setTypes] = useState([...mealTypes]);
 
   const getRadioState = () => {
     const arr = [...diets];
@@ -50,9 +51,22 @@ const UserSettings: FC<Props> = ({
     setTypes(arr);
   };
 
+  const refreshPage = () => {
+    setDiet(diets.filter((item) => item.isUsers)[0].id);
+    setIntole([...intolerances]);
+    setTypes([...mealTypes]);
+  };
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    isFocused ? refreshPage() : origin;
+  }, [isFocused]);
+
+  console.log("------\n", intole[0].isUsers, intolerances[0].isUsers);
+
   return (
     <View style={[styles.canvas, { backgroundColor }]}>
-      <ScrollView overScrollMode="always">
+      <ScrollView>
         <View style={{ flexGrow: 1 }}>
           <View style={styles.container}>
             <Text type="h6">Intolerances</Text>

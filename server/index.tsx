@@ -62,7 +62,7 @@ const apiConfig: apiProps = {
 };
 
 export const api = create({
-  baseURL: apiConfig.testURL,
+  baseURL: apiConfig.baseURL,
   headers: {
     Accept: "application/json",
     "User-Agent":

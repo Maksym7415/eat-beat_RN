@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
@@ -44,7 +44,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           fontSize: 14,
         }}
       >
-        v 0.1.4 t
+        v 0.1.5
       </Text>
       <Logo />
       <View style={styles.boxContainer}>
