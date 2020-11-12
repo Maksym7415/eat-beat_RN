@@ -12,10 +12,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { Col, Spacing, Typ } from "../../components/Config";
-import { Divider } from "../../components/MyComponents";
+import { Col, Spacing } from "../../components/Config";
+import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
-import Button from "../../components/custom/ConfirmationButton";
 import Nutrient from "../../components/Nutrient";
 import NutritionItem from "../../components/Nutrition";
 import { NavProps } from "../../components/interfaces";
@@ -53,7 +52,6 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     });
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.uri);
     }
   };
 
@@ -132,143 +130,139 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     };
   }, []);
   return Object.keys(feed).length && !disabled ? (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <View style={styles.imageContainer}>
-            {editMode && (
-              <View
-                style={{
-                  position: "absolute",
-                  left: "40%",
-                  top: "35%",
-                  zIndex: 10,
-                  opacity: 0.5,
-                }}
-              >
-                <TouchableOpacity onPress={pickAvatar}>
-                  <Icon name={"camera-plus"} color={Col.Grey1} size={58} />
-                </TouchableOpacity>
-              </View>
-            )}
-            {
-              <Image
-                source={{
-                  uri: image
-                    ? image
-                    : `https://logisticbrocker.hopto.org/eat-beat/${feed?.uri}`,
-                }}
-                style={styles.image}
-              />
-            }
-          </View>
-          <Divider styler={styles.divider} />
-          <View style={{ paddingHorizontal: 16 }}>
-            <Text style={{ marginBottom: 10 }}>Title*</Text>
-            {!editMode ? (
-              <Text>{feed.title}</Text>
-            ) : (
-              <View>
-                <TextInput
-                  value={
-                    data.title.value === undefined
-                      ? feed.title
-                      : data.title.value
-                  }
-                  onChangeText={(text) => onCnangeHandler(text, "title")}
-                  placeholder={"Add recipe title"}
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <View style={styles.imageContainer}>
+              {editMode && (
+                <View
                   style={{
-                    borderColor: data.title.error ? "#FF364F" : Col.Grey2,
-                    borderBottomWidth: 1,
+                    position: "absolute",
+                    left: "40%",
+                    top: "35%",
+                    zIndex: 10,
+                    opacity: 0.5,
                   }}
+                >
+                  <TouchableOpacity onPress={pickAvatar}>
+                    <Icon name={"camera-plus"} color={Col.Grey1} size={58} />
+                  </TouchableOpacity>
+                </View>
+              )}
+              {
+                <Image
+                  source={{
+                    uri: image
+                      ? image
+                      : `https://logisticbrocker.hopto.org/eat-beat/${feed?.uri}`,
+                  }}
+                  style={styles.image}
                 />
-                {data.title.error ? (
-                  <Text style={{ color: "#FF364F", marginTop: 10 }}>
-                    {data.title.error}{" "}
-                  </Text>
-                ) : null}
-              </View>
-            )}
+              }
+            </View>
+            <Divider styler={styles.divider} />
+            <View style={{ paddingHorizontal: 16 }}>
+              <Text style={{ marginBottom: 10 }}>Title*</Text>
+              {!editMode ? (
+                <Text>{feed.title}</Text>
+              ) : (
+                <View>
+                  <TextInput
+                    value={
+                      data.title.value === undefined
+                        ? feed.title
+                        : data.title.value
+                    }
+                    onChangeText={(text) => onCnangeHandler(text, "title")}
+                    placeholder={"Add recipe title"}
+                    style={{
+                      borderColor: data.title.error ? "#FF364F" : Col.Grey2,
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  {data.title.error ? (
+                    <Text style={{ color: "#FF364F", marginTop: 10 }}>
+                      {data.title.error}{" "}
+                    </Text>
+                  ) : null}
+                </View>
+              )}
+            </View>
           </View>
-        </View>
-        {!editMode ? (
-          <View>
+          {!editMode ? (
             <View>
-              <Nutrient
-                name={"Number of servings"}
-                currentValue={feed.servings}
-                recipe={true}
-                isUnit={true}
-              />
-            </View>
-            <View style={styles.boxContainer}>
-              {feed.mainNutrients &&
-                feed.mainNutrients.map((item, index) => (
-                  <View key={`${index}`} style={styles.box}>
-                    <Nutrient
-                      recipe={true}
-                      name={item.title}
-                      unit={item.unit}
-                      intakeNorm={item.intakeNorm}
-                      currentValue={item.amount}
-                    />
-                  </View>
-                ))}
-            </View>
-            <View style={styles.detailsContainer}>
-              <Text style={styles.detailTitle}>
-                Nutrition Details (per serving)
-              </Text>
               <View>
-                {feed.nutrients &&
-                  feed.nutrients.map((elm, index) => (
-                    <NutritionItem
-                      key={index}
-                      item={{
-                        recipe: true,
-                        name: elm.title,
-                        unit: elm.unit,
-                        currentValue: elm.amount,
-                      }}
-                    />
+                <Nutrient
+                  name={"Number of servings"}
+                  currentValue={feed.servings}
+                  recipe={true}
+                  isUnit={true}
+                />
+              </View>
+              <View style={styles.boxContainer}>
+                {feed.mainNutrients &&
+                  feed.mainNutrients.map((item, index) => (
+                    <View key={`${index}`} style={styles.box}>
+                      <Nutrient
+                        recipe={true}
+                        name={item.title}
+                        unit={item.unit}
+                        intakeNorm={item.intakeNorm}
+                        currentValue={item.amount}
+                      />
+                    </View>
                   ))}
               </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.detailTitle}>
+                  Nutrition Details (per serving)
+                </Text>
+                <View>
+                  {feed.nutrients &&
+                    feed.nutrients.map((elm, index) => (
+                      <NutritionItem
+                        key={index}
+                        item={{
+                          recipe: true,
+                          name: elm.title,
+                          unit: elm.unit,
+                          currentValue: elm.amount,
+                        }}
+                      />
+                    ))}
+                </View>
+              </View>
+              <View>
+                <Button
+                  label="Add recipe to my meals"
+                  onPress={() => console.log("")}
+                  deactivate={disabled}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+              </View>
             </View>
+          ) : (
             <View>
               <Button
-                title={"Add recipe to my meals"}
-                //onClickHandler={saveChanges}
-                bckColor={Col.Green1}
-                textColor={Col.White}
-                fts={Typ.Small}
-                ftw={"500"}
+                label="SAVE"
+                onPress={saveChanges}
+                deactivate={disabled}
+                style={{ backgroundColor: Col.Recipes }}
+              />
+              <Button
+                label="CANCEL"
+                type="text"
+                deactivate={disabled}
+                onPress={() => toggleEdit(!editMode)}
+                labelStyle={{ color: Col.Grey }}
+                style={{ marginVertical: 0 }}
               />
             </View>
-          </View>
-        ) : (
-          <View>
-            <Button
-              title={"SAVE"}
-              onClickHandler={saveChanges}
-              disabled={disabled}
-              bckColor={Col.Green1}
-              textColor={Col.White}
-              fts={Typ.Small}
-              ftw={"500"}
-            />
-            <Button
-              title={"Cancel"}
-              onClickHandler={() => toggleEdit(!editMode)}
-              disabled={disabled}
-              bckColor={""}
-              textColor={"#7A7A7A"}
-              fts={Typ.Small}
-              ftw={"500"}
-            />
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />

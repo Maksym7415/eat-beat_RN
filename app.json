@@ -22,7 +22,7 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.yakmoon.eatbeat"
+      "package": "com.prod.eatbeat"
     }
   }
 }

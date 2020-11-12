@@ -17,8 +17,8 @@ import { AuthProps } from "../components/interfaces";
 
 // console.log(Device, )
 const apiConfig: apiProps = {
-  baseURL: "http://10.4.30.212:8081/api",
-  //baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  //baseURL: "http://10.4.30.212:8081/api",
+  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -62,7 +62,7 @@ const apiConfig: apiProps = {
 };
 
 export const api = create({
-  baseURL: apiConfig.baseURL,
+  baseURL: apiConfig.testURL,
   headers: {
     Accept: "application/json",
     "User-Agent":
@@ -120,8 +120,7 @@ const logError = async ({
   headers,
   data,
 }: errorProps) => {
-  if(status === 401) return;
-  Alert.alert("error", data?.message);
+  if (status < 401) Alert.alert("error", data?.message);
   //console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
 
@@ -153,7 +152,6 @@ const getCookedMeals = async (date: Date) => {
 const updateCookedMeal = async (id: number, data: object) => {
   const address = apiConfig.put.updateCookedMeal + id;
   const response = await api.patch(address, data);
-  console.log(response);
   if (!response.ok) logError(response);
   return response;
 };

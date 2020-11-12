@@ -52,57 +52,59 @@ const UserSettings: FC<Props> = ({
 
   return (
     <View style={[styles.canvas, { backgroundColor }]}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
-        <View style={styles.container}>
-          <Text type="h6">Intolerances</Text>
-          <View style={styles.chipsContainer}>
-            {intole.map(({ id, name, isUsers }, index) => (
-              <Chip
+      <ScrollView overScrollMode="always">
+        <View style={{ flexGrow: 1 }}>
+          <View style={styles.container}>
+            <Text type="h6">Intolerances</Text>
+            <View style={styles.chipsContainer}>
+              {intole.map(({ id, name, isUsers }, index) => (
+                <Chip
+                  key={id + name}
+                  title={name}
+                  state={isUsers}
+                  selectedColor={blend}
+                  onPress={() => updateIntole(index)}
+                />
+              ))}
+            </View>
+          </View>
+          <Divider />
+          <View style={styles.container}>
+            <Text type="h6">Diet</Text>
+            {diets.map(({ id, name, isUsers }) => (
+              <RadioInput
                 key={id + name}
-                title={name}
-                state={isUsers}
-                selectedColor={blend}
-                onPress={() => updateIntole(index)}
+                value={id}
+                label={name}
+                selected={diet}
+                disabled={false}
+                onSelect={() => setDiet(id)}
+                blend={blend}
               />
             ))}
           </View>
-        </View>
-        <Divider />
-        <View style={styles.container}>
-          <Text type="h6">Diet</Text>
-          {diets.map(({ id, name, isUsers }) => (
-            <RadioInput
-              key={id + name}
-              value={id}
-              label={name}
-              selected={diet}
-              disabled={false}
-              onSelect={() => setDiet(id)}
-              blend={blend}
-            />
-          ))}
-        </View>
-        {showMealsTypes ? (
-          <>
-            <Divider />
-            <View style={styles.container}>
-              <Text type="h6">Meal Types</Text>
-              <View style={styles.chipsContainer}>
-                {types.map(({ id, name, isUsers }, index) => (
-                  <Chip
-                    key={id + name}
-                    title={name}
-                    state={isUsers}
-                    selectedColor={blend}
-                    onPress={() => updateTypes(index)}
-                  />
-                ))}
+          {showMealsTypes ? (
+            <>
+              <Divider />
+              <View style={styles.container}>
+                <Text type="h6">Meal Types</Text>
+                <View style={styles.chipsContainer}>
+                  {types.map(({ id, name, isUsers }, index) => (
+                    <Chip
+                      key={id + name}
+                      title={name}
+                      state={isUsers}
+                      selectedColor={blend}
+                      onPress={() => updateTypes(index)}
+                    />
+                  ))}
+                </View>
               </View>
-            </View>
-          </>
-        ) : (
-          <View />
-        )}
+            </>
+          ) : (
+            <View />
+          )}
+        </View>
         <View style={styles.buttonContainer}>
           <Button
             deactivate={fetching.deactivate}

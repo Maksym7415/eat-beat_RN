@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
-import { apisAreAvailable } from "expo";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -34,10 +33,9 @@ export default function App() {
 
   const ApiInterceptor = async () => {
     api.addAsyncResponseTransform(async ({ status, data }) => {
-      console.log(status);
       if (status === 401 && !flag) {
         flag = true;
-        const res = await server.refreshToken()
+        const res = await server.refreshToken();
         if (res.status === 401) removeToken();
         flag = false;
       }
