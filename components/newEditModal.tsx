@@ -39,17 +39,17 @@ const newEditModal: FC<Props> = ({
   blend = Col.Green,
   date
 }) => {
-  const { id, name, servings, modalVisible } = data;
-  const handleFetch = () => {
-    const hrs = new Date().getHours().toString();
-    const min = new Date().getMinutes().toString();
+  const { id, name, servings, modalVisible, creationTime } = data;
+  const handleFetch = (creationTime) => {
+    const hrs = new Date(creationTime).getHours().toString();
+    const min = new Date(creationTime).getMinutes().toString();
     return {
       hrs: hrs.length > 1 ? hrs : "0" + hrs,
       min: min.length > 1 ? min : "0" + min,
       portion: servings.toString(),
     };
   };
-  const [newTime, setNewTime] = useState(handleFetch());
+  const [newTime, setNewTime] = useState(handleFetch(creationTime));
   const handleEdit = () => {
     const edit: Date = new Date();
     edit.setHours(Math.round(parseInt(newTime.hrs, 10)));
@@ -57,11 +57,10 @@ const newEditModal: FC<Props> = ({
     return edit.getTime();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = () => { 
 
-    console.log(new Date(date).getTime(), date)
     setData(id, {
-      creationTime: new Date(date).getTime(),
+      creationTime: new Date(date).getTime() || handleEdit(),
       servings: Number(newTime.portion),
     });
   };
@@ -87,7 +86,7 @@ const newEditModal: FC<Props> = ({
   };
 
   useEffect(() => {
-    setNewTime(handleFetch());
+    setNewTime(handleFetch(creationTime));
   }, [data]);
 
   return (

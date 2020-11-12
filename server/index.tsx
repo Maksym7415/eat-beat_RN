@@ -62,7 +62,7 @@ const apiConfig: apiProps = {
 };
 
 export const api = create({
-  baseURL: apiConfig.testURL,
+  baseURL: apiConfig.baseURL,
   headers: {
     Accept: "application/json",
     "User-Agent":
@@ -97,7 +97,9 @@ const refreshToken = async () => {
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
+  console.log(token, address)
   const response = await api.post(address, { refreshToken: token });
+  console.log(response)
   if (response.ok) setToken(response.data);
   return response;
 };
@@ -281,6 +283,7 @@ const upload = async (uri) => {
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
   });
+  console.log(address)
   const response = await api.post(address, formData, {
     headers: {
       Accept: "application/json",

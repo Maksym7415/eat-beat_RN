@@ -97,6 +97,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         onClose={() => setActionBtn(false)}
       />
       <EditModal
+        date={modalData.creationTime}
         data={modalData}
         setData={(id, body) => updateMeal(id, body)}
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}

@@ -84,9 +84,11 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     if (getRecommend) {
       setFeed([]);
     }
+    navigation.addListener('focus', () => {
+      setFeed([]);
+    })
   }, [getRecommend]);
 
-  console.log(date, 'dsgfksgkjdfjk')
   return feed.length ? (
     <View style={{ flex: 1, backgroundColor: Col.Background }}>
       {console.log(date)}
