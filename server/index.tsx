@@ -17,8 +17,8 @@ import { AuthProps } from "../components/interfaces";
 
 // console.log(Device, )
 const apiConfig: apiProps = {
-  //baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
+  //baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -120,6 +120,7 @@ const logError = async ({
   headers,
   data,
 }: errorProps) => {
+  if(status === 401) return;
   Alert.alert("error", data?.message);
   //console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };

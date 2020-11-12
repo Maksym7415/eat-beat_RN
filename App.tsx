@@ -15,6 +15,8 @@ let customFonts = {
   Inter_700Bold: require("./assets/font/Roboto-Bold.ttf"),
 };
 
+let flag = false;
+
 export default function App() {
   //AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -33,9 +35,11 @@ export default function App() {
   const ApiInterceptor = async () => {
     api.addAsyncResponseTransform(async ({ status, data }) => {
       console.log(status);
-      if (status === 401) {
-        const res = await server.refreshToken();
+      if (status === 401 && !flag) {
+        flag = true;
+        const res = await server.refreshToken()
         if (res.status === 401) removeToken();
+        flag = false;
       }
       if (status === 403 && data.code === 120) removeToken();
     });
