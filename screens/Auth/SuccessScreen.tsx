@@ -6,11 +6,12 @@ import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import { AppContext } from "../../components/AppContext";
 import Logo from "./common/Logo";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const SuccessScreen: FC<NavProps> = ({ navigation }) => {
   const { login } = useContext(AppContext);
   return (
-    <View style={styles.container}>
+    <LayoutScroll style={styles.container}>
       <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
@@ -21,7 +22,7 @@ const SuccessScreen: FC<NavProps> = ({ navigation }) => {
         </Text>
         <Button style={styles.btn} onPress={() => login()} label="GO" />
       </View>
-    </View>
+    </LayoutScroll>
   );
 };
 

@@ -13,7 +13,8 @@ import {
   ProfileProps,
 } from "../../components/interfaces";
 import IntakeSlot from "./common/IntakeSlot";
-import { getDate } from "../../utils/date";
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
 
 interface Options {
   labels: string[];
@@ -31,9 +32,9 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
   const { preferences }: ProfileProps = myData;
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
-    deactivate: false
-  })
-  const [norms, setNorms] = useState<intakeProps>(myData.intakeNorms);
+    deactivate: false,
+  });
+  const [norms, setNorms] = useState<intakeProps>({ ...myData.intakeNorms });
   const [feed, setFeed] = useState<Options>({
     labels: Object.keys(myData.intakeNorms),
     values: Object.values(myData.intakeNorms),
@@ -41,8 +42,9 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
   const [intakes, setIntakes] = useState<Feed[]>([
     { label: "Calories (kcal)", value: 0, edit: false },
   ]);
+  const [refreshing, setRefreshing] = useState(0);
   const saveHandler = async () => {
-    setFetching({clicked: true, deactivate: true})
+    setFetching({ clicked: true, deactivate: true });
     const update = {
       Calories: norms.Calories,
       Protein: norms.Protein,
@@ -50,7 +52,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
       Carbs: norms.Carbs,
     };
     await server.updateIntakeNorm(update);
-    setFetching({clicked: false, deactivate: false})
+    setFetching({ clicked: false, deactivate: false });
     getData();
   };
 
@@ -71,6 +73,21 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
     setIntakes(newIntake);
   };
 
+  const refreshPage = () => {
+    setRefreshing(refreshing + 2);
+    setNorms({ ...myData.intakeNorms });
+    sortData();
+    setFeed({
+      labels: Object.keys(myData.intakeNorms),
+      values: Object.values(myData.intakeNorms),
+    });
+  };
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isFocused) refreshPage();
+  }, [isFocused]);
+
   useEffect(() => {
     sortData();
     setFeed({
@@ -80,7 +97,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
   }, [myData]);
 
   return (
-    <ScrollView>
+    <LayoutScroll>
       <View style={styles.container}>
         <Text type="h6" style={styles.intakeNormText}>
           Daily intake norm
@@ -91,6 +108,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
             item={item}
             editable={!preferences}
             onEdit={(key, val) => setNorms({ ...norms, [key]: val })}
+            refresh={refreshing}
           />
         ))}
         {preferences ? (
@@ -105,7 +123,7 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
           />
         )}
       </View>
-    </ScrollView>
+    </LayoutScroll>
   );
 };
 

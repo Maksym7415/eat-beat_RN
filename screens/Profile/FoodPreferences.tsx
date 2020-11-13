@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import server from "../../server";
 import UserSettings from "../../components/UserSettings";
 import { recipeSettings, Fetching, Memo } from "../../components/interfaces";
 import { Col } from "../../components/Config";
 import { AppContext } from "../../components/AppContext";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 export default function FoodPreferences({ navigation }) {
   const [filter, setFilter] = useState<recipeSettings | null>(null);

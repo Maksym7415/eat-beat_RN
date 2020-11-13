@@ -20,7 +20,7 @@ interface Props {
     creationTime: number;
     servings: number;
   };
-  onClick?: (id: number) => void;
+  onClick?: () => void;
   actionHandler: (value: editProps) => void;
   onDelete: (id: number, name: string) => void;
 }
@@ -88,7 +88,9 @@ const CookedMealCard: FC<Props> = ({
           <Text type="cap" style={styles.recipe}>
             Recipe
           </Text>
-          <Text style={styles.recipeName}>{name}</Text>
+          <Text onPress={onClick} style={styles.recipeName}>
+            {name}
+          </Text>
         </View>
       </View>
     </View>

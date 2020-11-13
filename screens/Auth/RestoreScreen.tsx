@@ -9,6 +9,7 @@ import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import Logo from "./common/Logo";
 import server from "../../server";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -33,7 +34,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LayoutScroll style={styles.container}>
       <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
@@ -82,7 +83,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </LayoutScroll>
   );
 };
 

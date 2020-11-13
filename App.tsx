@@ -15,6 +15,7 @@ let customFonts = {
 };
 
 let flag = false;
+const requests = [];
 
 export default function App() {
   //AsyncStorage.clear();
@@ -32,11 +33,22 @@ export default function App() {
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const ApiInterceptor = async () => {
-    api.addAsyncResponseTransform(async ({ status, data }) => {
+    api.addRequestTransform((request) => {
+      requests.push(request);
+    });
+    api.addAsyncResponseTransform(async ({ status, data, config, ok }) => {
+      if (ok) requests.unshift();
       if (status === 401 && !flag) {
         flag = true;
         const res = await server.refreshToken();
-        if (res.status === 401) removeToken();
+        if (res.status === 401) {
+          removeToken();
+        } else {
+          // const newConfig = { ...requests[0] };
+          // newConfig.headers.Authorization = `Bearer ${res.data.accessToken}`;
+          // await api.any(newConfig);
+          console.log("-------\nnewConf\n", requests[0]);
+        }
         flag = false;
       }
       if (status === 403 && data.code === 120) removeToken();

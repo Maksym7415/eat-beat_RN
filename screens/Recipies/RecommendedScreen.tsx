@@ -84,14 +84,13 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     if (getRecommend) {
       setFeed([]);
     }
-    navigation.addListener('focus', () => {
+    navigation.addListener("focus", () => {
       setFeed([]);
-    })
+    });
   }, [getRecommend]);
 
   return feed.length ? (
     <View style={{ flex: 1, backgroundColor: Col.Background }}>
-      {console.log(date)}
       <EditModal
         data={modalData}
         date={date}

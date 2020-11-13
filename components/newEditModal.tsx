@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   amountWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: Spacing.xlarge,
+    paddingHorizontal: "7%",
     paddingVertical: Spacing.small,
     borderRadius: 8,
     borderWidth: 1.5,

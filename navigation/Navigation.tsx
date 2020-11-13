@@ -95,6 +95,25 @@ const EditRecipeTopNAvigator = () => (
   </TopTabs.Navigator>
 );
 
+const PreviewRecipeTopNavigator = () => (
+  <TopTabs.Navigator
+    tabBarOptions={{
+      style: {
+        backgroundColor: Col.Header,
+        elevation: 0,
+      },
+      indicatorStyle: {
+        backgroundColor: Col.Recipes,
+      },
+    }}
+    initialRouteName="info"
+  >
+    <TopTabs.Screen name="info" component={RecipeInfoScreen} />
+    <TopTabs.Screen name="ingredients" component={IngradientScreen} />
+    <TopTabs.Screen name="instruction" component={InstructionScreen} />
+  </TopTabs.Navigator>
+);
+
 const RecipesTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{

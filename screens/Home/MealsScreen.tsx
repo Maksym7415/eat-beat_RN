@@ -133,6 +133,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
             actionHandler={(props: editProps) =>
               setModalData({ ...props, modalVisible: true })
             }
+            onClick={() => console.log("hi")}
             onDelete={(id, name) => setPopAlert({ id, name, visible: true })}
           />
         )}
