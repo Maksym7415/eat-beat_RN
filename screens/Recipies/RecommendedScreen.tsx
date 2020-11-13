@@ -70,11 +70,13 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
+    setFetching({ clicked: true, deactivate: true });
     await server.addCookedMeal({
       meal: modalData.data,
       quantity: servings,
       date: creationTime,
     });
+    setFetching({ clicked: false, deactivate: false });
     setModalData({ ...modalData, modalVisible: false });
     navigation.navigate("meals");
     isFetching();
@@ -93,10 +95,14 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     <View style={{ flex: 1, backgroundColor: Col.Background }}>
       {console.log(date)}
       <EditModal
+        clicked={fetching.clicked}
         data={modalData}
         date={date}
         setData={(id, body) => addMeal(id, body)}
-        hideModal={() => setModalData({ ...modalData, modalVisible: false })}
+        hideModal={() => {
+          if(fetching.clicked) return;
+          setModalData({ ...modalData, modalVisible: false })
+        }}
       />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>

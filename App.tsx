@@ -15,6 +15,18 @@ let customFonts = {
 };
 
 let flag = false;
+let failedQueue = [];
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
 
 export default function App() {
   //AsyncStorage.clear();
@@ -32,14 +44,45 @@ export default function App() {
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const ApiInterceptor = async () => {
-    api.addAsyncResponseTransform(async ({ status, data }) => {
-      if (status === 401 && !flag) {
-        flag = true;
+
+    api.addAsyncResponseTransform(async (Res) => {
+      const { ok, status, data, config } = Res
+      if (status === 401) {
+        console.log('failedq',flag )
+        if(flag) {
+          return new Promise((resolve, reject) => {
+
+            failedQueue.push({ resolve, reject });
+          })
+            .then( async (token) => {
+              const newConfig = { ...config };
+              newConfig.headers.Authorization = `Bearer ${token}`;
+              const newRes = await api.any(newConfig);
+              Res.ok = newRes.ok
+              Res.status = newRes.status
+              Res.data = newRes.data;
+              return;
+
+            })
+            .catch((err) => Promise.reject(err));
+        }
+        flag = true
         const res = await server.refreshToken();
-        if (res.status === 401) removeToken();
-        flag = false;
+        if (res.status === 401) {
+          processQueue(true, null);
+          return removeToken();
+        }
+        const newConfig = { ...config };
+        newConfig.headers.Authorization = ` Bearer ${res.data.accessToken}`;
+        processQueue(null, res.data.accessToken);
+        const newRes = await api.any(newConfig);
+        Res.ok = newRes.ok
+        Res.status = newRes.status
+        Res.data = newRes.data
       }
+      flag = false;
       if (status === 403 && data.code === 120) removeToken();
+      // (ok)? api.any(failedQueue[0]):failedQueue.unshift()
     });
   };
 

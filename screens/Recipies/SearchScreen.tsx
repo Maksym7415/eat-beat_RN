@@ -49,7 +49,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     deactivate: false,
     myFetching: false,
   });
-  const [feed, setFeed] = useState<RecommendedMeals[] | null>(null);
+  const [feed, setFeed] = useState<RecommendedMeals[] | null>('Search the meals');
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
     diets: [],
@@ -81,11 +81,16 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
-    setFeed(null);
     showModal(false);
     setFetching({ ...fetching, myFetching: true });
     const response = await server.getRecipeByName(state, config);
-    if (response.ok) setFeed(response.data);
+    if (response.ok) {
+      if(!response.data.length) {
+        setFetching({ ...fetching, myFetching: false });
+        return setFeed('We couldn’t find any meals')
+      }
+      setFeed(response.data);
+    }
     setFetching({ ...fetching, myFetching: false });
   };
 
@@ -186,8 +191,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <ScrollView>
+        {console.log(feed)}
         {!fetching.myFetching ? (
-          <View style={styles.container}>
+          typeof feed === 'string' ? <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 50}}><Text>{feed}</Text></View> : <View style={styles.container}>
             {feed?.map((item, index) => (
               <View key={`${index}`} style={styles.cardContainer}>
                 <RecipeCard details={item} actionHandler={actionHandler} />
