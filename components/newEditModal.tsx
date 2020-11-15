@@ -38,6 +38,7 @@ const newEditModal: FC<Props> = ({
   hideModal,
   blend = Col.Green,
   date,
+  clicked,
 }) => {
   const { id, name, servings, modalVisible, creationTime } = data;
   const handleFetch = (creationTime) => {
@@ -58,6 +59,7 @@ const newEditModal: FC<Props> = ({
   };
 
   const handleSubmit = () => {
+    if (clicked) return;
     const d = new Date(date);
     const hours = `${newTime.hrs}:${newTime.min}`;
     const times = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
@@ -65,7 +67,6 @@ const newEditModal: FC<Props> = ({
       .map((el) => (el.length === 1 ? "0" + el : el))
       .join("/");
     const format = new Date(times + " " + hours).getTime();
-
     setData(id, {
       creationTime: format,
       servings: Number(newTime.portion),
@@ -79,7 +80,7 @@ const newEditModal: FC<Props> = ({
       portion: `${initialValue + value}`,
     });
   };
-
+  console.log(clicked);
   const beautifyTime = () => {
     let h = newTime.hrs.length > 1 ? newTime.hrs : "0" + newTime.hrs;
     h = +h > 23 || isNaN(+h) ? "23" : h;
@@ -183,14 +184,14 @@ const newEditModal: FC<Props> = ({
                 label="CANCEL"
                 onPress={hideModal}
                 style={{ marginVertical: 0 }}
-                labelStyle={{ color: "black" }}
+                labelStyle={{ color: clicked ? "grey" : "black" }}
               />
               <Button
                 type="text"
                 label="OK"
                 onPress={handleSubmit}
                 style={{ marginVertical: 0 }}
-                labelStyle={{ color: "black" }}
+                labelStyle={{ color: clicked ? "grey" : "black" }}
               />
             </View>
           </View>

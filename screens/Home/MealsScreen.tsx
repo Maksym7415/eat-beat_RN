@@ -124,7 +124,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         <View />
       )}
       <FlatList
-        data={feed}
+        data={feed?.sort((a, b) => a.creationTime > b.creationTime )}
         ListEmptyComponent={() => <EmptyList />}
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item, index }) => (

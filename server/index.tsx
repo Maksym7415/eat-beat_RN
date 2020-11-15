@@ -176,7 +176,7 @@ const getProfile = async () => {
 
 const getHistory = async (days: number) => {
   const address = apiConfig.get.history + days;
-  const response = await api.get(address);
+  const response = await api.get(address);  
   if (!response.ok) logError(response);
   return response;
 };

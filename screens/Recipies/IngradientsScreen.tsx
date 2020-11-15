@@ -120,7 +120,7 @@ export default function IngradientScreen({ navigation }) {
               </View>
               <View style={styles.buttonContainer}>
                 <Button
-                  label="SAVE"
+                  label="SAVE CHANGES"
                   onPress={saveChanges}
                   style={{ backgroundColor: Col.Recipes }}
                 />
