@@ -54,11 +54,14 @@ const ModalWindow: FC<Props> = ({
           >
             {label}
           </Text>
-          <View style={{ flexShrink: 1 }}>
-            <ScrollView fadingEdgeLength={50}>
-              <Text type="body2">{desc}</Text>
-            </ScrollView>
-          </View>
+          <ScrollView
+            alwaysBounceVertical
+            showsVerticalScrollIndicator={false}
+            overScrollMode="auto"
+            fadingEdgeLength={50}
+          >
+            <Text type="body2">{desc}</Text>
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -73,9 +76,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: Col.Shadow,
     paddingHorizontal: Spacing.medium,
+    paddingVertical: heigh * 0.15,
   },
   modalView: {
-    maxHeight: heigh * 0.7,
     borderRadius: 8,
     shadowColor: "#000",
     padding: Spacing.medium,

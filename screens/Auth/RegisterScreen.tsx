@@ -43,7 +43,6 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     setDoc({ label, desc });
     setVisible(true);
   };
-
   return (
     <>
       <Modal

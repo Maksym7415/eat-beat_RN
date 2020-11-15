@@ -8,7 +8,10 @@ import NutritionItem from "../../components/Nutrition";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
-  const feed = route.params.details;
+  const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
+  const breast = fetcher.routes.filter((el) => el.name === "previewPage")[0]
+    .params?.details;
+  const feed = breast ? { ...breast } : {};
   return Object.keys(feed).length ? (
     <LayoutScroll>
       <View style={styles.container}>

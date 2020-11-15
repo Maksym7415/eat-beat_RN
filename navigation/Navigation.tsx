@@ -31,6 +31,9 @@ import NewRecipe from "../screens/Recipies/CreateRecipesScreen";
 import RecipeInfoScreen from "../screens/Recipies/RecipeInfoScreen";
 import IngradientScreen from "../screens/Recipies/IngradientsScreen";
 import InstructionScreen from "../screens/Recipies/InstructionScreen";
+import PreviewInfo from "../screens/Preview/PreviewInfo";
+import PreviewIngredients from "../screens/Preview/PreviewIngredients";
+import PreviewInstructions from "../screens/Preview/PreviewInstructions";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -106,11 +109,23 @@ const PreviewRecipeTopNavigator = () => (
         backgroundColor: Col.Recipes,
       },
     }}
-    initialRouteName="info"
+    initialRouteName="previewInfo"
   >
-    <TopTabs.Screen name="info" component={RecipeInfoScreen} />
-    <TopTabs.Screen name="ingredients" component={IngradientScreen} />
-    <TopTabs.Screen name="instruction" component={InstructionScreen} />
+    <TopTabs.Screen
+      name="previewInfo"
+      component={PreviewInfo}
+      options={{ title: "info" }}
+    />
+    <TopTabs.Screen
+      name="previewIngredients"
+      component={PreviewIngredients}
+      options={{ title: "ingredients" }}
+    />
+    <TopTabs.Screen
+      name="previewInstruction"
+      component={PreviewInstructions}
+      options={{ title: "instruction" }}
+    />
   </TopTabs.Navigator>
 );
 
@@ -198,6 +213,29 @@ export const MainStack = () => {
         })}
         name="homePage"
         component={HomeTopNavigator}
+      />
+      <Stack.Screen
+        options={({ navigation, route }) => ({
+          headerLeft: () => (
+            <Icon
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+              name={"arrow-back"}
+              color={Col.White}
+              size={24}
+            />
+          ),
+          title: route.params?.title || "Preview",
+          headerStyle: {
+            elevation: 1,
+            backgroundColor: Col.Recipes,
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
+        })}
+        name="previewPage"
+        component={PreviewRecipeTopNavigator}
       />
     </Stack.Navigator>
   );

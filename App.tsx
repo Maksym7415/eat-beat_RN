@@ -37,6 +37,7 @@ export default function App() {
   const [userData, setUserData] = useState<UserData>(ProfileData);
   const [recipeId, setRecipeId] = useState<number>(0);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [previewRecipe, setPreviewRecipe] = useState<object>({});
 
   const ApiInterceptor = async () => {
     api.addAsyncResponseTransform(async (Res) => {
@@ -147,6 +148,8 @@ export default function App() {
       toggleEdit: (v: boolean) => setEditMode(v),
       getRecommend,
       getRecomendation: (v: boolean) => setGetrecommend(v),
+      previewRecipe,
+      setPreview: (i) => setPreviewRecipe(i),
     }),
     [cal, show, userData, fetching, recipeId, editMode, getRecommend]
   );

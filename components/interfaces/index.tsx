@@ -1,3 +1,5 @@
+import { NavigationProps } from "./navInterface";
+
 export interface InputProps {
   value: string;
   label: string;
@@ -31,14 +33,7 @@ export interface UserData {
 }
 
 export interface NavProps {
-  navigation: {
-    navigate: (name: string, params?: object) => void;
-    reset: (name: string, params?: object) => void;
-    push: (name: string) => void;
-    goBack: () => void;
-    setOptions: (props: object) => void;
-    setParams: (props: object) => void;
-  };
+  navigation: NavigationProps;
   route: {
     params?: any;
   };
@@ -68,6 +63,10 @@ export interface Memo {
   isShow: boolean;
   editMode: boolean;
   toggleEdit: (v: boolean) => void;
+  getRecommend: boolean;
+  getRecomendation: (v: boolean) => void;
+  previewRecipe: object;
+  setPreview: (i: object) => void;
 }
 
 export interface CalendarInterface {

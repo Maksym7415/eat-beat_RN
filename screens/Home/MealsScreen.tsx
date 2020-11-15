@@ -81,6 +81,14 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     isFetching();
   };
 
+  const onPreview = (item) => {
+    navigation.navigate("previewPage", {
+      title: item.name,
+      details: item,
+    });
+  };
+
+  // const onFocus= navigation.isFocused()
   useEffect(() => {
     serveData();
   }, [date, refresh]);
@@ -124,7 +132,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         <View />
       )}
       <FlatList
-        data={feed?.sort((a, b) => a.creationTime > b.creationTime )}
+        data={feed?.sort((a, b) => a.creationTime > b.creationTime)}
         ListEmptyComponent={() => <EmptyList />}
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item, index }) => (
@@ -133,7 +141,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
             actionHandler={(props: editProps) =>
               setModalData({ ...props, modalVisible: true })
             }
-            onClick={() => console.log("hi")}
+            onClick={() => onPreview(item)}
             onDelete={(id, name) => setPopAlert({ id, name, visible: true })}
           />
         )}
