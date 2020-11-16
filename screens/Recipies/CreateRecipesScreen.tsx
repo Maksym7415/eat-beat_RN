@@ -16,6 +16,7 @@ import { TextInput } from "react-native-gesture-handler";
 import server from "../../server";
 import Text from "../../components/custom/Typography";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { title } from "process";
 
 interface Item {
   title: string;
@@ -34,7 +35,7 @@ interface Loading {
 }
 
 export default function CreateRecipeScreen({ navigation }) {
-  const { getRecipeId, changeUserRecipeTitle } = useContext(AppContext);
+  const { getRecipeId } = useContext(AppContext);
   const [image, setImage] = useState<null>(null);
   const [loading, setLoading] = useState<Loading>({
     loading: false,
@@ -61,7 +62,7 @@ export default function CreateRecipeScreen({ navigation }) {
     },
     servings: {
       title: "servings",
-      max: 2,
+      max: 1000,
       value: "",
       error: "",
     },
@@ -146,8 +147,7 @@ export default function CreateRecipeScreen({ navigation }) {
       }
       getRecipeId(id);
       setLoading({ ...loading, loading: false, disabled: false });
-      changeUserRecipeTitle(data.title.value);
-      navigation.navigate("user_recipe");
+      navigation.navigate("user_recipe", { title: data.title.value });
     }
     setLoading({ ...loading, loading: false, disabled: false });
   };
@@ -193,7 +193,9 @@ export default function CreateRecipeScreen({ navigation }) {
           </View>
         </View>
         <View style={styles.editContainer}>
-          <Text style={{ marginBottom: 10 }}>Servings</Text>
+          <Text type="bodyBold" style={{ marginBottom: 10 }}>
+            Servings
+          </Text>
           <TextInput
             keyboardType="number-pad"
             value={data.servings.value}

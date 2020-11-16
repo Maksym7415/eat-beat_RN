@@ -12,11 +12,10 @@ const SuccessScreen: FC<NavProps> = ({ navigation }) => {
   const { login } = useContext(AppContext);
 
   useEffect(() => {
-    navigation.addListener('focus', () => {
+    navigation.addListener("focus", () => {
       login(true);
     });
-    
-  }, [])
+  }, []);
 
   return (
     <LayoutScroll style={styles.container}>

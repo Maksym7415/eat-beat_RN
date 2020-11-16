@@ -25,7 +25,7 @@ const processQueue = (error, token = null) => {
 };
 
 export default function App() {
-  //AsyncStorage.clear();
+  // AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
   const [getRecommend, setGetrecommend] = useState<boolean>(false);
@@ -38,7 +38,6 @@ export default function App() {
   const [userData, setUserData] = useState<UserData>(ProfileData);
   const [recipeId, setRecipeId] = useState<number>(0);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [userRecipeTitle, setUserRecipeTitle] = useState<string>("");
 
   const ApiInterceptor = async () => {
     api.addAsyncResponseTransform(async (Res) => {
@@ -149,19 +148,8 @@ export default function App() {
       toggleEdit: (v: boolean) => setEditMode(v),
       getRecommend,
       getRecomendation: (v: boolean) => setGetrecommend(v),
-      userRecipeTitle,
-      changeUserRecipeTitle: (title: string) => setUserRecipeTitle(title),
     }),
-    [
-      cal,
-      show,
-      userData,
-      fetching,
-      recipeId,
-      editMode,
-      getRecommend,
-      userRecipeTitle,
-    ]
+    [cal, show, userData, fetching, recipeId, editMode, getRecommend]
   );
 
   useEffect(() => {
@@ -171,7 +159,6 @@ export default function App() {
 
   return (
     <AppContext.Provider value={appContext}>
-      {console.log(userData)}
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
     </AppContext.Provider>
   );

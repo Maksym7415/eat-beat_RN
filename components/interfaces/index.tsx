@@ -65,8 +65,6 @@ export interface Memo {
   toggleEdit: (v: boolean) => void;
   getRecommend: boolean;
   getRecomendation: (v: boolean) => void;
-  previewRecipe: object;
-  setPreview: (i: object) => void;
 }
 
 export interface CalendarInterface {

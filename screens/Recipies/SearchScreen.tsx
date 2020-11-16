@@ -100,6 +100,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         ...feed,
         results: response.data.results,
         offset: response.data.offset,
+        totalResults: response.data.totalResults,
       });
     }
     setFetching({ ...fetching, myFetching: false });
@@ -169,6 +170,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   const showMore = async () => {
+    if (feed.totalResults === feed.results.length) return;
     setFetching({ ...fetching, clicked: true, deactivate: true });
     let config = "";
     if (filterConfig.intolerances.length)
@@ -195,9 +197,13 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     }
     setFetching({ ...fetching, clicked: false, deactivate: false });
   };
+
+  useEffect(() => {
+    getFilter();
+  }, []);
   const isFocused = navigation.isFocused();
   useEffect(() => {
-    if (isFocused) getFilter();
+    if (!filter.intolerances.length) if (isFocused) getFilter();
   }, [isFocused]);
 
   return (
@@ -258,7 +264,11 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
                 <Button
                   label="SHOW MORE"
                   onPress={showMore}
-                  deactivate={fetching.deactivate}
+                  deactivate={
+                    feed.totalResults === feed.results.length
+                      ? true
+                      : fetching.deactivate
+                  }
                   clicked={fetching.clicked}
                   style={{ backgroundColor: Col.Recipes }}
                 />

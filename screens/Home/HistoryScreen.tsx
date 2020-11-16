@@ -29,7 +29,6 @@ interface Offset {
 }
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
-  const { refresh } = useContext<Memo>(AppContext);
   const [data, setData] = useState<Data>({ dates: [], scores: [] });
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
@@ -56,8 +55,10 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (navigation.isFocused()) getHealthsScore();
-  }, [navigation]);
+    navigation.addListener("focus", () => {
+      getHealthsScore();
+    });
+  }, []);
 
   return (
     <View style={styles.canvas}>

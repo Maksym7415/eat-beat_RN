@@ -31,7 +31,9 @@ interface Data {
 }
 
 const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
-  const { recipeId, editMode, toggleEdit, changeUserRecipeTitle } = useContext(AppContext);
+  const { recipeId, editMode, toggleEdit, changeUserRecipeTitle } = useContext(
+    AppContext
+  );
   const [feed, setFeed] = useState<object>({});
   const [disabled, setDisabled] = useState<boolean>(false);
   const [image, setImage] = useState<null>(null);
@@ -97,9 +99,12 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     }
   }, [recipeId]);
 
+  const ChangeTitle = (title: string) => {
+    navigation.dangerouslyGetParent().setOptions({ title });
+  };
+
   const saveChanges = async () => {
-    console.log(data.servings.value, feed.servings)
-    if(data.title.error || data.servings.error) return;
+    if (data.title.error || data.servings.error) return;
     setDisabled(true);
     const res = await server.updateRecipe(recipeId, {
       title: data.title.value || feed.title,
@@ -125,7 +130,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     }
     setDisabled(false);
     toggleEdit(false);
-    changeUserRecipeTitle(data.title.value || feed.title)
+    ChangeTitle(data.title.value || feed.title);
     getRecipeInfo();
     setData({
       title: {
@@ -140,7 +145,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
         value: undefined,
         error: "",
       },
-    })
+    });
   };
 
   const cancelHandler = () => {
@@ -158,8 +163,8 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
         value: undefined,
         error: "",
       },
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     if (navigation.isFocused()) {
@@ -281,44 +286,43 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
             </View>
           ) : (
             <>
-            <View style={styles.editContainer}>
-              {console.log(data.servings.value, feed.servings)}
-                  <TextInput
-                    value={
-                      data.servings.value === undefined
-                        ? feed.servings + ''
-                        : data.servings.value + ''
-                    }
-                    keyboardType='number-pad'
-                    onChangeText={(text) => onCnangeHandler(text, "servings")}
-                    placeholder={"Add recipe serving"}
-                    style={{
-                      borderColor: data.servings.error ? "#FF364F" : Col.Grey2,
-                      borderBottomWidth: 1,
-                    }}
-                  />
-                  {data.servings.error ? (
-                    <Text style={{ color: "#FF364F", marginTop: 10 }}>
-                      {data.servings.error}{" "}
-                    </Text>
-                  ) : null}
-                </View>
-            <View>
-              <Button
-                label="SAVE"
-                onPress={saveChanges}
-                deactivate={disabled}
-                style={{ backgroundColor: Col.Recipes }}
-              />
-              <Button
-                label="CANCEL"
-                type="text"
-                deactivate={disabled}
-                onPress={cancelHandler}
-                labelStyle={{ color: Col.Grey }}
-                style={{ marginVertical: 0 }}
-              />
-            </View>
+              <View style={styles.editContainer}>
+                <TextInput
+                  value={
+                    data.servings.value === undefined
+                      ? feed.servings + ""
+                      : data.servings.value + ""
+                  }
+                  keyboardType="number-pad"
+                  onChangeText={(text) => onCnangeHandler(text, "servings")}
+                  placeholder={"Add recipe serving"}
+                  style={{
+                    borderColor: data.servings.error ? "#FF364F" : Col.Grey2,
+                    borderBottomWidth: 1,
+                  }}
+                />
+                {data.servings.error ? (
+                  <Text style={{ color: "#FF364F", marginTop: 10 }}>
+                    {data.servings.error}{" "}
+                  </Text>
+                ) : null}
+              </View>
+              <View>
+                <Button
+                  label="SAVE"
+                  onPress={saveChanges}
+                  deactivate={disabled}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+                <Button
+                  label="CANCEL"
+                  type="text"
+                  deactivate={disabled}
+                  onPress={cancelHandler}
+                  labelStyle={{ color: Col.Grey }}
+                  style={{ marginVertical: 0 }}
+                />
+              </View>
             </>
           )}
         </View>

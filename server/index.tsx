@@ -13,6 +13,7 @@ import { Alert, Platform } from "react-native";
 import { AuthProps } from "../components/interfaces";
 
 const apiConfig: apiProps = {
+  // baseURL: "http://10.4.30.212:8081/api",
   baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
@@ -57,7 +58,7 @@ const apiConfig: apiProps = {
 };
 
 export const api = create({
-  baseURL: apiConfig.baseURL,
+  baseURL: apiConfig.testURL,
   headers: {
     Accept: "application/json",
     "User-Agent":

@@ -115,13 +115,13 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
           ))}
         </View>
       </ScrollView>
-      <View style={styles.button}>
+      {/* <View style={styles.button}>
         <Button
           label="SHOW MORE"
           onPress={() => console.log("show more")}
           style={{ backgroundColor: Col.Recipes }}
         />
-      </View>
+      </View> */}
     </View>
   ) : (
     <View style={styles.btnContainer}>

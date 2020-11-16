@@ -310,10 +310,9 @@ export const RecommendedStack = () => {
       />
       <Stack.Screen
         name="user_recipe"
-        options={({ navigation }) => {
-          const { userRecipeTitle } = useContext(AppContext)
-          return ({
-            title: userRecipeTitle,
+        options={({ navigation, route }) => {
+          return {
+            title: route.params.title,
             headerStyle: {
               elevation: 0,
               backgroundColor: Col.Recipes,
@@ -339,7 +338,8 @@ export const RecommendedStack = () => {
                 size={24}
               />
             ),
-        })}}
+          };
+        }}
         component={EditRecipeTopNAvigator}
       />
     </Stack.Navigator>

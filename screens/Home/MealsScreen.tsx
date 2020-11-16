@@ -88,14 +88,15 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     });
   };
 
-  const onFocus = navigation.isFocused();
   useEffect(() => {
     serveData();
   }, [date]);
 
   useEffect(() => {
-    if (navigation.isFocused()) serveData();
-  }, [onFocus]);
+    navigation.addListener("focus", () => {
+      serveData();
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -139,6 +140,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         data={feed?.sort((a, b) => a.creationTime > b.creationTime)}
         ListEmptyComponent={() => <EmptyList />}
         keyExtractor={(item) => `${item.id}`}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <CookedMealCard
             item={item}

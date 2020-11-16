@@ -49,11 +49,6 @@ const NutritionItem: FC<Props> = ({ item }) => {
           percenatage || 0
         } %`}</Text>
       )}
-      {!recipe && (
-        <View
-          style={{ width: "8%", backgroundColor: color, borderRadius: 20 }}
-        ></View>
-      )}
     </View>
   );
 };

@@ -12,7 +12,7 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 
 export default function UserRecipes({ navigation }) {
   const [feed, setFeed] = useState<null | []>(null);
-  const { getRecipeId, changeUserRecipeTitle } = useContext<Memo>(AppContext);
+  const { getRecipeId } = useContext<Memo>(AppContext);
 
   const getData = async () => {
     const { data, ok } = await server.getRecipes();
@@ -40,9 +40,7 @@ export default function UserRecipes({ navigation }) {
 
   const actionHandler = ({ id, title }) => {
     getRecipeId(id);
-    changeUserRecipeTitle(title);
-    navigation.navigate("user_recipe");
-    
+    navigation.navigate("user_recipe", { title });
   };
 
   return feed !== null ? (
