@@ -1,11 +1,13 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Image, ActivityIndicator } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing, Typ } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
 import IngradientRow from "./Components/IngradientRow";
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import Text from "../../components/custom/Typography";
 
 export default function InstructionScreen({ navigation }) {
   const { recipeId, editMode, toggleEdit } = useContext(AppContext);
@@ -57,46 +59,39 @@ export default function InstructionScreen({ navigation }) {
   };
 
   return Object.keys(feed).length ? (
-    <View>
-      <ScrollView>
-        <View style={styles.ingradientContainer}>
-          {!editMode ? (
-            <View style={styles.InstructionContainer}>
-              <Text style={styles.ingradientTitle}>Instruction</Text>
-              <Text>
-                {feed.instruction ||
-                  "You have not added any instruction for your recipe yet"}
-              </Text>
-            </View>
-          ) : (
+    <LayoutScroll style={{ flexGrow: 1, backgroundColor: Col.Background }}>
+      <View style={styles.ingradientContainer}>
+        {!editMode ? (
+          <View style={styles.InstructionContainer}>
+            <Text type="body2">
+              {feed.instruction ||
+                "You have not added any instruction for your recipe yet"}
+            </Text>
+          </View>
+        ) : (
+          <View>
             <View>
-              <View>
-                <TextInput
-                  multiline
-                  value={value}
-                  onChangeText={changeHandler}
-                />
-                <Divider styler={styles.divider} />
-              </View>
-              <View>
-                <Button
-                  label="SAVE"
-                  onPress={saveChanges}
-                  style={{ backgroundColor: Col.Recipes }}
-                />
-                <Button
-                  label="CANCEL"
-                  type="text"
-                  onPress={() => toggleEdit(!editMode)}
-                  style={{ marginVertical: 0 }}
-                  labelStyle={{ color: Col.Grey }}
-                />
-              </View>
+              <TextInput multiline value={value} onChangeText={changeHandler} />
+              <Divider styler={styles.divider} />
             </View>
-          )}
-        </View>
-      </ScrollView>
-    </View>
+            <View>
+              <Button
+                label="SAVE"
+                onPress={saveChanges}
+                style={{ backgroundColor: Col.Recipes }}
+              />
+              <Button
+                label="CANCEL"
+                type="text"
+                onPress={() => toggleEdit(!editMode)}
+                style={{ marginVertical: 0 }}
+                labelStyle={{ color: Col.Grey }}
+              />
+            </View>
+          </View>
+        )}
+      </View>
+    </LayoutScroll>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
@@ -126,7 +121,10 @@ const styles = StyleSheet.create({
   btnConatiner: {
     paddingHorizontal: 16,
   },
-  InstructionContainer: {},
+  InstructionContainer: {
+    paddingHorizontal: Spacing.xlarge,
+    paddingVertical: Spacing.medium,
+  },
   loading: {
     flex: 1,
     justifyContent: "center",

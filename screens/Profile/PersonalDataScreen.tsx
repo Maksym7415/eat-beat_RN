@@ -1,5 +1,5 @@
 import React, { useState, FC, useContext, useEffect } from "react";
-import { View, Switch, StyleSheet, ScrollView } from "react-native";
+import { View, Switch, StyleSheet } from "react-native";
 import Text from "../../components/custom/Typography";
 import server from "../../server";
 import Select from "../../components/custom/Select";
@@ -15,6 +15,7 @@ import ToggleChip from "../../components/custom/ToggleChip";
 import { AppContext } from "../../components/AppContext";
 import InputFeild from "./common/InputFeild";
 import { useIsFocused } from "@react-navigation/native";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   const { myData, getData } = useContext<Memo>(AppContext);
@@ -79,7 +80,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.canvas}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <LayoutScroll>
         <View style={styles.toggleContainer}>
           <Text type="body" style={styles.wide}>
             Use individual infake recommendations
@@ -148,7 +149,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </LayoutScroll>
       <View style={{ padding: Spacing.medium }}>
         <Button
           label="SAVE CHANGES"

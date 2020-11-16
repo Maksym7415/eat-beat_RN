@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Image,
-  ScrollView,
   ActivityIndicator,
   Alert,
   Pressable,
@@ -12,10 +11,11 @@ import {
 import { AppContext } from "../../components/AppContext";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../../components/Config";
-import { Button, Divider } from "../../components/MyComponents";
+import { Button } from "../../components/MyComponents";
 import { TextInput } from "react-native-gesture-handler";
 import server from "../../server";
 import Text from "../../components/custom/Typography";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 interface Item {
   title: string;
@@ -156,7 +156,7 @@ export default function CreateRecipeScreen({ navigation }) {
     );
 
   return (
-    <ScrollView contentContainerStyle={styles.scroll}>
+    <LayoutScroll style={styles.scroll}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Pressable onPress={checkPermission}>
@@ -168,9 +168,10 @@ export default function CreateRecipeScreen({ navigation }) {
               )}
             </View>
           </Pressable>
-          <Divider />
-          <View style={{ paddingHorizontal: Spacing.medium }}>
-            <Text style={{ marginBottom: 10 }}>Title*</Text>
+          <View style={{ padding: Spacing.medium }}>
+            <Text type="bodyBold" style={{ marginBottom: 10 }}>
+              Title*
+            </Text>
             <TextInput
               value={data.title.value}
               onChangeText={(text) => onCnangeHandler(text, "title")}
@@ -188,7 +189,9 @@ export default function CreateRecipeScreen({ navigation }) {
           </View>
         </View>
         <View style={styles.editContainer}>
-          <Text style={{ marginBottom: 10 }}>Ingradients*</Text>
+          <Text type="bodyBold" style={{ marginBottom: 10 }}>
+            Ingradients*
+          </Text>
           <TextInput
             value={data.ingredients.value}
             onChangeText={(text) => onCnangeHandler(text, "ingredients")}
@@ -206,7 +209,9 @@ export default function CreateRecipeScreen({ navigation }) {
           ) : null}
         </View>
         <View style={styles.editContainer}>
-          <Text style={{ marginBottom: 10 }}>Instruction</Text>
+          <Text type="bodyBold" style={{ marginBottom: 10 }}>
+            Instruction
+          </Text>
           <TextInput
             value={data.instruction.value}
             onChangeText={(text) => onCnangeHandler(text, "instruction")}
@@ -230,7 +235,7 @@ export default function CreateRecipeScreen({ navigation }) {
           labelStyle={{ color: Col.Grey }}
         />
       </View>
-    </ScrollView>
+    </LayoutScroll>
   );
 }
 
@@ -271,8 +276,7 @@ const styles = StyleSheet.create({
     minHeight: 109,
     backgroundColor: Col.White,
     borderRadius: 8,
-    paddingHorizontal: Spacing.medium,
-    paddingVertical: Spacing.r_small,
+    padding: Spacing.medium,
     marginBottom: Spacing.r_small,
   },
   editText: {

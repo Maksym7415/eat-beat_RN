@@ -80,7 +80,6 @@ const newEditModal: FC<Props> = ({
       portion: `${initialValue + value}`,
     });
   };
-  console.log(clicked);
   const beautifyTime = () => {
     let h = newTime.hrs.length > 1 ? newTime.hrs : "0" + newTime.hrs;
     h = +h > 23 || isNaN(+h) ? "23" : h;

@@ -1,18 +1,26 @@
 import React, { FC } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Col } from "./Config";
+import Text from "./custom/Typography";
 interface Props {
   item: {
     name: string;
     currentValue: number;
     unit: string;
-    defaultValue: number;
-    percenatage: number;
-    recipe: boolean
+    defaultValue?: number;
+    percenatage?: number;
+    recipe?: boolean;
   };
 }
 const NutritionItem: FC<Props> = ({ item }) => {
-  const { name, currentValue, unit, defaultValue, percenatage = 0, recipe } = item;
+  const {
+    name,
+    currentValue,
+    unit,
+    defaultValue,
+    percenatage = 0,
+    recipe,
+  } = item;
   // const precent = Math.round((nutrition_measure / nutrition_number) * 100);
   const color =
     percenatage < 100
@@ -22,14 +30,30 @@ const NutritionItem: FC<Props> = ({ item }) => {
       : Col.Red;
   return (
     <View style={styles.itemContainer}>
-      <Text style={{ width: "25%" }}>{name}</Text>
-      <Text style={{ width: "15%" }}>{unit}</Text>
-      <Text style={{ width: "20%" }}>{currentValue}/</Text>
-     {!recipe &&<Text style={{ width: "15%" }}>{defaultValue}</Text>}
-      {!recipe &&<Text style={{ width: "15%" }}>{`${percenatage || 0} %`}</Text>}
-      {!recipe && <View
-        style={{ width: "8%", backgroundColor: color, borderRadius: 20 }}
-      ></View>}
+      <Text type="cap" style={{ width: "30%" }}>
+        {name}
+      </Text>
+      <Text type="cap" style={{ width: "15%", color: Col.Grey }}>
+        ({unit})
+      </Text>
+      <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
+        {currentValue}
+      </Text>
+      {!recipe && (
+        <Text type="cap" style={{ width: "15%", color: Col.Grey }}>
+          /{defaultValue}
+        </Text>
+      )}
+      {!recipe && (
+        <Text type="cap" style={{ width: "15%" }}>{`${
+          percenatage || 0
+        } %`}</Text>
+      )}
+      {!recipe && (
+        <View
+          style={{ width: "8%", backgroundColor: color, borderRadius: 20 }}
+        ></View>
+      )}
     </View>
   );
 };

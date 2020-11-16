@@ -38,8 +38,8 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
           <TextInput
             maxLength={50}
             value={newValue}
-            style={edit ? styles.editInput : styles.textInput}
-            secureTextEntry={!edit}
+            style={styles.editInput}
+            secureTextEntry={true}
             placeholder="New Password"
             onChangeText={(val) => setNewValue(val)}
           />
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   editInput: {
     fontSize: 16,
     borderBottomWidth: 1,
+    color: "red",
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
     fontFamily: "Inter_400Regular",

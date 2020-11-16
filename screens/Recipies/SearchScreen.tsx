@@ -50,7 +50,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     deactivate: false,
     myFetching: false,
   });
-  const [feed, setFeed] = useState<RecommendedMeals[] | null>('Search the meals');
+  const [feed, setFeed] = useState<RecommendedMeals[] | null>(
+    "Search the meals"
+  );
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
     diets: [],
@@ -86,9 +88,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     setFetching({ ...fetching, myFetching: true });
     const response = await server.getRecipeByName(state, config);
     if (response.ok) {
-      if(!response.data.length) {
+      if (!response.data.length) {
         setFetching({ ...fetching, myFetching: false });
-        return setFeed('We couldn’t find any meals')
+        return setFeed("We couldn’t find any meals");
       }
       setFeed(response.data);
     }
@@ -193,15 +195,26 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <ScrollView>
-        {console.log(feed)}
         {!fetching.myFetching ? (
-          typeof feed === 'string' ? <View style={{alignItems: 'center', justifyContent: 'center', marginTop: 50}}><Text>{feed}</Text></View> : <View style={styles.container}>
-            {feed?.map((item, index) => (
-              <View key={`${index}`} style={styles.cardContainer}>
-                <RecipeCard details={item} actionHandler={actionHandler} />
-              </View>
-            ))}
-          </View>
+          typeof feed === "string" ? (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 50,
+              }}
+            >
+              <Text>{feed}</Text>
+            </View>
+          ) : (
+            <View style={styles.container}>
+              {feed?.map((item, index) => (
+                <View key={`${index}`} style={styles.cardContainer}>
+                  <RecipeCard details={item} actionHandler={actionHandler} />
+                </View>
+              ))}
+            </View>
+          )
         ) : (
           <View style={styles.loading}>
             <ActivityIndicator size="large" color={Col.Black} />

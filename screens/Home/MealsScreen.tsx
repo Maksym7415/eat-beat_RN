@@ -88,10 +88,14 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     });
   };
 
-  // const onFocus= navigation.isFocused()
+  const onFocus = navigation.isFocused();
   useEffect(() => {
     serveData();
-  }, [date, refresh]);
+  }, [date]);
+
+  useEffect(() => {
+    if (navigation.isFocused()) serveData();
+  }, [onFocus]);
 
   return (
     <View style={styles.container}>

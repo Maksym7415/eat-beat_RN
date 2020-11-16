@@ -3,7 +3,6 @@ import * as ImagePicker from "expo-image-picker";
 import { AppContext } from "../../components/AppContext";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   ScrollView,
@@ -14,6 +13,7 @@ import {
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
+import Text from "../../components/custom/Typography";
 import server from "../../server";
 import Nutrient from "../../components/Nutrient";
 import NutritionItem from "../../components/Nutrition";
@@ -120,17 +120,13 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    //getRecipeInfo();
-    let focus = navigation.addListener("focus", () => {
+    if (navigation.isFocused()) {
       toggleEdit(false);
       getRecipeInfo();
-    });
-    () => {
-      focus = null;
-    };
-  }, []);
+    }
+  }, [navigation]);
   return Object.keys(feed).length && !disabled ? (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: Col.Background }}>
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.titleContainer}>
@@ -161,13 +157,12 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                 />
               }
             </View>
-            <Divider styler={styles.divider} />
-            <View style={{ paddingHorizontal: 16 }}>
-              <Text style={{ marginBottom: 10 }}>Title*</Text>
+            <View style={{ padding: Spacing.medium }}>
               {!editMode ? (
-                <Text>{feed.title}</Text>
+                <Text type="h6">{feed.title}</Text>
               ) : (
                 <View>
+                  <Text type="h6">Title*</Text>
                   <TextInput
                     value={
                       data.title.value === undefined
@@ -215,7 +210,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                   ))}
               </View>
               <View style={styles.detailsContainer}>
-                <Text style={styles.detailTitle}>
+                <Text type="bodyBold" style={styles.detailTitle}>
                   Nutrition Details (per serving)
                 </Text>
                 <View>
@@ -282,7 +277,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: Col.White,
-    paddingBottom: 23,
     borderRadius: 8,
     marginBottom: 12,
   },
@@ -298,6 +292,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopEndRadius: 8,
     borderTopStartRadius: 8,
+    overflow: "hidden",
   },
   image: {
     width: "100%",

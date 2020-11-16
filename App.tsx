@@ -43,7 +43,6 @@ export default function App() {
     api.addAsyncResponseTransform(async (Res) => {
       const { ok, status, data, config } = Res;
       if (status === 401) {
-        console.log("failedq", flag);
         if (flag) {
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });

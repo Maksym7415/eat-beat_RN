@@ -92,18 +92,21 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
   }, [getRecommend]);
 
   return feed.length ? (
-    <View style={{ flex: 1, backgroundColor: Col.Background }}>
+    <View style={styles.canvas}>
       <EditModal
         clicked={fetching.clicked}
         data={modalData}
         date={date}
         setData={(id, body) => addMeal(id, body)}
         hideModal={() => {
-          if(fetching.clicked) return;
-          setModalData({ ...modalData, modalVisible: false })
+          if (fetching.clicked) return;
+          setModalData({ ...modalData, modalVisible: false });
         }}
       />
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
@@ -134,6 +137,10 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
 };
 
 const styles = StyleSheet.create({
+  canvas: {
+    flex: 1,
+    backgroundColor: Col.Background,
+  },
   container: {
     flex: 1,
     padding: Spacing.r_small,
@@ -153,7 +160,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    padding: Spacing.r_small,
+    paddingHorizontal: Spacing.r_small,
     backgroundColor: Col.Background,
   },
   button: {

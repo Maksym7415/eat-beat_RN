@@ -107,6 +107,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
           autoFocus={edit}
           value={userName}
           editable={edit}
+          maxLength={64}
           style={edit ? styles.editInput : styles.nameInput}
           onChangeText={(val) => setUserName(val)}
         />

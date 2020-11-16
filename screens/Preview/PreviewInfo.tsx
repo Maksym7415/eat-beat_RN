@@ -1,83 +1,128 @@
-import React, { FC } from "react";
-import { View, Text, Image, StyleSheet, ActivityIndicator } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import { NavProps } from "../../components/interfaces";
-import { Button, Divider } from "../../components/MyComponents";
+import { Divider } from "../../components/MyComponents";
 import Nutrient from "../../components/Nutrient";
 import { Col, Spacing } from "../../components/Config";
 import NutritionItem from "../../components/Nutrition";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import Text from "../../components/custom/Typography";
+import SvgMaker from "../../components/SvgMaker";
 
 const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
-  const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-  const breast = fetcher.routes.filter((el) => el.name === "previewPage")[0]
-    .params?.details;
-  const feed = breast ? { ...breast } : {};
+  const getInfo = () => {
+    const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
+    const spread = fetcher.routes.filter((el) => el.name === "previewPage")[0]
+      .params?.details;
+    return spread
+      ? { ...spread }
+      : {
+          image: "",
+          name: "",
+          servings: 0,
+          nutrients: [],
+          vegetarian: false,
+          vegan: false,
+          glutenFree: false,
+          dairyFree: false,
+          veryPopular: false,
+        };
+  };
+  const [feed, setFeed] = useState(getInfo());
+  const {
+    image,
+    name,
+    servings,
+    nutrients,
+    vegetarian,
+    vegan,
+    glutenFree,
+    dairyFree,
+    veryPopular,
+  } = feed;
+  const getImage = (
+    vegetarian: boolean,
+    vegan: boolean,
+    glutenFree: boolean,
+    dairyFree: boolean,
+    veryPopular: boolean
+  ): string[] => {
+    const iconsArray = [];
+    if (vegetarian) iconsArray.push("vegetarian");
+    if (vegan) iconsArray.push("vegan");
+    if (glutenFree) iconsArray.push("glutenFree");
+    if (dairyFree) iconsArray.push("dairyFree");
+    if (veryPopular) iconsArray.push("popular");
+    return iconsArray;
+  };
+  const mnarr = ["Calories", "Protein", "Fat", "Carbohydrates"];
+  const mainNutrients = nutrients.filter((el) => mnarr.includes(el.title));
+  useEffect(() => {
+    if (navigation.isFocused()) {
+      const newFeed = getInfo();
+      if (newFeed.name !== "") setFeed(newFeed);
+    }
+  }, [navigation]);
   return Object.keys(feed).length ? (
     <LayoutScroll>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.imageContainer}>
-            <Image
-              source={{
-                uri: `https://logisticbrocker.hopto.org/eat-beat/${feed.uri}`,
-              }}
-              style={styles.image}
-            />
+            <Image source={{ uri: image }} style={styles.image} />
           </View>
-          <Divider styler={styles.divider} />
-          <View style={{ paddingHorizontal: 16 }}>
-            <Text style={{ marginBottom: 10 }}>Title*</Text>
-            <Text>{feed.title}</Text>
+          <View style={styles.nameContainer}>
+            <View style={styles.catagoryContainer}>
+              {getImage(
+                vegetarian,
+                vegan,
+                glutenFree,
+                dairyFree,
+                veryPopular
+              ).map((icon: string, index: number) => (
+                <SvgMaker key={index} style={styles.icons} name={icon} />
+              ))}
+            </View>
+            <Text type="h6">{name}</Text>
           </View>
         </View>
         <View>
-          <View>
-            <Nutrient
-              name={"Number of servings"}
-              currentValue={feed.servings}
-              recipe={true}
-              isUnit={true}
-            />
-          </View>
+          <Nutrient
+            name={"Number of servings"}
+            currentValue={servings}
+            recipe={true}
+            isUnit={true}
+          />
           <View style={styles.boxContainer}>
-            {feed.mainNutrients &&
-              feed.mainNutrients.map((item, index) => (
-                <View key={`${index}`} style={styles.box}>
-                  <Nutrient
-                    recipe={true}
-                    name={item.title}
-                    unit={item.unit}
-                    intakeNorm={item.intakeNorm}
-                    currentValue={item.amount}
-                  />
-                </View>
-              ))}
+            {mainNutrients.map((item, index) => (
+              <View key={`${index}`} style={styles.box}>
+                <Nutrient
+                  recipe={true}
+                  name={item.title}
+                  unit={item.unit}
+                  intakeNorm={item.intakeNorm}
+                  currentValue={item.amount}
+                />
+              </View>
+            ))}
           </View>
+          <Divider style={styles.divider} />
           <View style={styles.detailsContainer}>
-            <Text style={styles.detailTitle}>
+            <Text type="bodyBold" style={styles.detailTitle}>
               Nutrition Details (per serving)
             </Text>
             <View>
-              {feed.nutrients &&
-                feed.nutrients.map((elm, index) => (
-                  <NutritionItem
-                    key={index}
-                    item={{
-                      recipe: true,
-                      name: elm.title,
-                      unit: elm.unit,
-                      currentValue: elm.amount,
-                    }}
-                  />
-                ))}
+              {nutrients.map((elm, index) => (
+                <NutritionItem
+                  key={index}
+                  item={{
+                    recipe: true,
+                    name: elm.title,
+                    unit: elm.unit,
+                    currentValue: elm.amount,
+                  }}
+                />
+              ))}
             </View>
-          </View>
-          <View>
-            <Button
-              label="Add recipe to my meals"
-              onPress={() => console.log("")}
-              style={{ backgroundColor: Col.Recipes }}
-            />
           </View>
         </View>
       </View>
@@ -91,32 +136,33 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: Spacing.medium,
     paddingVertical: Spacing.r_small,
-    flex: 1,
+    backgroundColor: Col.Background,
   },
   border: {
     borderColor: Col.Grey2,
     borderWidth: 1,
   },
   titleContainer: {
-    backgroundColor: Col.White,
-    paddingBottom: 23,
     borderRadius: 8,
-    marginBottom: 12,
+    overflow: "hidden",
+    backgroundColor: Col.White,
+    marginVertical: Spacing.small,
+  },
+  nameContainer: {
+    padding: Spacing.medium,
   },
   divider: {
-    borderBottomWidth: 1,
-    marginVertical: Spacing.small,
-    borderBottomColor: Col.Divider,
+    marginVertical: 0,
+    marginBottom: Spacing.small,
   },
   imageContainer: {
-    height: 194,
+    height: 200,
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     alignItems: "center",
     justifyContent: "center",
-    borderTopEndRadius: 8,
-    borderTopStartRadius: 8,
   },
   image: {
     width: "100%",
@@ -157,6 +203,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: Spacing.medium,
     paddingBottom: Spacing.small,
+  },
+  catagoryContainer: {
+    flexDirection: "row",
+  },
+  icons: {
+    margin: 2,
   },
 });
 export default PreviewInfo;

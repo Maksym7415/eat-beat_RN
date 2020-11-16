@@ -56,10 +56,8 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      getHealthsScore();
-    });
-  }, []);
+    if (navigation.isFocused()) getHealthsScore();
+  }, [navigation]);
 
   return (
     <View style={styles.canvas}>

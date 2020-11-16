@@ -21,12 +21,13 @@ import { AppContext } from "../../components/AppContext";
 import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ActionButton from "./common/ActionButton";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
-  const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
+  const { calendar, saveCal } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
   const serveData = async () => {
@@ -38,7 +39,11 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
 
   useEffect(() => {
     serveData();
-  }, [date, refresh]);
+  }, [date]);
+
+  useEffect(() => {
+    if (navigation.isFocused()) serveData();
+  }, [navigation]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     if (event.type === "dismissed")
@@ -91,7 +96,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
             style={{ shadowColor: "pink" }}
           />
         )}
-        <ScrollView>
+        <LayoutScroll>
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <Text type="bodyBold" style={styles.title}>
@@ -154,7 +159,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
               <Nutrition key={`${index}`} item={item} />
             ))}
           </View>
-        </ScrollView>
+        </LayoutScroll>
       </View>
     );
   } else {

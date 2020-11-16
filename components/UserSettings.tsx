@@ -7,6 +7,7 @@ import Text from "./custom/Typography";
 import RadioInput from "./custom/RadioInput";
 import { recipeSettings, Fetching } from "./interfaces";
 import { useIsFocused } from "@react-navigation/native";
+import LayoutScroll from "./custom/LayoutScroll";
 
 interface Props {
   data: recipeSettings;
@@ -63,77 +64,75 @@ const UserSettings: FC<Props> = ({
   }, [isFocused]);
 
   return (
-    <View style={[styles.canvas, { backgroundColor }]}>
-      <ScrollView>
-        <View style={{ flexGrow: 1 }}>
-          <View style={styles.container}>
-            <Text type="h6">Intolerances</Text>
-            <View style={styles.chipsContainer}>
-              {intole.map(({ id, name, isUsers }, index) => (
-                <Chip
-                  key={id + name}
-                  title={name}
-                  state={isUsers}
-                  selectedColor={blend}
-                  onPress={() => updateIntole(index)}
-                />
-              ))}
-            </View>
-          </View>
-          <Divider />
-          <View style={styles.container}>
-            <Text type="h6">Diet</Text>
-            {diets.map(({ id, name, isUsers }) => (
-              <RadioInput
+    <LayoutScroll style={{ backgroundColor, flexGrow: 1 }}>
+      <View style={{ flexGrow: 1 }}>
+        <View style={styles.container}>
+          <Text type="h6">Intolerances</Text>
+          <View style={styles.chipsContainer}>
+            {intole.map(({ id, name, isUsers }, index) => (
+              <Chip
                 key={id + name}
-                value={id}
-                label={name}
-                selected={diet}
-                disabled={false}
-                onSelect={() => setDiet(id)}
-                blend={blend}
+                title={name}
+                state={isUsers}
+                selectedColor={blend}
+                onPress={() => updateIntole(index)}
               />
             ))}
           </View>
-          {showMealsTypes ? (
-            <>
-              <Divider />
-              <View style={styles.container}>
-                <Text type="h6">Meal Types</Text>
-                <View style={styles.chipsContainer}>
-                  {types.map(({ id, name, isUsers }, index) => (
-                    <Chip
-                      key={id + name}
-                      title={name}
-                      state={isUsers}
-                      selectedColor={blend}
-                      onPress={() => updateTypes(index)}
-                    />
-                  ))}
-                </View>
+        </View>
+        <Divider />
+        <View style={styles.container}>
+          <Text type="h6">Diet</Text>
+          {diets.map(({ id, name, isUsers }) => (
+            <RadioInput
+              key={id + name}
+              value={id}
+              label={name}
+              selected={diet}
+              disabled={false}
+              onSelect={() => setDiet(id)}
+              blend={blend}
+            />
+          ))}
+        </View>
+        {showMealsTypes ? (
+          <>
+            <Divider />
+            <View style={styles.container}>
+              <Text type="h6">Meal Types</Text>
+              <View style={styles.chipsContainer}>
+                {types.map(({ id, name, isUsers }, index) => (
+                  <Chip
+                    key={id + name}
+                    title={name}
+                    state={isUsers}
+                    selectedColor={blend}
+                    onPress={() => updateTypes(index)}
+                  />
+                ))}
               </View>
-            </>
-          ) : (
-            <View />
-          )}
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            deactivate={fetching.deactivate}
-            clicked={fetching.clicked}
-            label="SAVE CHANGES"
-            onPress={() =>
-              onSave({
-                intolerances: intole,
-                diets: getRadioState(),
-                mealTypes: types,
-              })
-            }
-            style={{ backgroundColor: blend }}
-          />
-        </View>
-      </ScrollView>
-    </View>
+            </View>
+          </>
+        ) : (
+          <View />
+        )}
+      </View>
+      <View style={[styles.buttonContainer, { backgroundColor }]}>
+        <Button
+          deactivate={fetching.deactivate}
+          clicked={fetching.clicked}
+          label="SAVE CHANGES"
+          onPress={() =>
+            onSave({
+              intolerances: intole,
+              diets: getRadioState(),
+              mealTypes: types,
+            })
+          }
+          style={{ backgroundColor: blend }}
+        />
+      </View>
+    </LayoutScroll>
   );
 };
 

@@ -8,6 +8,7 @@ import { Memo } from "../../components/interfaces";
 import { Button } from "../../components/MyComponents";
 import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 export default function UserRecipes({ navigation }) {
   const [feed, setFeed] = useState<null | []>(null);
@@ -45,8 +46,8 @@ export default function UserRecipes({ navigation }) {
   };
 
   return feed !== null ? (
-    <View style={{ flex: 1, backgroundColor: Col.Background }}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+    <View style={{ backgroundColor: Col.Background, flexGrow: 1 }}>
+      <LayoutScroll>
         <View style={styles.container}>
           {feed ? (
             feed.map(({ id, title, recipe }, index) => (
@@ -64,7 +65,7 @@ export default function UserRecipes({ navigation }) {
             <View />
           )}
         </View>
-      </ScrollView>
+      </LayoutScroll>
       <View style={styles.buttonContainer}>
         <Button
           label="NEW RECIPE"
@@ -83,7 +84,7 @@ export default function UserRecipes({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: Spacing.r_small,
+    paddingHorizontal: Spacing.r_small,
     flexDirection: "row",
     flexWrap: "wrap",
   },
@@ -98,6 +99,6 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Background,
   },
   buttonContainer: {
-    padding: Spacing.medium,
+    paddingHorizontal: Spacing.medium,
   },
 });
