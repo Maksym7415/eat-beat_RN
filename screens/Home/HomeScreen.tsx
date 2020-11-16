@@ -41,9 +41,10 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
     serveData();
   }, [date]);
 
+  const Focus = navigation.isFocused();
   useEffect(() => {
     if (navigation.isFocused()) serveData();
-  }, [navigation]);
+  }, [Focus]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     if (event.type === "dismissed")

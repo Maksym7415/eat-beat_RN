@@ -31,7 +31,7 @@ interface Data {
 }
 
 const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
-  const { recipeId, editMode, toggleEdit } = useContext(AppContext);
+  const { recipeId, editMode, toggleEdit, changeUserRecipeTitle } = useContext(AppContext);
   const [feed, setFeed] = useState<object>({});
   const [disabled, setDisabled] = useState<boolean>(false);
   const [image, setImage] = useState<null>(null);
@@ -39,6 +39,12 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     title: {
       title: "title",
       max: 64,
+      value: undefined,
+      error: "",
+    },
+    servings: {
+      title: "servings",
+      max: 2,
       value: undefined,
       error: "",
     },
@@ -63,7 +69,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
         value: text,
         error:
           text.length > data[name].max
-            ? `Title length can not be more than ${data[name].max} symbols`
+            ? `${data[name].title} length can not be more than ${data[name].max} symbols`
             : "",
       },
     });
@@ -92,11 +98,14 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   }, [recipeId]);
 
   const saveChanges = async () => {
+    console.log(data.servings.value, feed.servings)
+    if(data.title.error || data.servings.error) return;
     setDisabled(true);
     const res = await server.updateRecipe(recipeId, {
       title: data.title.value || feed.title,
       instruction: feed.instruction,
       ingredients: feed.ingredients,
+      servings: +data.servings.value || +feed.servings,
     });
     if (!res.ok) {
       setDisabled(false);
@@ -116,8 +125,41 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     }
     setDisabled(false);
     toggleEdit(false);
+    changeUserRecipeTitle(data.title.value || feed.title)
     getRecipeInfo();
+    setData({
+      title: {
+        title: "title",
+        max: 64,
+        value: undefined,
+        error: "",
+      },
+      servings: {
+        title: "servings",
+        max: 2,
+        value: undefined,
+        error: "",
+      },
+    })
   };
+
+  const cancelHandler = () => {
+    toggleEdit(!editMode);
+    setData({
+      title: {
+        title: "title",
+        max: 64,
+        value: undefined,
+        error: "",
+      },
+      servings: {
+        title: "servings",
+        max: 2,
+        value: undefined,
+        error: "",
+      },
+    })
+  }
 
   useEffect(() => {
     if (navigation.isFocused()) {
@@ -138,7 +180,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     left: "40%",
                     top: "35%",
                     zIndex: 10,
-                    opacity: 0.5,
+                    opacity: 1,
                   }}
                 >
                   <TouchableOpacity onPress={pickAvatar}>
@@ -238,6 +280,29 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
               </View>
             </View>
           ) : (
+            <>
+            <View style={styles.editContainer}>
+              {console.log(data.servings.value, feed.servings)}
+                  <TextInput
+                    value={
+                      data.servings.value === undefined
+                        ? feed.servings + ''
+                        : data.servings.value + ''
+                    }
+                    keyboardType='number-pad'
+                    onChangeText={(text) => onCnangeHandler(text, "servings")}
+                    placeholder={"Add recipe serving"}
+                    style={{
+                      borderColor: data.servings.error ? "#FF364F" : Col.Grey2,
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  {data.servings.error ? (
+                    <Text style={{ color: "#FF364F", marginTop: 10 }}>
+                      {data.servings.error}{" "}
+                    </Text>
+                  ) : null}
+                </View>
             <View>
               <Button
                 label="SAVE"
@@ -249,11 +314,12 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                 label="CANCEL"
                 type="text"
                 deactivate={disabled}
-                onPress={() => toggleEdit(!editMode)}
+                onPress={cancelHandler}
                 labelStyle={{ color: Col.Grey }}
                 style={{ marginVertical: 0 }}
               />
             </View>
+            </>
           )}
         </View>
       </ScrollView>
@@ -306,7 +372,7 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Background,
   },
   editContainer: {
-    minHeight: 109,
+    minHeight: 50,
     backgroundColor: Col.White,
     borderRadius: 8,
     paddingHorizontal: 16,

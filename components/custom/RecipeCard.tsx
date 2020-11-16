@@ -17,7 +17,7 @@ interface Props {
   actionHandler: (id: string, title: string, data: object) => void;
 }
 
-const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
+const RecipeCard: FC<Props> = ({ details, actionHandler, notShowScore }) => {
   const {
     id,
     image,
@@ -65,13 +65,13 @@ const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
                 alignItems: "flex-end",
               }}
             >
-              <HealthCircle
+              {notShowScore ? <View style={{height: 32}}></View> : <HealthCircle
                 showText
                 radius={32}
                 percentage={healthScore}
                 textColor="white"
                 background="#fff3"
-              />
+              />}
               {/* <Icon
           onPress={addFavourMeal}
           name={!state ? 'heart-outline' : 'heart'}
@@ -84,7 +84,8 @@ const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
         <View style={styles.infoContainer}>
           <Text type="bodyBold2">{title}</Text>
           <View style={styles.catagoryContainer}>
-            {getImage(
+            {
+            getImage(
               vegetarian,
               vegan,
               glutenFree,

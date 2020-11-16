@@ -22,7 +22,7 @@ import SearchModal from "../../components/SearchModal";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import FilterModal from "../../components/FilterModal";
 import Text from "../../components/custom/Typography";
-import { useIsFocused } from "@react-navigation/native";
+import { Button } from "../../components/MyComponents";
 
 type constNum = () => number;
 
@@ -40,6 +40,12 @@ interface AddMealsProps {
 }
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 
+interface Feed {
+  results: RecommendedMeals[];
+  offset: number;
+  totalResults: number;
+}
+
 const SearchScreen: FC<NavProps> = ({ navigation }) => {
   const { isShow, showModal, calendar, isFetching } = useContext<Memo>(
     AppContext
@@ -50,9 +56,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     deactivate: false,
     myFetching: false,
   });
-  const [feed, setFeed] = useState<RecommendedMeals[] | null>(
-    "Search the meals"
-  );
+  const [feed, setFeed] = useState<Feed | null | string>("Search the meals");
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
     diets: [],
@@ -86,13 +90,17 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       config += `&type=${filterConfig.mealTypes}`;
     showModal(false);
     setFetching({ ...fetching, myFetching: true });
-    const response = await server.getRecipeByName(state, config);
+    const response = await server.getRecipeByName(state, config, 0);
     if (response.ok) {
-      if (!response.data.length) {
+      if (!response.data.results.length) {
         setFetching({ ...fetching, myFetching: false });
         return setFeed("We couldn’t find any meals");
       }
-      setFeed(response.data);
+      setFeed({
+        ...feed,
+        results: response.data.results,
+        offset: response.data.offset,
+      });
     }
     setFetching({ ...fetching, myFetching: false });
   };
@@ -160,7 +168,34 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
-  const isFocused = useIsFocused();
+  const showMore = async () => {
+    setFetching({ ...fetching, clicked: true, deactivate: true });
+    let config = "";
+    if (filterConfig.intolerances.length)
+      config += `&intolerances=${filterConfig.intolerances}`;
+    if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
+    if (filterConfig.mealTypes.length)
+      config += `&type=${filterConfig.mealTypes}`;
+    showModal(false);
+    const response = await server.getRecipeByName(
+      state,
+      config,
+      feed.offset + 10
+    );
+    if (response.ok) {
+      if (!response.data.results.length) {
+        setFetching({ ...fetching, myFetching: false });
+        return setFeed("We couldn’t find any meals");
+      }
+      setFeed({
+        ...feed,
+        results: [...feed.results, ...response.data.results],
+        offset: response.data.offset,
+      });
+    }
+    setFetching({ ...fetching, clicked: false, deactivate: false });
+  };
+  const isFocused = navigation.isFocused();
   useEffect(() => {
     if (isFocused) getFilter();
   }, [isFocused]);
@@ -207,13 +242,28 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
               <Text>{feed}</Text>
             </View>
           ) : (
-            <View style={styles.container}>
-              {feed?.map((item, index) => (
-                <View key={`${index}`} style={styles.cardContainer}>
-                  <RecipeCard details={item} actionHandler={actionHandler} />
-                </View>
-              ))}
-            </View>
+            <>
+              <View style={styles.container}>
+                {feed.results?.map((item, index) => (
+                  <View key={`${index}`} style={styles.cardContainer}>
+                    <RecipeCard
+                      details={item}
+                      actionHandler={actionHandler}
+                      notShowScore={true}
+                    />
+                  </View>
+                ))}
+              </View>
+              <View style={styles.button}>
+                <Button
+                  label="SHOW MORE"
+                  onPress={showMore}
+                  deactivate={fetching.deactivate}
+                  clicked={fetching.clicked}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+              </View>
+            </>
           )
         ) : (
           <View style={styles.loading}>
@@ -251,6 +301,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
+  },
+  button: {
+    paddingHorizontal: Spacing.medium,
   },
 });
 export default SearchScreen;

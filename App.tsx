@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
+import { stringify } from "querystring";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -37,7 +38,7 @@ export default function App() {
   const [userData, setUserData] = useState<UserData>(ProfileData);
   const [recipeId, setRecipeId] = useState<number>(0);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [previewRecipe, setPreviewRecipe] = useState<object>({});
+  const [userRecipeTitle, setUserRecipeTitle] = useState<string>("");
 
   const ApiInterceptor = async () => {
     api.addAsyncResponseTransform(async (Res) => {
@@ -116,9 +117,10 @@ export default function App() {
       await AsyncStorage.mergeItem("@doc", JSON.stringify(response.data.data));
   };
 
-  const loginHandler = async () => {
+  const loginHandler = async (successPage: boolean) => {
     ApiInterceptor();
     await getUserData();
+    if (successPage) return;
     setLogged(true);
   };
 
@@ -132,7 +134,7 @@ export default function App() {
       myData: userData,
       refresh: fetching,
       saveCal: (value) => setCal(value),
-      login: () => loginHandler(),
+      login: (successPage: boolean) => loginHandler(successPage),
       signOut: () => removeToken(),
       getData: () => getUserData(),
       pushData: () => console.log("push data"),
@@ -147,10 +149,19 @@ export default function App() {
       toggleEdit: (v: boolean) => setEditMode(v),
       getRecommend,
       getRecomendation: (v: boolean) => setGetrecommend(v),
-      previewRecipe,
-      setPreview: (i) => setPreviewRecipe(i),
+      userRecipeTitle,
+      changeUserRecipeTitle: (title: string) => setUserRecipeTitle(title),
     }),
-    [cal, show, userData, fetching, recipeId, editMode, getRecommend]
+    [
+      cal,
+      show,
+      userData,
+      fetching,
+      recipeId,
+      editMode,
+      getRecommend,
+      userRecipeTitle,
+    ]
   );
 
   useEffect(() => {
@@ -160,6 +171,7 @@ export default function App() {
 
   return (
     <AppContext.Provider value={appContext}>
+      {console.log(userData)}
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
     </AppContext.Provider>
   );

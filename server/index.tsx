@@ -176,13 +176,18 @@ const getProfile = async () => {
 
 const getHistory = async (days: number) => {
   const address = apiConfig.get.history + days;
-  const response = await api.get(address);  
+  const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
 };
 
-const getRecipeByName = async (name: string, config: string) => {
-  const address = apiConfig.get.recipeByName + name + config;
+const getRecipeByName = async (
+  name: string,
+  config: string,
+  offset: number
+) => {
+  const address =
+    apiConfig.get.recipeByName + name + config + `&offset=${offset}`;
   const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
@@ -233,9 +238,9 @@ const addRecipe = async (data: any) => {
 
 const updateRecipe = async (
   id: number,
-  { avatar, title, ingredientList, instruction }
+  { avatar, title, ingredientList, instruction, servings }
 ) => {
-  const params = { title, ingredientList, instruction };
+  const params = { title, ingredientList, instruction, servings };
   const bodyParams = {};
   Object.keys(params).forEach((el) =>
     params[el] ? (bodyParams[el] = params[el]) : el

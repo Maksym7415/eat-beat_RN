@@ -1,4 +1,4 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "../../components/MyComponents";
 import { Col, Spacing } from "../../components/Config";
@@ -10,6 +10,14 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const SuccessScreen: FC<NavProps> = ({ navigation }) => {
   const { login } = useContext(AppContext);
+
+  useEffect(() => {
+    navigation.addListener('focus', () => {
+      login(true);
+    });
+    
+  }, [])
+
   return (
     <LayoutScroll style={styles.container}>
       <Logo />

@@ -52,7 +52,7 @@ export interface Memo {
   refresh: number;
   myData: UserData;
   saveCal: (currentDate: Cal) => void;
-  login: () => void;
+  login: (successPage: boolean) => void;
   signOut: () => void;
   getData: () => void;
   pushData: () => void;

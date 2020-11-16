@@ -12,6 +12,7 @@ export default function IngradientRow({
   servings,
   checked,
   checkHandler,
+  weight,
 }) {
   return (
     <View style={styles.container}>
@@ -30,24 +31,28 @@ export default function IngradientRow({
           marginHorizontal: Spacing.r_small,
         }}
       >
-        <Image style={styles.image} source={{ uri }} />
+        <Image
+          style={styles.image}
+          source={{
+            uri: `https://spoonacular.com/cdn/ingredients_100x100/${uri}`,
+          }}
+        />
       </View>
       <Text type="h6" style={{ width: "15%", textAlign: "center" }}>
         {servings}
       </Text>
       <Text type="cap" style={{ color: Col.Grey, width: "15%" }}>
-        {title}
+        {unit}
       </Text>
       <Text type="cap" style={{ width: "25%", flexWrap: "wrap" }}>
         {name}
       </Text>
       <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
-        ({unit || "g"})
+        ({`${servings * weight.amount}${weight.unit}`})
       </Text>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
