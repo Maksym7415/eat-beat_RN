@@ -34,7 +34,6 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
   const getHealthsScore = async () => {
-    console.log(124)
     const response = await server.getHistory(offset.offset);
     if (response.ok) {
       const historyFeed: HealthScore[] = response.data.data;

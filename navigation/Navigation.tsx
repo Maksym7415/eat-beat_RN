@@ -253,34 +253,36 @@ export const RecommendedStack = () => {
       />
       <Stack.Screen
         name="user_recipe"
-        options={({ navigation }) => ({
-          title: "",
-          headerStyle: {
-            elevation: 0,
-            backgroundColor: Col.Recipes,
-          },
-          headerTitleStyle: {
-            color: "white",
-          },
-          headerLeft: () => (
-            <Icon
-              style={{ marginLeft: 16 }}
-              onPress={() => navigation.navigate("user_recipies")}
-              name={"arrow-back"}
-              color={Col.White}
-              size={24}
-            />
-          ),
-          headerRight: () => (
-            <Icon
-              style={{ marginRight: 16 }}
-              onPress={() => toggleEdit(!editMode)}
-              name={!editMode ? "edit" : "close"}
-              color={Col.White}
-              size={24}
-            />
-          ),
-        })}
+        options={({ navigation }) => {
+          const { userRecipeTitle } = useContext(AppContext)
+          return ({
+            title: userRecipeTitle,
+            headerStyle: {
+              elevation: 0,
+              backgroundColor: Col.Recipes,
+            },
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerLeft: () => (
+              <Icon
+                style={{ marginLeft: 16 }}
+                onPress={() => navigation.navigate("user_recipies")}
+                name={"arrow-back"}
+                color={Col.White}
+                size={24}
+              />
+            ),
+            headerRight: () => (
+              <Icon
+                style={{ marginRight: 16 }}
+                onPress={() => toggleEdit(!editMode)}
+                name={!editMode ? "edit" : "close"}
+                color={Col.White}
+                size={24}
+              />
+            ),
+        })}}
         component={EditRecipeTopNAvigator}
       />
     </Stack.Navigator>

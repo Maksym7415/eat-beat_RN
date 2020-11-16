@@ -17,8 +17,8 @@ import { AuthProps } from "../components/interfaces";
 
 // console.log(Device, )
 const apiConfig: apiProps = {
-  //baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
+  baseURL: "http://10.4.30.212:8081/api",
+  // baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
   testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
   get: {
     profile: "/user/profile-data",
@@ -186,8 +186,8 @@ const getHistory = async (days: number) => {
   return response;
 };
 
-const getRecipeByName = async (name: string, config: string) => {
-  const address = apiConfig.get.recipeByName + name + config;
+const getRecipeByName = async (name: string, config: string, offset: number) => {
+  const address = apiConfig.get.recipeByName + name + config + `&offset=${offset}`;
   const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
@@ -238,9 +238,9 @@ const addRecipe = async (data: any) => {
 
 const updateRecipe = async (
   id: number,
-  { avatar, title, ingredientList, instruction }
+  { avatar, title, ingredientList, instruction, servings }
 ) => {
-  const params = { title, ingredientList, instruction };
+  const params = { title, ingredientList, instruction, servings };
   const bodyParams = {};
   Object.keys(params).forEach((el) =>
     params[el] ? (bodyParams[el] = params[el]) : el

@@ -4,7 +4,7 @@ import { View, StyleSheet, Image, Text } from 'react-native';
 import { Col } from '../../../components/Config';
 import CheckBox from '../../../components/custom/CheckBox';
 
-export default function IngradientRow({ name, title, unit, uri, servings, checked, checkHandler }) {
+export default function IngradientRow({ name, title, unit, uri, servings, checked, checkHandler, weight }) {
     return (
         <View style={styles.container}>
             <View style={styles.checkboxContainer}>
@@ -16,12 +16,13 @@ export default function IngradientRow({ name, title, unit, uri, servings, checke
             name={name}
             size={20}
           />
+          {console.log(uri)}
             </View>
-            <Image style={styles.image} source={{ uri }} />
+            <Image style={styles.image} source={{ uri: `https://spoonacular.com/cdn/ingredients_100x100/${uri}` }} />
             <Text>{servings}</Text>
             <Text>{title}</Text>
             <Text>{name}</Text>
-            <Text>({unit || 'g'})</Text>
+            <Text>({`${servings*weight.amount}${weight.unit}`})</Text>
         </View>
     )
 }

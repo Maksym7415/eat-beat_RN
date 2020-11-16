@@ -34,7 +34,7 @@ interface Loading {
 }
 
 export default function CreateRecipeScreen({ navigation }) {
-  const { getRecipeId } = useContext(AppContext);
+  const { getRecipeId, changeUserRecipeTitle } = useContext(AppContext);
   const [image, setImage] = useState<null>(null);
   const [loading, setLoading] = useState<Loading>({
     loading: false,
@@ -56,6 +56,12 @@ export default function CreateRecipeScreen({ navigation }) {
     instruction: {
       title: "instruction",
       max: 10000,
+      value: "",
+      error: "",
+    },
+    servings: {
+      title: "servings",
+      max: 2,
       value: "",
       error: "",
     },
@@ -105,18 +111,16 @@ export default function CreateRecipeScreen({ navigation }) {
   };
 
   const saveChanges = async () => {
-    let error = false;
     setData((state) => {
       const obj: Data = {};
       Object.values(state).forEach((item: Item) => {
         if (!item.value && item.title !== "instruction") {
           obj[item.title] = { ...item, error: "This field can not be empty" };
-          error = true;
         } else obj[item.title] = item;
       });
       return obj;
     });
-    if (error) return;
+    if (!data.title.value ||  !data.ingredients.value ) return;
     setLoading({ ...loading, loading: true, disabled: true });
     const {
       data: { id },
@@ -125,6 +129,7 @@ export default function CreateRecipeScreen({ navigation }) {
       title: data.title.value,
       instruction: data.instruction.value,
       ingredientList: data.ingredients.value,
+      servings: +data.servings.value
     });
     if (ok) {
       let formData;
@@ -141,9 +146,9 @@ export default function CreateRecipeScreen({ navigation }) {
       }
       getRecipeId(id);
       setLoading({ ...loading, loading: false, disabled: false });
-      navigation.navigate("user_recipe", {
-        title: data.title.value,
-      });
+      changeUserRecipeTitle(data.title.value)
+      navigation.navigate("user_recipe");
+      
     }
     setLoading({ ...loading, loading: false, disabled: false });
   };
@@ -186,6 +191,16 @@ export default function CreateRecipeScreen({ navigation }) {
               </Text>
             ) : null}
           </View>
+        </View>
+        <View style={styles.editContainer}>
+          <Text style={{ marginBottom: 10 }}>Servings</Text>
+          <TextInput
+            keyboardType='number-pad'
+            value={data.servings.value}
+            onChangeText={(text) => onCnangeHandler(text, "servings")}
+            style={{ borderColor: Col.Grey2, borderBottomWidth: 1 }}
+            placeholder={"Add serving for recipe"}
+          />
         </View>
         <View style={styles.editContainer}>
           <Text style={{ marginBottom: 10 }}>Ingradients*</Text>

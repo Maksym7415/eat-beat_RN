@@ -62,6 +62,10 @@ export default function IngradientScreen({ navigation }) {
   };
 
   const saveChanges = async () => {
+    const initialState = feed.ingredients
+      .map((el) => `${el.amount} ${el.unit} ${el.name}`)
+      .join("\n");
+    if(initialState === value) return toggleEdit(false);
     await server.updateRecipe(recipeId, { ingredientList: value });
     getRecipeInfo();
     toggleEdit(false);
@@ -76,6 +80,7 @@ export default function IngradientScreen({ navigation }) {
               <View>
                 {feed.ingredients &&
                   feed.ingredients.map((el, index) => {
+                    {console.log(el)}
                     return (
                       <IngradientRow
                         key={index}
@@ -85,6 +90,8 @@ export default function IngradientScreen({ navigation }) {
                         unit={el.unit}
                         title={el.unit}
                         servings={el.amount}
+                        uri={el.image}
+                        weight={el.weightPerServing}
                       />
                     );
                   })}

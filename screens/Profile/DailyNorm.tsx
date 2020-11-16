@@ -77,6 +77,9 @@ const DailyNorm: FC<NavProps> = ({ navigation }) => {
       labels: Object.keys(myData.intakeNorms),
       values: Object.values(myData.intakeNorms),
     });
+    navigation.addListener('focus', () => {
+      getData();
+    });
   }, [myData]);
 
   return (

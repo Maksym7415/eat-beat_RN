@@ -37,7 +37,9 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    serveData();
+    navigation.addListener('focus', () => {
+      serveData();
+    });
   }, [date, refresh]);
 
   const onChange = (event: Event, selectedDate: Date) => {
