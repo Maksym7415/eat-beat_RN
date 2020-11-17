@@ -6,12 +6,11 @@ import {
   NativeScrollEvent,
   View,
 } from "react-native";
-import { Memo, NavProps } from "../../components/interfaces";
+import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import server from "../../server";
 import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
-import { AppContext } from "../../components/AppContext";
 import { useIsFocused } from "@react-navigation/native";
 
 interface HealthScore {

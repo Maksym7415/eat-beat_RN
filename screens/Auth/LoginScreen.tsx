@@ -25,9 +25,10 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
     setClicked(true);
     const response = await server.signIn(value);
     if (response.ok) {
-      login();
+      login(false);
     } else {
-      if (response.status === 401) navigation.navigate("confirm", value);
+      if (response.status === 403 && response.data.code == 121)
+        navigation.navigate("confirm", value);
       setClicked(false);
       setError(true);
     }

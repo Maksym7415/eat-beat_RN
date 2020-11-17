@@ -134,7 +134,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       data,
       servings: 1,
       modalVisible: true,
-      creationTime: new Date(calendar.date).getTime(),
+      creationTime: new Date().getTime(),
     });
   };
 

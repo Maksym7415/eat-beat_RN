@@ -148,7 +148,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         <View />
       )} */}
       <FlatList
-        data={feed?.sort((a, b) => a.creationTime > b.creationTime)}
+        data={feed}
         ListEmptyComponent={() => <EmptyList />}
         keyExtractor={(item) => `${item.id}`}
         showsVerticalScrollIndicator={false}

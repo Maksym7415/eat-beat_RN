@@ -44,7 +44,6 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   }, [focus]);
 
   const onChange = (event: Event, selectedDate: Date) => {
-    console.log("off");
     if (event.type === "dismissed")
       return saveCal({ visible: false, date: date });
     if (selectedDate && selectedDate !== date) {
@@ -66,7 +65,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         <ActivityIndicator size="small" color={Col.Black} />
       </View>
     );
-  console.log(Object.keys(feed).length);
+
   if (Object.keys(feed).length) {
     return (
       <View style={styles.canvas}>
@@ -155,6 +154,9 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           </View>
           <Divider styler={styles.divider} />
           <View style={styles.nutritionContainer}>
+            <Text type="bodyBold" style={{ paddingVertical: Spacing.tiny }}>
+              Nutrition Details
+            </Text>
             {feed.nutrientsData.map((item, index) => (
               <Nutrition key={`${index}`} item={item} />
             ))}
