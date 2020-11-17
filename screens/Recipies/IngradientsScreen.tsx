@@ -52,7 +52,7 @@ export default function IngradientScreen({ navigation }) {
           .map((el) => `${el.amount} ${el.unit} ${el.name}`)
           .join("\n")
       );
-  }, [feed]);
+  }, [feed, editMode]);
 
   const checkHandler = (name: string, check: boolean) => {
     setChecked((val) => ({ ...val, [name]: check }));
@@ -106,49 +106,49 @@ export default function IngradientScreen({ navigation }) {
             <View style={styles.btnConatiner}>
               <Button
                 label="Add recipe to my meals"
-                onPress={() => toggleEdit(!editMode)}
+                onPress={() => console.log('need to do this')} // !!!
                 style={{ backgroundColor: Col.Recipes }}
                 deactivate={Object.values(checked).filter((el) => el).length}
               />
             </View>
           </>
         ) : (
-          <View style={{ flexGrow: 1 }}>
-            <View style={styles.ingradientContainer}>
-              <Text style={styles.ingradientTitle}>Ingredients</Text>
-              <View style={styles.ingradientTextField}>
-                <TextInput
-                  multiline
-                  value={value}
-                  onChangeText={changeHandler}
+            <View style={{ flexGrow: 1 }}>
+              <View style={styles.ingradientContainer}>
+                <Text style={styles.ingradientTitle}>Ingredients</Text>
+                <View style={styles.ingradientTextField}>
+                  <TextInput
+                    multiline
+                    value={value}
+                    onChangeText={changeHandler}
+                  />
+                </View>
+
+                <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  label="SAVE CHANGES"
+                  onPress={saveChanges}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+                <Button
+                  label="CANCEL"
+                  type="text"
+                  onPress={() => toggleEdit(false)}
+                  labelStyle={{ color: Col.Grey }}
+                  style={{ marginVertical: 0 }}
                 />
               </View>
-
-              <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
             </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                label="SAVE CHANGES"
-                onPress={saveChanges}
-                style={{ backgroundColor: Col.Recipes }}
-              />
-              <Button
-                label="CANCEL"
-                type="text"
-                onPress={() => toggleEdit(false)}
-                labelStyle={{ color: Col.Grey }}
-                style={{ marginVertical: 0 }}
-              />
-            </View>
-          </View>
-        )}
+          )}
       </View>
     </LayoutScroll>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Background,
   },
   buttonContainer: {
-    // flex: 1,
+    flex: 1,
     padding: Spacing.medium,
-    //justifyContent: 'flex-end'
+    justifyContent: 'flex-end'
   },
 });
