@@ -12,6 +12,7 @@ import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
+import { useIsFocused } from "@react-navigation/native";
 
 interface ModalData {
   id: number;
@@ -30,9 +31,7 @@ interface AddMealsProps {
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 
 const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
-  const { calendar, isFetching, getRecommend, getRecomendation } = useContext<
-    Memo
-  >(AppContext);
+  const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
     deactivate: false,
@@ -52,7 +51,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     setFetching({ clicked: true, deactivate: true });
     const response = await server.getRecommendedMeals(date);
     if (response.ok) {
-      getRecomendation(false);
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);
     }
@@ -121,14 +119,13 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     });
   };
 
+  const focus = useIsFocused();
   useEffect(() => {
-    if (getRecommend) {
+    if (!focus) {
       setFeed([]);
+      setModalData({ ...modalData, modalVisible: false });
     }
-    navigation.addListener("focus", () => {
-      setFeed([]);
-    });
-  }, [getRecommend]);
+  }, [focus]);
 
   return feed.length ? (
     <View style={styles.canvas}>

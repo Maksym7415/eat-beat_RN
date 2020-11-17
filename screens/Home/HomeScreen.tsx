@@ -28,7 +28,9 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
-      setFeed(data);
+      Object.keys(data).length && data?.totalMeals > 0
+        ? setFeed(data)
+        : setFeed({});
     }
   };
 
@@ -64,8 +66,8 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         <ActivityIndicator size="small" color={Col.Black} />
       </View>
     );
-
-  if (Object.keys(feed).length && feed?.totalMeals > 0) {
+  console.log(Object.keys(feed).length);
+  if (Object.keys(feed).length) {
     return (
       <View style={styles.canvas}>
         <ActionButton

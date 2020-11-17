@@ -63,8 +63,6 @@ export interface Memo {
   isShow: boolean;
   editMode: boolean;
   toggleEdit: (v: boolean) => void;
-  getRecommend: boolean;
-  getRecomendation: (v: boolean) => void;
 }
 
 export interface CalendarInterface {
