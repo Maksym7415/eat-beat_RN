@@ -11,11 +11,9 @@ import * as Device from "expo-device";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert, Platform } from "react-native";
 import { AuthProps } from "../components/interfaces";
-
+import { baseURL } from '../url.js';
 const apiConfig: apiProps = {
-  // baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
-  testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
+  baseURL: baseURL + 'api',
   get: {
     profile: "/user/profile-data",
     cookedMeals: "/meals/cooked-meals?date=",

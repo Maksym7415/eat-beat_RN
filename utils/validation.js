@@ -3,11 +3,20 @@ import { useState } from 'react';
 export default function useValidation(params) {
 
     // const [isRender, setIsRender] = useState(isReactivityValdiation);
+    const defaultState = {...params};
     const [value, setValue] = useState(params);
     const [validationResponse, setValidationResponse] = useState(() => {
       const { errorFields, error } = _getFields(params, true);
       return { error, validation: errorFields }
     })
+
+    function getDefafultConfig () {
+      setValue(defaultState);
+      setValidationResponse(() => {
+        const { errorFields, error } = _getFields(defaultState, true);
+        return { error, validation: errorFields }
+      })
+    }
   
     function onChangeHandler(event, name) {
       if (typeof event !== 'string') event.preventDefault();
@@ -89,7 +98,7 @@ export default function useValidation(params) {
       return { errorFields, error }
     }
     return (
-      [...validationResponse.validation, value, onChangeHandler, startValidation]
+      [...validationResponse.validation, value, onChangeHandler, startValidation, getDefafultConfig]
     )
   
   }

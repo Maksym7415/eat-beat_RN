@@ -13,6 +13,7 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
 import Text from "../../../components/custom/Typography";
+import { baseURL } from '../../../url';
 
 interface Props {
   image: string | null;
@@ -91,13 +92,13 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
         {image === null ? (
           <SvgMaker name="camera" />
         ) : (
-          <Image
-            style={styles.image}
-            source={{
-              uri: "https://logisticbrocker.hopto.org/eat-beat/" + image,
-            }}
-          />
-        )}
+            <Image
+              style={styles.image}
+              source={{
+                uri: `${baseURL}/${image}`,
+              }}
+            />
+          )}
         <View style={styles.imageEditor}>
           <Icon name="edit" size={16} color={Col.White} />
         </View>
