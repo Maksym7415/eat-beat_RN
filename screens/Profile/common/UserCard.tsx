@@ -14,6 +14,7 @@ import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
 import Text from "../../../components/custom/Typography";
 import * as ImageManipulator from "expo-image-manipulator";
+import { baseURL } from "../../../url";
 
 interface Props {
   image: string | null;
@@ -100,7 +101,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
           <Image
             style={styles.image}
             source={{
-              uri: "https://logisticbrocker.hopto.org/eat-beat/" + image,
+              uri: `${baseURL}/${image}`,
             }}
           />
         )}

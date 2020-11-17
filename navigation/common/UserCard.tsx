@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
+import { baseURL } from '../../url';
 
 const UserCard = ({ color }) => {
   const { myData } = useContext(AppContext);
@@ -11,7 +12,7 @@ const UserCard = ({ color }) => {
         style={styles.image}
         source={{
           uri:
-            "https://logisticbrocker.hopto.org/eat-beat/" + myData.userAvatar,
+            baseURL + myData.userAvatar,
         }}
       />
       <Text style={styles.text}>{myData.email}</Text>

@@ -97,7 +97,7 @@ export default function IngradientScreen({ navigation }) {
             </View>
             <View style={{ flexGrow: 1, paddingHorizontal: Spacing.medium }}>
               <Button
-                label="Add selected products to My Shoppping List"
+                label="Add products to My Shoppping List"
                 onPress={() => console.log("")}
                 style={{ backgroundColor: Col.Recipes }}
                 deactivate={!Object.values(checked).filter((el) => el).length}

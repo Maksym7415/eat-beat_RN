@@ -19,6 +19,8 @@ import server from "../../server";
 import Nutrient from "../../components/Nutrient";
 import NutritionItem from "../../components/Nutrition";
 import { NavProps } from "../../components/interfaces";
+import { baseURL } from '../../url';
+import useValidation from '../../utils/validation';
 
 interface Item {
   title: string;
@@ -31,25 +33,42 @@ interface Data {
   [key: string]: Item;
 }
 
+const config = {
+  title: {
+    id: 0,
+    title: 'title',
+    maxLength: 50,
+    value: null,
+    required: true,
+    errors: {
+      maxLegnth: 'Title length can not be more than 50 symbols',
+      value: 'This field can not be empty',
+    }
+  },
+  servings: {
+    id: 1,
+    title: 'servings',
+    maxLength: 1000,
+    value: null,
+    required: true,
+    type: 'number',
+    errors: {
+      maxLegnth: 'error message for max length',
+      isNumber: 'should be number',
+      value: 'This field can not be empty',
+    }
+  },
+}
+
 const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
+
   const { recipeId, editMode, toggleEdit } = useContext(AppContext);
+
   const [feed, setFeed] = useState<object>({});
   const [disabled, setDisabled] = useState<boolean>(false);
   const [image, setImage] = useState<null>(null);
-  const [data, setData] = useState<Data>({
-    title: {
-      title: "title",
-      max: 64,
-      value: undefined,
-      error: "",
-    },
-    servings: {
-      title: "servings",
-      max: 2,
-      value: undefined,
-      error: "",
-    },
-  });
+  const [cfg, setCfg] = useState<object>(config);
+  const [title, servings, fieldValues, changeHandler, startValidation, getDefaultConfig] = useValidation(cfg);
   const pickAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -60,20 +79,6 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     if (!result.cancelled) {
       setImage(result.uri);
     }
-  };
-
-  const onCnangeHandler = (text: string, name: string) => {
-    setData({
-      ...data,
-      [name]: {
-        ...data[name],
-        value: text,
-        error:
-          text.length > data[name].max
-            ? `${data[name].title} length can not be more than ${data[name].max} symbols`
-            : "",
-      },
-    });
   };
 
   const getRecipeInfo = useCallback(async () => {
@@ -95,6 +100,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
         ingredients: nutrition.ingredient,
         uri: image,
       });
+      setCfg((config) => ({ ...config, title: { ...config.title, value: title }, servings: { ...config.servings, value: servings } }))
     }
   }, [recipeId]);
 
@@ -102,14 +108,14 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     navigation.dangerouslyGetParent().setOptions({ title });
   };
 
-  const saveChanges = async () => {
-    if (data.title.error || data.servings.error) return;
+  const saveChanges = async ([title, servings], error) => {
+    if (error) return;
     setDisabled(true);
     const res = await server.updateRecipe(recipeId, {
-      title: data.title.value || feed.title,
+      title: title.value || feed.title,
       instruction: feed.instruction,
       ingredients: feed.ingredients,
-      servings: +data.servings.value || +feed.servings,
+      servings: +servings.value || +feed.servings,
     });
     if (!res.ok) {
       setDisabled(false);
@@ -129,48 +135,25 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     }
     setDisabled(false);
     toggleEdit(false);
-    ChangeTitle(data.title.value || feed.title);
+    ChangeTitle(title.value || feed.title);
     getRecipeInfo();
-    setData({
-      title: {
-        title: "title",
-        max: 64,
-        value: undefined,
-        error: "",
-      },
-      servings: {
-        title: "servings",
-        max: 2,
-        value: undefined,
-        error: "",
-      },
-    });
-  };
-
+  }
   const cancelHandler = () => {
     toggleEdit(!editMode);
-    setData({
-      title: {
-        title: "title",
-        max: 64,
-        value: undefined,
-        error: "",
-      },
-      servings: {
-        title: "servings",
-        max: 2,
-        value: undefined,
-        error: "",
-      },
-    });
   };
 
   useEffect(() => {
     if (navigation.isFocused()) {
       toggleEdit(false);
       getRecipeInfo();
+
     }
   }, [navigation]);
+
+  useEffect(() => {
+    getDefaultConfig()
+  }, [editMode])
+
   return Object.keys(feed).length && !disabled ? (
     <View style={{ flex: 1, backgroundColor: Col.Background }}>
       <ScrollView>
@@ -181,7 +164,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                 source={{
                   uri: image
                     ? image
-                    : `https://logisticbrocker.hopto.org/eat-beat/${feed?.uri}`,
+                    : `${baseURL}${feed?.uri}`,
                 }}
                 style={styles.image}
               >
@@ -193,44 +176,42 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     size={58}
                   />
                 ) : (
-                  <View />
-                )}
+                    <View />
+                  )}
               </ImageBackground>
             </View>
             <View style={{ padding: Spacing.medium }}>
               {!editMode ? (
                 <Text type="h6">{feed.title}</Text>
               ) : (
-                <View>
-                  <Text
-                    type="bodyBold"
-                    style={{ color: Col.Grey, marginBottom: Spacing.small }}
-                  >
-                    Title*
+                  <View>
+                    <Text
+                      type="bodyBold"
+                      style={{ color: Col.Grey, marginBottom: Spacing.small }}
+                    >
+                      Title*
                   </Text>
-                  <TextInput
-                    value={
-                      data.title.value === undefined
-                        ? feed.title
-                        : data.title.value
-                    }
-                    onChangeText={(text) => onCnangeHandler(text, "title")}
-                    placeholder={"Add recipe title"}
-                    style={{
-                      borderColor: data.title.error ? Col.Error : Col.Grey2,
-                      fontFamily: "Inter_500Medium",
-                      fontSize: 20,
-                      color: Col.Dark,
-                      borderBottomWidth: 1,
-                    }}
-                  />
-                  {data.title.error ? (
+                    <TextInput
+                      value={
+                        fieldValues.title.value === null
+                          ? feed.title
+                          : fieldValues.title.value
+                      }
+                      onChangeText={(text) => changeHandler(text, "title")}
+                      placeholder={"Add recipe title"}
+                      style={{
+                        borderColor: title.errors ? Col.Error : Col.Grey2,
+                        fontFamily: "Inter_500Medium",
+                        fontSize: 20,
+                        color: Col.Dark,
+                        borderBottomWidth: 1,
+                      }}
+                    />
                     <Text style={{ color: Col.Error, marginTop: 10 }}>
-                      {data.title.error}{" "}
+                      {title.errors}
                     </Text>
-                  ) : null}
-                </View>
-              )}
+                  </View>
+                )}
             </View>
           </View>
           {!editMode ? (
@@ -286,63 +267,61 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
               </View>
             </View>
           ) : (
-            <>
-              <View style={styles.editContainer}>
-                <Text
-                  type="bodyBold"
-                  style={{ color: Col.Grey, marginBottom: Spacing.small }}
-                >
-                  Servings
+              <>
+                <View style={styles.editContainer}>
+                  <Text
+                    type="bodyBold"
+                    style={{ color: Col.Grey, marginBottom: Spacing.small }}
+                  >
+                    Servings
                 </Text>
-                <TextInput
-                  value={
-                    data.servings.value === undefined
-                      ? feed.servings + ""
-                      : data.servings.value + ""
-                  }
-                  keyboardType="number-pad"
-                  onChangeText={(text) => onCnangeHandler(text, "servings")}
-                  placeholder={"Add recipe serving"}
-                  style={{
-                    borderColor: data.servings.error ? Col.Error : Col.Grey2,
-                    fontFamily: "Inter_500Medium",
-                    fontSize: 20,
-                    color: Col.Dark,
-                    borderBottomWidth: 1,
-                  }}
-                />
-                {data.servings.error ? (
+                  <TextInput
+                    value={
+                      fieldValues.servings.value === null
+                        ? feed.servings + ""
+                        : fieldValues.servings.value + ""
+                    }
+                    keyboardType="number-pad"
+                    onChangeText={(text) => changeHandler(text, "servings")}
+                    placeholder={"Add recipe serving"}
+                    style={{
+                      borderColor: servings.errors ? Col.Error : Col.Grey2,
+                      fontFamily: "Inter_500Medium",
+                      fontSize: 20,
+                      color: Col.Dark,
+                      borderBottomWidth: 1,
+                    }}
+                  />
                   <Text style={{ color: Col.Error, marginTop: 10 }}>
-                    {data.servings.error}{" "}
+                    {servings.errors}
                   </Text>
-                ) : null}
-              </View>
-              <View>
-                <Button
-                  label="SAVE"
-                  onPress={saveChanges}
-                  deactivate={disabled}
-                  style={{ backgroundColor: Col.Recipes }}
-                />
-                <Button
-                  label="CANCEL"
-                  type="text"
-                  deactivate={disabled}
-                  onPress={cancelHandler}
-                  labelStyle={{ color: Col.Grey }}
-                  style={{ marginVertical: 0 }}
-                />
-              </View>
-            </>
-          )}
+                </View>
+                <View>
+                  <Button
+                    label="SAVE"
+                    onPress={() => startValidation(saveChanges)}
+                    deactivate={disabled}
+                    style={{ backgroundColor: Col.Recipes }}
+                  />
+                  <Button
+                    label="CANCEL"
+                    type="text"
+                    deactivate={disabled}
+                    onPress={cancelHandler}
+                    labelStyle={{ color: Col.Grey }}
+                    style={{ marginVertical: 0 }}
+                  />
+                </View>
+              </>
+            )}
         </View>
       </ScrollView>
     </View>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({

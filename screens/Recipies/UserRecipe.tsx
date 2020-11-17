@@ -8,6 +8,7 @@ import { Button } from "../../components/MyComponents";
 import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { baseURL } from '../../url';
 
 export default function UserRecipes({ navigation }) {
   const [feed, setFeed] = useState<null | []>(null);
@@ -44,13 +45,13 @@ export default function UserRecipes({ navigation }) {
                   recipe={true}
                   title={title}
                   actionHandler={actionHandler}
-                  image={`https://logisticbrocker.hopto.org/eat-beat/${recipe.image}`}
+                  image={`${baseURL}/${recipe.image}`}
                 />
               </View>
             ))
           ) : (
-            <View />
-          )}
+              <View />
+            )}
         </View>
       </LayoutScroll>
       <View style={styles.buttonContainer}>
@@ -62,10 +63,10 @@ export default function UserRecipes({ navigation }) {
       </View>
     </View>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({
