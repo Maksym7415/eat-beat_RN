@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext, FC } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, Pressable, ActivityIndicator } from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
@@ -22,12 +16,13 @@ import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ActionButton from "./common/ActionButton";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
-  const { calendar, saveCal } = useContext<Memo>(AppContext);
+  const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
   const serveData = async () => {
@@ -39,21 +34,22 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
 
   useEffect(() => {
     serveData();
-  }, [date]);
+  }, [date, refresh]);
 
+  let focus = useIsFocused();
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      serveData();
-    });
-  }, []);
+    if (focus) serveData();
+  }, [focus]);
 
   const onChange = (event: Event, selectedDate: Date) => {
+    console.log("off");
     if (event.type === "dismissed")
       return saveCal({ visible: false, date: date });
     if (selectedDate && selectedDate !== date) {
       setFeed(null);
       const currentDate = selectedDate || date;
       saveCal({ visible: false, date: currentDate });
+      serveData();
     }
   };
 

@@ -21,6 +21,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
           name: "",
           servings: 0,
           nutrients: [],
+          nutrition: [],
           vegetarian: false,
           vegan: false,
           glutenFree: false,
@@ -34,6 +35,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
     name,
     servings,
     nutrients,
+    nutrition,
     vegetarian,
     vegan,
     glutenFree,
@@ -56,7 +58,9 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
     return iconsArray;
   };
   const mnarr = ["Calories", "Protein", "Fat", "Carbohydrates"];
-  const mainNutrients = nutrients.filter((el) => mnarr.includes(el.title));
+  const mainNutrients = nutrients
+    ? nutrients.filter((el) => mnarr.includes(el.title))
+    : [];
   useEffect(() => {
     if (navigation.isFocused()) {
       const newFeed = getInfo();
@@ -111,17 +115,18 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
               Nutrition Details (per serving)
             </Text>
             <View>
-              {nutrients.map((elm, index) => (
-                <NutritionItem
-                  key={index}
-                  item={{
-                    recipe: true,
-                    name: elm.title,
-                    unit: elm.unit,
-                    currentValue: elm.amount,
-                  }}
-                />
-              ))}
+              {nutrients &&
+                nutrients.map((elm, index) => (
+                  <NutritionItem
+                    key={index}
+                    item={{
+                      recipe: true,
+                      name: elm.title,
+                      unit: elm.unit,
+                      currentValue: elm.amount,
+                    }}
+                  />
+                ))}
             </View>
           </View>
         </View>

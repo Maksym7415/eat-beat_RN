@@ -30,6 +30,8 @@ interface Props {
   hideModal: () => void;
   data: dataProps;
   blend?: string;
+  onPreview?: () => void;
+  preview?: boolean;
 }
 
 const newEditModal: FC<Props> = ({
@@ -39,6 +41,8 @@ const newEditModal: FC<Props> = ({
   blend = Col.Green,
   date,
   clicked,
+  onPreview,
+  preview,
 }) => {
   const { id, name, servings, modalVisible, creationTime } = data;
   const handleFetch = (creationTime) => {
@@ -177,7 +181,17 @@ const newEditModal: FC<Props> = ({
               </View>
             </View>
             <View style={styles.btnContainer}>
-              <View />
+              {preview ? (
+                <Button
+                  type="text"
+                  label="PREVIEW"
+                  onPress={onPreview}
+                  style={{ marginVertical: 0 }}
+                  labelStyle={{ color: clicked ? "grey" : "black" }}
+                />
+              ) : (
+                <View />
+              )}
               <Button
                 type="text"
                 label="CANCEL"

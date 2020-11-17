@@ -82,6 +82,45 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     isFetching();
   };
 
+  const onPreview = () => {
+    const title = modalData.name;
+    const read = feed.filter((el) => el.id === modalData.id)[0];
+    const {
+      image,
+      servings,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      veryPopular,
+      nutrition,
+      analyzedInstructions,
+    } = read;
+    let ing = "";
+    analyzedInstructions.forEach((el) => {
+      el.steps.forEach((ele) => {
+        ing += "\n" + ele.step;
+      });
+    });
+    const details = {
+      image,
+      name: modalData.name,
+      servings,
+      nutrients: [...nutrition.nutrients],
+      ingredients: [...nutrition.ingredients],
+      instructions: ing,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      veryPopular,
+    };
+    navigation.navigate("previewPage", {
+      title,
+      details,
+    });
+  };
+
   useEffect(() => {
     if (getRecommend) {
       setFeed([]);
@@ -102,6 +141,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
           if (fetching.clicked) return;
           setModalData({ ...modalData, modalVisible: false });
         }}
+        preview={true}
+        onPreview={onPreview}
       />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}

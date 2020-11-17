@@ -17,6 +17,7 @@ import PopUp from "../../components/PopUp";
 import server from "../../server";
 import ActionButton from "./common/ActionButton";
 import ActionModal from "../../components/ActionModal";
+import { useIsFocused } from "@react-navigation/native";
 
 interface ModalData {
   id: number;
@@ -56,10 +57,21 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     if (response.ok) setFeed(response.data);
   };
 
-  const onChange = (event: Ev, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || date;
-    saveCal({ visible: false, date: currentDate });
-  };
+  // const onChange = (event: Ev, selectedDate: Date | undefined) => {
+  //   const currentDate = selectedDate || date;
+  //   saveCal({ visible: false, date: currentDate });
+  // };
+
+  // const onChange = (event: Event, selectedDate: Date) => {
+  //   console.log("bad");
+  //   if (event.type === "dismissed")
+  //     return saveCal({ visible: false, date: date });
+  //   if (selectedDate && selectedDate !== date) {
+  //     setFeed(null);
+  //     const currentDate = selectedDate || date;
+  //     saveCal({ visible: false, date: currentDate });
+  //   }
+  // };
 
   const deleteHandler = async () => {
     await server.delCookedMeal(popAlert.id);
@@ -90,13 +102,12 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
   useEffect(() => {
     serveData();
-  }, [date]);
+  }, [date, refresh]);
 
+  let focus = useIsFocused();
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      serveData();
-    });
-  }, []);
+    if (focus) serveData();
+  }, [focus]);
 
   return (
     <View style={styles.container}>
@@ -124,7 +135,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         onRight={deleteHandler}
         visible={popAlert.visible}
       />
-      {visible ? (
+      {/* {visible ? (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
@@ -135,7 +146,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         />
       ) : (
         <View />
-      )}
+      )} */}
       <FlatList
         data={feed?.sort((a, b) => a.creationTime > b.creationTime)}
         ListEmptyComponent={() => <EmptyList />}

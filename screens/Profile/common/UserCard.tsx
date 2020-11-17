@@ -13,6 +13,7 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
 import Text from "../../../components/custom/Typography";
+import * as ImageManipulator from "expo-image-manipulator";
 
 interface Props {
   image: string | null;
@@ -58,7 +59,12 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
       quality: 1,
     });
     if (!result.cancelled) {
-      uploadAvatar(result.uri);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 600, height: 600 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      uploadAvatar(manipResult.uri);
     }
   };
 

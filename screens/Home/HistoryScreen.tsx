@@ -12,6 +12,7 @@ import server from "../../server";
 import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
 import { AppContext } from "../../components/AppContext";
+import { useIsFocused } from "@react-navigation/native";
 
 interface HealthScore {
   date: string;
@@ -54,11 +55,10 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
+  let focus = useIsFocused();
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      getHealthsScore();
-    });
-  }, []);
+    if (focus) getHealthsScore();
+  }, [focus]);
 
   return (
     <View style={styles.canvas}>

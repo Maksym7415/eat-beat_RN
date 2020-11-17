@@ -5,6 +5,7 @@ import Text from "../../components/custom/Typography";
 import { Col, Spacing } from "../../components/Config";
 import CheckBox from "../../components/custom/CheckBox";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { Button } from "../../components/MyComponents";
 
 interface IngProps {
   item: {
@@ -58,7 +59,11 @@ const Ingredient = ({ item }: IngProps) => {
         {name}
       </Text>
       <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
-        ({`${amount * weightPerServing?.amount}${weightPerServing?.unit}`})
+        (
+        {`${amount * weightPerServing?.amount || 0}${
+          weightPerServing?.unit || "g"
+        }`}
+        )
       </Text>
     </TouchableOpacity>
   );
@@ -84,6 +89,12 @@ const PreviewIngredients: FC<NavProps> = ({ navigation }) => {
       {ingredients.map((ele, ind) => (
         <Ingredient key={`_${ind}`} item={ele} />
       ))}
+      <Button
+        label="Add selected products to My Shoppping List"
+        onPress={() => console.log("")}
+        style={{ backgroundColor: Col.Recipes }}
+        deactivate={true}
+      />
     </LayoutScroll>
   );
 };
