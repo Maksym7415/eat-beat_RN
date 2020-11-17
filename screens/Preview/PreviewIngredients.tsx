@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { NavProps } from "../../components/interfaces";
 import Text from "../../components/custom/Typography";
 import { Col, Spacing } from "../../components/Config";
@@ -23,11 +23,14 @@ const Ingredient = ({ item }: IngProps) => {
   const { image, name, unit, amount, weightPerServing } = item;
   const [check, setCheck] = useState(false);
   return (
-    <View style={styles.ingredient}>
+    <TouchableOpacity
+      onPress={() => setCheck(!check)}
+      style={styles.ingredient}
+    >
       <CheckBox
         name={name}
         value={check}
-        onCheck={(a, b) => setCheck(b)}
+        onCheck={(a, b) => {}}
         size={18}
         blend={Col.Dark}
       />
@@ -45,7 +48,7 @@ const Ingredient = ({ item }: IngProps) => {
           }}
         />
       </View>
-      <Text type="h6" style={{ width: "20%", textAlign: "center" }}>
+      <Text type="h6" style={{ width: "15%" }}>
         {amount}
       </Text>
       <Text type="cap" style={{ color: Col.Grey, width: "20%" }}>
@@ -57,7 +60,7 @@ const Ingredient = ({ item }: IngProps) => {
       <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
         ({`${amount * weightPerServing?.amount}${weightPerServing?.unit}`})
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

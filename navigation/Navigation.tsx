@@ -108,6 +108,8 @@ const PreviewRecipeTopNavigator = () => (
       indicatorStyle: {
         backgroundColor: Col.Recipes,
       },
+      scrollEnabled: true,
+      allowFontScaling: true,
     }}
     initialRouteName="previewInfo"
   >
@@ -140,6 +142,7 @@ const RecipesTopNavigator = () => (
         backgroundColor: Col.Recipes,
       },
       scrollEnabled: true,
+      allowFontScaling: true,
     }}
     initialRouteName="recommended"
   >
@@ -164,6 +167,7 @@ const ProfileTopNavigator = () => (
         backgroundColor: Col.Grey,
       },
       scrollEnabled: true,
+      allowFontScaling: true,
     }}
     initialRouteName="subscription"
   >

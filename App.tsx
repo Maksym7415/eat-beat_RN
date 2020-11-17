@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
-import { stringify } from "querystring";
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -74,7 +73,6 @@ export default function App() {
       }
       flag = false;
       if (status === 403 && data.code === 120) removeToken();
-      // (ok)? api.any(failedQueue[0]):failedQueue.unshift()
     });
   };
 

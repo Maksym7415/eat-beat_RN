@@ -23,6 +23,7 @@ export const Col = {
   Error: "#FF364F",
   Ghost: "#6E7882",
 
+  Faded: "#757575",
   Profile: "#616161",
   Recipes: "#4C9C05",
 

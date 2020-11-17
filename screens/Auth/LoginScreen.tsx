@@ -45,7 +45,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           opacity: 0.5,
         }}
       >
-        v 0.1.5
+        v 0.1.6
       </Text>
       <Logo />
       <View style={styles.boxContainer}>

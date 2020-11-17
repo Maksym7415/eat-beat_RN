@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../../components/Config";
@@ -31,9 +32,7 @@ interface Data {
 }
 
 const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
-  const { recipeId, editMode, toggleEdit, changeUserRecipeTitle } = useContext(
-    AppContext
-  );
+  const { recipeId, editMode, toggleEdit } = useContext(AppContext);
   const [feed, setFeed] = useState<object>({});
   const [disabled, setDisabled] = useState<boolean>(false);
   const [image, setImage] = useState<null>(null);
@@ -178,38 +177,37 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
         <View style={styles.container}>
           <View style={styles.titleContainer}>
             <View style={styles.imageContainer}>
-              {editMode && (
-                <View
-                  style={{
-                    position: "absolute",
-                    left: "40%",
-                    top: "35%",
-                    zIndex: 10,
-                    opacity: 1,
-                  }}
-                >
-                  <TouchableOpacity onPress={pickAvatar}>
-                    <Icon name={"camera-plus"} color={Col.Grey1} size={58} />
-                  </TouchableOpacity>
-                </View>
-              )}
-              {
-                <Image
-                  source={{
-                    uri: image
-                      ? image
-                      : `https://logisticbrocker.hopto.org/eat-beat/${feed?.uri}`,
-                  }}
-                  style={styles.image}
-                />
-              }
+              <ImageBackground
+                source={{
+                  uri: image
+                    ? image
+                    : `https://logisticbrocker.hopto.org/eat-beat/${feed?.uri}`,
+                }}
+                style={styles.image}
+              >
+                {editMode ? (
+                  <Icon
+                    onPress={pickAvatar}
+                    name={"camera-plus"}
+                    color={Col.White}
+                    size={58}
+                  />
+                ) : (
+                  <View />
+                )}
+              </ImageBackground>
             </View>
             <View style={{ padding: Spacing.medium }}>
               {!editMode ? (
                 <Text type="h6">{feed.title}</Text>
               ) : (
                 <View>
-                  <Text type="h6">Title*</Text>
+                  <Text
+                    type="bodyBold"
+                    style={{ color: Col.Grey, marginBottom: Spacing.small }}
+                  >
+                    Title*
+                  </Text>
                   <TextInput
                     value={
                       data.title.value === undefined
@@ -219,12 +217,15 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     onChangeText={(text) => onCnangeHandler(text, "title")}
                     placeholder={"Add recipe title"}
                     style={{
-                      borderColor: data.title.error ? "#FF364F" : Col.Grey2,
+                      borderColor: data.title.error ? Col.Error : Col.Grey2,
+                      fontFamily: "Inter_500Medium",
+                      fontSize: 20,
+                      color: Col.Dark,
                       borderBottomWidth: 1,
                     }}
                   />
                   {data.title.error ? (
-                    <Text style={{ color: "#FF364F", marginTop: 10 }}>
+                    <Text style={{ color: Col.Error, marginTop: 10 }}>
                       {data.title.error}{" "}
                     </Text>
                   ) : null}
@@ -287,6 +288,12 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
           ) : (
             <>
               <View style={styles.editContainer}>
+                <Text
+                  type="bodyBold"
+                  style={{ color: Col.Grey, marginBottom: Spacing.small }}
+                >
+                  Servings
+                </Text>
                 <TextInput
                   value={
                     data.servings.value === undefined
@@ -297,12 +304,15 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                   onChangeText={(text) => onCnangeHandler(text, "servings")}
                   placeholder={"Add recipe serving"}
                   style={{
-                    borderColor: data.servings.error ? "#FF364F" : Col.Grey2,
+                    borderColor: data.servings.error ? Col.Error : Col.Grey2,
+                    fontFamily: "Inter_500Medium",
+                    fontSize: 20,
+                    color: Col.Dark,
                     borderBottomWidth: 1,
                   }}
                 />
                 {data.servings.error ? (
-                  <Text style={{ color: "#FF364F", marginTop: 10 }}>
+                  <Text style={{ color: Col.Error, marginTop: 10 }}>
                     {data.servings.error}{" "}
                   </Text>
                 ) : null}
@@ -367,6 +377,8 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   loading: {
     flex: 1,

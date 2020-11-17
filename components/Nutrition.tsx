@@ -30,24 +30,27 @@ const NutritionItem: FC<Props> = ({ item }) => {
       : Col.Red;
   return (
     <View style={styles.itemContainer}>
-      <Text type="cap" style={{ width: "30%" }}>
+      <Text type="body2" style={{ width: "37%", color: Col.Dark }}>
         {name}
       </Text>
-      <Text type="cap" style={{ width: "15%", color: Col.Grey }}>
+      <Text type="body2" style={{ width: "15%", color: Col.Faded }}>
         ({unit})
       </Text>
-      <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
+      <Text
+        type="body2"
+        style={{ width: "20%", textAlign: "right", color: Col.Dark }}
+      >
         {currentValue}
       </Text>
       {!recipe && (
-        <Text type="cap" style={{ width: "15%", color: Col.Grey }}>
+        <Text type="body2" style={{ width: "18%", color: Col.Faded }}>
           /{defaultValue}
         </Text>
       )}
       {!recipe && (
-        <Text type="cap" style={{ width: "15%" }}>{`${
+        <Text type="body2" style={{ width: "15%", color }}>{`${
           percenatage || 0
-        } %`}</Text>
+        }%`}</Text>
       )}
     </View>
   );
