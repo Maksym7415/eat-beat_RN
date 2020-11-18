@@ -8,6 +8,7 @@ import NutritionItem from "../../components/Nutrition";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import Text from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
+import { baseURL } from '../../url';
 
 const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
   const getInfo = () => {
@@ -17,16 +18,16 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
     return spread
       ? { ...spread }
       : {
-          image: "",
-          name: "",
-          servings: 0,
-          nutrients: [],
-          vegetarian: false,
-          vegan: false,
-          glutenFree: false,
-          dairyFree: false,
-          veryPopular: false,
-        };
+        image: "",
+        name: "",
+        servings: 0,
+        nutrients: [],
+        vegetarian: false,
+        vegan: false,
+        glutenFree: false,
+        dairyFree: false,
+        veryPopular: false,
+      };
   };
   const [feed, setFeed] = useState(getInfo());
   const {
@@ -68,7 +69,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image source={{ uri: image.slice(0, 4) === 'http' ? image : `${baseURL}${image}` }} style={styles.image} />
           </View>
           <View style={styles.nameContainer}>
             <View style={styles.catagoryContainer}>
@@ -128,10 +129,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
       </View>
     </LayoutScroll>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({

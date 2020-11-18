@@ -4,6 +4,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing, Typ } from "./Config";
 import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
+import { baseURL } from '../url';
 
 interface editProps {
   id: number;
@@ -29,9 +30,8 @@ const getTime = (value: number) => {
   const Now = new Date(value);
   const Hours = Now.getHours();
   const Minutes = Now.getMinutes();
-  return `${Hours < 10 ? "0" + Hours : Hours}:${
-    Minutes < 10 ? "0" + Minutes : Minutes
-  }`;
+  return `${Hours < 10 ? "0" + Hours : Hours}:${Minutes < 10 ? "0" + Minutes : Minutes
+    }`;
 };
 
 const CookedMealCard: FC<Props> = ({
@@ -41,6 +41,7 @@ const CookedMealCard: FC<Props> = ({
   onDelete,
 }) => {
   const { id, name, image, creationTime, servings } = item;
+  console.log(image, new Date().getTimezoneOffset())
   const time = getTime(creationTime);
   return (
     <View style={styles.container}>
@@ -82,7 +83,7 @@ const CookedMealCard: FC<Props> = ({
       ></View>
       <View style={styles.imageDetails}>
         <View>
-          <Image style={styles.image} source={{ uri: image }} />
+          <Image style={styles.image} source={{ uri: image.slice(0, 4) === 'http' ? image : `${baseURL}${image}` }} />
         </View>
         <View style={styles.bodyContainer}>
           <Text type="cap" style={styles.recipe}>

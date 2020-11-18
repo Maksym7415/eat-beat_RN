@@ -253,7 +253,8 @@ const addRecipe = async (data: any) => {
 const addRecipeToMeals = async (data: any) => {
 
   const address = apiConfig.post.addUserRecipeToMeals
-  const response = await api.get(address, data);
+  const response = await api.post(address, data);
+  // console.log(response)
   if (!response.ok) logError(response);
   return response;
 

@@ -1,7 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { Memo } from "../../components/interfaces";
@@ -19,6 +19,15 @@ export default function UserRecipes({ navigation }) {
     const { data, ok } = await server.getRecipes();
     if (ok) setFeed(data);
   };
+
+  const addRecipe = async (recipe) => {
+    const data = {
+      "quantity": 1,
+      "date": new Date().getTime(),
+      meal: recipe
+    }
+    const result = await server.addRecipeToMeals(data);
+  }
 
   useEffect(() => {
     getData();
@@ -49,15 +58,18 @@ export default function UserRecipes({ navigation }) {
       <LayoutScroll>
         <View style={styles.container}>
           {feed ? (
-            feed.map(({ id, title, recipe }, index) => (
+            feed.map(({ id, title, recipe, ...other }, index) => (
               <View key={`${index + title}`} style={styles.cardContainer}>
-                <CreatedRecipeCard
-                  id={id}
-                  recipe={true}
-                  title={title}
-                  actionHandler={actionHandler}
-                  image={`${baseURL}/${recipe.image}`}
-                />
+                {/* {console.log(recipe)} */}
+                <TouchableOpacity onPress={() => addRecipe(recipe)} >
+                  <CreatedRecipeCard
+                    id={id}
+                    recipe={true}
+                    title={title}
+                    actionHandler={actionHandler}
+                    image={`${baseURL}/${recipe.image}`}
+                  />
+                </TouchableOpacity>
               </View>
             ))
           ) : (
