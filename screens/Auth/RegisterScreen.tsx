@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../components/FormikInput";

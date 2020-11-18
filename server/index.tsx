@@ -39,6 +39,7 @@ const apiConfig: apiProps = {
     refresh: "/auth/refresh-token",
     addRecipe: "/recipe/add-own-recipe",
     addRecipeAvatar: "/upload/recipe-image/",
+    addUserRecipeToMeals: "/meals/add-meal-own-recipe"
   },
   del: {
     user: "/user/delete-user",
@@ -91,11 +92,25 @@ const refreshToken = async () => {
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
-  console.log(token, address);
-  const response = await api.post(address, { refreshToken: token });
-  console.log(response);
-  if (response.ok) setToken(response.data);
-  return response;
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("User-Agent", Platform.OS === "ios"
+    ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+    : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`)
+  const raw = JSON.stringify({ "refreshToken": `${token}` });
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  const res = await fetch(apiConfig.baseURL + apiConfig.post.refresh, requestOptions);
+  const result = await res.json();
+  console.log(result, requestOptions)
+  if (result.code !== 110) setToken(result);
+  return result;
 };
 
 const setHeader = (token: string) => {
@@ -234,6 +249,15 @@ const addRecipe = async (data: any) => {
   if (!response.ok) logError(response);
   return response;
 };
+
+const addRecipeToMeals = async (data: any) => {
+
+  const address = apiConfig.post.addUserRecipeToMeals
+  const response = await api.get(address, data);
+  if (!response.ok) logError(response);
+  return response;
+
+}
 
 const updateRecipe = async (
   id: number,
@@ -419,4 +443,5 @@ export default {
   updateRecipe,
   getDocs,
   refreshToken,
+  addRecipeToMeals,
 };

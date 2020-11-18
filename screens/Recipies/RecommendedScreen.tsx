@@ -56,7 +56,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);
     }
-    Alert.alert(`${response.status}`, `${response.data}`);
+    if (response?.status < 401) Alert.alert(`${response.status}`, `${response.data}`);
+
   };
   const actionHandler = (id: string, name: string, data: object) => {
     setModalData({
@@ -124,16 +125,16 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       </View> */}
     </View>
   ) : (
-    <View style={styles.btnContainer}>
-      <Button
-        label="GET RECOMMENDATION"
-        onPress={serveData}
-        deactivate={fetching.deactivate}
-        clicked={fetching.clicked}
-        style={{ backgroundColor: Col.Recipes }}
-      />
-    </View>
-  );
+      <View style={styles.btnContainer}>
+        <Button
+          label="GET RECOMMENDATION"
+          onPress={serveData}
+          deactivate={fetching.deactivate}
+          clicked={fetching.clicked}
+          style={{ backgroundColor: Col.Recipes }}
+        />
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
