@@ -48,7 +48,7 @@ export default function IngradientRow({
         {name}
       </Text>
       <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
-        ({`${servings * weight.amount}${weight.unit}`})
+        ({`${weight.amount}${weight.unit}`})
       </Text>
     </View>
   );

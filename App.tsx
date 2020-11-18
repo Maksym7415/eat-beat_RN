@@ -7,6 +7,20 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
+import RSAKey from 'react-native-rsa';
+// const bits = 1024;
+// const exponent = '10001'; // must be a string. This is hex string. decimal = 65537
+// var rsa = new RSAKey();
+// rsa.generate(bits, exponent);
+// var publicKey = rsa.getPublicString(); // return json encoded string
+// var privateKey = rsa.getPrivateString(); // return json encoded string
+// rsa.setPublicString(publicKey);
+// var originText = 'sample String Value';
+// var encrypted = rsa.encrypt(originText);
+// console.log(encrypted);
+// rsa.setPrivateString(privateKey);
+// var decrypted = rsa.decrypt(encrypted); // decrypted == originText
+// console.log(decrypted);
 
 let customFonts = {
   Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
@@ -58,13 +72,13 @@ export default function App() {
         }
         flag = true;
         const res = await server.refreshToken();
-        if (res.status === 401) {
+        if (res?.code === 110) {
           processQueue(true, null);
           return removeToken();
         }
         const newConfig = { ...config };
-        newConfig.headers.Authorization = ` Bearer ${res.data.accessToken}`;
-        processQueue(null, res.data.accessToken);
+        newConfig.headers.Authorization = ` Bearer ${res.accessToken}`;
+        processQueue(null, res.accessToken);
         const newRes = await api.any(newConfig);
         Res.ok = newRes.ok;
         Res.status = newRes.status;
