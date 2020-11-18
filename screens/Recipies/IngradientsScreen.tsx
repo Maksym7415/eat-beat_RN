@@ -1,6 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";

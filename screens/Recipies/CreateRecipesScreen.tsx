@@ -7,16 +7,16 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
+  TextInput,
 } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../../components/Config";
 import { Button } from "../../components/MyComponents";
-import { TextInput } from "react-native-gesture-handler";
 import server from "../../server";
 import Text from "../../components/custom/Typography";
 import LayoutScroll from "../../components/custom/LayoutScroll";
-import useValidation from '../../utils/validation';
+import useValidation from "../../utils/validation";
 
 interface Item {
   title: string;
@@ -37,52 +37,58 @@ interface Loading {
 const config = {
   title: {
     id: 0,
-    title: 'title',
+    title: "title",
     maxLength: 50,
     value: null,
     required: true,
     errors: {
-      maxLegnth: 'Title length can not be more than 50 symbols',
-      value: 'This field can not be empty',
-    }
+      maxLegnth: "Title length can not be more than 50 symbols",
+      value: "This field can not be empty",
+    },
   },
   servings: {
     id: 1,
-    title: 'servings',
+    title: "servings",
     maxLength: 1000,
     value: null,
-    type: 'number',
+    type: "number",
     errors: {
-      maxLegnth: 'error message for max length',
-      isNumber: 'should be number'
-    }
+      maxLegnth: "error message for max length",
+      isNumber: "should be number",
+    },
   },
   ingredients: {
     id: 2,
-    title: 'ingredients',
+    title: "ingredients",
     maxLength: 10000,
     required: true,
     value: null,
     errors: {
-      maxLegnth: 'error message for max length',
-      value: 'This field can not be empty',
-    }
+      maxLegnth: "error message for max length",
+      value: "This field can not be empty",
+    },
   },
   instruction: {
     id: 3,
-    title: 'instruction',
+    title: "instruction",
     maxLength: 10000,
     value: null,
     errors: {
-      maxLegnth: 'error message for max length',
-    }
-  }
-}
-
-
+      maxLegnth: "error message for max length",
+    },
+  },
+};
 
 export default function CreateRecipeScreen({ navigation }) {
-  const [title, servings, ingredients, instruction, fieldValues, changeHandler, startValidation] = useValidation(config);
+  const [
+    title,
+    servings,
+    ingredients,
+    instruction,
+    fieldValues,
+    changeHandler,
+    startValidation,
+  ] = useValidation(config);
   const { getRecipeId } = useContext(AppContext);
   const [image, setImage] = useState<null>(null);
   const [loading, setLoading] = useState<Loading>({
@@ -119,7 +125,10 @@ export default function CreateRecipeScreen({ navigation }) {
     }
   };
 
-  const saveChanges = async ([title, servings, ingredients, instruction], error: boolean) => {
+  const saveChanges = async (
+    [title, servings, ingredients, instruction],
+    error: boolean
+  ) => {
     if (error) return;
     setLoading({ ...loading, loading: true, disabled: true });
     const {
@@ -167,8 +176,8 @@ export default function CreateRecipeScreen({ navigation }) {
               {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
-                  <Icon name={"camera-plus"} color={Col.White} size={58} />
-                )}
+                <Icon name={"camera-plus"} color={Col.White} size={58} />
+              )}
             </View>
           </Pressable>
           <View style={{ padding: Spacing.medium }}>
@@ -176,7 +185,7 @@ export default function CreateRecipeScreen({ navigation }) {
               Title*
             </Text>
             <TextInput
-              value={fieldValues?.title?.value || ''}
+              value={fieldValues?.title?.value || ""}
               onChangeText={(text) => changeHandler(text, "title")}
               placeholder={"Add recipe title"}
               style={{
@@ -195,9 +204,12 @@ export default function CreateRecipeScreen({ navigation }) {
           </Text>
           <TextInput
             keyboardType="number-pad"
-            value={fieldValues?.servings?.value || ''}
+            value={fieldValues?.servings?.value || ""}
             onChangeText={(text) => changeHandler(text, "servings")}
-            style={{ borderColor: servings.errors ? Col.Error : Col.Grey2, borderBottomWidth: 1 }}
+            style={{
+              borderColor: servings.errors ? Col.Error : Col.Grey2,
+              borderBottomWidth: 1,
+            }}
             placeholder={"Add serving for recipe"}
           />
           <Text style={{ color: Col.Error, marginTop: 10 }}>
@@ -209,7 +221,7 @@ export default function CreateRecipeScreen({ navigation }) {
             Ingredients*
           </Text>
           <TextInput
-            value={fieldValues?.ingredients?.value || ''}
+            value={fieldValues?.ingredients?.value || ""}
             onChangeText={(text) => changeHandler(text, "ingredients")}
             style={{
               borderColor: ingredients.errors ? Col.Error : Col.Grey2,
@@ -228,9 +240,12 @@ export default function CreateRecipeScreen({ navigation }) {
             Instruction
           </Text>
           <TextInput
-            value={fieldValues?.instruction?.value || ''}
+            value={fieldValues?.instruction?.value || ""}
             onChangeText={(text) => changeHandler(text, "instruction")}
-            style={{ borderColor: instruction.errors ? Col.Error : Col.Grey2, borderBottomWidth: 1 }}
+            style={{
+              borderColor: instruction.errors ? Col.Error : Col.Grey2,
+              borderBottomWidth: 1,
+            }}
             placeholder={"Add instruction for recipe"}
             multiline
           />
