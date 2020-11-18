@@ -7,15 +7,15 @@ import { Text } from "../../components/custom/Typography";
 import { AppContext } from "../../components/AppContext";
 import Logo from "./common/Logo";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
 
 const SuccessScreen: FC<NavProps> = ({ navigation }) => {
   const { login } = useContext(AppContext);
 
+  const focus = useIsFocused();
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      login(true);
-    });
-  }, []);
+    login(true);
+  }, [focus]);
 
   return (
     <LayoutScroll style={styles.container}>
@@ -27,7 +27,7 @@ const SuccessScreen: FC<NavProps> = ({ navigation }) => {
         <Text type="body2">
           Your account is ready. You can use the application
         </Text>
-        <Button style={styles.btn} onPress={() => login()} label="GO" />
+        <Button style={styles.btn} onPress={() => login(true)} label="GO" />
       </View>
     </LayoutScroll>
   );

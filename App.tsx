@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
-import RSAKey from 'react-native-rsa';
+// import RSAKey from 'react-native-rsa';
 // const bits = 1024;
 // const exponent = '10001'; // must be a string. This is hex string. decimal = 65537
 // var rsa = new RSAKey();
@@ -41,7 +41,6 @@ export default function App() {
   // AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
-  const [getRecommend, setGetrecommend] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
   const [fetching, setFetching] = useState<number>(0);
   const [cal, setCal] = useState<Cal>({
@@ -158,10 +157,8 @@ export default function App() {
       isShow: show,
       editMode,
       toggleEdit: (v: boolean) => setEditMode(v),
-      getRecommend,
-      getRecomendation: (v: boolean) => setGetrecommend(v),
     }),
-    [cal, show, userData, fetching, recipeId, editMode, getRecommend]
+    [cal, show, userData, fetching, recipeId, editMode]
   );
 
   useEffect(() => {

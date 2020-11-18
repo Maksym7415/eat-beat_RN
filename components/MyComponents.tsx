@@ -59,7 +59,7 @@ export const Button: FC<ButtonProps> = ({
               labelStyle,
             ]}
           >
-            {label}
+            {type === "text" ? label : label.toString().toUpperCase()}
           </Text>
         )}
       </View>

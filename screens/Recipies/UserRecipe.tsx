@@ -1,7 +1,6 @@
-import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { Memo } from "../../components/interfaces";
@@ -33,20 +32,10 @@ export default function UserRecipes({ navigation }) {
     getData();
   }, []);
 
+  const focus = useIsFocused();
   useEffect(() => {
-    let focus = navigation.addListener("focus", () => {
-      getData();
-    });
-    () => {
-      focus = null;
-    };
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-    }, [])
-  );
+    if (focus) getData();
+  }, [focus]);
 
   const actionHandler = ({ id, title }) => {
     getRecipeId(id);

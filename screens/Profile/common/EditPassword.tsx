@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   editInput: {
     fontSize: 16,
     borderBottomWidth: 1,
-    color: "red",
+    color: Col.Black,
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
     fontFamily: "Inter_400Regular",

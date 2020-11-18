@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { Button, Divider } from "./MyComponents";
 import { Col, Spacing } from "./Config";
 import Chip from "./custom/ToggleChip";

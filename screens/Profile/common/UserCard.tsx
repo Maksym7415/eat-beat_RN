@@ -13,7 +13,8 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
 import Text from "../../../components/custom/Typography";
-import { baseURL } from '../../../url';
+import * as ImageManipulator from "expo-image-manipulator";
+import { baseURL } from "../../../url";
 
 interface Props {
   image: string | null;
@@ -59,7 +60,12 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
       quality: 1,
     });
     if (!result.cancelled) {
-      uploadAvatar(result.uri);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 600, height: 600 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      uploadAvatar(manipResult.uri);
     }
   };
 
@@ -92,13 +98,13 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
         {image === null ? (
           <SvgMaker name="camera" />
         ) : (
-            <Image
-              style={styles.image}
-              source={{
-                uri: `${baseURL}/${image}`,
-              }}
-            />
-          )}
+          <Image
+            style={styles.image}
+            source={{
+              uri: `${baseURL}/${image}`,
+            }}
+          />
+        )}
         <View style={styles.imageEditor}>
           <Icon name="edit" size={16} color={Col.White} />
         </View>

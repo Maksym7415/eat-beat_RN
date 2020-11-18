@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext, FC } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, Pressable, ActivityIndicator } from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
@@ -22,30 +16,32 @@ import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ActionButton from "./common/ActionButton";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
-  const { calendar, saveCal } = useContext<Memo>(AppContext);
+  const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
 
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
-      setFeed(data);
+      Object.keys(data).length && data?.totalMeals > 0
+        ? setFeed(data)
+        : setFeed({});
     }
   };
 
   useEffect(() => {
     serveData();
-  }, [date]);
+  }, [date, refresh]);
 
+  let focus = useIsFocused();
   useEffect(() => {
-    navigation.addListener("focus", () => {
-      serveData();
-    });
-  }, []);
+    if (focus) serveData();
+  }, [focus]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     if (event.type === "dismissed")
@@ -54,6 +50,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
       setFeed(null);
       const currentDate = selectedDate || date;
       saveCal({ visible: false, date: currentDate });
+      serveData();
     }
   };
 
@@ -69,7 +66,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
       </View>
     );
 
-  if (Object.keys(feed).length && feed?.totalMeals > 0) {
+  if (Object.keys(feed).length) {
     return (
       <View style={styles.canvas}>
         <ActionButton
@@ -157,6 +154,9 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           </View>
           <Divider styler={styles.divider} />
           <View style={styles.nutritionContainer}>
+            <Text type="bodyBold" style={{ paddingVertical: Spacing.tiny }}>
+              Nutrition Details
+            </Text>
             {feed.nutrientsData.map((item, index) => (
               <Nutrition key={`${index}`} item={item} />
             ))}

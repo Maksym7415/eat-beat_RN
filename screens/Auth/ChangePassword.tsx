@@ -12,7 +12,11 @@ import Logo from "./common/Logo";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const Validation = Yup.object().shape({
-  verificationCode: Yup.number().required().min(5).label("verification Code"),
+  verificationCode: Yup.number()
+    .required()
+    .min(5)
+    .label("verification Code")
+    .typeError("Code must be a number"),
   password: Yup.string().required().min(6).label("Reset Password"),
 });
 

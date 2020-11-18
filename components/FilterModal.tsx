@@ -12,6 +12,11 @@ interface Props {
   constaintNumber: number;
   hideModal: () => void;
   saveFilterData: (value: recipeSettings) => void;
+  fetching: {
+    clicked: boolean;
+    deactivate: boolean;
+    myFetching: boolean;
+  };
 }
 
 const FilterModal: FC<Props> = ({

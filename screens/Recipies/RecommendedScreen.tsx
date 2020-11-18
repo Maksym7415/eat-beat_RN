@@ -12,6 +12,7 @@ import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
+import { useIsFocused } from "@react-navigation/native";
 
 interface ModalData {
   id: number;
@@ -28,11 +29,9 @@ interface AddMealsProps {
 }
 
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
-
+let DontRefresh = false;
 const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
-  const { calendar, isFetching, getRecommend, getRecomendation } = useContext<
-    Memo
-  >(AppContext);
+  const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
     deactivate: false,
@@ -52,7 +51,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     setFetching({ clicked: true, deactivate: true });
     const response = await server.getRecommendedMeals(date);
     if (response.ok) {
-      getRecomendation(false);
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);
     }
@@ -83,14 +81,52 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     isFetching();
   };
 
-  useEffect(() => {
-    if (getRecommend) {
-      setFeed([]);
-    }
-    navigation.addListener("focus", () => {
-      setFeed([]);
+  const onPreview = (item) => {
+    const title = item.title;
+    const {
+      image,
+      servings,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      veryPopular,
+      nutrition,
+      analyzedInstructions,
+    } = item;
+    let ing = "";
+    analyzedInstructions.forEach((el) => {
+      el.steps.forEach((ele) => {
+        ing += "\n" + ele.step;
+      });
     });
-  }, [getRecommend]);
+    const details = {
+      image,
+      name: modalData.name,
+      servings,
+      nutrients: [...nutrition.nutrients],
+      ingredients: [...nutrition.ingredients],
+      instructions: ing,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      veryPopular,
+    };
+    navigation.navigate("previewRecommendedPage", {
+      title,
+      details,
+    });
+    DontRefresh = true;
+  };
+
+  const focus = useIsFocused();
+  useEffect(() => {
+    if (!focus) {
+      setModalData({ ...modalData, modalVisible: false });
+      DontRefresh ? (DontRefresh = false) : setFeed([]);
+    }
+  }, [focus]);
 
   return feed.length ? (
     <View style={styles.canvas}>
@@ -111,7 +147,11 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
-              <RecipeCard details={item} actionHandler={actionHandler} />
+              <RecipeCard
+                details={item}
+                actionHandler={actionHandler}
+                onPreview={() => onPreview(item)}
+              />
             </View>
           ))}
         </View>

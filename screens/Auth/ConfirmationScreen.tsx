@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
@@ -18,6 +18,10 @@ const Validation = Yup.object().shape({
     .label("verification Code")
     .typeError("Code must be a number"),
 });
+
+interface Val {
+  verificationCode: number;
+}
 
 const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const Email = route.params.email;
@@ -62,7 +66,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
           Confirmation
         </Text>
         <Text type="body2" style={styles.header}>
-          Thanks for registration. You'll recieve a verification code in “
+          Thanks for registration. You'll receive a verification code in “
           {Email}” in order to activate your account.
         </Text>
         <Formik
@@ -80,7 +84,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
               />
               <ErrorMessage
                 visible={error}
-                error="The Code you Entered is incorrect"
+                error="The Code you entered is incorrect"
                 style={styles.errorContainer}
               />
               <Button
