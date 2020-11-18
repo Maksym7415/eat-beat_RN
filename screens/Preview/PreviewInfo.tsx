@@ -8,34 +8,35 @@ import NutritionItem from "../../components/Nutrition";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import Text from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
-
+import { useIsFocused } from "@react-navigation/native";
+const empty = {
+  image: "",
+  name: "",
+  servings: 0,
+  nutrients: [],
+  vegetarian: false,
+  vegan: false,
+  glutenFree: false,
+  dairyFree: false,
+  veryPopular: false,
+};
 const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
   const getInfo = () => {
     const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const spread = fetcher.routes.filter((el) => el.name === "previewPage")[0]
-      .params?.details;
-    return spread
-      ? { ...spread }
-      : {
-          image: "",
-          name: "",
-          servings: 0,
-          nutrients: [],
-          nutrition: [],
-          vegetarian: false,
-          vegan: false,
-          glutenFree: false,
-          dairyFree: false,
-          veryPopular: false,
-        };
+    const Page =
+      fetcher.routes.map((el) => el.name)[0] === "homePage"
+        ? "previewPage"
+        : "previewRecommendedPage";
+    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
+      ?.details;
+    return spread ? { ...spread } : { ...empty };
   };
-  const [feed, setFeed] = useState(getInfo());
+  const [feed, setFeed] = useState({ ...empty });
   const {
     image,
     name,
     servings,
     nutrients,
-    nutrition,
     vegetarian,
     vegan,
     glutenFree,
@@ -61,18 +62,24 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
   const mainNutrients = nutrients
     ? nutrients.filter((el) => mnarr.includes(el.title))
     : [];
+
+  const focus = useIsFocused();
   useEffect(() => {
-    if (navigation.isFocused()) {
+    if (focus) {
       const newFeed = getInfo();
-      if (newFeed.name !== "") setFeed(newFeed);
+      if (newFeed.name !== "" || newFeed.title !== "") setFeed(newFeed);
     }
-  }, [navigation]);
+  }, [focus]);
   return Object.keys(feed).length ? (
     <LayoutScroll>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: image }} style={styles.image} />
+            {image !== "" ? (
+              <Image source={{ uri: image }} style={styles.image} />
+            ) : (
+              <View style={styles.image} />
+            )}
           </View>
           <View style={styles.nameContainer}>
             <View style={styles.catagoryContainer}>

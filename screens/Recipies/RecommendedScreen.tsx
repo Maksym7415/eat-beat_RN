@@ -29,7 +29,7 @@ interface AddMealsProps {
 }
 
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
-
+let DontRefresh = false;
 const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
@@ -80,9 +80,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     isFetching();
   };
 
-  const onPreview = () => {
-    const title = modalData.name;
-    const read = feed.filter((el) => el.id === modalData.id)[0];
+  const onPreview = (item) => {
+    const title = item.title;
     const {
       image,
       servings,
@@ -93,7 +92,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       veryPopular,
       nutrition,
       analyzedInstructions,
-    } = read;
+    } = item;
     let ing = "";
     analyzedInstructions.forEach((el) => {
       el.steps.forEach((ele) => {
@@ -113,17 +112,18 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       dairyFree,
       veryPopular,
     };
-    navigation.navigate("previewPage", {
+    navigation.navigate("previewRecommendedPage", {
       title,
       details,
     });
+    DontRefresh = true;
   };
 
   const focus = useIsFocused();
   useEffect(() => {
     if (!focus) {
-      setFeed([]);
       setModalData({ ...modalData, modalVisible: false });
+      DontRefresh ? (DontRefresh = false) : setFeed([]);
     }
   }, [focus]);
 
@@ -138,8 +138,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
           if (fetching.clicked) return;
           setModalData({ ...modalData, modalVisible: false });
         }}
-        preview={true}
-        onPreview={onPreview}
       />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -148,7 +146,11 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
         <View style={styles.container}>
           {feed.map((item, index) => (
             <View key={`${index}`} style={styles.cardContainer}>
-              <RecipeCard details={item} actionHandler={actionHandler} />
+              <RecipeCard
+                details={item}
+                actionHandler={actionHandler}
+                onPreview={() => onPreview(item)}
+              />
             </View>
           ))}
         </View>

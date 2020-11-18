@@ -35,7 +35,7 @@ const ModalWindow: FC<Props> = ({
   };
   useEffect(() => {
     getDoc();
-  }, []);
+  }, [content]);
   return (
     <Modal
       animationType="fade"

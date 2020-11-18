@@ -23,6 +23,7 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import FilterModal from "../../components/FilterModal";
 import Text from "../../components/custom/Typography";
 import { Button } from "../../components/MyComponents";
+import { useIsFocused } from "@react-navigation/native";
 
 type constNum = () => number;
 
@@ -125,6 +126,11 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         .map((el) => el.name.toLowerCase())
         .join(),
     });
+    setFilter({
+      intolerances,
+      diets,
+      mealTypes,
+    });
   };
 
   const actionHandler = (id: string, name: string, data: object) => {
@@ -198,12 +204,51 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     setFetching({ ...fetching, clicked: false, deactivate: false });
   };
 
+  const onPreview = (item) => {
+    const title = item.title;
+    const {
+      image,
+      servings,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      veryPopular,
+      nutrition,
+      analyzedInstructions,
+    } = item;
+    let ing = "";
+    analyzedInstructions.forEach((el) => {
+      el.steps.forEach((ele) => {
+        ing += "\n" + ele.step;
+      });
+    });
+    const details = {
+      image,
+      name: modalData.name,
+      servings,
+      nutrients: [...nutrition.nutrients],
+      ingredients: [...nutrition.ingredients],
+      instructions: ing,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      veryPopular,
+    };
+    navigation.navigate("previewRecommendedPage", {
+      title,
+      details,
+    });
+  };
+
   useEffect(() => {
     getFilter();
   }, []);
-  const isFocused = navigation.isFocused();
+
+  const isFocused = useIsFocused();
   useEffect(() => {
-    if (!filter.intolerances.length) if (isFocused) getFilter();
+    if (isFocused) getFilter();
   }, [isFocused]);
 
   return (
@@ -231,7 +276,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       />
       <TouchableOpacity onPress={() => setShowFilterModal(true)}>
         <View style={styles.constraint}>
-          <Text>Constraint({constraintNumber()})</Text>
+          <Text>Constraints({constraintNumber()})</Text>
           <Icon name="keyboard-arrow-right" size={22} color={Col.Ghost} />
         </View>
       </TouchableOpacity>
@@ -256,6 +301,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
                       details={item}
                       actionHandler={actionHandler}
                       notShowScore={true}
+                      onPreview={() => onPreview(item)}
                     />
                   </View>
                 ))}

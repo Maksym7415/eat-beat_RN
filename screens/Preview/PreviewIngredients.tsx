@@ -31,7 +31,7 @@ const Ingredient = ({ item }: IngProps) => {
       <CheckBox
         name={name}
         value={check}
-        onCheck={(a, b) => {}}
+        onCheck={(a, b) => setCheck(!check)}
         size={18}
         blend={Col.Dark}
       />
@@ -72,8 +72,12 @@ const Ingredient = ({ item }: IngProps) => {
 const PreviewIngredients: FC<NavProps> = ({ navigation }) => {
   const getInfo = () => {
     const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const spread = fetcher.routes.filter((el) => el.name === "previewPage")[0]
-      .params?.details;
+    const Page =
+      fetcher.routes.map((el) => el.name)[0] === "homePage"
+        ? "previewPage"
+        : "previewRecommendedPage";
+    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
+      ?.details;
     return spread ? { ...spread } : { ingredients: [] };
   };
   const [feed, setFeed] = useState(getInfo());
@@ -90,7 +94,7 @@ const PreviewIngredients: FC<NavProps> = ({ navigation }) => {
         <Ingredient key={`_${ind}`} item={ele} />
       ))}
       <Button
-        label="Add selected products to My Shoppping List"
+        label="Add selected products to My Shopping List"
         onPress={() => console.log("")}
         style={{ backgroundColor: Col.Recipes }}
         deactivate={true}

@@ -13,7 +13,8 @@ import { Col, Spacing } from "../../components/Config";
 interface ItemProps {
   icon: string;
   label: string;
-  onPress: () => void;
+  onPress?: () => void;
+  disabled?: boolean;
   focus: number;
   index: number;
 }
@@ -24,16 +25,36 @@ const Divider = () => (
   </View>
 );
 
-const Item = ({ icon, label, onPress, focus, index }: ItemProps) => (
+const Item = ({
+  icon,
+  label,
+  onPress,
+  focus,
+  index,
+  disabled = false,
+}: ItemProps) => (
   <TouchableOpacity
     onPress={onPress}
+    disabled={disabled}
     style={[
       styles.itemContainer,
       focus === index && { backgroundColor: Colors[index] },
     ]}
   >
-    <IconMaker name={icon} fill={focus === index ? "#fff" : "#737373"} />
-    <Text style={[styles.item, focus === index && { color: "white" }]}>
+    <View style={{ width: 24 }}>
+      <IconMaker
+        name={icon}
+        fill={disabled ? Col.Inactive : focus === index ? "#fff" : "#737373"}
+      />
+    </View>
+    <Text
+      style={[
+        styles.item,
+        disabled
+          ? { color: Col.Inactive }
+          : focus === index && { color: "white" },
+      ]}
+    >
       {label}
     </Text>
   </TouchableOpacity>
@@ -76,21 +97,21 @@ const DrawerLayout = (props) => {
           focus={props.state.index}
           icon="restaurants"
           label="Restaurants"
-          onPress={() => console.log("hi")}
+          disabled
         />
         <Item
           index={3}
           focus={props.state.index}
           icon="snacks"
           label="Snacks"
-          onPress={() => console.log("hi")}
+          disabled
         />
         <Item
           index={3}
           focus={props.state.index}
           icon="foodStocks"
           label="Food Stocks"
-          onPress={() => console.log("hi")}
+          disabled
         />
         <Divider />
         <Item
@@ -98,7 +119,7 @@ const DrawerLayout = (props) => {
           focus={props.state.index}
           icon="shoppingList"
           label="Shopping List"
-          onPress={() => console.log("hi")}
+          disabled
         />
         <Divider />
         <Item
@@ -106,7 +127,7 @@ const DrawerLayout = (props) => {
           focus={props.state.index}
           icon="barcodeScanner"
           label="Barcode Scanner"
-          onPress={() => console.log("hi")}
+          disabled
         />
         <View
           style={{
@@ -114,7 +135,7 @@ const DrawerLayout = (props) => {
             alignItems: "center",
           }}
         >
-          <Text>v 0.1.6</Text>
+          <Text style={{ color: Col.Inactive }}>v 0.1.8</Text>
         </View>
       </ScrollView>
     );

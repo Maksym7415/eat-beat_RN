@@ -1,11 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Image, ActivityIndicator } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing, Typ } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
-import IngradientRow from "./Components/IngradientRow";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import Text from "../../components/custom/Typography";
 
@@ -18,18 +17,7 @@ export default function InstructionScreen({ navigation }) {
     const { data, ok } = await server.getRecipeInfo(recipeId);
     if (ok) {
       setFeed({
-        title: data.title,
         instruction: data.instruction,
-        mainNutrients: data.nutrition.nutrients.filter(
-          (el) =>
-            el.title === "Calories" ||
-            el.title === "Protein" ||
-            el.title === "Fat" ||
-            el.title === "Carbs"
-        ),
-        nutrients: data.nutrition.nutrients,
-        servings: data.servings,
-        ingredients: data.nutrition.ingredients,
       });
     }
   }, [recipeId]);
@@ -69,12 +57,12 @@ export default function InstructionScreen({ navigation }) {
             </Text>
           </View>
         ) : (
-          <View>
+          <View style={{ flex: 1 }}>
             <View>
               <TextInput multiline value={value} onChangeText={changeHandler} />
               <Divider styler={styles.divider} />
             </View>
-            <View>
+            <View style={styles.buttons}>
               <Button
                 label="SAVE"
                 onPress={saveChanges}
@@ -101,17 +89,18 @@ export default function InstructionScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   ingradientContainer: {
-    paddingHorizontal: 16,
+    flexGrow: 1,
+    paddingHorizontal: Spacing.medium,
     paddingVertical: 12,
   },
   ingradientTitle: {
     fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: Spacing.r_small,
   },
   ingradientTextField: {
-    paddingHorizontal: 16,
-    paddingTop: 22,
+    paddingHorizontal: Spacing.medium,
+    paddingTop: Spacing.large,
   },
   divider: {
     borderBottomWidth: 1,
@@ -119,7 +108,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(0, 0, 0, 0.6)",
   },
   btnConatiner: {
-    paddingHorizontal: 16,
+    paddingHorizontal: Spacing.medium,
   },
   InstructionContainer: {
     paddingHorizontal: Spacing.xlarge,
@@ -131,5 +120,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
+  },
+  buttons: {
+    flexGrow: 1,
+    justifyContent: "flex-end",
   },
 });

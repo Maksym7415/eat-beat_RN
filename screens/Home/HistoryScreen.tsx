@@ -12,6 +12,8 @@ import server from "../../server";
 import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
 import { useIsFocused } from "@react-navigation/native";
+import ActionButton from "./common/ActionButton";
+import ActionModal from "../../components/ActionModal";
 
 interface HealthScore {
   date: string;
@@ -30,6 +32,7 @@ interface Offset {
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   const [data, setData] = useState<Data>({ dates: [], scores: [] });
+  const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
   const getHealthsScore = async () => {
@@ -54,6 +57,11 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
+  const addRecommended = (value: number) => {
+    setActionBtn(false);
+    navigation.navigate("recommendedDrawer");
+  };
+
   let focus = useIsFocused();
   useEffect(() => {
     if (focus) getHealthsScore();
@@ -61,6 +69,15 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.canvas}>
+      <ActionButton
+        style={styles.actionButton}
+        onPress={() => setActionBtn(!actionBtn)}
+      />
+      <ActionModal
+        visible={actionBtn}
+        onClick={(value: number) => addRecommended(value)}
+        onClose={() => setActionBtn(false)}
+      />
       <View style={styles.header}>
         <Text type="h6">Your health score</Text>
       </View>
@@ -83,6 +100,12 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Col.White,
     padding: Spacing.large,
+  },
+  actionButton: {
+    zIndex: 1,
+    position: "absolute",
+    right: Spacing.medium,
+    bottom: Spacing.large,
   },
 });
 export default HistoryScreen;

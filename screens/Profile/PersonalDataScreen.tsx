@@ -83,7 +83,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
       <LayoutScroll>
         <View style={styles.toggleContainer}>
           <Text type="body" style={styles.wide}>
-            Use individual infake recommendations
+            Use individual intake recommendations
           </Text>
           <Switch
             trackColor={{ false: Col.Inactive, true: Col.Lemon }}

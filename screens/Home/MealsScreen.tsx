@@ -34,8 +34,6 @@ interface editProps {
   creationTime: number;
 }
 
-type Ev = SyntheticEvent<Readonly<{ timestamp: number }>, Event>;
-
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   const [feed, setFeed] = useState(null);
   const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
@@ -47,31 +45,13 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     modalVisible: false,
     creationTime: 0,
   });
-  const { calendar, saveCal, refresh, isFetching } = useContext<Memo>(
-    AppContext
-  );
-  const { visible, date } = calendar;
+  const { calendar, refresh, isFetching } = useContext<Memo>(AppContext);
+  const { date } = calendar;
 
   const serveData = async () => {
     const response = await server.getCookedMeals(date);
     if (response.ok) setFeed(response.data);
   };
-
-  // const onChange = (event: Ev, selectedDate: Date | undefined) => {
-  //   const currentDate = selectedDate || date;
-  //   saveCal({ visible: false, date: currentDate });
-  // };
-
-  // const onChange = (event: Event, selectedDate: Date) => {
-  //   console.log("bad");
-  //   if (event.type === "dismissed")
-  //     return saveCal({ visible: false, date: date });
-  //   if (selectedDate && selectedDate !== date) {
-  //     setFeed(null);
-  //     const currentDate = selectedDate || date;
-  //     saveCal({ visible: false, date: currentDate });
-  //   }
-  // };
 
   const deleteHandler = async () => {
     await server.delCookedMeal(popAlert.id);
@@ -135,18 +115,6 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         onRight={deleteHandler}
         visible={popAlert.visible}
       />
-      {/* {visible ? (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      ) : (
-        <View />
-      )} */}
       <FlatList
         data={feed}
         ListEmptyComponent={() => <EmptyList />}

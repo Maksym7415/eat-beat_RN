@@ -14,6 +14,7 @@ import NewRecipe from "../../screens/Recipies/CreateRecipesScreen";
 import RecipeInfoScreen from "../../screens/Recipies/RecipeInfoScreen";
 import IngradientScreen from "../../screens/Recipies/IngradientsScreen";
 import InstructionScreen from "../../screens/Recipies/InstructionScreen";
+import PreviewRecipeTopNavigator from "./PreviewTab";
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -163,6 +164,29 @@ export const RecommendedStack = () => {
           };
         }}
         component={EditRecipeTopNAvigator}
+      />
+      <Stack.Screen
+        options={({ navigation, route }) => ({
+          headerLeft: () => (
+            <Icon
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+              name={"arrow-back"}
+              color={Col.White}
+              size={24}
+            />
+          ),
+          title: route.params?.title || "Preview",
+          headerStyle: {
+            elevation: 1,
+            backgroundColor: Col.Recipes,
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
+        })}
+        name="previewRecommendedPage"
+        component={PreviewRecipeTopNavigator}
       />
     </Stack.Navigator>
   );

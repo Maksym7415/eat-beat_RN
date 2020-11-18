@@ -4,22 +4,28 @@ import { NavProps } from "../../components/interfaces";
 import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
 
 const PreviewInstructions: FC<NavProps> = ({ navigation }) => {
   const getInfo = () => {
     const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const spread = fetcher.routes.filter((el) => el.name === "previewPage")[0]
-      .params?.details;
+    const Page =
+      fetcher.routes.map((el) => el.name)[0] === "homePage"
+        ? "previewPage"
+        : "previewRecommendedPage";
+    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
+      ?.details;
     return spread ? { ...spread } : { instructions: "" };
   };
-  const [feed, setFeed] = useState(getInfo());
+  const [feed, setFeed] = useState({ instructions: "" });
   const { instructions } = feed;
+  const focus = useIsFocused();
   useEffect(() => {
-    if (navigation.isFocused()) {
+    if (focus) {
       const newFeed = getInfo();
       if (newFeed.instructions) setFeed(newFeed);
     }
-  }, [navigation]);
+  }, [focus]);
   return (
     <LayoutScroll style={styles.container}>
       <Text type="body2">

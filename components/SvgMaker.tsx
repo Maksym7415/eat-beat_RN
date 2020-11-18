@@ -124,9 +124,9 @@ const newIcon = (name = "profile", fill = "#737373") => {
     case "barcodeScanner":
       return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
   <g id="Group_4" data-name="Group 4" transform="translate(-1347 -980)">
-    <rect id="Rectangle_2" data-name="Rectangle 2" width="6" height="6" transform="translate(1348 981)" fill=${fill} stroke="#737373" stroke-width="2"/>
-    <rect id="Rectangle_3" data-name="Rectangle 3" width="6" height="6" transform="translate(1348 993)" fill=${fill} stroke="#737373" stroke-width="2"/>
-    <rect id="Rectangle_4" data-name="Rectangle 4" width="6" height="6" transform="translate(1360 981)" fill=${fill} stroke="#737373" stroke-width="2"/>
+    <rect id="Rectangle_2" data-name="Rectangle 2" width="6" height="6" transform="translate(1348 981)" fill=${fill} stroke=${fill} stroke-width="2"/>
+    <rect id="Rectangle_3" data-name="Rectangle 3" width="6" height="6" transform="translate(1348 993)" fill=${fill} stroke=${fill} stroke-width="2"/>
+    <rect id="Rectangle_4" data-name="Rectangle 4" width="6" height="6" transform="translate(1360 981)" fill=${fill} stroke=${fill} stroke-width="2"/>
     <rect id="Rectangle_5" data-name="Rectangle 5" width="2" height="2" transform="translate(1347 989)" fill=${fill}/>
     <rect id="Rectangle_6" data-name="Rectangle 6" width="2" height="2" transform="translate(1359 989)" fill=${fill}/>
     <rect id="Rectangle_7" data-name="Rectangle 7" width="2" height="2" transform="translate(1353 989)" fill=${fill}/>
