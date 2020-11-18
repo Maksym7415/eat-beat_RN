@@ -11,9 +11,9 @@ import * as Device from "expo-device";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert, Platform } from "react-native";
 import { AuthProps } from "../components/interfaces";
-import { baseURL } from '../url.js';
+import { baseURL } from "../url";
 const apiConfig: apiProps = {
-  baseURL: baseURL + 'api',
+  baseURL: baseURL + "api",
   get: {
     profile: "/user/profile-data",
     cookedMeals: "/meals/cooked-meals?date=",
@@ -39,7 +39,7 @@ const apiConfig: apiProps = {
     refresh: "/auth/refresh-token",
     addRecipe: "/recipe/add-own-recipe",
     addRecipeAvatar: "/upload/recipe-image/",
-    addUserRecipeToMeals: "/meals/add-meal-own-recipe"
+    addUserRecipeToMeals: "/meals/add-meal-own-recipe",
   },
   del: {
     user: "/user/delete-user",
@@ -94,21 +94,27 @@ const refreshToken = async () => {
   const token = await getRefresh();
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("User-Agent", Platform.OS === "ios"
-    ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
-    : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`)
-  const raw = JSON.stringify({ "refreshToken": `${token}` });
+  myHeaders.append(
+    "User-Agent",
+    Platform.OS === "ios"
+      ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+      : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+  );
+  const raw = JSON.stringify({ refreshToken: `${token}` });
 
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: "follow",
   };
 
-  const res = await fetch(apiConfig.baseURL + apiConfig.post.refresh, requestOptions);
+  const res = await fetch(
+    apiConfig.baseURL + apiConfig.post.refresh,
+    requestOptions
+  );
   const result = await res.json();
-  console.log(result, requestOptions)
+  console.log(result, requestOptions);
   if (result.code !== 110) setToken(result);
   return result;
 };
@@ -251,13 +257,11 @@ const addRecipe = async (data: any) => {
 };
 
 const addRecipeToMeals = async (data: any) => {
-
-  const address = apiConfig.post.addUserRecipeToMeals
+  const address = apiConfig.post.addUserRecipeToMeals;
   const response = await api.get(address, data);
   if (!response.ok) logError(response);
   return response;
-
-}
+};
 
 const updateRecipe = async (
   id: number,

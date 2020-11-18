@@ -1,16 +1,9 @@
-import React, {
-  FC,
-  SyntheticEvent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import CookedMealCard from "../../components/CookedMealCard";
 import { Memo, NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { Text } from "../../components/custom/Typography";
 import EditModal from "../../components/newEditModal";
 import PopUp from "../../components/PopUp";
@@ -33,7 +26,7 @@ interface editProps {
   servings: number;
   creationTime: number;
 }
-
+let Busy = false;
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   const [feed, setFeed] = useState(null);
   const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
@@ -55,6 +48,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
   const deleteHandler = async () => {
     await server.delCookedMeal(popAlert.id);
+    Busy = false;
     setPopAlert({ ...popAlert, visible: false });
     isFetching();
   };
@@ -127,7 +121,9 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
               setModalData({ ...props, modalVisible: true })
             }
             onClick={() => onPreview(item)}
-            onDelete={(id, name) => setPopAlert({ id, name, visible: true })}
+            onDelete={(id, name) => {
+              if (!Busy) setPopAlert({ id, name, visible: true });
+            }}
           />
         )}
       />

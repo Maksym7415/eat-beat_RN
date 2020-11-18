@@ -59,11 +59,7 @@ const Ingredient = ({ item }: IngProps) => {
         {name}
       </Text>
       <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
-        (
-        {`${amount * weightPerServing?.amount || 0}${
-          weightPerServing?.unit || "g"
-        }`}
-        )
+        ({`${weightPerServing?.amount || 0}${weightPerServing?.unit || "g"}`})
       </Text>
     </TouchableOpacity>
   );
