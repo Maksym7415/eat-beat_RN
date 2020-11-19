@@ -151,7 +151,8 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    getDefaultConfig()
+    getRecipeInfo();
+    getDefaultConfig();
   }, [editMode])
 
   return Object.keys(feed).length && !disabled ? (
