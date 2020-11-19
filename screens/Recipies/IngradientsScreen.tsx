@@ -108,52 +108,52 @@ export default function IngradientScreen({ navigation }) {
                 deactivate={!Object.values(checked).filter((el) => el).length}
               />
             </View>
-            <View style={styles.btnConatiner}>
+            {/* <View style={styles.btnConatiner}>
               <Button
                 label="Add recipe to my meals"
                 onPress={() => console.log("need to do this")} // !!!
                 style={{ backgroundColor: Col.Recipes }}
                 deactivate={Object.values(checked).filter((el) => el).length}
               />
-            </View>
+            </View> */}
           </>
         ) : (
-          <View style={{ flexGrow: 1 }}>
-            <View style={styles.ingradientContainer}>
-              <Text style={styles.ingradientTitle}>Ingredients</Text>
-              <View style={styles.ingradientTextField}>
-                <TextInput
-                  multiline
-                  value={value}
-                  onChangeText={changeHandler}
-                />
-              </View>
+            <View style={{ flexGrow: 1 }}>
+              <View style={styles.ingradientContainer}>
+                <Text style={styles.ingradientTitle}>Ingredients</Text>
+                <View style={styles.ingradientTextField}>
+                  <TextInput
+                    multiline
+                    value={value}
+                    onChangeText={changeHandler}
+                  />
+                </View>
 
-              <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
+                <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  label="SAVE CHANGES"
+                  onPress={saveChanges}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+                {/* <Button
+                  label="CANCEL"
+                  type="text"
+                  onPress={() => toggleEdit(false)}
+                  labelStyle={{ color: Col.Grey }}
+                  style={{ marginVertical: 0 }}
+                /> */}
+              </View>
             </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                label="SAVE CHANGES"
-                onPress={saveChanges}
-                style={{ backgroundColor: Col.Recipes }}
-              />
-              <Button
-                label="CANCEL"
-                type="text"
-                onPress={() => toggleEdit(false)}
-                labelStyle={{ color: Col.Grey }}
-                style={{ marginVertical: 0 }}
-              />
-            </View>
-          </View>
-        )}
+          )}
       </View>
     </LayoutScroll>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({

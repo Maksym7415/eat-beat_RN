@@ -151,7 +151,8 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   }, [navigation]);
 
   useEffect(() => {
-    getDefaultConfig()
+    getRecipeInfo();
+    getDefaultConfig();
   }, [editMode])
 
   return Object.keys(feed).length && !disabled ? (
@@ -303,14 +304,14 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     deactivate={disabled}
                     style={{ backgroundColor: Col.Recipes }}
                   />
-                  <Button
+                  {/* <Button
                     label="CANCEL"
                     type="text"
                     deactivate={disabled}
                     onPress={cancelHandler}
                     labelStyle={{ color: Col.Grey }}
                     style={{ marginVertical: 0 }}
-                  />
+                  /> */}
                 </View>
               </>
             )}

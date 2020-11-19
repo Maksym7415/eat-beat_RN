@@ -8,17 +8,20 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Col, Spacing } from "../../../components/Config";
 import Text from "../../../components/custom/Typography";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 
 interface Props {
   id: number;
   recipe: boolean;
   image: string;
   title: string;
+  addRecipe: (data: any) => void
+  recipeData: object
   actionHandler: (props: Props) => void;
 }
 
 const CreatedRecipeCard: FC<Props> = (props) => {
-  const { id, recipe, image, title, actionHandler } = props;
+  const { id, recipe, image, title, actionHandler, recipeData, addRecipe } = props;
 
   return (
     <TouchableOpacity onPress={() => actionHandler(props)}>
@@ -42,6 +45,12 @@ const CreatedRecipeCard: FC<Props> = (props) => {
               }}
             >
               <View style={{ width: 64, height: 64 }} />
+              <Icon
+                onPress={() => addRecipe(recipeData)}
+                name={"add-box"}
+                color={Col.White}
+                size={32}
+              />
             </View>
           </LinearGradient>
         </ImageBackground>

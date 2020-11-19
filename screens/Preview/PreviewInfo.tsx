@@ -9,6 +9,8 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 import Text from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
 import { useIsFocused } from "@react-navigation/native";
+import { baseURL } from '../../url';
+
 const empty = {
   image: "",
   name: "",
@@ -76,10 +78,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
         <View style={styles.titleContainer}>
           <View style={styles.imageContainer}>
             {image !== "" ? (
-              <Image source={{ uri: image }} style={styles.image} />
+              <Image source={{ uri: image.slice(0, 4) === 'http' ? image : `${baseURL}${image}` }} style={styles.image} />
             ) : (
-              <View style={styles.image} />
-            )}
+                <View style={styles.image} />
+              )}
           </View>
           <View style={styles.nameContainer}>
             <View style={styles.catagoryContainer}>
@@ -140,10 +142,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
       </View>
     </LayoutScroll>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
