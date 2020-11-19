@@ -57,34 +57,34 @@ export default function InstructionScreen({ navigation }) {
             </Text>
           </View>
         ) : (
-          <View style={{ flex: 1 }}>
-            <View>
-              <TextInput multiline value={value} onChangeText={changeHandler} />
-              <Divider styler={styles.divider} />
-            </View>
-            <View style={styles.buttons}>
-              <Button
-                label="SAVE"
-                onPress={saveChanges}
-                style={{ backgroundColor: Col.Recipes }}
-              />
-              <Button
+            <View style={{ flex: 1 }}>
+              <View>
+                <TextInput multiline value={value} onChangeText={changeHandler} />
+                <Divider styler={styles.divider} />
+              </View>
+              <View style={styles.buttons}>
+                <Button
+                  label="SAVE"
+                  onPress={saveChanges}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+                {/* <Button
                 label="CANCEL"
                 type="text"
                 onPress={() => toggleEdit(!editMode)}
                 style={{ marginVertical: 0 }}
                 labelStyle={{ color: Col.Grey }}
-              />
+              /> */}
+              </View>
             </View>
-          </View>
-        )}
+          )}
       </View>
     </LayoutScroll>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({

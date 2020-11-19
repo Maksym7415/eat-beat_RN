@@ -132,13 +132,13 @@ export default function IngradientScreen({ navigation }) {
                   onPress={saveChanges}
                   style={{ backgroundColor: Col.Recipes }}
                 />
-                <Button
+                {/* <Button
                   label="CANCEL"
                   type="text"
                   onPress={() => toggleEdit(false)}
                   labelStyle={{ color: Col.Grey }}
                   style={{ marginVertical: 0 }}
-                />
+                /> */}
               </View>
             </View>
           )}
