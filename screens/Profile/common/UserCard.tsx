@@ -79,7 +79,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
 
   const submitChange = async () => {
     setEdit(!edit);
-    if (userName !== name) {
+    if (userName !== name && userName !== "") {
       const response = await server.updateProfile({ name: userName });
       response ? onUpdate() : setUserName(name);
     }

@@ -17,6 +17,7 @@ import server from "../../server";
 import Text from "../../components/custom/Typography";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import useValidation from "../../utils/validation";
+import * as ImageManipulator from "expo-image-manipulator";
 
 interface Item {
   title: string;
@@ -121,7 +122,12 @@ export default function CreateRecipeScreen({ navigation }) {
       quality: 1,
     });
     if (!result.cancelled) {
-      setImage(result.uri);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 600, height: 600 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      setImage(manipResult.uri);
     }
   };
 

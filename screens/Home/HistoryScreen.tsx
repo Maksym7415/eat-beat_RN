@@ -41,19 +41,21 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
       const historyFeed: HealthScore[] = response.data.data;
       const dates: string[] = historyFeed.map((el) => `${el.date}`);
       const scores: number[] = historyFeed.map((el) => el.healthScore);
-      setData((value) => ({ ...value, dates, scores }));
+      setData((value) => ({
+        dates: [...value.dates, ...dates],
+        scores: [...value.scores, ...scores],
+      }));
     }
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     event.persist();
-    if (event?.nativeEvent?.contentOffset?.x > offset.count + 650) {
+    if (event?.nativeEvent?.contentOffset?.x >= offset.count + 586) {
       setOffset((value) => ({
         ...value,
         count: event.nativeEvent.contentOffset.x,
         offset: value.offset + 10,
       }));
-      getHealthsScore();
     }
   };
 
@@ -65,7 +67,7 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   let focus = useIsFocused();
   useEffect(() => {
     if (focus) getHealthsScore();
-  }, [focus]);
+  }, [focus, offset.offset]);
 
   return (
     <View style={styles.canvas}>
