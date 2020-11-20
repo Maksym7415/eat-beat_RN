@@ -7,10 +7,11 @@ import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
 import { ProfileData } from "./components/Config";
+import pingServer from './utils/pingServer';
 // import RSAKey from 'react-native-rsa';
 // const bits = 1024;
 // const exponent = '10001'; // must be a string. This is hex string. decimal = 65537
-// var rsa = new RSAKey();
+// s
 // rsa.generate(bits, exponent);
 // var publicKey = rsa.getPublicString(); // return json encoded string
 // var privateKey = rsa.getPrivateString(); // return json encoded string
@@ -164,6 +165,7 @@ export default function App() {
   useEffect(() => {
     loadUser();
     loadDocs();
+    pingServer();
   }, [logged]);
 
   return (

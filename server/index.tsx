@@ -12,6 +12,8 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Alert, Platform } from "react-native";
 import { AuthProps } from "../components/interfaces";
 import { baseURL } from "../url";
+import encryption from '../utils/dataEncryption';
+
 const apiConfig: apiProps = {
   baseURL: baseURL + "api",
   get: {
@@ -296,11 +298,11 @@ const signIn = async (payload: AuthProps) => {
 };
 
 const register = async (payload: AuthProps) => {
+  //const encrypted = await encryption(payload)
   const address = apiConfig.post.register;
   const response = await api.post(address, payload);
   return response;
 };
-
 const upload = async (uri) => {
   const address = apiConfig.baseURL + apiConfig.post.upload;
   const token = await getToken();
