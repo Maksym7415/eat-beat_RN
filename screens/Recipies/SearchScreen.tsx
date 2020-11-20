@@ -217,21 +217,21 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       dairyFree,
       veryPopular,
       nutrition,
-      analyzedInstructions,
+      instruction,
     } = data;
-    let ing = "";
-    analyzedInstructions.forEach((el) => {
-      el.steps.forEach((ele) => {
-        ing += "\n" + ele.step;
-      });
-    });
+    // let ing = "";
+    // analyzedInstructions.forEach((el) => {
+    //   el.steps.forEach((ele) => {
+    //     ing += "\n" + ele.step;
+    //   });
+    // });
     const details = {
       image,
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
       ingredients: [...nutrition.ingredients],
-      instructions: ing,
+      instructions: instruction,
       vegetarian,
       vegan,
       glutenFree,
