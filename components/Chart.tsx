@@ -3,13 +3,6 @@ import { Dimensions, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { Col } from "./Config";
 
-interface Props {
-  data: {
-    dates: string[];
-    scores: number[];
-  };
-}
-
 const Chart: FC = ({ data }) => {
   const dates = Object.keys(data);
   const scores = Object.values(data);

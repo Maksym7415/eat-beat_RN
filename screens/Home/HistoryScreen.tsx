@@ -20,11 +20,6 @@ interface HealthScore {
   healthScore: number;
 }
 
-interface Data {
-  dates: string[];
-  scores: number[];
-}
-
 interface Offset {
   count: number;
   offset: number;
