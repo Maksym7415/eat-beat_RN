@@ -250,7 +250,9 @@ const getRecipes = async () => {
 
 const addRecipe = async (data: any) => {
   const address = apiConfig.post.addRecipe;
-  const response = await api.post(address, data);
+  const params = { ...data }
+  if (!params.servings) delete params.servings
+  const response = await api.post(address, params);
   if (!response.ok) logError(response);
   return response;
 };
@@ -411,6 +413,12 @@ const changeURL = () => {
   Alert.alert("change", `changed from: ${current}\nto: ${change}`);
 };
 
+const getPreview = async (id) => {
+  const response = await api.get(`${baseURL}api/meals/recipe-info/${id}`);
+  if (!response.ok) logError(response);
+  return response.data;
+}
+
 export default {
   api,
   setup,
@@ -448,4 +456,5 @@ export default {
   getDocs,
   refreshToken,
   addRecipeToMeals,
+  getPreview,
 };

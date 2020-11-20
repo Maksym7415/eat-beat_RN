@@ -86,8 +86,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
                 style={styles.image}
               />
             ) : (
-              <View style={styles.image} />
-            )}
+                <View style={styles.image} />
+              )}
           </View>
           <View style={styles.nameContainer}>
             <View style={styles.catagoryContainer}>
@@ -148,10 +148,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
       </View>
     </LayoutScroll>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({

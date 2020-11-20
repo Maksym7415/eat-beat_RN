@@ -75,14 +75,14 @@ const RecipeCard: FC<Props> = ({
               {notShowScore ? (
                 <View style={{ height: 32 }} />
               ) : (
-                <HealthCircle
-                  showText
-                  radius={32}
-                  percentage={healthScore}
-                  textColor="white"
-                  background="#fff3"
-                />
-              )}
+                  <HealthCircle
+                    showText
+                    radius={32}
+                    percentage={healthScore}
+                    textColor="white"
+                    background="#fff3"
+                  />
+                )}
               <Icon
                 onPress={() => actionHandler(id, title, details)}
                 name={"add-box"}

@@ -44,7 +44,7 @@ const FilterModal: FC<Props> = ({
         <Text
           type="h6"
           style={styles.text}
-        >{`Constraint(${constaintNumber})`}</Text>
+        >{`Filters(${constaintNumber})`}</Text>
       </View>
       <UserSettings
         data={data}

@@ -150,6 +150,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     toggleEdit(false);
     ChangeTitle(title.value || feed.title);
     getRecipeInfo();
+    setImage('');
   };
   const cancelHandler = () => {
     toggleEdit(!editMode);
@@ -165,6 +166,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   useEffect(() => {
     getRecipeInfo();
     getDefaultConfig();
+    setImage(`${baseURL}${feed?.uri}`)
   }, [editMode]);
 
   return Object.keys(feed).length && !disabled ? (
@@ -187,42 +189,42 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     size={58}
                   />
                 ) : (
-                  <View />
-                )}
+                    <View />
+                  )}
               </ImageBackground>
             </View>
             <View style={{ padding: Spacing.medium }}>
               {!editMode ? (
                 <Text type="h6">{feed.title}</Text>
               ) : (
-                <View>
-                  <Text
-                    type="bodyBold"
-                    style={{ color: Col.Grey, marginBottom: Spacing.small }}
-                  >
-                    Title*
+                  <View>
+                    <Text
+                      type="bodyBold"
+                      style={{ color: Col.Grey, marginBottom: Spacing.small }}
+                    >
+                      Title*
                   </Text>
-                  <TextInput
-                    value={
-                      fieldValues.title.value === null
-                        ? feed.title
-                        : fieldValues.title.value
-                    }
-                    onChangeText={(text) => changeHandler(text, "title")}
-                    placeholder={"Add recipe title"}
-                    style={{
-                      borderColor: title.errors ? Col.Error : Col.Grey2,
-                      fontFamily: "Inter_500Medium",
-                      fontSize: 20,
-                      color: Col.Dark,
-                      borderBottomWidth: 1,
-                    }}
-                  />
-                  <Text style={{ color: Col.Error, marginTop: 10 }}>
-                    {title.errors}
-                  </Text>
-                </View>
-              )}
+                    <TextInput
+                      value={
+                        fieldValues.title.value === null
+                          ? feed.title
+                          : fieldValues.title.value
+                      }
+                      onChangeText={(text) => changeHandler(text, "title")}
+                      placeholder={"Add recipe title"}
+                      style={{
+                        borderColor: title.errors ? Col.Error : Col.Grey2,
+                        fontFamily: "Inter_500Medium",
+                        fontSize: 20,
+                        color: Col.Dark,
+                        borderBottomWidth: 1,
+                      }}
+                    />
+                    <Text style={{ color: Col.Error, marginTop: 10 }}>
+                      {title.errors}
+                    </Text>
+                  </View>
+                )}
             </View>
           </View>
           {!editMode ? (
@@ -270,43 +272,43 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
               </View>
             </View>
           ) : (
-            <>
-              <View style={styles.editContainer}>
-                <Text
-                  type="bodyBold"
-                  style={{ color: Col.Grey, marginBottom: Spacing.small }}
-                >
-                  Servings
+              <>
+                <View style={styles.editContainer}>
+                  <Text
+                    type="bodyBold"
+                    style={{ color: Col.Grey, marginBottom: Spacing.small }}
+                  >
+                    Servings
                 </Text>
-                <TextInput
-                  value={
-                    fieldValues.servings.value === null
-                      ? feed.servings + ""
-                      : fieldValues.servings.value + ""
-                  }
-                  keyboardType="number-pad"
-                  onChangeText={(text) => changeHandler(text, "servings")}
-                  placeholder={"Add recipe serving"}
-                  style={{
-                    borderColor: servings.errors ? Col.Error : Col.Grey2,
-                    fontFamily: "Inter_500Medium",
-                    fontSize: 20,
-                    color: Col.Dark,
-                    borderBottomWidth: 1,
-                  }}
-                />
-                <Text style={{ color: Col.Error, marginTop: 10 }}>
-                  {servings.errors}
-                </Text>
-              </View>
-              <View>
-                <Button
-                  label="SAVE"
-                  onPress={() => startValidation(saveChanges)}
-                  deactivate={disabled}
-                  style={{ backgroundColor: Col.Recipes }}
-                />
-                {/* <Button
+                  <TextInput
+                    value={
+                      fieldValues.servings.value === null
+                        ? feed.servings + ""
+                        : fieldValues.servings.value + ""
+                    }
+                    keyboardType="number-pad"
+                    onChangeText={(text) => changeHandler(text, "servings")}
+                    placeholder={"Add recipe serving"}
+                    style={{
+                      borderColor: servings.errors ? Col.Error : Col.Grey2,
+                      fontFamily: "Inter_500Medium",
+                      fontSize: 20,
+                      color: Col.Dark,
+                      borderBottomWidth: 1,
+                    }}
+                  />
+                  <Text style={{ color: Col.Error, marginTop: 10 }}>
+                    {servings.errors}
+                  </Text>
+                </View>
+                <View>
+                  <Button
+                    label="SAVE"
+                    onPress={() => startValidation(saveChanges)}
+                    deactivate={disabled}
+                    style={{ backgroundColor: Col.Recipes }}
+                  />
+                  {/* <Button
                     label="CANCEL"
                     type="text"
                     deactivate={disabled}
@@ -314,17 +316,17 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     labelStyle={{ color: Col.Grey }}
                     style={{ marginVertical: 0 }}
                   /> */}
-              </View>
-            </>
-          )}
+                </View>
+              </>
+            )}
         </View>
       </ScrollView>
     </View>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
