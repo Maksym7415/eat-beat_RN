@@ -109,7 +109,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: [...data.nutrition.ingredients],
+      ingredients: data.code ? [...nutrition.ingredients] : [...data.nutrition.ingredients],
       instructions: ing,
       vegetarian,
       vegan,

@@ -112,25 +112,32 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     diets,
     mealTypes,
   }: recipeSettings) => {
-    setFilterConfig({
-      mealTypes: mealTypes
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(", "),
-      intolerances: intolerances
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(", "),
-      diets: diets
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(),
-    });
-    setFilter({
-      intolerances,
-      diets,
-      mealTypes,
-    });
+    setFetching((f) => ({ ...f, clicked: true, deactivate: true, }))
+    setTimeout(() => {
+      setFilterConfig({
+        mealTypes: mealTypes
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(", "),
+        intolerances: intolerances
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(", "),
+        diets: diets
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(),
+      });
+      setFilter({
+        intolerances,
+        diets,
+        mealTypes,
+      });
+      setFetching((f) => ({ ...f, clicked: false, deactivate: false, }))
+      setShowFilterModal(false)
+    }, 500)
+
+
   };
 
   const actionHandler = (id: string, name: string, data: object) => {
@@ -207,7 +214,6 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
   const onPreview = async (item) => {
     const title = item.title;
     const data = await server.getPreview(item.id);
-    if (data.code) return;
     const {
       image,
       servings,
@@ -230,7 +236,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: [...data.nutrition.ingredients],
+      ingredients: data.code ? [...nutrition.ingredients] : [...data.nutrition.ingredients],
       instructions: ing,
       vegetarian,
       vegan,

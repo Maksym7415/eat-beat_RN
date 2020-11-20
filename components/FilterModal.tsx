@@ -29,7 +29,6 @@ const FilterModal: FC<Props> = ({
 }) => {
   const saveFilterConfig = (value: recipeSettings) => {
     saveFilterData(value);
-    hideModal();
   };
 
   return (
