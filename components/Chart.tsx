@@ -10,8 +10,9 @@ interface Props {
   };
 }
 
-const Chart: FC<Props> = ({ data }) => {
-  const { dates, scores } = data;
+const Chart: FC = ({ data }) => {
+  const dates = Object.keys(data);
+  const scores = Object.values(data);
   return scores.length ? (
     <LineChart
       data={{

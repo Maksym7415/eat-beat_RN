@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useContext } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -31,20 +31,19 @@ interface Offset {
 }
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
-  const [data, setData] = useState<Data>({ dates: [], scores: [] });
+  const [data, setData] = useState({});
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
   const getHealthsScore = async () => {
     const response = await server.getHistory(offset.offset);
+    const newFeed = { ...data };
     if (response.ok) {
       const historyFeed: HealthScore[] = response.data.data;
-      const dates: string[] = historyFeed.map((el) => `${el.date}`);
-      const scores: number[] = historyFeed.map((el) => el.healthScore);
-      setData((value) => ({
-        dates: [...value.dates, ...dates],
-        scores: [...value.scores, ...scores],
-      }));
+      historyFeed.forEach(({ date, healthScore }) => {
+        Object.assign(newFeed, { [date]: healthScore });
+      });
+      setData(newFeed);
     }
   };
 
