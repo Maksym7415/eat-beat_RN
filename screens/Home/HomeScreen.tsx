@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FC } from "react";
+import React, { useState, useEffect, useContext, FC, useCallback } from "react";
 import { StyleSheet, View, Pressable, ActivityIndicator } from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
@@ -51,7 +51,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
     navigation.navigate("recommendedDrawer");
   };
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     serveData().then(() => setRefreshing(false));
   }, []);
