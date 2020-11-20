@@ -73,7 +73,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     setFetching({ clicked: true, deactivate: true });
     await server.addCookedMeal({
-      meal: modalData.data,
+      mealId: modalData.data.id,
       quantity: servings,
       date: creationTime,
     });

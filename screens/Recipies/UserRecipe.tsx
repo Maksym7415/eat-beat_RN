@@ -40,9 +40,10 @@ export default function UserRecipes({ navigation }) {
     data: {},
   });
 
-  const handlerData = (recipe) => {
+  const handlerData = (recipe, id) => {
     setModalData({
       meal: recipe,
+      id,
       creationTime: new Date().getTime(),
       servings: recipe.servings,
       modalVisible: true,
@@ -59,7 +60,7 @@ export default function UserRecipes({ navigation }) {
     const data = {
       quantity: servings,
       date: creationTime,
-      meal: modalData.meal,
+      recipeId: modalData.id,
     };
     await server.addRecipeToMeals(data);
     setFetching({ clicked: false, deactivate: false });
@@ -110,8 +111,8 @@ export default function UserRecipes({ navigation }) {
               </View>
             ))
           ) : (
-            <View />
-          )}
+              <View />
+            )}
         </View>
       </LayoutScroll>
       <View style={styles.buttonContainer}>
@@ -123,10 +124,10 @@ export default function UserRecipes({ navigation }) {
       </View>
     </View>
   ) : (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Col.Black} />
-    </View>
-  );
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Col.Black} />
+      </View>
+    );
 }
 
 const styles = StyleSheet.create({

@@ -46,7 +46,7 @@ const CreatedRecipeCard: FC<Props> = (props) => {
             >
               <View style={{ width: 64, height: 64 }} />
               <Icon
-                onPress={() => addRecipe(recipeData)}
+                onPress={() => addRecipe(recipeData, id)}
                 name={"add-box"}
                 color={Col.White}
                 size={32}

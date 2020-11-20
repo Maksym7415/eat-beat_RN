@@ -153,7 +153,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     await server.addCookedMeal({
-      meal: modalData.data,
+      mealId: modalData.data.id,
       quantity: servings,
       date: creationTime,
     });
