@@ -289,8 +289,9 @@ const addRecipeAvatar = async (formData: FormData, id: number) => {
 };
 
 const signIn = async (payload: AuthProps) => {
+  const encrypted = await encryption(payload)
   const address = apiConfig.post.signIn;
-  const response = await api.post(address, payload);
+  const response = await api.post(address, encrypted);
   if (response.ok) {
     setToken(response.data);
   }
@@ -298,9 +299,9 @@ const signIn = async (payload: AuthProps) => {
 };
 
 const register = async (payload: AuthProps) => {
-  //const encrypted = await encryption(payload)
+  const encrypted = await encryption(payload)
   const address = apiConfig.post.register;
-  const response = await api.post(address, payload);
+  const response = await api.post(address, encrypted);
   return response;
 };
 const upload = async (uri) => {
