@@ -27,7 +27,7 @@ const SuccessScreen: FC<NavProps> = ({ navigation }) => {
         <Text type="body2">
           Your account is ready. You can use the application
         </Text>
-        <Button style={styles.btn} onPress={() => login(false)} label="GO" />
+        <Button style={styles.btn} onPress={() => login()} label="GO" />
       </View>
     </LayoutScroll>
   );

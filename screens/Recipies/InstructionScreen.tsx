@@ -1,8 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { View, StyleSheet, ActivityIndicator, TextInput } from "react-native";
 import { AppContext } from "../../components/AppContext";
-import { Col, Spacing, Typ } from "../../components/Config";
+import { Col, Spacing } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
 import LayoutScroll from "../../components/custom/LayoutScroll";

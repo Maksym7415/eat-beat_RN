@@ -114,7 +114,6 @@ const refreshToken = async () => {
     requestOptions
   );
   const result = await res.json();
-  console.log(result, requestOptions);
   if (result.code !== 110) setToken(result);
   return result;
 };
@@ -257,8 +256,7 @@ const addRecipe = async (data: any) => {
 };
 
 const addRecipeToMeals = async (data: any) => {
-
-  const address = apiConfig.post.addUserRecipeToMeals
+  const address = apiConfig.post.addUserRecipeToMeals;
   const response = await api.post(address, data);
   // console.log(response)
   if (!response.ok) logError(response);

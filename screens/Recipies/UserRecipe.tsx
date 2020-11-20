@@ -1,6 +1,11 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { Fetching, Memo } from "../../components/interfaces";
@@ -8,7 +13,7 @@ import { Button } from "../../components/MyComponents";
 import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 import LayoutScroll from "../../components/custom/LayoutScroll";
-import { baseURL } from '../../url';
+import { baseURL } from "../../url";
 import EditModal from "../../components/newEditModal";
 
 interface ModalData {
@@ -42,7 +47,7 @@ export default function UserRecipes({ navigation }) {
       servings: recipe.servings,
       modalVisible: true,
     });
-  }
+  };
 
   const getData = async () => {
     const { data, ok } = await server.getRecipes();
@@ -52,15 +57,15 @@ export default function UserRecipes({ navigation }) {
   const addRecipe = async (id, { servings, creationTime }) => {
     setFetching({ clicked: true, deactivate: true });
     const data = {
-      "quantity": servings,
-      "date": creationTime,
-      meal: modalData.meal
-    }
+      quantity: servings,
+      date: creationTime,
+      meal: modalData.meal,
+    };
     await server.addRecipeToMeals(data);
     setFetching({ clicked: false, deactivate: false });
     setModalData({ ...modalData, modalVisible: false });
     navigation.navigate("meals");
-  }
+  };
 
   useEffect(() => {
     getData();
@@ -93,7 +98,6 @@ export default function UserRecipes({ navigation }) {
           {feed ? (
             feed.map(({ id, title, recipe, ...other }, index) => (
               <View key={`${index + title}`} style={styles.cardContainer}>
-                {/* {console.log(recipe)} */}
                 <CreatedRecipeCard
                   addRecipe={handlerData}
                   recipeData={recipe}
@@ -106,8 +110,8 @@ export default function UserRecipes({ navigation }) {
               </View>
             ))
           ) : (
-              <View />
-            )}
+            <View />
+          )}
         </View>
       </LayoutScroll>
       <View style={styles.buttonContainer}>
@@ -119,10 +123,10 @@ export default function UserRecipes({ navigation }) {
       </View>
     </View>
   ) : (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={Col.Black} />
-      </View>
-    );
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

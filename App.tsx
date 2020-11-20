@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
-import Splash from "./screens/SplashScreen";
-import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
-import { AppContext } from "./components/AppContext";
-import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
-import AsyncStorage from "@react-native-community/async-storage";
 import * as Font from "expo-font";
 import server, { api } from "./server";
+import Splash from "./screens/SplashScreen";
 import { ProfileData } from "./components/Config";
+import { AppContext } from "./components/AppContext";
+import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
+import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
+import AsyncStorage from "@react-native-community/async-storage";
 // import RSAKey from 'react-native-rsa';
 // const bits = 1024;
 // const exponent = '10001'; // must be a string. This is hex string. decimal = 65537
@@ -172,4 +172,3 @@ export default function App() {
     </AppContext.Provider>
   );
 }
-// Reminder Notes
