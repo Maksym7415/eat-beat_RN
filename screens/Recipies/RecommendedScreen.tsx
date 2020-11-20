@@ -96,21 +96,21 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       dairyFree,
       veryPopular,
       nutrition,
-      instruction,
-    } = data;
+      analyzedInstructions
+    } = item;
     let ing = "";
-    // analyzedInstructions.forEach((el) => {
-    //   el.steps.forEach((ele) => {
-    //     ing += "\n" + ele.step;
-    //   });
-    // });
+    analyzedInstructions.forEach((el) => {
+      el.steps.forEach((ele) => {
+        ing += "\n" + ele.step;
+      });
+    });
     const details = {
       image,
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: [...nutrition.ingredients],
-      instructions: instruction,
+      ingredients: [...data.nutrition.ingredients],
+      instructions: ing,
       vegetarian,
       vegan,
       glutenFree,
