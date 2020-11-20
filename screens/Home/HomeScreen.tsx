@@ -21,6 +21,7 @@ import { useIsFocused } from "@react-navigation/native";
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
   const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
@@ -33,15 +34,6 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
         : setFeed({});
     }
   };
-
-  useEffect(() => {
-    serveData();
-  }, [date, refresh]);
-
-  let focus = useIsFocused();
-  useEffect(() => {
-    if (focus) serveData();
-  }, [focus]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     if (event.type === "dismissed")
@@ -58,6 +50,20 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
     setActionBtn(false);
     navigation.navigate("recommendedDrawer");
   };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    serveData().then(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
+    serveData();
+  }, [date, refresh]);
+
+  let focus = useIsFocused();
+  useEffect(() => {
+    if (focus) serveData();
+  }, [focus]);
 
   if (feed === null)
     return (
@@ -95,7 +101,11 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
             style={{ shadowColor: "pink" }}
           />
         )}
-        <LayoutScroll>
+        <LayoutScroll
+          pullToRefresh
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        >
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <Text type="bodyBold" style={styles.title}>

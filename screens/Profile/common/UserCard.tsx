@@ -82,6 +82,8 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
     if (userName !== name && userName !== "") {
       const response = await server.updateProfile({ name: userName });
       response ? onUpdate() : setUserName(name);
+    } else {
+      setUserName(name);
     }
   };
 
@@ -114,7 +116,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
           autoFocus={edit}
           value={userName}
           editable={edit}
-          maxLength={64}
+          maxLength={50}
           style={edit ? styles.editInput : styles.nameInput}
           onChangeText={(val) => setUserName(val)}
         />
