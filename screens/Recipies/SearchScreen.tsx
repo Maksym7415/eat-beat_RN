@@ -112,25 +112,32 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     diets,
     mealTypes,
   }: recipeSettings) => {
-    setFilterConfig({
-      mealTypes: mealTypes
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(", "),
-      intolerances: intolerances
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(", "),
-      diets: diets
-        .filter((el) => el.isUsers)
-        .map((el) => el.name.toLowerCase())
-        .join(),
-    });
-    setFilter({
-      intolerances,
-      diets,
-      mealTypes,
-    });
+    setFetching((f) => ({ ...f, clicked: true, deactivate: true, }))
+    setTimeout(() => {
+      setFilterConfig({
+        mealTypes: mealTypes
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(", "),
+        intolerances: intolerances
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(", "),
+        diets: diets
+          .filter((el) => el.isUsers)
+          .map((el) => el.name.toLowerCase())
+          .join(),
+      });
+      setFilter({
+        intolerances,
+        diets,
+        mealTypes,
+      });
+      setFetching((f) => ({ ...f, clicked: false, deactivate: false, }))
+      setShowFilterModal(false)
+    }, 500)
+
+
   };
 
   const actionHandler = (id: string, name: string, data: object) => {
@@ -146,7 +153,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     await server.addCookedMeal({
-      meal: modalData.data,
+      mealId: modalData.data.id,
       quantity: servings,
       date: creationTime,
     });
@@ -204,8 +211,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     setFetching({ ...fetching, clicked: false, deactivate: false });
   };
 
-  const onPreview = (item) => {
+  const onPreview = async (item) => {
     const title = item.title;
+    const data = await server.getPreview(item.id);
     const {
       image,
       servings,
@@ -228,7 +236,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: [...nutrition.ingredients],
+      ingredients: data.code ? [...nutrition.ingredients] : [...data.nutrition.ingredients],
       instructions: ing,
       vegetarian,
       vegan,
@@ -276,7 +284,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       />
       <TouchableOpacity onPress={() => setShowFilterModal(true)}>
         <View style={styles.constraint}>
-          <Text>Constraints({constraintNumber()})</Text>
+          <Text>Filters({constraintNumber()})</Text>
           <Icon name="keyboard-arrow-right" size={22} color={Col.Ghost} />
         </View>
       </TouchableOpacity>
@@ -293,39 +301,39 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
               <Text>{feed}</Text>
             </View>
           ) : (
-            <>
-              <View style={styles.container}>
-                {feed.results?.map((item, index) => (
-                  <View key={`${index}`} style={styles.cardContainer}>
-                    <RecipeCard
-                      details={item}
-                      actionHandler={actionHandler}
-                      notShowScore={true}
-                      onPreview={() => onPreview(item)}
-                    />
-                  </View>
-                ))}
-              </View>
-              <View style={styles.button}>
-                <Button
-                  label="SHOW MORE"
-                  onPress={showMore}
-                  deactivate={
-                    feed.totalResults === feed.results.length
-                      ? true
-                      : fetching.deactivate
-                  }
-                  clicked={fetching.clicked}
-                  style={{ backgroundColor: Col.Recipes }}
-                />
-              </View>
-            </>
-          )
+              <>
+                <View style={styles.container}>
+                  {feed.results?.map((item, index) => (
+                    <View key={`${index}`} style={styles.cardContainer}>
+                      <RecipeCard
+                        details={item}
+                        actionHandler={actionHandler}
+                        notShowScore={true}
+                        onPreview={() => onPreview(item)}
+                      />
+                    </View>
+                  ))}
+                </View>
+                <View style={styles.button}>
+                  <Button
+                    label="SHOW MORE"
+                    onPress={showMore}
+                    deactivate={
+                      feed.totalResults === feed.results.length
+                        ? true
+                        : fetching.deactivate
+                    }
+                    clicked={fetching.clicked}
+                    style={{ backgroundColor: Col.Recipes }}
+                  />
+                </View>
+              </>
+            )
         ) : (
-          <View style={styles.loading}>
-            <ActivityIndicator size="large" color={Col.Black} />
-          </View>
-        )}
+            <View style={styles.loading}>
+              <ActivityIndicator size="large" color={Col.Black} />
+            </View>
+          )}
       </ScrollView>
     </View>
   );

@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useContext } from "react";
 import { StyleSheet, ScrollView, View, Alert } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
+import baseURL from '../../url';
 import {
   Fetching,
   Memo,
@@ -13,6 +14,7 @@ import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
+import Axios from "axios";
 
 interface ModalData {
   id: number;
@@ -71,7 +73,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     setFetching({ clicked: true, deactivate: true });
     await server.addCookedMeal({
-      meal: modalData.data,
+      mealId: modalData.data.id,
       quantity: servings,
       date: creationTime,
     });
@@ -81,8 +83,10 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     isFetching();
   };
 
-  const onPreview = (item) => {
+  const onPreview = async (item) => {
     const title = item.title;
+    const data = await server.getPreview(item.id);
+    if (data.code) return;
     const {
       image,
       servings,
@@ -92,7 +96,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       dairyFree,
       veryPopular,
       nutrition,
-      analyzedInstructions,
+      analyzedInstructions
     } = item;
     let ing = "";
     analyzedInstructions.forEach((el) => {
@@ -105,7 +109,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: [...nutrition.ingredients],
+      ingredients: data.code ? [...nutrition.ingredients] : [...data.nutrition.ingredients],
       instructions: ing,
       vegetarian,
       vegan,

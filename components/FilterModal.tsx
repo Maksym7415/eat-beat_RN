@@ -29,7 +29,6 @@ const FilterModal: FC<Props> = ({
 }) => {
   const saveFilterConfig = (value: recipeSettings) => {
     saveFilterData(value);
-    hideModal();
   };
 
   return (
@@ -44,7 +43,7 @@ const FilterModal: FC<Props> = ({
         <Text
           type="h6"
           style={styles.text}
-        >{`Constraint(${constaintNumber})`}</Text>
+        >{`Filters(${constaintNumber})`}</Text>
       </View>
       <UserSettings
         data={data}

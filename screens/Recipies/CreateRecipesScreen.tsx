@@ -144,7 +144,7 @@ export default function CreateRecipeScreen({ navigation }) {
       title: title.value,
       instruction: instruction.value,
       ingredientList: ingredients.value,
-      servings: +servings.value,
+      servings: servings.value === null ? '' : +servings.value,
     });
     if (ok) {
       let formData;
@@ -182,8 +182,8 @@ export default function CreateRecipeScreen({ navigation }) {
               {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
-                <Icon name={"camera-plus"} color={Col.White} size={58} />
-              )}
+                  <Icon name={"camera-plus"} color={Col.White} size={58} />
+                )}
             </View>
           </Pressable>
           <View style={{ padding: Spacing.medium }}>
