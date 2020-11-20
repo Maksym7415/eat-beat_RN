@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect, useContext } from "react";
 import { StyleSheet, ScrollView, View, Alert } from "react-native";
 import { Col, Spacing } from "../../components/Config";
 import RecipeCard from "../../components/custom/RecipeCard";
-import baseURL from '../../url';
+import baseURL from "../../url";
 import {
   Fetching,
   Memo,
@@ -56,8 +56,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);
     }
-    if (response?.status < 401) Alert.alert(`${response.status}`, `${response.data}`);
-
+    if (response?.status < 401)
+      Alert.alert(`${response.status}`, `${response.data}`);
   };
   const actionHandler = (id: string, name: string, data: object) => {
     setModalData({
@@ -96,12 +96,12 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       dairyFree,
       veryPopular,
       nutrition,
-      analyzedInstructions
+      analyzedInstructions,
     } = item;
     let ing = "";
     analyzedInstructions.forEach((el) => {
       el.steps.forEach((ele) => {
-        ing += "\n" + ele.step;
+        ing += "\n\n" + ele.step;
       });
     });
     const details = {
@@ -109,7 +109,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       name: modalData.name,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: data.code ? [...nutrition.ingredients] : [...data.nutrition.ingredients],
+      ingredients: data.code
+        ? [...nutrition.ingredients]
+        : [...data.nutrition.ingredients],
       instructions: ing,
       vegetarian,
       vegan,
@@ -169,16 +171,16 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       </View> */}
     </View>
   ) : (
-      <View style={styles.btnContainer}>
-        <Button
-          label="GET RECOMMENDATION"
-          onPress={serveData}
-          deactivate={fetching.deactivate}
-          clicked={fetching.clicked}
-          style={{ backgroundColor: Col.Recipes }}
-        />
-      </View>
-    );
+    <View style={styles.btnContainer}>
+      <Button
+        label="GET RECOMMENDATION"
+        onPress={serveData}
+        deactivate={fetching.deactivate}
+        clicked={fetching.clicked}
+        style={{ backgroundColor: Col.Recipes }}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

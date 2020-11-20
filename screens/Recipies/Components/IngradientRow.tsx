@@ -6,7 +6,6 @@ import Text from "../../../components/custom/Typography";
 
 export default function IngradientRow({
   name,
-  title,
   unit,
   uri,
   servings,

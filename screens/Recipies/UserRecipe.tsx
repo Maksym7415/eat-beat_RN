@@ -97,7 +97,7 @@ export default function UserRecipes({ navigation }) {
             }}
           />
           {feed ? (
-            feed.map(({ id, title, recipe, ...other }, index) => (
+            feed.map(({ id, title, recipe }, index) => (
               <View key={`${index + title}`} style={styles.cardContainer}>
                 <CreatedRecipeCard
                   addRecipe={handlerData}
@@ -111,8 +111,8 @@ export default function UserRecipes({ navigation }) {
               </View>
             ))
           ) : (
-              <View />
-            )}
+            <View />
+          )}
         </View>
       </LayoutScroll>
       <View style={styles.buttonContainer}>
@@ -124,10 +124,10 @@ export default function UserRecipes({ navigation }) {
       </View>
     </View>
   ) : (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={Col.Black} />
-      </View>
-    );
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

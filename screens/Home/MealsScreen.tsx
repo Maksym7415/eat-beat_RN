@@ -68,9 +68,12 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   };
 
   const onPreview = (item) => {
+    const instructions = item.instructions
+      ? item.instructions.replace(/(<([^>]+)>)/g, "\n")
+      : "";
     navigation.navigate("previewPage", {
       title: item.name,
-      details: item,
+      details: { ...item, instructions },
     });
   };
 

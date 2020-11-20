@@ -92,10 +92,9 @@ export default function IngradientScreen({ navigation }) {
                       checked={checked}
                       name={el.name}
                       unit={el.unit}
-                      title={el.unit}
                       servings={el.amount}
                       uri={el.image}
-                      weight={el.weightPerServing}
+                      weight={el.nutrition.weightPerServing}
                     />
                   );
                 })}
@@ -118,42 +117,42 @@ export default function IngradientScreen({ navigation }) {
             </View> */}
           </>
         ) : (
-            <View style={{ flexGrow: 1 }}>
-              <View style={styles.ingradientContainer}>
-                <Text style={styles.ingradientTitle}>Ingredients</Text>
-                <View style={styles.ingradientTextField}>
-                  <TextInput
-                    multiline
-                    value={value}
-                    onChangeText={changeHandler}
-                  />
-                </View>
-
-                <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
-              </View>
-              <View style={styles.buttonContainer}>
-                <Button
-                  label="SAVE CHANGES"
-                  onPress={saveChanges}
-                  style={{ backgroundColor: Col.Recipes }}
+          <View style={{ flexGrow: 1 }}>
+            <View style={styles.ingradientContainer}>
+              <Text style={styles.ingradientTitle}>Ingredients</Text>
+              <View style={styles.ingradientTextField}>
+                <TextInput
+                  multiline
+                  value={value}
+                  onChangeText={changeHandler}
                 />
-                {/* <Button
+              </View>
+
+              <Divider style={{ backgroundColor: "rgba(0,0,0,0.3)" }} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                label="SAVE CHANGES"
+                onPress={saveChanges}
+                style={{ backgroundColor: Col.Recipes }}
+              />
+              {/* <Button
                   label="CANCEL"
                   type="text"
                   onPress={() => toggleEdit(false)}
                   labelStyle={{ color: Col.Grey }}
                   style={{ marginVertical: 0 }}
                 /> */}
-              </View>
             </View>
-          )}
+          </View>
+        )}
       </View>
     </LayoutScroll>
   ) : (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={Col.Black} />
-      </View>
-    );
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
