@@ -39,10 +39,8 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
     if (event.type === "dismissed")
       return saveCal({ visible: false, date: date });
     if (selectedDate && selectedDate !== date) {
-      setFeed(null);
       const currentDate = selectedDate || date;
       saveCal({ visible: false, date: currentDate });
-      serveData();
     }
   };
 
@@ -65,7 +63,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
     if (focus) serveData();
   }, [focus]);
 
-  if (feed === null)
+  if (feed === null || refreshing)
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="small" color={Col.Black} />
