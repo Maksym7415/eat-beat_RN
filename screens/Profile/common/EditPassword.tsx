@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   editInput: {
     fontSize: 16,
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     color: Col.Black,
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   button: {
     width: 48,

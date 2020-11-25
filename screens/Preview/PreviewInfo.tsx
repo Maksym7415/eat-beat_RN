@@ -15,6 +15,7 @@ const empty = {
   image: "",
   name: "",
   servings: 0,
+  recipeServings: 0,
   nutrients: [],
   vegetarian: false,
   vegan: false,
@@ -38,6 +39,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
     image,
     name,
     servings,
+    recipeServings,
     nutrients,
     vegetarian,
     vegan,
@@ -72,6 +74,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
       if (newFeed.name !== "" || newFeed.title !== "") setFeed(newFeed);
     }
   }, [focus]);
+
   return Object.keys(feed).length ? (
     <LayoutScroll>
       <View style={styles.container}>
@@ -86,8 +89,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
                 style={styles.image}
               />
             ) : (
-                <View style={styles.image} />
-              )}
+              <View style={styles.image} />
+            )}
           </View>
           <View style={styles.nameContainer}>
             <View style={styles.catagoryContainer}>
@@ -107,7 +110,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
         <View>
           <Nutrient
             name={"Number of servings"}
-            currentValue={servings}
+            currentValue={recipeServings || servings}
             recipe={true}
             isUnit={true}
           />
@@ -148,10 +151,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
       </View>
     </LayoutScroll>
   ) : (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={Col.Black} />
-      </View>
-    );
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Col.Black} />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

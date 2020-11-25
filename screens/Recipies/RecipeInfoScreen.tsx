@@ -208,7 +208,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                     placeholder={"Add recipe title"}
                     style={{
                       borderColor: title.errors ? Col.Error : Col.Grey2,
-                      fontFamily: "Inter_500Medium",
+                      fontFamily: "Roboto_500Medium",
                       fontSize: 20,
                       color: Col.Dark,
                       borderBottomWidth: 1,
@@ -285,7 +285,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
                   placeholder={"Add recipe serving"}
                   style={{
                     borderColor: servings.errors ? Col.Error : Col.Grey2,
-                    fontFamily: "Inter_500Medium",
+                    fontFamily: "Roboto_500Medium",
                     fontSize: 20,
                     color: Col.Dark,
                     borderBottomWidth: 1,

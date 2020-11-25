@@ -48,14 +48,14 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   editInput: {
     fontSize: 16,
     borderBottomWidth: 1,
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   button: {
     width: 48,

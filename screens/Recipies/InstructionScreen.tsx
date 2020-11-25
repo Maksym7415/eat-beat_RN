@@ -52,7 +52,7 @@ export default function InstructionScreen({ navigation }) {
           <View style={styles.InstructionContainer}>
             <Text type="body2">
               {feed.instruction ||
-                "You have not added any instruction for your recipe yet"}
+                "You have not added any instructions for your recipe yet"}
             </Text>
           </View>
         ) : (
@@ -67,13 +67,6 @@ export default function InstructionScreen({ navigation }) {
                 onPress={saveChanges}
                 style={{ backgroundColor: Col.Recipes }}
               />
-              {/* <Button
-                label="CANCEL"
-                type="text"
-                onPress={() => toggleEdit(!editMode)}
-                style={{ marginVertical: 0 }}
-                labelStyle={{ color: Col.Grey }}
-              /> */}
             </View>
           </View>
         )}

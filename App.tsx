@@ -1,5 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import * as Font from "expo-font";
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold,
+} from "@expo-google-fonts/roboto";
 import server, { api } from "./server";
 import Splash from "./screens/SplashScreen";
 import { ProfileData } from "./components/Config";
@@ -7,26 +12,6 @@ import { AppContext } from "./components/AppContext";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
-// import RSAKey from 'react-native-rsa';
-// const bits = 1024;
-// const exponent = '10001'; // must be a string. This is hex string. decimal = 65537
-// var rsa = new RSAKey();
-// rsa.generate(bits, exponent);
-// var publicKey = rsa.getPublicString(); // return json encoded string
-// var privateKey = rsa.getPrivateString(); // return json encoded string
-// rsa.setPublicString(publicKey);
-// var originText = 'sample String Value';
-// var encrypted = rsa.encrypt(originText);
-// console.log(encrypted);
-// rsa.setPrivateString(privateKey);
-// var decrypted = rsa.decrypt(encrypted); // decrypted == originText
-// console.log(decrypted);
-
-let customFonts = {
-  Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
-  Inter_500Medium: require("./assets/font/Roboto-Medium.ttf"),
-  Inter_700Bold: require("./assets/font/Roboto-Bold.ttf"),
-};
 
 let flag = false;
 let failedQueue: object[] = [];
@@ -38,7 +23,6 @@ const processQueue = (error, token = null) => {
 };
 
 export default function App() {
-  AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
@@ -91,7 +75,7 @@ export default function App() {
 
   const loadUser = async () => {
     if (logged) return;
-    console.log("new log", new Date(), "\n");
+
     await server.setup();
     const token = await AsyncStorage.getItem("@token");
     const user = await AsyncStorage.getItem("@user");
@@ -99,7 +83,6 @@ export default function App() {
       ApiInterceptor();
       setLogged(true);
     }
-    await Font.loadAsync(customFonts);
     if (user) setUserData(JSON.parse(user));
     setLoaded(true);
   };
@@ -165,6 +148,12 @@ export default function App() {
     loadUser();
     loadDocs();
   }, [logged]);
+
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+    Roboto_700Bold,
+  });
 
   return (
     <AppContext.Provider value={appContext}>

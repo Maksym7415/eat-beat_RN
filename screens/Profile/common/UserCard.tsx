@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   nameInput: {
     color: Col.Black,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Roboto_500Medium",
     fontSize: 18,
   },
   editInput: {
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   emailInput: {
     fontFamily: Font,

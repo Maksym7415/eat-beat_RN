@@ -90,11 +90,7 @@ export default function IngradientScreen({ navigation }) {
                       key={index}
                       checkHandler={checkHandler}
                       checked={checked}
-                      name={el.name}
-                      unit={el.unit}
-                      servings={el.amount}
-                      uri={el.image}
-                      weight={el.nutrition.weightPerServing}
+                      item={el}
                     />
                   );
                 })}

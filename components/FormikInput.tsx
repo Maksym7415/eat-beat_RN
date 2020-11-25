@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { useFormikContext } from "formik";
 import { Ionicons as Icon } from "@expo/vector-icons";
@@ -7,9 +7,22 @@ import { Col, Spacing } from "./Config";
 import { InputProps } from "./interfaces";
 
 const formikInput: FC<InputProps> = ({ value, label, error, maxLength }) => {
-  const { handleChange, setFieldTouched, touched, errors } = useFormikContext();
+  const {
+    values,
+    handleChange,
+    setFieldTouched,
+    touched,
+    errors,
+  } = useFormikContext();
   const [hide, setHide] = useState(true);
   const [focus, setFocus] = useState(false);
+  const sercure = value === "password" && hide ? { secureTextEntry: true } : {};
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef?.current.setNativeProps({
+      style: { fontFamily: "Roboto_400Regular" },
+    });
+  }, [hide]);
   return (
     <>
       <View
@@ -20,6 +33,9 @@ const formikInput: FC<InputProps> = ({ value, label, error, maxLength }) => {
         ]}
       >
         <TextInput
+          value={values[value]}
+          ref={inputRef}
+          {...sercure}
           maxLength={maxLength}
           style={styles.input}
           onChangeText={handleChange(value)}
@@ -29,11 +45,10 @@ const formikInput: FC<InputProps> = ({ value, label, error, maxLength }) => {
           }}
           placeholder={label}
           onFocus={() => setFocus(true)}
-          secureTextEntry={value === "password" && hide}
         />
         {value === "password" ? (
           <Icon
-            name={hide ? "md-eye" : "md-eye-off"}
+            name={hide ? "md-eye-off" : "md-eye"}
             size={24}
             color={Col.Grey}
             onPress={() => setHide(!hide)}
@@ -61,7 +76,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: Col.Dark,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
     fontSize: 16,
   },
   borderEr: {

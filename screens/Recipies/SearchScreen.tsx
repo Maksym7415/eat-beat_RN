@@ -112,7 +112,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     diets,
     mealTypes,
   }: recipeSettings) => {
-    setFetching((f) => ({ ...f, clicked: true, deactivate: true, }))
+    setFetching((f) => ({ ...f, clicked: true, deactivate: true }));
     setTimeout(() => {
       setFilterConfig({
         mealTypes: mealTypes
@@ -133,11 +133,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         diets,
         mealTypes,
       });
-      setFetching((f) => ({ ...f, clicked: false, deactivate: false, }))
-      setShowFilterModal(false)
-    }, 500)
-
-
+      setFetching((f) => ({ ...f, clicked: false, deactivate: false }));
+      setShowFilterModal(false);
+    }, 500);
   };
 
   const actionHandler = (id: string, name: string, data: object) => {
@@ -233,10 +231,12 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     });
     const details = {
       image,
-      name: modalData.name,
+      name: item.title,
       servings,
       nutrients: [...nutrition.nutrients],
-      ingredients: data.code ? [...nutrition.ingredients] : [...data.nutrition.ingredients],
+      ingredients: data.code
+        ? [...nutrition.ingredients]
+        : [...data.nutrition.ingredients],
       instructions: ing,
       vegetarian,
       vegan,
@@ -301,39 +301,39 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
               <Text>{feed}</Text>
             </View>
           ) : (
-              <>
-                <View style={styles.container}>
-                  {feed.results?.map((item, index) => (
-                    <View key={`${index}`} style={styles.cardContainer}>
-                      <RecipeCard
-                        details={item}
-                        actionHandler={actionHandler}
-                        notShowScore={true}
-                        onPreview={() => onPreview(item)}
-                      />
-                    </View>
-                  ))}
-                </View>
-                <View style={styles.button}>
-                  <Button
-                    label="SHOW MORE"
-                    onPress={showMore}
-                    deactivate={
-                      feed.totalResults === feed.results.length
-                        ? true
-                        : fetching.deactivate
-                    }
-                    clicked={fetching.clicked}
-                    style={{ backgroundColor: Col.Recipes }}
-                  />
-                </View>
-              </>
-            )
+            <>
+              <View style={styles.container}>
+                {feed.results?.map((item, index) => (
+                  <View key={`${index}`} style={styles.cardContainer}>
+                    <RecipeCard
+                      details={item}
+                      actionHandler={actionHandler}
+                      notShowScore={true}
+                      onPreview={() => onPreview(item)}
+                    />
+                  </View>
+                ))}
+              </View>
+              <View style={styles.button}>
+                <Button
+                  label="SHOW MORE"
+                  onPress={showMore}
+                  deactivate={
+                    feed.totalResults === feed.results.length
+                      ? true
+                      : fetching.deactivate
+                  }
+                  clicked={fetching.clicked}
+                  style={{ backgroundColor: Col.Recipes }}
+                />
+              </View>
+            </>
+          )
         ) : (
-            <View style={styles.loading}>
-              <ActivityIndicator size="large" color={Col.Black} />
-            </View>
-          )}
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color={Col.Black} />
+          </View>
+        )}
       </ScrollView>
     </View>
   );

@@ -30,6 +30,8 @@ interface Props {
   hideModal: () => void;
   data: dataProps;
   blend?: string;
+  clicked?: boolean;
+  date?: Date;
 }
 
 const newEditModal: FC<Props> = ({

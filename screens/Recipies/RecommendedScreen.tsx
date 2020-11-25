@@ -106,7 +106,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     });
     const details = {
       image,
-      name: modalData.name,
+      name: item.title,
       servings,
       nutrients: [...nutrition.nutrients],
       ingredients: data.code

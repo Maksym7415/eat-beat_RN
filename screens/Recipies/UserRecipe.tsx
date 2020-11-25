@@ -1,11 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { Fetching, Memo } from "../../components/interfaces";
@@ -17,8 +12,12 @@ import { baseURL } from "../../url";
 import EditModal from "../../components/newEditModal";
 
 interface ModalData {
+  id: number;
+  name: string;
+  servings: number;
+  modalVisible: boolean;
   creationTime: number;
-  meal: object;
+  data: object;
 }
 
 export default function UserRecipes({ navigation }) {
@@ -42,11 +41,12 @@ export default function UserRecipes({ navigation }) {
 
   const handlerData = (recipe, id) => {
     setModalData({
-      meal: recipe,
       id,
+      name: recipe.title,
       creationTime: new Date().getTime(),
-      servings: recipe.servings,
+      servings: 1,
       modalVisible: true,
+      data: recipe,
     });
   };
 

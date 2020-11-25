@@ -23,6 +23,8 @@ const Chart: FC = ({ data }) => {
       withHorizontalLines={false}
       withVerticalLines={false}
       onDataPointClick={({ value }) => console.log(value)}
+      fromZero
+      yAxisInterval={1}
       chartConfig={{
         backgroundGradientFrom: Col.White,
         backgroundGradientTo: Col.White,

@@ -15,13 +15,21 @@ interface Props {
   recipe: boolean;
   image: string;
   title: string;
-  addRecipe: (data: any) => void
-  recipeData: object
+  addRecipe: (recipeData: object, id: number) => void;
+  recipeData: object;
   actionHandler: (props: Props) => void;
 }
 
 const CreatedRecipeCard: FC<Props> = (props) => {
-  const { id, recipe, image, title, actionHandler, recipeData, addRecipe } = props;
+  const {
+    id,
+    recipe,
+    image,
+    title,
+    actionHandler,
+    recipeData,
+    addRecipe,
+  } = props;
 
   return (
     <TouchableOpacity onPress={() => actionHandler(props)}>

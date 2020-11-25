@@ -135,7 +135,7 @@ const DrawerLayout = (props) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ color: Col.Inactive }}>v 0.2.0</Text>
+          <Text style={{ color: Col.Inactive }}>v 0.2.1</Text>
         </View>
       </ScrollView>
     );
