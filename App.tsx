@@ -12,6 +12,7 @@ import { AppContext } from "./components/AppContext";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
+import pingServer from './utils/pingServer';
 
 let flag = false;
 let failedQueue: object[] = [];
@@ -154,6 +155,11 @@ export default function App() {
     Roboto_500Medium,
     Roboto_700Bold,
   });
+
+  useEffect(() => {
+    pingServer();
+  }, [])
+
 
   return (
     <AppContext.Provider value={appContext}>
