@@ -165,8 +165,11 @@ export default function App() {
   useEffect(() => {
     loadUser();
     loadDocs();
-    pingServer();
   }, [logged]);
+
+  useEffect(() => {
+    pingServer();
+  }, [])
 
   return (
     <AppContext.Provider value={appContext}>
