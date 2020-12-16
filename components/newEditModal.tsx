@@ -67,8 +67,9 @@ const newEditModal: FC<Props> = ({
     const times = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
       .split("/")
       .map((el) => (el.length === 1 ? "0" + el : el))
-      .join("/");
-    const format = new Date(times + " " + hours).getTime();
+      .join("-");
+    const format = times + " " + hours;
+    console.log(format)
     setData(id, {
       creationTime: format,
       servings: Number(newTime.portion),

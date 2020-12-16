@@ -42,7 +42,8 @@ const CookedMealCard: FC<Props> = ({
   onDelete,
 }) => {
   const { id, name, image, creationTime, servings } = item;
-  const time = getTime(creationTime);
+  const [date, time] = creationTime.split(' ');
+
   return (
     <View style={styles.container}>
       <View
@@ -66,7 +67,7 @@ const CookedMealCard: FC<Props> = ({
           <Divider styler={styles.verticalDivider} />
           <Icon
             style={{ alignSelf: "flex-end" }}
-            onPress={() => actionHandler({ id, name, servings, creationTime })}
+            onPress={() => actionHandler({ id, name, servings, creationTime: new Date(`${date.replaceAll('-', '/')} ${time}`)})}
             name="pencil"
             size={24}
             color={Col.Grey5}

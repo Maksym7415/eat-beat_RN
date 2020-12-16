@@ -14,7 +14,7 @@ import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import Axios from "axios";
+import { dateFormat } from '../../utils/date';
 
 interface ModalData {
   id: number;
@@ -72,6 +72,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     setFetching({ clicked: true, deactivate: true });
+    console.log(creationTime)
     await server.addCookedMeal({
       mealId: modalData.data.id,
       quantity: servings,
