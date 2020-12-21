@@ -2737,6 +2737,11 @@ expo-permissions@~9.3.0:
   resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-9.3.0.tgz#b90c7e9e411d306c1c7ba2bae18d5c53c201affd"
   integrity sha512-ylSJZVvEGJVFTKsFrUL2S6gCvFt+/o8TJ3xT4WaMjHe2/2Z7R8ng6NR47Kt54t7XBIV/SZ7DIY9uRiR7TPuNYA==
 
+expo-secure-store@^9.2.0:
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-9.3.0.tgz#b716d5d115cc50a34037d1afef84fe4b8ea0745c"
+  integrity sha512-dNhKcoUUn+1kmEfFVxSU7h+YsqODqlExZQJcQgxgeiuCeeDvJWkE10t3jjrO6aNfrdM5i/X2l3oh401EDslWsQ==
+
 expo-splash-screen@^0.6.1:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.6.2.tgz#2be7fc28ad62549e870c69f1fe133ebe756c524f"
@@ -4947,6 +4952,16 @@ react-native-reanimated@~1.13.0:
   integrity sha512-3sF46jts9MbktgIasf0sTM8uhOYO5a5Q3YyQ4X1jjSE82n/fY2nW3XTFsLGfLEpK2ir4XSDhQWVgFHazaXZTww==
   dependencies:
     fbjs "^1.0.0"
+
+react-native-rsa-native@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-rsa-native/-/react-native-rsa-native-2.0.3.tgz#a028fe5ddedcd50e792c0bd0f04c48f97a084d64"
+  integrity sha512-3M9U+cBMIYdvYAHImnIn1ODC948gi7A0lT9CNK3AUllD6qzRV9x+9RgPqPtAJfuC3fw6KyhP30zXaIKfAZGBHA==
+
+react-native-rsa@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-rsa/-/react-native-rsa-0.0.3.tgz#c3b5b85278e8a1a3ef22b4206a7d6aa04a26d99b"
+  integrity sha1-w7W4UnjooaPvIrQgan1qoEom2Zs=
 
 react-native-safe-area-context@3.1.4:
   version "3.1.4"

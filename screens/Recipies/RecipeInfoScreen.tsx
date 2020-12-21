@@ -44,14 +44,16 @@ const config = {
   servings: {
     id: 1,
     title: "servings",
+    minLength: 1,
     maxLength: 1000,
     value: null,
-    required: true,
     type: "number",
+    integer: true,
     errors: {
-      maxLegnth: "error message for max length",
+      maxLength: "should be smaller than 1000",
+      minLength: "should be bigger than 0",
       isNumber: "should be number",
-      value: "This field can not be empty",
+      integer: "should not contain decimals",
     },
   },
 };

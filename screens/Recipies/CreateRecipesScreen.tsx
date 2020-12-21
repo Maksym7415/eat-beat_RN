@@ -56,10 +56,10 @@ const config = {
     type: "number",
     integer: true,
     errors: {
-      maxLength: "should be bigger then",
-      minLength: "should be bigger then",
+      maxLength: "should be smaller than 1000",
+      minLength: "should be bigger than 0",
       isNumber: "should be number",
-      integer: 'should be a integer number',
+      integer: "should not contain decimals",
     },
   },
   ingredients: {
@@ -100,7 +100,6 @@ export default function CreateRecipeScreen({ navigation }) {
     loading: false,
     disabled: false,
   });
-
   const checkPermission = async () => {
     const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
     if (granted) {
@@ -148,7 +147,7 @@ export default function CreateRecipeScreen({ navigation }) {
       title: title.value,
       instruction: instruction.value,
       ingredientList: ingredients.value,
-      servings: servings.value === null ? '' : +servings.value,
+      servings: servings.value === null ? "" : +servings.value,
     });
     if (ok) {
       let formData;
@@ -186,8 +185,8 @@ export default function CreateRecipeScreen({ navigation }) {
               {image ? (
                 <Image source={{ uri: image }} style={styles.image} />
               ) : (
-                  <Icon name={"camera-plus"} color={Col.White} size={58} />
-                )}
+                <Icon name={"camera-plus"} color={Col.White} size={58} />
+              )}
             </View>
           </Pressable>
           <View style={{ padding: Spacing.medium }}>
