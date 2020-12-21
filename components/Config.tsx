@@ -1,3 +1,5 @@
+export const appVersion = "v 0.2.2";
+
 export const Col = {
   Main: "#F29B27",
   Black: "#333942",

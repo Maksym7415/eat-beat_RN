@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { IconMaker } from "../../components/SvgMaker";
-import { Col, Spacing } from "../../components/Config";
+import { Col, Spacing, appVersion } from "../../components/Config";
 
 interface ItemProps {
   icon: string;
@@ -135,7 +135,7 @@ const DrawerLayout = (props) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ color: Col.Inactive }}>v 0.2.1</Text>
+          <Text style={{ color: Col.Inactive }}>{appVersion}</Text>
         </View>
       </ScrollView>
     );

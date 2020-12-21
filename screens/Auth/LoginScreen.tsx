@@ -5,7 +5,7 @@ import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
 import { AppContext } from "../../components/AppContext";
-import { Col, Spacing } from "../../components/Config";
+import { appVersion, Col, Spacing } from "../../components/Config";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
@@ -46,7 +46,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           opacity: 0.5,
         }}
       >
-        v 0.2.1
+        {appVersion}
       </Text>
       <Logo />
       <View style={styles.boxContainer}>
