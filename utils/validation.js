@@ -31,8 +31,8 @@ export default function useValidation(params) {
     }
   
     function maxLengthValidation(field) {
-      if (field?.maxLength < field.value?.length) {
-        field = { ...field, errors: `${field.errors.maxLength} ${field.maxLength}` };
+      if (field?.maxLength < field?.value) {
+        field = { ...field, errors: `${field.errors.maxLength} ${field.value}` };
         return field;
       }
       field = { ...field, errors: '' }
@@ -40,8 +40,8 @@ export default function useValidation(params) {
     }
   
     function minLengthValidation(field) {
-      if (field?.minLength > field.value?.length) {
-        field = { ...field, errors: `${field?.errors?.minLength} ${field?.minLength}` };
+      if (field?.minLength > field?.value) {
+        field = { ...field, errors: `${field?.errors?.minLength} ${field?.value}` };
         return field;
       }
       field = { ...field, errors: '' }
@@ -57,13 +57,19 @@ export default function useValidation(params) {
           field = { ...field, errors: field.errors.isNumber };
           return field;
         }
-  
-        if (maxLengthValidation(field).errors) {
-          return maxLengthValidation(field);
+        if(field.integer) {
+          if(field.value % 1 === 0) {
+            field = { ...field, errors: '' }
+            return field;
+          }
+          return field = { ...field, errors: `"${field?.value}" ${field?.errors?.integer}` };
+        }
+        if (maxLengthValidation(Number(field)).errors) {
+          return maxLengthValidation(Number(field));
         }
   
-        if (minLengthValidation(field).errors) {
-          return minLengthValidation(field);
+        if (minLengthValidation(Number(field)).errors) {
+          return minLengthValidation(Number(field));
         }
       }
   

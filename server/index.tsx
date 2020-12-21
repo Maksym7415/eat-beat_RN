@@ -355,14 +355,17 @@ const updateProfile = async (data: object) => {
 
 const changePassword = async (options: changePassProps) => {
   const address = apiConfig.put.password;
-  const response = await api.patch(address, options);
+  const encrypted = await encryption(options)
+  const response = await api.patch(address, encrypted);
   if (!response.ok) logError(response);
   return response;
 };
 
 const updatePassword = async (options: updatePassProps) => {
   const address = apiConfig.post.updatePassword;
-  const response = await api.post(address, options);
+  const encrypted = await encryption(options);
+  const response = await api.post(address, encrypted);
+  console.log(response)
   if (!response.ok) logError(response);
   return response.ok;
 };

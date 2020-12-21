@@ -50,12 +50,16 @@ const config = {
   servings: {
     id: 1,
     title: "servings",
+    minLength: 1,
     maxLength: 1000,
     value: null,
     type: "number",
+    integer: true,
     errors: {
-      maxLegnth: "error message for max length",
+      maxLength: "should be bigger then",
+      minLength: "should be bigger then",
       isNumber: "should be number",
+      integer: 'should be a integer number',
     },
   },
   ingredients: {
@@ -65,7 +69,7 @@ const config = {
     required: true,
     value: null,
     errors: {
-      maxLegnth: "error message for max length",
+      maxLength: "error message for max length",
       value: "This field can not be empty",
     },
   },
@@ -75,7 +79,7 @@ const config = {
     maxLength: 10000,
     value: null,
     errors: {
-      maxLegnth: "error message for max length",
+      maxLength: "error message for max length",
     },
   },
 };
