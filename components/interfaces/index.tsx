@@ -34,9 +34,11 @@ export interface UserData {
 
 export interface NavProps {
   navigation: NavigationProps;
+  restaurants: boolean
   route: {
     params?: any;
   };
+  title: string
 }
 
 export interface Cal {

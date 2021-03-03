@@ -31,6 +31,7 @@ const apiConfig: apiProps = {
     userAcitvities: "/main/user-activities",
     resendVerificationCode: "/auth/resend-verification-code?email=",
     resendResetPasswordCode: "/auth/resend-reset-password-code?email=",
+    recommendRestaurant: "/restaurants/recommend-dish?date="
   },
   post: {
     signIn: "/auth/sign-in",
@@ -138,6 +139,11 @@ const logError = async ({
   headers,
   data,
 }: errorProps) => {
+  console.log(problem,
+    config,
+    status,
+    headers,
+    data,)
   if (status < 401) Alert.alert("error", data?.message);
   //console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
@@ -287,6 +293,17 @@ const addRecipeAvatar = async (formData: FormData, id: number) => {
   if (!response.ok) logError(response);
   return response;
 };
+
+const getRecommendedRestaurant = async (date: Date) => {
+  const address = apiConfig.get.recommendRestaurant + getCalendar(date);
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const addRestaurantsMeal = async () => {
+  console.log('addRestaurantsMeal')
+}
 
 const signIn = async (payload: AuthProps) => {
   const encrypted = await encryption(payload)
@@ -463,4 +480,6 @@ export default {
   refreshToken,
   addRecipeToMeals,
   getPreview,
+  getRecommendedRestaurant,
+  addRestaurantsMeal
 };

@@ -17,6 +17,7 @@ export interface apiProps {
     userAcitvities: string
     resendVerificationCode: string
     resendResetPasswordCode: string
+    recommendRestaurant: string
   };
   post: {
     addCookedMeal: string;

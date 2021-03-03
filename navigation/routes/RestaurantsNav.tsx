@@ -7,15 +7,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
-// import RecommendedScreen from "../../screens/Recipies/RecommendedScreen";
-import RecommendedScreen from '../../components/custom/RecommendedScreen';
+import RecommendFromRestaurantsScreen from "../../screens/Restaurants/RecommendFromRestaurants";
+import RecommendScreen from '../../components/custom/RecommendedScreen';
 import SearchScreen from "../../screens/Recipies/SearchScreen";
 import UserRecipes from "../../screens/Recipies/UserRecipe";
 import NewRecipe from "../../screens/Recipies/CreateRecipesScreen";
-import RecipeInfoScreen from "../../screens/Recipies/RecipeInfoScreen";
-import IngradientScreen from "../../screens/Recipies/IngradientsScreen";
-import InstructionScreen from "../../screens/Recipies/InstructionScreen";
 import PreviewRecipeTopNavigator from "./PreviewTab";
+import { View, Text } from 'react-native'
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -29,14 +27,14 @@ const EditRecipeTopNAvigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Recipes,
+        backgroundColor: Col.Restaurants,
       },
     }}
     initialRouteName="info"
   >
-    <EditTopTabs.Screen name="info" component={RecipeInfoScreen} />
-    <EditTopTabs.Screen name="ingredients" component={IngradientScreen} />
-    <EditTopTabs.Screen name="instruction" component={InstructionScreen} />
+    <EditTopTabs.Screen name="recommend" component={() => <Text>recommend</Text>} />
+    <EditTopTabs.Screen name="ingredients" component={() => <Text>page 2</Text>} />
+    <EditTopTabs.Screen name="instruction" component={() => <Text>page 3</Text>} />
   </EditTopTabs.Navigator>
 );
 
@@ -48,29 +46,29 @@ const RecipesTopNavigator = () => (
         elevation: 0,
       },
       indicatorStyle: {
-        backgroundColor: Col.Recipes,
+        backgroundColor: Col.Restaurants,
       },
       scrollEnabled: true,
       allowFontScaling: true,
     }}
     initialRouteName="recommended"
   >
-    <TopTabs.Screen name="recommended"> 
-      {(props) => <RecommendedScreen {...props} title={'recipes'}/>}
+    <TopTabs.Screen name="recommended">
+        {(props) => <RecommendScreen {...props} title='restaurants'/>}
     </TopTabs.Screen>
-    <TopTabs.Screen name="search" component={SearchScreen} />
+    <TopTabs.Screen name="search" component={() => <Text>page 4</Text>} />
     <TopTabs.Screen
       name="user_recipies"
-      component={UserRecipes}
+      component={() => <Text>page 5</Text>}
       options={{ title: "my recipes" }}
     />
   </TopTabs.Navigator>
 );
 
-export const RecommendedStack = () => {
+export const RestaurantsStack = () => {
   const { toggleEdit, editMode } = useContext(AppContext);
   return (
-    <Stack.Navigator initialRouteName="recommendedPage">
+    <Stack.Navigator initialRouteName="restaurantsPage">
       <Stack.Screen
         options={({ navigation, ...other }) => {
           const { showModal } = useContext(AppContext);
@@ -97,17 +95,17 @@ export const RecommendedStack = () => {
               }
               return "";
             },
-            title: "Recipes",
+            title: "Restaurants",
             headerStyle: {
               elevation: 1,
-              backgroundColor: Col.Recipes,
+              backgroundColor: Col.Restaurants,
             },
             headerTitleStyle: {
               color: "white",
             },
           };
         }}
-        name="recommendedPage"
+        name="restaurantsPage"
         component={RecipesTopNavigator}
       />
       <Stack.Screen
@@ -117,7 +115,7 @@ export const RecommendedStack = () => {
           //headerShown: false,
           headerStyle: {
             elevation: 0,
-            backgroundColor: Col.Recipes,
+            backgroundColor: Col.Restaurants,
           },
           headerTitleStyle: {
             color: "white",
@@ -132,7 +130,7 @@ export const RecommendedStack = () => {
             />
           ),
         })}
-        component={NewRecipe}
+        component={() => <Text>page 6</Text>}
       />
       <Stack.Screen
         name="user_recipe"
@@ -141,7 +139,7 @@ export const RecommendedStack = () => {
             title: route.params.title,
             headerStyle: {
               elevation: 0,
-              backgroundColor: Col.Recipes,
+              backgroundColor: Col.Restaurants,
             },
             headerTitleStyle: {
               color: "white",
@@ -182,7 +180,7 @@ export const RecommendedStack = () => {
           title: route.params?.title || "Preview",
           headerStyle: {
             elevation: 1,
-            backgroundColor: Col.Recipes,
+            backgroundColor: Col.Restaurants,
           },
           headerTitleStyle: {
             color: "white",

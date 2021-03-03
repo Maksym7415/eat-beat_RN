@@ -14,6 +14,7 @@ import ResetSuccess from "../screens/Auth/ResetSuccessScreen";
 import { MainStack } from "./routes/FoodDiaryNav";
 import { RecommendedStack } from "./routes/RecipesNav";
 import { ProfileStack } from "./routes/ProfileNav";
+import { RestaurantsStack } from "./routes/RestaurantsNav";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -60,6 +61,11 @@ export const DrawerNavigator = () => {
           options={{ title: "Profile" }}
           name="profileDrawer"
           component={ProfileStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Restaurants" }}
+          name="restaurants"
+          component={RestaurantsStack}
         />
       </Drawer.Navigator>
     </NavigationContainer>

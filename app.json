@@ -22,7 +22,10 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.prod.eatbeat"
+      "package": "com.prod.eatbeat",
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyDXUf622T_5pXNoTVXrOC0VIbt3x0iCNho" }   
+     }
     }
   }
 }

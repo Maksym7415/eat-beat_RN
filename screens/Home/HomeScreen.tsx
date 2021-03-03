@@ -18,6 +18,11 @@ import ActionButton from "./common/ActionButton";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import { useIsFocused } from "@react-navigation/native";
 
+const recommendScreens = {
+  0: 'recommendedDrawer',
+  1: 'restaurants'
+}
+
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
@@ -46,7 +51,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
 
   const addRecommended = (value: number) => {
     setActionBtn(false);
-    navigation.navigate("recommendedDrawer");
+    navigation.navigate(recommendScreens[value]);
   };
 
   const onRefresh = async () => {

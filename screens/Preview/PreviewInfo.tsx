@@ -71,6 +71,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
   useEffect(() => {
     if (focus) {
       const newFeed = getInfo();
+      // console.log(newFeed)
       if (newFeed.name !== "" || newFeed.title !== "") setFeed(newFeed);
     }
   }, [focus]);

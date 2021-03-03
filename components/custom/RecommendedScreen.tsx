@@ -1,8 +1,7 @@
 import React, { FC, useState, useEffect, useContext } from "react";
-import { StyleSheet, ScrollView, View, Alert } from "react-native";
-import { Col, Spacing } from "../../components/Config";
-import RecipeCard from "../../components/custom/RecipeCard";
-import baseURL from "../../url";
+import { StyleSheet, ScrollView, View, Alert, Text } from "react-native";
+import { Col, Spacing, Typ } from "../../components/Config";
+import RecipeCard from "./RecipeCard";
 import {
   Fetching,
   Memo,
@@ -14,7 +13,52 @@ import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import { dateFormat } from '../../utils/date';
+import { resolve } from "path";
+
+interface Navigation {
+    title: string
+    page: string
+}
+
+interface RecommendedScreens {
+    [key:string]: {
+        get: Function
+        add: Function
+        preview: Function
+        navigation: Array<Navigation>
+        color: string
+    }
+}
+
+const restrauntsPreview = (id, item) => new Promise((resolve) => resolve(item));
+            
+    
+
+
+const recommendedScreens: RecommendedScreens = {
+    'recipes': {
+        get: server.getRecommendedMeals,
+        add: server.addCookedMeal,
+        preview: server.getPreview,
+        navigation: [{
+            title: 'previewRecommendedPage',
+            page: 'recipes'
+        }],
+        color: Col.Recipes
+
+    },
+    'restaurants': {
+        get: server.getRecommendedRestaurant,
+        add: server.addRestaurantsMeal,
+        preview: restrauntsPreview,
+        navigation: [{
+            title: 'previewRecommendedPage',
+            page: 'restaurant'
+        }],
+        color: Col.Restaurants
+
+    }
+}
 
 interface ModalData {
   id: number;
@@ -32,14 +76,14 @@ interface AddMealsProps {
 
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 let DontRefresh = false;
-const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
+const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title, ...other }) => {
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
     deactivate: false,
   });
   const { date } = calendar;
-  const [feed, setFeed] = useState<RecommendedMeals[]>([]);
+  const [feed, setFeed] = useState<RecommendedMeals[] | null>(null);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
     name: "",
@@ -51,13 +95,16 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
 
   const serveData = async () => {
     setFetching({ clicked: true, deactivate: true });
-    const response = await server.getRecommendedMeals(date);
+    const response = await recommendedScreens[title].get(date);
     if (response.ok) {
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);
     }
     if (response?.status < 401)
       Alert.alert(`${response.status}`, `${response.data}`);
+    
+
+   setFetching({ clicked: true, deactivate: true });
   };
   const actionHandler = (id: string, name: string, data: object) => {
     setModalData({
@@ -72,8 +119,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     setFetching({ clicked: true, deactivate: true });
-    console.log(creationTime)
-    await server.addCookedMeal({
+    await recommendedScreens[title].add({
       mealId: modalData.data.id,
       quantity: servings,
       date: creationTime,
@@ -85,8 +131,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
   };
 
   const onPreview = async (item) => {
-    const title = item.title;
-    const data = await server.getPreview(item.id);
+    const data = await recommendedScreens[title].preview(item.id, item);
+    console.log(data)
     if (data.code) return;
     const {
       image,
@@ -100,19 +146,21 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       analyzedInstructions,
     } = item;
     let ing = "";
-    analyzedInstructions.forEach((el) => {
-      el.steps.forEach((ele) => {
-        ing += "\n\n" + ele.step;
-      });
-    });
+    if(title === 'recipes') {
+        analyzedInstructions.forEach((el) => {
+            el.steps.forEach((ele) => {
+              ing += "\n\n" + ele.step;
+            });
+        });
+    }
     const details = {
-      image,
+      image: image || 'https://media.wired.com/photos/5b493b6b0ea5ef37fa24f6f6/125:94/w_2393,h_1800,c_limit/meat-80049790.jpg',
       name: item.title,
       servings,
-      nutrients: [...nutrition.nutrients],
-      ingredients: data.code
+      nutrients: title === 'recipes' ? [...nutrition.nutrients] : Object.keys(item.nutritions).map((el) => ({amount: item.nutritions[el], title: el})),
+      ingredients: title === 'recipes' ? data.code
         ? [...nutrition.ingredients]
-        : [...data.nutrition.ingredients],
+        : [...data.nutrition.ingredients] : null,
       instructions: ing,
       vegetarian,
       vegan,
@@ -120,9 +168,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       dairyFree,
       veryPopular,
     };
-    navigation.navigate("previewRecommendedPage", {
-      title,
-      details,
+    navigation.navigate(recommendedScreens[title].navigation[0].title, {
+      title: item.title,
+      details: {...details, page: recommendedScreens[title].navigation[0].page},
     });
     DontRefresh = true;
   };
@@ -135,7 +183,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
     }
   }, [focus]);
 
-  return feed.length ? (
+  return feed?.length ? (
     <View style={styles.canvas}>
       <EditModal
         clicked={fetching.clicked}
@@ -172,15 +220,22 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, ...other }) => {
       </View> */}
     </View>
   ) : (
-    <View style={styles.btnContainer}>
-      <Button
-        label="GET RECOMMENDATION"
-        onPress={serveData}
-        deactivate={fetching.deactivate}
-        clicked={fetching.clicked}
-        style={{ backgroundColor: Col.Recipes }}
-      />
+    <>
+    <View style={styles.noRecommendationContainer}>
+        <Text style={styles.noRecommendationText}>
+            No recommendations
+        </Text>
     </View>
+        <View style={styles.btnContainer}>
+        <Button
+            label="GET RECOMMENDATION"
+            onPress={serveData}
+            deactivate={fetching.deactivate}
+            clicked={fetching.clicked}
+            style={{ backgroundColor: recommendedScreens[title].color }}
+        />
+        </View>
+    </>
   );
 };
 
@@ -214,6 +269,17 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: Spacing.medium,
   },
+  noRecommendationContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: 'center',
+  },
+  noRecommendationText: {
+    fontWeight: '500',
+    color: Col.Dark,
+    fontSize: Typ.H3,
+    lineHeight: Typ.H2,
+  }
 });
 
 export default RecommendedScreen;
