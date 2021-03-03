@@ -38,7 +38,7 @@ export interface NavProps {
   route: {
     params?: any;
   };
-  title: string
+  page: string
 }
 
 export interface Cal {

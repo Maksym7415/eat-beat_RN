@@ -10,6 +10,7 @@ import PreviewInstructions from "../../screens/Preview/PreviewInstructions";
 const TopTabs = createMaterialTopTabNavigator();
 
 const PreviewRecipeTopNavigator = (props) => {
+  const page = props.route.params.details.page
   const phoneWidth = Dimensions.get('window').width;
 return (
   <TopTabs.Navigator
@@ -19,7 +20,7 @@ return (
         elevation: 0,
       },
       tabStyle: {
-        width: props.route.params.details.page === 'recipes' ? phoneWidth/3 : phoneWidth/2,
+        width: page === "recipes" ? phoneWidth/3 : phoneWidth/2,
       },
       indicatorStyle: {
         backgroundColor: Col.Recipes,
@@ -31,10 +32,11 @@ return (
   >
     <TopTabs.Screen
       name="previewInfo"
-      component={PreviewInfo}
       options={{ title: "info" }}
-    />
-    {props.route.params.details.page === 'recipes' ? <TopTabs.Screen
+    >
+      {(tabsProps) => <PreviewInfo {...tabsProps} page={page}/>}
+    </TopTabs.Screen>
+    {props.route.params.details.page === "recipes" ? <TopTabs.Screen
       name="previewIngredients"
       component={PreviewIngredients}
       options={{ title: "ingredients" }}
@@ -42,7 +44,7 @@ return (
     <TopTabs.Screen
       name="previewInstruction"
       component={PreviewInstructions}
-      options={{ title: "instruction" }}
+      options={{ title: page === "recipes" ? "instruction" : "description" }}
     />
   </TopTabs.Navigator>
 )};

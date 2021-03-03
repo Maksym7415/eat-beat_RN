@@ -23,7 +23,7 @@ const empty = {
   dairyFree: false,
   veryPopular: false,
 };
-const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
+const PreviewInfo: FC<NavProps> = ({ navigation, route, page }) => {
   const getInfo = () => {
     const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
     const Page =
@@ -46,6 +46,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
     glutenFree,
     dairyFree,
     veryPopular,
+    price
   } = feed;
   const getImage = (
     vegetarian: boolean,
@@ -110,8 +111,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route }) => {
         </View>
         <View>
           <Nutrient
-            name={"Number of servings"}
-            currentValue={recipeServings || servings}
+            name={page === 'recipes' ? "Number of servings" : 'Price'}
+            currentValue={page === 'recipes' ? (recipeServings || servings) : `${price} €`}
             recipe={true}
             isUnit={true}
           />

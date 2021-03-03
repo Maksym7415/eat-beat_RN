@@ -132,7 +132,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
 
   const onPreview = async (item) => {
     const data = await recommendedScreens[title].preview(item.id, item);
-    console.log(data)
     if (data.code) return;
     const {
       image,
@@ -144,6 +143,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
       veryPopular,
       nutrition,
       analyzedInstructions,
+      price,
+      description
     } = item;
     let ing = "";
     if(title === 'recipes') {
@@ -161,12 +162,13 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
       ingredients: title === 'recipes' ? data.code
         ? [...nutrition.ingredients]
         : [...data.nutrition.ingredients] : null,
-      instructions: ing,
+      instructions: ing || description,
       vegetarian,
       vegan,
       glutenFree,
       dairyFree,
       veryPopular,
+      price
     };
     navigation.navigate(recommendedScreens[title].navigation[0].title, {
       title: item.title,
