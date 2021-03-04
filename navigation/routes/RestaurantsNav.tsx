@@ -38,7 +38,7 @@ const EditRecipeTopNAvigator = () => (
   </EditTopTabs.Navigator>
 );
 
-const RecipesTopNavigator = () => (
+const RestaurantsTopNavigator = () => (
   <TopTabs.Navigator
     tabBarOptions={{
       style: {
@@ -54,9 +54,11 @@ const RecipesTopNavigator = () => (
     initialRouteName="recommended"
   >
     <TopTabs.Screen name="recommended">
-        {(props) => <RecommendScreen {...props} title='restaurants'/>}
+        {(props) => <RecommendScreen {...props} page='restaurants'/>}
     </TopTabs.Screen>
-    <TopTabs.Screen name="search" component={() => <Text>page 4</Text>} />
+    <TopTabs.Screen name="search" >
+      {(props) => <SearchScreen {...props} page={'restaurants'}/>}
+    </TopTabs.Screen>
     <TopTabs.Screen
       name="user_recipies"
       component={() => <Text>page 5</Text>}
@@ -86,7 +88,7 @@ export const RestaurantsStack = () => {
                 return (
                   <Icon
                     style={{ marginRight: 16 }}
-                    onPress={() => showModal(true)}
+                    onPress={() => showModal(true, 'restaurants')}
                     name={"search"}
                     color={Col.White}
                     size={24}
@@ -106,7 +108,7 @@ export const RestaurantsStack = () => {
           };
         }}
         name="restaurantsPage"
-        component={RecipesTopNavigator}
+        component={RestaurantsTopNavigator}
       />
       <Stack.Screen
         name="new"

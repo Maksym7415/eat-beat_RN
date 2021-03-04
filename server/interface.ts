@@ -29,6 +29,7 @@ export interface apiProps {
     addRecipe: string;
     addRecipeAvatar: string;
     addUserRecipeToMeals: string
+    addRestaurantMeal: string
   };
   del: {
     cookedMeal: string;

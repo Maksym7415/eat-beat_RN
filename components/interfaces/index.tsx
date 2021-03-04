@@ -59,10 +59,10 @@ export interface Memo {
   getData: () => void;
   pushData: () => void;
   isFetching: () => void;
-  showModal: (value: boolean) => void;
+  showModal: (value: boolean, page: string) => void;
   recipeId: number;
   getRecipeId: (id: number) => void;
-  isShow: boolean;
+  isShow: object;
   editMode: boolean;
   toggleEdit: (v: boolean) => void;
 }

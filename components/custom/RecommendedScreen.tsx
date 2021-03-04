@@ -8,57 +8,14 @@ import {
   NavProps,
   RecommendedMeals,
 } from "../../components/interfaces";
-import server from "../../server";
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import { resolve } from "path";
-
-interface Navigation {
-    title: string
-    page: string
-}
-
-interface RecommendedScreens {
-    [key:string]: {
-        get: Function
-        add: Function
-        preview: Function
-        navigation: Array<Navigation>
-        color: string
-    }
-}
-
-const restrauntsPreview = (id, item) => new Promise((resolve) => resolve(item));
-            
-    
+import { recommendedScreens } from '../../screens/config';
 
 
-const recommendedScreens: RecommendedScreens = {
-    'recipes': {
-        get: server.getRecommendedMeals,
-        add: server.addCookedMeal,
-        preview: server.getPreview,
-        navigation: [{
-            title: 'previewRecommendedPage',
-            page: 'recipes'
-        }],
-        color: Col.Recipes
 
-    },
-    'restaurants': {
-        get: server.getRecommendedRestaurant,
-        add: server.addRestaurantsMeal,
-        preview: restrauntsPreview,
-        navigation: [{
-            title: 'previewRecommendedPage',
-            page: 'restaurant'
-        }],
-        color: Col.Restaurants
-
-    }
-}
 
 interface ModalData {
   id: number;
@@ -76,7 +33,7 @@ interface AddMealsProps {
 
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 let DontRefresh = false;
-const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title, ...other }) => {
+const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, page, ...other }) => {
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -95,7 +52,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
 
   const serveData = async () => {
     setFetching({ clicked: true, deactivate: true });
-    const response = await recommendedScreens[title].get(date);
+    const response = await recommendedScreens[page].get(date);
     if (response.ok) {
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);
@@ -119,11 +76,19 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     setFetching({ clicked: true, deactivate: true });
-    await recommendedScreens[title].add({
-      mealId: modalData.data.id,
-      quantity: servings,
-      date: creationTime,
-    });
+    const data = {
+      recipes: {
+        mealId: modalData.data.id,
+        quantity: servings,
+        date: creationTime,
+      },
+      restaurants: {
+        meal: modalData.data, 
+        quantity: servings, 
+        date: creationTime
+      }
+    }
+    await recommendedScreens[page].add(data[page]);
     setFetching({ clicked: false, deactivate: false });
     setModalData({ ...modalData, modalVisible: false });
     navigation.navigate("meals");
@@ -131,7 +96,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
   };
 
   const onPreview = async (item) => {
-    const data = await recommendedScreens[title].preview(item.id, item);
+    const data = await recommendedScreens[page].preview(item.id, item);
     if (data.code) return;
     const {
       image,
@@ -147,19 +112,20 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
       description
     } = item;
     let ing = "";
-    if(title === 'recipes') {
+    if(page === 'recipes') {
         analyzedInstructions.forEach((el) => {
             el.steps.forEach((ele) => {
               ing += "\n\n" + ele.step;
             });
         });
     }
+    console.log(item)
     const details = {
       image: image || 'https://media.wired.com/photos/5b493b6b0ea5ef37fa24f6f6/125:94/w_2393,h_1800,c_limit/meat-80049790.jpg',
       name: item.title,
       servings,
-      nutrients: title === 'recipes' ? [...nutrition.nutrients] : Object.keys(item.nutritions).map((el) => ({amount: item.nutritions[el], title: el})),
-      ingredients: title === 'recipes' ? data.code
+      nutrients: [...nutrition.nutrients],
+      ingredients: page === 'recipes' ? data.code
         ? [...nutrition.ingredients]
         : [...data.nutrition.ingredients] : null,
       instructions: ing || description,
@@ -170,9 +136,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
       veryPopular,
       price
     };
-    navigation.navigate(recommendedScreens[title].navigation[0].title, {
+    navigation.navigate(recommendedScreens[page].navigation[0].title, {
       title: item.title,
-      details: {...details, page: recommendedScreens[title].navigation[0].page},
+      details: {...details, page: recommendedScreens[page].navigation[0].page},
     });
     DontRefresh = true;
   };
@@ -184,7 +150,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
       DontRefresh ? (DontRefresh = false) : setFeed([]);
     }
   }, [focus]);
-
   return feed?.length ? (
     <View style={styles.canvas}>
       <EditModal
@@ -234,7 +199,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, title
             onPress={serveData}
             deactivate={fetching.deactivate}
             clicked={fetching.clicked}
-            style={{ backgroundColor: recommendedScreens[title].color }}
+            style={{ backgroundColor: recommendedScreens[page].color }}
         />
         </View>
     </>

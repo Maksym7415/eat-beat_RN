@@ -25,6 +25,7 @@ import Text from "../../components/custom/Typography";
 import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
 import { dateFormat } from '../../utils/date';
+import { searchScreen } from '../config';
 
 type constNum = () => number;
 
@@ -48,7 +49,7 @@ interface Feed {
   totalResults: number;
 }
 
-const SearchScreen: FC<NavProps> = ({ navigation }) => {
+const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
   const { isShow, showModal, calendar, isFetching } = useContext<Memo>(
     AppContext
   );
@@ -58,7 +59,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     deactivate: false,
     myFetching: false,
   });
-  const [feed, setFeed] = useState<Feed | null | string>("Search the meals");
+  const [feed, setFeed] = useState<Feed | null | string>(searchScreen[page].pageText);
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
     diets: [],
@@ -90,9 +91,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
-    showModal(false);
+    showModal(false, page);
     setFetching({ ...fetching, myFetching: true });
-    const response = await server.getRecipeByName(state, config, 0);
+    const response = await searchScreen[page].search(state, config, 0);
     if (response.ok) {
       if (!response.data.results.length) {
         setFetching({ ...fetching, myFetching: false });
@@ -151,7 +152,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
-    await server.addCookedMeal({
+    await searchScreen[page].add({
       mealId: modalData.data.id,
       quantity: servings,
       date: creationTime,
@@ -190,8 +191,8 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
-    showModal(false);
-    const response = await server.getRecipeByName(
+    showModal(false, page);
+    const response = await searchScreen[page].search(
       state,
       config,
       feed.offset + 10
@@ -212,7 +213,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
 
   const onPreview = async (item) => {
     const title = item.title;
-    const data = await server.getPreview(item.id);
+    const data = await searchScreen[page].preview(item.id);
     const {
       image,
       servings,
@@ -245,9 +246,9 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
       dairyFree,
       veryPopular,
     };
-    navigation.navigate("previewRecommendedPage", {
+    navigation.navigate(searchScreen[page].navigation[0].title, {
       title,
-      details,
+      details: {...details, page: searchScreen[page].navigation[0].page},
     });
   };
 
@@ -269,11 +270,12 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
       />
       <SearchModal
-        modalVisible={isShow}
-        hideModal={() => showModal(false)}
+        modalVisible={isShow[page]}
+        hideModal={() => showModal(false, page)}
         onChangeHandler={onChangeHandler}
         value={state}
         searchHandler={startSearch}
+        page={page}
       />
       <FilterModal
         data={filter}
@@ -282,6 +284,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
         hideModal={() => setShowFilterModal(false)}
         constaintNumber={constraintNumber()}
         fetching={fetching}
+        page={page}
       />
       <TouchableOpacity onPress={() => setShowFilterModal(true)}>
         <View style={styles.constraint}>
@@ -325,7 +328,7 @@ const SearchScreen: FC<NavProps> = ({ navigation }) => {
                       : fetching.deactivate
                   }
                   clicked={fetching.clicked}
-                  style={{ backgroundColor: Col.Recipes }}
+                  style={styles[`button${page}`]}
                 />
               </View>
             </>
@@ -367,8 +370,13 @@ const styles = StyleSheet.create({
     padding: Spacing.medium,
     backgroundColor: Col.Background,
   },
-  button: {
+  buttonrecipes: {
     paddingHorizontal: Spacing.medium,
+    backgroundColor: Col.Recipes
+  },
+  buttonrestaurants: {
+    paddingHorizontal: Spacing.medium,
+    backgroundColor: Col.Restaurants
   },
 });
 export default SearchScreen;

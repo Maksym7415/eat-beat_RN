@@ -86,7 +86,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page }) => {
               <Image
                 source={{
                   uri:
-                    image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+                    image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
                 }}
                 style={styles.image}
               />

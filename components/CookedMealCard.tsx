@@ -20,10 +20,13 @@ interface Props {
     image: string;
     creationTime: number;
     servings: number;
+    isPartner?: boolean
+    source: string
   };
   onClick?: () => void;
   actionHandler: (value: editProps) => void;
   onDelete: (id: number, name: string) => void;
+  bgColor: string
 }
 
 const getTime = (value: number) => {
@@ -40,12 +43,12 @@ const CookedMealCard: FC<Props> = ({
   onClick,
   actionHandler,
   onDelete,
+  bgColor
 }) => {
-  const { id, name, image, creationTime, servings } = item;
+  const { id, name, image, creationTime, servings, isPartner, source } = item;
   const [date, time] = creationTime.split(' ');
-
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, borderLeftColor: bgColor}}>
       <View
         style={{
           display: "flex",
@@ -59,7 +62,7 @@ const CookedMealCard: FC<Props> = ({
         <View style={styles.iconsContainer}>
           <Icon
             style={{ alignSelf: "flex-end" }}
-            onPress={() => onDelete(id, name)}
+            onPress={() => onDelete(id, name, source)}
             name="delete"
             size={24}
             color={Col.Grey5}
@@ -67,7 +70,7 @@ const CookedMealCard: FC<Props> = ({
           <Divider styler={styles.verticalDivider} />
           <Icon
             style={{ alignSelf: "flex-end" }}
-            onPress={() => actionHandler({ id, name, servings, creationTime: new Date(`${date.replaceAll('-', '/')} ${time}`)})}
+            onPress={() => actionHandler({ id, name, servings, creationTime: new Date(`${date.replace(/-/g, '/')} ${time}`), source})}
             name="pencil"
             size={24}
             color={Col.Grey5}
@@ -87,7 +90,7 @@ const CookedMealCard: FC<Props> = ({
           <Image
             style={styles.image}
             source={{
-              uri: image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+              uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
             }}
           />
         </View>
@@ -107,6 +110,7 @@ const CookedMealCard: FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
+    borderLeftWidth: 5,
     paddingHorizontal: Spacing.r_small,
     paddingVertical: Spacing.r_small,
     backgroundColor: Col.White,

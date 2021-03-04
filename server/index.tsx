@@ -13,12 +13,13 @@ import { Alert, Platform } from "react-native";
 import { AuthProps } from "../components/interfaces";
 import { baseURL } from "../url";
 import encryption from '../utils/dataEncryption';
+import Axios from "axios";
 
 const apiConfig: apiProps = {
   baseURL: baseURL + "api",
   get: {
     profile: "/user/profile-data",
-    cookedMeals: "/meals/cooked-meals?date=",
+    cookedMeals: "/meals/day-meals?date=",
     history: "/meals/healthscore-history?offset=",
     dailyConsumption: "/meals/daily-consumption?date=",
     recommendedMeals: "/meals/recommend-meals?date=",
@@ -43,16 +44,17 @@ const apiConfig: apiProps = {
     addRecipe: "/recipe/add-own-recipe",
     addRecipeAvatar: "/upload/recipe-image/",
     addUserRecipeToMeals: "/meals/add-meal-own-recipe",
+    addRestaurantMeal: '/restaurants/eat-dish',
   },
   del: {
     user: "/user/delete-user",
-    cookedMeal: "/meals/cooked-meal/",
+    cookedMeal: "/meals/day-meal/",
   },
   put: {
     profile: "/user/update-profile",
     intakeNorms: "/user/intake-norms",
     password: "/user/update-password",
-    updateCookedMeal: "/meals/update-cooked-meal/",
+    updateCookedMeal: "/meals/update-meal/",
     updateUserReferences: "/user/update-preferences",
     updateIntakeNorms: "/user/intake-norms",
     updateRecipe: "​/recipe/update-recipe/",
@@ -301,8 +303,11 @@ const getRecommendedRestaurant = async (date: Date) => {
   return response;
 };
 
-const addRestaurantsMeal = async () => {
-  console.log('addRestaurantsMeal')
+const addRestaurantsMeal = async (data: any) => {
+  const address = apiConfig.post.addRestaurantMeal
+  const response = await api.post(address, data);
+  if (!response.ok) logError(response);
+  return response;
 }
 
 const signIn = async (payload: AuthProps) => {
@@ -343,10 +348,21 @@ const upload = async (uri) => {
   return response.ok;
 };
 
-const delCookedMeal = async (id: number) => {
-  const address = apiConfig.del.cookedMeal + id;
-  const response = await api.delete(address);
-  if (!response.ok) logError(response);
+const delCookedMeal = async (id: number, data: Object) => {
+  const address = baseURL.slice(0, baseURL.length-1) + '/api' + apiConfig.del.cookedMeal + id;
+  const token = await getToken();
+  const response = await Axios(address, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      'User-Agent':   Platform.OS === "ios"
+        ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+        : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+    },
+    data
+  }).then(res=> res).catch((error) => console.log(error, 'error'));
+  if (response.status >= 400) logError(response);
   return response;
 };
 

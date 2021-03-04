@@ -17,6 +17,7 @@ interface Props {
     deactivate: boolean;
     myFetching: boolean;
   };
+  page: string
 }
 
 const FilterModal: FC<Props> = ({
@@ -26,6 +27,7 @@ const FilterModal: FC<Props> = ({
   saveFilterData,
   constaintNumber,
   fetching,
+  page
 }) => {
   const saveFilterConfig = (value: recipeSettings) => {
     saveFilterData(value);
@@ -33,7 +35,7 @@ const FilterModal: FC<Props> = ({
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
-      <View style={styles.container}>
+      <View style={styles[`container${page}`]}>
         <Icon
           onPress={hideModal}
           name={"arrow-back"}
@@ -47,7 +49,7 @@ const FilterModal: FC<Props> = ({
       </View>
       <UserSettings
         data={data}
-        blend={Col.Recipes}
+        blend={styles[`bg${page}`].backgroundColor}
         onSave={saveFilterConfig}
         showMealsTypes={true}
         backgroundColor={Col.Background}
@@ -57,11 +59,18 @@ const FilterModal: FC<Props> = ({
   );
 };
 const styles = StyleSheet.create({
-  container: {
+  containerrecipes: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: Col.Recipes,
+    padding: Spacing.medium,
+  },
+  containerrestaurants: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: Col.Restaurants,
     padding: Spacing.medium,
   },
   input: {
@@ -75,6 +84,13 @@ const styles = StyleSheet.create({
     color: Col.White,
     alignSelf: "center",
   },
+  bgrecipes: {
+    backgroundColor: Col.Recipes
+  },
+  bgrestaurants: {
+    backgroundColor: Col.Restaurants
+  }
+
 });
 
 export default FilterModal;

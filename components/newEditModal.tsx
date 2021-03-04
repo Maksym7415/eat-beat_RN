@@ -23,6 +23,7 @@ interface dataProps {
 interface Body {
   creationTime: number;
   servings: number;
+  source: string
 }
 
 interface Props {
@@ -42,7 +43,7 @@ const newEditModal: FC<Props> = ({
   date,
   clicked,
 }) => {
-  const { id, name, servings, modalVisible, creationTime } = data;
+  const { id, name, servings, modalVisible, creationTime, source } = data;
   const handleFetch = (creationTime) => {
     const hrs = new Date(creationTime).getHours().toString();
     const min = new Date(creationTime).getMinutes().toString();
@@ -73,6 +74,7 @@ const newEditModal: FC<Props> = ({
     setData(id, {
       creationTime: format,
       servings: Number(newTime.portion),
+      source
     });
   };
 

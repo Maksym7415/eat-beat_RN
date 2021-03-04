@@ -29,7 +29,7 @@ interface editProps {
 let Busy = false;
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   const [feed, setFeed] = useState(null);
-  const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0 });
+  const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0, source: '' });
   const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
@@ -47,7 +47,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   };
 
   const deleteHandler = async () => {
-    await server.delCookedMeal(popAlert.id);
+    await server.delCookedMeal(popAlert.id, {source: popAlert.source});
     Busy = false;
     setPopAlert({ ...popAlert, visible: false });
     isFetching();
@@ -58,11 +58,8 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     navigation.navigate("recommendedDrawer");
   };
 
-  const updateMeal = async (id, { creationTime, servings }) => {
-    await server.updateCookedMeal(id, {
-      servings,
-      creationTime,
-    });
+  const updateMeal = async (id, body) => {
+    await server.updateCookedMeal(id, body);
     setModalData({ ...modalData, modalVisible: false });
     isFetching();
   };
@@ -71,9 +68,18 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     const instructions = item.instructions
       ? item.instructions.replace(/(<([^>]+)>)/g, "\n")
       : "";
+    const page = 'isPartner' in item  ? 'restaurants' : 'recipes'
+    const data = {
+      recipes: {
+        page: 'recipes'
+      },
+      restaurants: {
+        page: 'restaurants'
+      }
+    }
     navigation.navigate("previewPage", {
       title: item.name,
-      details: { ...item, instructions },
+      details: { ...item, instructions, page: data[page].page, nutrients: item.nutrients },
     });
   };
 
@@ -120,12 +126,13 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         renderItem={({ item, index }) => (
           <CookedMealCard
             item={item}
+            bgColor={item.source === 'restaurant' ? item.isPartner ?  Col.Main : Col.Grey5 : Col.Green}
             actionHandler={(props: editProps) =>
               setModalData({ ...props, modalVisible: true })
             }
             onClick={() => onPreview(item)}
-            onDelete={(id, name) => {
-              if (!Busy) setPopAlert({ id, name, visible: true });
+            onDelete={(id, name, source) => {
+              if (!Busy) setPopAlert({ id, name, visible: true, source });
             }}
           />
         )}

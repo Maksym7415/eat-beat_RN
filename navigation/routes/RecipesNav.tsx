@@ -56,9 +56,11 @@ const RecipesTopNavigator = () => (
     initialRouteName="recommended"
   >
     <TopTabs.Screen name="recommended"> 
-      {(props) => <RecommendedScreen {...props} title={'recipes'}/>}
+      {(props) => <RecommendedScreen {...props} page={'recipes'}/>}
     </TopTabs.Screen>
-    <TopTabs.Screen name="search" component={SearchScreen} />
+    <TopTabs.Screen name="search">
+      {(props) => <SearchScreen {...props} page={'recipes'}/>}
+    </TopTabs.Screen>
     <TopTabs.Screen
       name="user_recipies"
       component={UserRecipes}
@@ -88,7 +90,7 @@ export const RecommendedStack = () => {
                 return (
                   <Icon
                     style={{ marginRight: 16 }}
-                    onPress={() => showModal(true)}
+                    onPress={() => showModal(true, 'recipes')}
                     name={"search"}
                     color={Col.White}
                     size={24}
