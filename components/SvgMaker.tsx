@@ -73,6 +73,54 @@ const Icons: IIcons = {
   <path d="M293.617 19.1479H302V14.6279H280.765V19.1479H289.243V39.4999H293.617V19.1479Z" fill="#FAFAFA"/>
   </svg>
   `,
+  myLocation: `<svg width="28" height="28" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<g>
+ <g>
+   <path fill='#000' d="M256,160c-52.928,0-96,43.072-96,96s43.072,96,96,96c52.928,0,96-43.072,96-96C352,203.072,308.928,160,256,160z M256,320
+     c-35.296,0-64-28.704-64-64c0-35.296,28.704-64,64-64s64,28.704,64,64S291.296,320,256,320z"/>
+ </g>
+</g>
+<g>
+ <g>
+   <path fill='#000' d="M496,240h-48.8C439.456,146.88,365.12,72.544,272,64.8V16c0-8.832-7.168-16-16-16c-8.832,0-16,7.168-16,16v48.8
+     C146.88,72.544,72.544,146.912,64.8,240H16c-8.832,0-16,7.168-16,16c0,8.832,7.168,16,16,16h48.8
+     c7.744,93.12,82.08,167.456,175.2,175.2V496c0,8.832,7.168,16,16,16c8.832,0,16-7.168,16-16v-48.8
+     c93.12-7.744,167.456-82.08,175.2-175.2H496c8.832,0,16-7.136,16-16C512,247.2,504.832,240,496,240z M256,416
+     c-88.224,0-160-71.776-160-160S167.776,96,256,96s160,71.776,160,160S344.224,416,256,416z"/>
+ </g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>
+`
 };
 
 const newIcon = (name = "profile", fill = "#737373") => {
@@ -153,32 +201,33 @@ const newIcon = (name = "profile", fill = "#737373") => {
 
 interface Props {
   name:
-    | "default"
-    | "alert"
-    | "verify"
-    | "actionButton"
-    | "menu"
-    | "vegetarian"
-    | "vegan"
-    | "popular"
-    | "paleo"
-    | "glutenFree"
-    | "dairyFree"
-    | "camera"
-    | "logo";
+  | "default"
+  | "alert"
+  | "verify"
+  | "actionButton"
+  | "menu"
+  | "vegetarian"
+  | "vegan"
+  | "popular"
+  | "paleo"
+  | "glutenFree"
+  | "dairyFree"
+  | "camera"
+  | "logo"
+  | "myLocation"
   style?: object;
 }
 
 interface IconProps {
   name:
-    | "profile"
-    | "foodDiary"
-    | "recipes"
-    | "restaurants"
-    | "snacks"
-    | "foodStocks"
-    | "shoppingList"
-    | "barcodeScanner";
+  | "profile"
+  | "foodDiary"
+  | "recipes"
+  | "restaurants"
+  | "snacks"
+  | "foodStocks"
+  | "shoppingList"
+  | "barcodeScanner";
   style?: object;
   fill?: string;
 }

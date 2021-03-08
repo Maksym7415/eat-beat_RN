@@ -10,33 +10,11 @@ import BurgerIcon from "../common/BurgerIcon";
 import RecommendFromRestaurantsScreen from "../../screens/Restaurants/RecommendFromRestaurants";
 import RecommendScreen from '../../components/custom/RecommendedScreen';
 import SearchScreen from "../../screens/Recipies/SearchScreen";
-import UserRecipes from "../../screens/Recipies/UserRecipe";
-import NewRecipe from "../../screens/Recipies/CreateRecipesScreen";
 import PreviewRecipeTopNavigator from "./PreviewTab";
-import { View, Text } from 'react-native'
+import RestaurantMap from '../../screens/Restaurants/RestaurantMap';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
-const EditTopTabs = createMaterialTopTabNavigator();
-
-const EditRecipeTopNAvigator = () => (
-  <EditTopTabs.Navigator
-    tabBarOptions={{
-      style: {
-        backgroundColor: Col.Header,
-        elevation: 0,
-      },
-      indicatorStyle: {
-        backgroundColor: Col.Restaurants,
-      },
-    }}
-    initialRouteName="info"
-  >
-    <EditTopTabs.Screen name="recommend" component={() => <Text>recommend</Text>} />
-    <EditTopTabs.Screen name="ingredients" component={() => <Text>page 2</Text>} />
-    <EditTopTabs.Screen name="instruction" component={() => <Text>page 3</Text>} />
-  </EditTopTabs.Navigator>
-);
 
 const RestaurantsTopNavigator = () => (
   <TopTabs.Navigator
@@ -54,21 +32,20 @@ const RestaurantsTopNavigator = () => (
     initialRouteName="recommended"
   >
     <TopTabs.Screen name="recommended">
-        {(props) => <RecommendScreen {...props} page='restaurants'/>}
+      {(props) => <RecommendScreen {...props} page='restaurants' />}
     </TopTabs.Screen>
     <TopTabs.Screen name="search" >
-      {(props) => <SearchScreen {...props} page={'restaurants'}/>}
+      {(props) => <SearchScreen {...props} page={'restaurants'} />}
     </TopTabs.Screen>
     <TopTabs.Screen
-      name="user_recipies"
-      component={() => <Text>page 5</Text>}
-      options={{ title: "my recipes" }}
+      name="restaurant_map"
+      component={RestaurantMap}
+      options={{ title: "Map" }}
     />
   </TopTabs.Navigator>
 );
 
 export const RestaurantsStack = () => {
-  const { toggleEdit, editMode } = useContext(AppContext);
   return (
     <Stack.Navigator initialRouteName="restaurantsPage">
       <Stack.Screen
@@ -109,64 +86,6 @@ export const RestaurantsStack = () => {
         }}
         name="restaurantsPage"
         component={RestaurantsTopNavigator}
-      />
-      <Stack.Screen
-        name="new"
-        options={({ navigation }) => ({
-          title: "Recipe creation",
-          //headerShown: false,
-          headerStyle: {
-            elevation: 0,
-            backgroundColor: Col.Restaurants,
-          },
-          headerTitleStyle: {
-            color: "white",
-          },
-          headerLeft: () => (
-            <Icon
-              style={{ marginLeft: 16 }}
-              onPress={() => navigation.navigate("user_recipies")}
-              name={"arrow-back"}
-              color={Col.White}
-              size={24}
-            />
-          ),
-        })}
-        component={() => <Text>page 6</Text>}
-      />
-      <Stack.Screen
-        name="user_recipe"
-        options={({ navigation, route }) => {
-          return {
-            title: route.params.title,
-            headerStyle: {
-              elevation: 0,
-              backgroundColor: Col.Restaurants,
-            },
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerLeft: () => (
-              <Icon
-                style={{ marginLeft: 16 }}
-                onPress={() => navigation.navigate("user_recipies")}
-                name={"arrow-back"}
-                color={Col.White}
-                size={24}
-              />
-            ),
-            headerRight: () => (
-              <Icon
-                style={{ marginRight: 16 }}
-                onPress={() => toggleEdit(!editMode)}
-                name={!editMode ? "edit" : "close"}
-                color={Col.White}
-                size={24}
-              />
-            ),
-          };
-        }}
-        component={EditRecipeTopNAvigator}
       />
       <Stack.Screen
         options={({ navigation, route }) => ({
