@@ -4,7 +4,7 @@ import { baseURL } from "../url";
 import * as SecureStore from "expo-secure-store";
 
 async function ping() {
-   await SecureStore.deleteItemAsync("public_key");
+   //await SecureStore.deleteItemAsync("public_key");
   if (await SecureStore.getItemAsync("public_key")) return;
   const id = generator();
   const url = `${baseURL}api/main/generate-rsa`;
