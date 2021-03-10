@@ -7,7 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
-import RecommendFromRestaurantsScreen from "../../screens/Restaurants/RecommendFromRestaurants";
+import RestaurantMenu from '../../screens/Restaurants/RestaurantMenu';
 import RecommendScreen from '../../components/custom/RecommendedScreen';
 import SearchScreen from "../../screens/Recipies/SearchScreen";
 import PreviewRecipeTopNavigator from "./PreviewTab";
@@ -109,6 +109,29 @@ export const RestaurantsStack = () => {
         })}
         name="previewRecommendedPage"
         component={PreviewRecipeTopNavigator}
+      />
+      <Stack.Screen
+        options={({ navigation, route }) => ({
+          headerLeft: () => (
+            <Icon
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+              name={"arrow-back"}
+              color={Col.White}
+              size={24}
+            />
+          ),
+          title: route.params?.title,
+          headerStyle: {
+            elevation: 1,
+            backgroundColor: Col.Restaurants,
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
+        })}
+        name="restaurantMenu"
+        component={RestaurantMenu}
       />
     </Stack.Navigator>
   );

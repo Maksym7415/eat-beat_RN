@@ -119,7 +119,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, page,
             });
         });
     }
-    console.log(item)
     const details = {
       image: image || 'https://media.wired.com/photos/5b493b6b0ea5ef37fa24f6f6/125:94/w_2393,h_1800,c_limit/meat-80049790.jpg',
       name: item.title,

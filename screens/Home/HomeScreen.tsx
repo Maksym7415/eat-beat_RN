@@ -157,12 +157,14 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
               title={`Too much (${feed.tooMuchNutrients.length})`}
               styler={{ color: Col.Error }}
               icon_type={"alert"}
+              isPrecent
             />
             <Collapse
               data={feed.notEnough}
               title={`Not enough (${feed.notEnough.length})`}
               styler={{ color: Col.Info }}
               icon_type={"verify"}
+              isPrecent
             />
           </View>
           <Divider styler={styles.divider} />

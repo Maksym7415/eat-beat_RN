@@ -118,6 +118,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         onRight={deleteHandler}
         visible={popAlert.visible}
       />
+      {console.log(feed[0])}
       <FlatList
         data={feed}
         ListEmptyComponent={() => <EmptyList />}

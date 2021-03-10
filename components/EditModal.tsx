@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -52,6 +52,7 @@ const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
       servings: parseInt(newTime.portion),
     });
   };
+
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
