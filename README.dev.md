@@ -96,11 +96,7 @@ Then make settings:
 
 * *run android on Android device/emulator*
 
-* in root folder
-
-
-    expo start
-
 # Build android apk
 
-    npm run android
+###// todo ... Mykolay Lytvyn ... will ask from Mohammed Altulaibawi
+
