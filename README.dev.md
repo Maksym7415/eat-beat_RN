@@ -82,24 +82,17 @@ make steps from the  file *Readme.dev.md*
 
 
 # Running app
-    yarn
-
-    npm i expo-cli -g
-
-    yarn run start
-
-in consol choose
-
-    w
-
+* in root folder
+    
+    
+    npm i 
+    npm run  start
 
 open 
 http://localhost:19002/
 
 Then make settings: 
 * connection choose *local*
-
-
 
 * *run android on Android device/emulator*
 
