@@ -28,12 +28,12 @@ const apiConfig: apiProps = {
     verification: "/auth/verify-account?verificationCode=",
     resetPassword: "/auth/reset-password",
     recipeInfo: "/recipe/my-recipes/",
-    docs: "/main/terms-of-use",
+    docs: "/main/app-info",
     userAcitvities: "/main/user-activities",
     resendVerificationCode: "/auth/resend-verification-code?email=",
     resendResetPasswordCode: "/auth/resend-reset-password-code?email=",
     recommendRestaurant: "/restaurants/recommend-dish?date=",
-    getRestaurants: "restaurants/get-restaurants",
+    getRestaurants: "/restaurants/all-restaurants",
     getRestaurantMenu: "/restaurants/restaurant-menu/"
   },
   post: {
@@ -315,6 +315,7 @@ const addRestaurantsMeal = async (data: any) => {
 
 const getRestaurants = async () => {
   const address = apiConfig.get.getRestaurants;
+  console.log(address, 'address')
   const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;

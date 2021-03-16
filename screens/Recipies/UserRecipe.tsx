@@ -9,7 +9,7 @@ import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import { baseURL } from "../../url";
-import EditModal from "../../components/newEditModal";
+import EditModal from "../../components/EditModal";
 
 interface ModalData {
   id: number;

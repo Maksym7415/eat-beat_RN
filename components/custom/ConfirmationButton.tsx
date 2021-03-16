@@ -2,8 +2,9 @@ import { fstat } from 'fs';
 import React from 'react';
 
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { ConfirmationButton } from "../interfaces"
 
-export default function Button({ title, onClickHandler, bckColor, textColor, fts, ftw, border = {}, disabled }) {
+export default function Button({ title, onClickHandler, bckColor, textColor, fts, ftw, border = {}, disabled }: ConfirmationButton) {
 
     return (
         <TouchableOpacity style={{...styles.contanier, backgroundColor: disabled ? '#E5E5E5' : bckColor, ...border}} onPress={onClickHandler}>

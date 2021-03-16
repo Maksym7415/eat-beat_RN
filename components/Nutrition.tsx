@@ -21,7 +21,6 @@ const NutritionItem: FC<Props> = ({ item }) => {
     percenatage = 0,
     recipe,
   } = item;
-  // const precent = Math.round((nutrition_measure / nutrition_number) * 100);
   const color =
     percenatage < 100
       ? `rgb(${45 + percenatage * 1.9},${175 - percenatage * 0.73},${

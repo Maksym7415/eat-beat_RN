@@ -3,16 +3,16 @@ import { TouchableOpacity } from 'react-native';
 import SvgMaker from '../../../components/SvgMaker';
 
 interface Props {
-    isPartner: boolean
+    is_partner: boolean
 }
 
 function CustomMarker(props: Props) {
 
-    const { isPartner } = props;
+    const { is_partner } = props;
 
     return (
         <TouchableOpacity>
-                <SvgMaker name={!props.hasOwnProperty('isPartner') ? 'myMarker' : isPartner ? 'partnerRestaurantMarker' : 'notPartnerRestaurantMarker'} />
+                <SvgMaker name={!props.hasOwnProperty('is_partner') ? 'myMarker' : is_partner ? 'partnerRestaurantMarker' : 'notPartnerRestaurantMarker'} />
         </TouchableOpacity>
     )
 }

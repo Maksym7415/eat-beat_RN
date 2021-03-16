@@ -34,6 +34,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
+      console.log(data?.healthScore)
       Object.keys(data).length && data?.totalMeals > 0
         ? setFeed(data)
         : setFeed({});

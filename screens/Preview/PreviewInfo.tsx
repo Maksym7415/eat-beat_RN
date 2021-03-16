@@ -12,7 +12,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { Button } from "../../components/MyComponents";
 import { baseURL } from "../../url";
 import { pageSettings } from '../config'
-import EditModal from '../../components/newEditModal';
+import EditModal from '../../components/EditModal';
 import { AppContext } from "../../components/AppContext";
 import {
   Fetching,
@@ -118,7 +118,6 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
         modalVisible: true
     });
   }
-  console.log(item)
   useEffect(() => {
     if (focus) {
       const newFeed = getInfo();
@@ -280,7 +279,6 @@ const styles = StyleSheet.create({
   },
   box: {
     width: "49%",
-    //    marginRight: '1%',
   },
   boxContainer: {
     flexWrap: "wrap",

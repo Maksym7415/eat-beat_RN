@@ -5,7 +5,7 @@ import CookedMealCard from "../../components/CookedMealCard";
 import { Memo, NavProps } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
 import { Text } from "../../components/custom/Typography";
-import EditModal from "../../components/newEditModal";
+import EditModal from "../../components/EditModal";
 import PopUp from "../../components/PopUp";
 import server from "../../server";
 import ActionButton from "./common/ActionButton";

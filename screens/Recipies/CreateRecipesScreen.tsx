@@ -19,17 +19,6 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 import useValidation from "../../utils/validation";
 import * as ImageManipulator from "expo-image-manipulator";
 
-interface Item {
-  title: string;
-  max: number;
-  value: string;
-  error: string;
-}
-
-interface Data {
-  [key: string]: Item;
-}
-
 interface Loading {
   loading: boolean;
   disabled: boolean;
@@ -196,7 +185,7 @@ export default function CreateRecipeScreen({ navigation }) {
             <TextInput
               value={fieldValues?.title?.value || ""}
               onChangeText={(text) => changeHandler(text, "title")}
-              placeholder={"Add recipe title"}
+              placeholder="Add recipe title"
               style={{
                 borderColor: title.errors ? Col.Error : Col.Grey2,
                 borderBottomWidth: 1,
@@ -219,7 +208,7 @@ export default function CreateRecipeScreen({ navigation }) {
               borderColor: servings.errors ? Col.Error : Col.Grey2,
               borderBottomWidth: 1,
             }}
-            placeholder={"Add serving for recipe"}
+            placeholder="Add serving for recipe"
           />
           <Text style={{ color: Col.Error, marginTop: 10 }}>
             {servings?.errors}
@@ -236,7 +225,7 @@ export default function CreateRecipeScreen({ navigation }) {
               borderColor: ingredients.errors ? Col.Error : Col.Grey2,
               borderBottomWidth: 1,
             }}
-            placeholder={"One ingredient per line"}
+            placeholder="One ingredient per line"
             multiline
           />
 
@@ -255,7 +244,7 @@ export default function CreateRecipeScreen({ navigation }) {
               borderColor: instruction.errors ? Col.Error : Col.Grey2,
               borderBottomWidth: 1,
             }}
-            placeholder={"Add instruction for recipe"}
+            placeholder="Add instruction for recipe"
             multiline
           />
           <Text style={{ color: Col.Error, marginTop: 10 }}>

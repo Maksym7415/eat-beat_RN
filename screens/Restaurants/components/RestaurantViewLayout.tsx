@@ -8,23 +8,27 @@ import { Button } from "../../../components/MyComponents";
 import server from '../../../server';
 
 interface Props {
+    id: number
     title: string
     address: string
     description: string
-    isPartner: boolean
+    is_partner: boolean
     setOpen: Function
     navigation: object
 }
 
 
-function RestaurantViewLayout({ id, title, address, description, distance, isPartner, setOpen, originCoords, destinationCoords, navigation } : Props) {
+function RestaurantViewLayout({ id, title, address, description, is_partner, setOpen, navigation, distance } : Props) {
 
     const menuHandler = (title: string) => {
         async function getMenu(restId: number) {
             const result = await server.getRestaurantMenu(restId);
+            const correctFormat = {}
+            result.data.forEach((el) => correctFormat[el.category] = [...(correctFormat[el.category] || []),  el]);
+            console.log(correctFormat)
             if(result.ok) {
                 setOpen(false);
-                navigation.navigate('restaurantMenu', {title, is_partner: isPartner, menu: result.data});
+                navigation.navigate('restaurantMenu', {title, is_partner, menu: correctFormat});
             }
         }
         getMenu(id)
@@ -39,8 +43,8 @@ function RestaurantViewLayout({ id, title, address, description, distance, isPar
                     </TouchableOpacity>
                 </View>
                 <View style={styles.titleContainer}>
-                {isPartner && <SvgMaker name='partnerStar' />}
-                    <Text type='bodyBold' style={{paddingLeft: isPartner ? 10 : 0}}>
+                {is_partner && <SvgMaker name='partnerStar' />}
+                    <Text type='bodyBold' style={{paddingLeft: is_partner ? 10 : 0}}>
                         {title}
                     </Text>
                 </View>
@@ -63,7 +67,7 @@ function RestaurantViewLayout({ id, title, address, description, distance, isPar
                     <Button
                         label="OPEN MENU"
                         onPress={() => menuHandler(title)}
-                        style={styles[`btnStyle${Number(isPartner)}`]}
+                        style={styles[`btnStyle${Number(is_partner)}`]}
                     />
                 </View>
             </View>

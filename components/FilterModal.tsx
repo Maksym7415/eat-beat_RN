@@ -3,7 +3,7 @@ import { Modal, View, StyleSheet } from "react-native";
 import { Col, Spacing } from "./Config";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import UserSettings from "./UserSettings";
-import { recipeSettings } from "./interfaces";
+import { recipeSettings, Styles } from "./interfaces";
 import Text from "./custom/Typography";
 
 interface Props {
@@ -58,7 +58,8 @@ const FilterModal: FC<Props> = ({
     </Modal>
   );
 };
-const styles = StyleSheet.create({
+
+const styles: Styles = StyleSheet.create({
   containerrecipes: {
     display: "flex",
     flexDirection: "row",

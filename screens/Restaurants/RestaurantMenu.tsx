@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Text from '../../components/custom/Typography';
 import Collapse from '../../components/Collapse';
-import EditModal from '../../components/newEditModal';
+import EditModal from '../../components/EditModal';
 import {
     Fetching,
     Memo,

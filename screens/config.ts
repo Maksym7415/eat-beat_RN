@@ -7,6 +7,13 @@ interface Page {
     previewTabTitle: string
     width: number
     bg: string
+    pageText: string
+    search: Function
+    get?: Function
+    add: () => Function
+    preview: () => Function
+    navigation: Array<object>
+    noInstractiontext: string
 }
 
 interface Pages {
@@ -19,80 +26,10 @@ interface Navigation {
 }
 
 
-interface RecommendedScreen {
-    [key:string]: {
-        get: Function
-        add: Function
-        preview: Function
-        navigation: Array<Navigation>
-        color: string
-    }
-}
-
-interface SearchScreen {
-    [key: string] : {
-        pageText: string,
-        search: Function,
-        add: Function,
-        preview: Function
-        navigation: Array<Navigation>
-    }
-}
-
 const deviceWidth = Dimensions.get('window').width;
 
 const restrauntsPreview = (id, item) => new Promise((resolve) => resolve(item));
             
- 
-
-export const recommendedScreens: RecommendedScreen = {
-    'recipes': {
-        get: server.getRecommendedMeals,
-        add: server.addCookedMeal,
-        preview: server.getPreview,
-        navigation: [{
-            title: 'previewRecommendedPage',
-            page: 'recipes'
-        }],
-        color: Col.Recipes
-
-    },
-    'restaurants': {
-        get: server.getRecommendedRestaurant,
-        add: server.addRestaurantsMeal,
-        preview: restrauntsPreview,
-        navigation: [{
-            title: 'previewRecommendedPage',
-            page: 'restaurants'
-        }],
-        color: Col.Restaurants
-
-    }
-}
-
-export const searchScreen: SearchScreen = {
-    restaurants: {
-        pageText: "Search the restaurant meals",
-        search: (search:string) => console.log(search),
-        add: server.addRestaurantsMeal,
-        preview: restrauntsPreview,
-        navigation: [{
-            title: 'previewRecommendedPage',
-            page: 'restaurants'
-        }],
-    },
-    recipes: {
-        pageText: "Search the meals",
-        search: server.getRecipeByName,
-        add: server.addCookedMeal,
-        preview: server.getPreview,
-        navigation: [{
-            title: 'previewRecommendedPage',
-            page: 'recipes'
-        }],
-    }
-}
-
 export const pageSettings: Pages = {
     restaurants: {
         title: 'restaurants',
@@ -100,6 +37,7 @@ export const pageSettings: Pages = {
         width: deviceWidth/2,
         bg: Col.Restaurants,
         pageText: "Search the restaurant meals",
+        get: server.getRecommendedRestaurant,
         search: (search:string) => console.log(search),
         add: server.addRestaurantsMeal,
         preview: restrauntsPreview,
@@ -115,6 +53,7 @@ export const pageSettings: Pages = {
         width: deviceWidth/3,
         bg: Col.Recipes,
         pageText: "Search the meals",
+        get: server.getRecommendedMeals,
         search: server.getRecipeByName,
         add: server.addCookedMeal,
         preview: server.getPreview,

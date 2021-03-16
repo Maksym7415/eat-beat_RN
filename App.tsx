@@ -108,7 +108,7 @@ export default function App() {
   const loadDocs = async () => {
     const response = await server.getDocs();
     if (response.ok)
-      await AsyncStorage.mergeItem("@doc", JSON.stringify(response.data.data));
+      await AsyncStorage.mergeItem("@doc", JSON.stringify(response.data));
   };
 
   const loginHandler = async (successPage: boolean) => {
