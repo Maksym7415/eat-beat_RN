@@ -11,6 +11,7 @@ import HistoryScreen from "../../screens/Home/HistoryScreen";
 import CalendarButton from "../common/CalendarButton";
 import BurgerIcon from "../common/BurgerIcon";
 import PreviewRecipeTopNavigator from "./PreviewTab";
+import { pageSettings } from '../../screens/config';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -63,17 +64,17 @@ export const MainStack = () => {
         options={({ navigation, route }) => ({
           headerLeft: () => (
             <Icon
-              style={{ marginLeft: 16 }}
-              onPress={() => navigation.goBack()}
-              name={"arrow-back"}
-              color={Col.White}
-              size={24}
-            />
+                style={{ marginLeft: 16 }}
+                onPress={() => navigation.goBack()}
+                name={"arrow-back"}
+                color={Col.White}
+                size={24}
+              />
           ),
           title: route.params?.title || "Preview",
           headerStyle: {
             elevation: 1,
-            backgroundColor: Col.Recipes,
+            backgroundColor: pageSettings[route.params.details.page].bg,
           },
           headerTitleStyle: {
             color: "white",

@@ -32,7 +32,9 @@ const apiConfig: apiProps = {
     userAcitvities: "/main/user-activities",
     resendVerificationCode: "/auth/resend-verification-code?email=",
     resendResetPasswordCode: "/auth/resend-reset-password-code?email=",
-    recommendRestaurant: "/restaurants/recommend-dish?date="
+    recommendRestaurant: "/restaurants/recommend-dish?date=",
+    getRestaurants: "restaurants/get-restaurants",
+    getRestaurantMenu: "/restaurants/restaurant-menu/"
   },
   post: {
     signIn: "/auth/sign-in",
@@ -305,7 +307,22 @@ const getRecommendedRestaurant = async (date: Date) => {
 
 const addRestaurantsMeal = async (data: any) => {
   const address = apiConfig.post.addRestaurantMeal
+  console.log(data)
   const response = await api.post(address, data);
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const getRestaurants = async () => {
+  const address = apiConfig.get.getRestaurants;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const getRestaurantMenu = async (id: number) => {
+  const address = `${apiConfig.get.getRestaurantMenu}${id}`;
+  const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
 }
@@ -497,5 +514,7 @@ export default {
   addRecipeToMeals,
   getPreview,
   getRecommendedRestaurant,
-  addRestaurantsMeal
+  addRestaurantsMeal,
+  getRestaurants,
+  getRestaurantMenu
 };

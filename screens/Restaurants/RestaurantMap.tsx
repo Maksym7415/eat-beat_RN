@@ -5,8 +5,8 @@ import MapView, { Marker } from 'react-native-maps';
 import SvgMaker from '../../components/SvgMaker';
 import CustomMarker from './components/CustomMarker';
 import RestaurantViewLayout from './components/RestaurantViewLayout';
-
-const API_KEY = 'AIzaSyDXUf622T_5pXNoTVXrOC0VIbt3x0iCNho';
+import { GOOGLE_MAP_API_KEY } from '../../constants';
+import server from '../../server';
 
 const getDeltasCoord = (latitude, longitude) => {
     const { width, height } = Dimensions.get('window');
@@ -17,7 +17,9 @@ const getDeltasCoord = (latitude, longitude) => {
     const lngDelta = latDelta * ASPECT_RATIO;
     return {
         latitudeDelta: latDelta,
-        longitudeDelta: lngDelta
+        longitudeDelta: lngDelta,
+        lat: latitude,
+        lng: longitude
     }
 }
 
@@ -67,13 +69,14 @@ const tallinsRestaurants = [
 
 function RestaurantMap({ navigation }) {
     const [location, setLocation] = useState(null);
+    const [restaurants, setRestaurants] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
     const [restData, setRestData] = useState({});
     const [open, setOpen] = useState(false)
 
     const getLocation = async () => {
         let location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
-        setLocation({ ...location.coords, ...getDeltasCoord(location.coords.latitude, location.coords.longitude) });
+        setLocation((loc) => ({...loc, coordinates: getDeltasCoord(location.coords.latitude, location.coords.longitude)}));
     }
 
     const getUserCoordinates = () => getLocation();
@@ -81,17 +84,17 @@ function RestaurantMap({ navigation }) {
 
 
     const getDistance = async (originCoords, destinationCoords) => {
-        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.latitude},${originCoords.longitude}&destination=${destinationCoords.latitude},${destinationCoords.longitude}&mode=driver&sensor=true&key=${API_KEY}`);
+        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.latitude},${originCoords.longitude}&destination=${destinationCoords.latitude},${destinationCoords.longitude}&mode=driver&sensor=true&key=${GOOGLE_MAP_API_KEY}`);
         const result = await data.json();
         console.log(result.routes[0].legs[0].distance.text)
         return result.routes[0].legs[0].distance.text;
 }
 
-    const setDataRestaraunt =  async (_, address, description, title, isPartner, coords) => {
+    const setDataRestaraunt =  async (_, id, address, description, title, isPartner, coords) => {
         if(!title) {
             return;
         }
-        setRestData({address, description, title, isPartner, distance: await getDistance(tallin, coords)});
+        setRestData({id, address, description: description || 'test description', title, isPartner, distance: await getDistance(tallin, coords)});
         setOpen(true);
     }
 
@@ -115,6 +118,16 @@ function RestaurantMap({ navigation }) {
         }
     }, []);
 
+    useEffect(() => {
+        async function restaurants() {
+            const result = await server.getRestaurants();
+            if(result.ok) {
+                setRestaurants(result.data)
+            }
+        }
+        restaurants()
+    }, [])
+
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.myLocation} onPress={getUserCoordinates}>
@@ -127,8 +140,8 @@ function RestaurantMap({ navigation }) {
                     //onRegionChange={(reg) => console.log(reg)}
                     //region={{...location, ...getDeltasCoord(tallin.latitude, tallin.longitude)}}
                 >
-                   {[...tallinsRestaurants, location].map((rest, key) =>  
-                    <Marker key={key} onPress={(coords) => setDataRestaraunt(coords, rest.address, rest.description, rest.title, rest.isPartner, {latitude: rest.latitude, longitude: rest.longitude})} key={rest.id} coordinate={{ latitude : rest.latitude , longitude : rest.longitude }}>
+                   {location && [...restaurants, location].map((rest, key) =>  
+                    <Marker key={key} onPress={(coords) => setDataRestaraunt(coords, rest.id, rest.address, rest.description, rest.name, rest.isPartner, {latitude: rest.coordinates.lat, longitude: rest.coordinates.lng})} key={key} coordinate={{ latitude : rest.coordinates.lat , longitude : rest.coordinates.lng }}>
                         <CustomMarker {...rest}/>
                     </Marker>
                     )}

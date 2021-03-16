@@ -5,6 +5,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import SvgMaker from '../../../components/SvgMaker';
 import { Col } from '../../../components/Config';
 import { Button } from "../../../components/MyComponents";
+import server from '../../../server';
 
 interface Props {
     title: string
@@ -16,11 +17,17 @@ interface Props {
 }
 
 
-function RestaurantViewLayout({ title, address, description, distance, isPartner, setOpen, originCoords, destinationCoords, navigation } : Props) {
+function RestaurantViewLayout({ id, title, address, description, distance, isPartner, setOpen, originCoords, destinationCoords, navigation } : Props) {
 
     const menuHandler = (title: string) => {
-        setOpen(false)
-        navigation.navigate('restaurantMenu', {title});
+        async function getMenu(restId: number) {
+            const result = await server.getRestaurantMenu(restId);
+            if(result.ok) {
+                setOpen(false);
+                navigation.navigate('restaurantMenu', {title, is_partner: isPartner, menu: result.data});
+            }
+        }
+        getMenu(id)
     }
 
     return (

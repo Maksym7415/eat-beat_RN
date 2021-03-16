@@ -8,7 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { IconMaker } from "../../components/SvgMaker";
-import { Col, Spacing, appVersion } from "../../components/Config";
+import { Col, Spacing } from "../../components/Config";
+import { APP_VERSION } from '../../constants';
 
 interface ItemProps {
   icon: string;
@@ -69,7 +70,7 @@ const DrawerLayout = (props) => {
   if (cust)
     return (
       <ScrollView {...props}>
-        <UserCard color={Colors[props.state.index]} />
+        <UserCard color={Colors[props.state.index]} isDrawer/>
         <Item
           index={2}
           focus={props.state.index}
@@ -129,17 +130,26 @@ const DrawerLayout = (props) => {
           label="Barcode Scanner"
           disabled
         />
+        <Divider />
+        <Item
+          index={8}
+          focus={props.state.index}
+          icon="about"
+          label="About"
+          onPress={() => navigate("about")}
+        />
         <View
           style={{
             flex: 1,
             alignItems: "center",
           }}
         >
-          <Text style={{ color: Col.Inactive }}>{appVersion}</Text>
+          <Text style={{ color: Col.Inactive }}>{`v ${APP_VERSION}`}</Text>
         </View>
       </ScrollView>
     );
 };
+// 
 const styles = StyleSheet.create({
   cont: {
     paddingHorizontal: 16,

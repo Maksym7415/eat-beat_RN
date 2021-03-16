@@ -18,6 +18,8 @@ export interface apiProps {
     resendVerificationCode: string
     resendResetPasswordCode: string
     recommendRestaurant: string
+    getRestaurants: string
+    getRestaurantMenu: string
   };
   post: {
     addCookedMeal: string;

@@ -11,6 +11,8 @@ const TopTabs = createMaterialTopTabNavigator();
 
 const PreviewRecipeTopNavigator = (props) => {
   const page = props.route.params.details.page;
+  const routeFrom = props.route.params.details.from;
+  const item = props.route.params.item;
 return (
   <TopTabs.Navigator
     tabBarOptions={{
@@ -22,7 +24,7 @@ return (
         width: pageSettings[page].width,
       },
       indicatorStyle: {
-        backgroundColor: Col.Recipes,
+        backgroundColor: pageSettings[page].bg,
       },
       scrollEnabled: true,
       allowFontScaling: true,
@@ -33,7 +35,7 @@ return (
       name="previewInfo"
       options={{ title: "info" }}
     >
-      {(tabsProps) => <PreviewInfo {...tabsProps} page={page}/>}
+      {(tabsProps) => <PreviewInfo {...tabsProps} page={page} routeFrom={routeFrom} item={item}/>}
     </TopTabs.Screen>
     {page === "recipes" ? <TopTabs.Screen
       name="previewIngredients"
@@ -42,9 +44,10 @@ return (
     /> : null}
     <TopTabs.Screen
       name="previewInstruction"
-      component={PreviewInstructions}
       options={{ title: pageSettings[page].previewTabTitle }}
-    />
+    >
+      {(instructionProps) => <PreviewInstructions {...instructionProps} page={page}/>}
+    </TopTabs.Screen>
   </TopTabs.Navigator>
 )};
 export default PreviewRecipeTopNavigator;

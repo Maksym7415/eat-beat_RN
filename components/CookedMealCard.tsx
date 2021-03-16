@@ -96,7 +96,7 @@ const CookedMealCard: FC<Props> = ({
         </View>
         <View style={styles.bodyContainer}>
           <Text type="cap" style={styles.recipe}>
-            Recipe
+            {source}
           </Text>
           <Text onPress={onClick} style={styles.recipeName}>
             {name}

@@ -5,12 +5,13 @@ import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
 import * as Yup from "yup";
 import { AppContext } from "../../components/AppContext";
-import { appVersion, Col, Spacing } from "../../components/Config";
+import { Col, Spacing } from "../../components/Config";
 import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { APP_VERSION } from '../../constants';
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -46,7 +47,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           opacity: 0.5,
         }}
       >
-        {appVersion}
+        {`v ${APP_VERSION}`}
       </Text>
       <Logo />
       <View style={styles.boxContainer}>

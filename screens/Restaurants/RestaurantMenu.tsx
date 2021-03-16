@@ -1,13 +1,16 @@
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Text from '../../components/custom/Typography';
 import Collapse from '../../components/Collapse';
-import EditModal from '../../components/EditModal';
+import EditModal from '../../components/newEditModal';
 import {
     Fetching,
     Memo,
   } from "../../components/interfaces";
 import { AppContext } from "../../components/AppContext";
+import server from '../../server'
+import { correctFormat } from '../../utils/date';
+import { Col } from '../../components/Config';
 
 const mockData = {
     Salad: [
@@ -50,7 +53,7 @@ interface ModalData {
     data: object;
   }
 
-function RestaurantMenu({ navigation }) {
+function RestaurantMenu({ navigation, route }) {
     const { calendar, isFetching } = useContext<Memo>(AppContext);
     const [fetching, setFetching] = useState<Fetching>({
       clicked: false,
@@ -65,24 +68,34 @@ function RestaurantMenu({ navigation }) {
         creationTime: new Date(date).getTime(),
       });
 
-      const addMenuItem = (id: number, body: object) => {
-
-        console.log(id, body)
+      const addMenuItem = async (id: number, {servings, creationTime}: object) => {
         setModalData({
             ...modalData,
             modalVisible: false
         })
-        navigation.navigate("meals");
+       const result = await server.addRestaurantsMeal({quantity: servings, date: creationTime, meal: {...modalData.meal, title: modalData.meal.name, is_partner: route.params.is_partner}});
+        if(result.ok) {
+            navigation.navigate("meals");
+        }
       }
 
-      const modalAction = ({name, id}: object) => {
+      const modalAction = (data: object) => {
         setModalData({
             ...modalData,
-            id,
-            name,
+            id: data.id,
+            name: data.name,
+            meal: data,
             modalVisible: true
         });
-      } 
+      }
+
+      const previewPage = (item) => {
+        navigation.navigate("previewPage", {
+            title: item.name,
+            details: { ...item, instructions: item.description, page: 'restaurants', nutrients: item.nutrition.nutrients, from: 'restaurantMenu' },
+            item: {meal: {...item, title: item.name, is_partner: route.params.is_partner}, quantity: 1, date: correctFormat()}
+          });
+      }
 
     return (
         <View style={styles.container}>
@@ -95,12 +108,18 @@ function RestaurantMenu({ navigation }) {
                 if (fetching.clicked) return;
                 setModalData({ ...modalData, modalVisible: false });
                 }}
+                bg={Col.Restaurants}
             />
             <View style={styles.collapseContainer}>
-                {Object.keys(mockData).map((elm) => 
-                <View key={elm.id} style={styles.collapseWrapper}>
-                    <Collapse title={elm} icon_type={false} isPrecent={false} data={mockData[elm]} cb={(data) => modalAction(data)}/>
-                </View>)}
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1, }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {route.params.menu && Object.keys(route.params.menu).map((elm , key) => 
+                    <View key={key} style={styles.collapseWrapper}>
+                        <Collapse title={elm} icon_type={false} isPrecent={false} data={route.params.menu[elm]} cb={(data) => modalAction(data)} routeToCb={previewPage}/>
+                    </View>)}
+                </ScrollView>
             </View>
         </View>
     )
@@ -117,7 +136,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     collapseWrapper: {
-        marginTop: 12,
+        // marginTop: 12,
+        marginVertical: 8,
         borderRadius: 8,
         backgroundColor: '#fff',
     }

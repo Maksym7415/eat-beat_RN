@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { StyleSheet, View, TouchableWithoutFeedback, Image } from "react-native";
+import { StyleSheet, View, TouchableWithoutFeedback, Image, ScrollView } from "react-native";
 import { Col, Spacing } from "./Config";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import SvgMaker from "./SvgMaker";
@@ -7,6 +7,7 @@ import { Text } from "../components/custom/Typography";
 import { Divider } from "./MyComponents";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { baseURL } from "../url";
+
 
 interface dataArray {
   name: string;
@@ -22,7 +23,7 @@ interface Props {
   cb?: () => void,
 }
 
-const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb }) => {
+const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, routeToCb }) => {
   const [arrow, setArrow] = useState(false);
   return (
       <View style={styles.container}>
@@ -42,34 +43,34 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb }) 
           </View>
         </TouchableWithoutFeedback>
         {arrow ? (
-          <View>
-            <Divider styler={styles.collapseDivider} />
-            {data.map((item) => (
-              <View key={item.name} style={{ flexDirection: "row", justifyContent: isPrecent ? 'flex-start': 'space-between', paddingHorizontal: 4, alignItems: 'center' }}>
-                <View style={styles.imageContainer}>
-                  {!isPrecent && <Image
-                  source={{
-                    uri: item.image,
-                  }}
-                  style={styles.image}
-                    // source={{
-                    //   uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
-                    // }}
-                  />}
-                  <Text style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}}>{item.name}</Text>
+            <View>
+              <Divider styler={styles.collapseDivider} />
+              {data.map((item) => (
+                <View key={item.name} style={{ flexDirection: "row", justifyContent: isPrecent ? 'flex-start': 'space-between', paddingHorizontal: 4, alignItems: 'center' }}>
+                  <View style={styles.imageContainer}>
+                    {!isPrecent && <Image
+                    source={{
+                      uri: item.image || 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2010/4/23/0/BX0204_greek-salad_s4x3.jpg.rend.hgtvcom.826.620.suffix/1529943050536.jpeg',
+                    }}
+                    style={styles.image}
+                      // source={{
+                      //   uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+                      // }}
+                    />}
+                    <Text style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}} onPress={() => routeToCb(item)}>{item.name}</Text>
+                  </View>
+                  {isPrecent && <Divider styler={styles.verticalDivider} />}
+                  {isPrecent ? 
+                    <Text style={styles.collapseText}>{`${
+                      item.value || 0
+                    } %`}</Text> : 
+                    <TouchableOpacity onPress={() => cb(item)}>
+                      <SvgMaker name='addMenuIcon'/>
+                    </TouchableOpacity>
+                  }
                 </View>
-                {isPrecent && <Divider styler={styles.verticalDivider} />}
-                {isPrecent ? 
-                  <Text style={styles.collapseText}>{`${
-                    item.value || 0
-                  } %`}</Text> : 
-                  <TouchableOpacity onPress={() => cb(item)}>
-                    <SvgMaker name='addMenuIcon'/>
-                  </TouchableOpacity>
-                }
-              </View>
-            ))}
-          </View>
+              ))}
+            </View>
         ) : (
           <View />
         )}
@@ -79,6 +80,7 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb }) 
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     borderRadius: 8,
     flexDirection: "column",
     backgroundColor: Col.White,

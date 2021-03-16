@@ -12,7 +12,7 @@ import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/newEditModal";
 import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import { recommendedScreens } from '../../screens/config';
+import { pageSettings, recommendedScreens } from '../../screens/config';
 
 
 
@@ -160,6 +160,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, route, restaurants, page,
           if (fetching.clicked) return;
           setModalData({ ...modalData, modalVisible: false });
         }}
+        bg={pageSettings[page].bg}
       />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}

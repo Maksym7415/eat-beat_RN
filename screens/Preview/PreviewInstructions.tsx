@@ -5,8 +5,9 @@ import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import { useIsFocused } from "@react-navigation/native";
+import { pageSettings } from "../config";
 
-const PreviewInstructions: FC<NavProps> = ({ navigation }) => {
+const PreviewInstructions: FC<NavProps> = ({ navigation, page }) => {
   const getInfo = () => {
     const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
     const Page =
@@ -29,7 +30,7 @@ const PreviewInstructions: FC<NavProps> = ({ navigation }) => {
   return (
     <LayoutScroll style={styles.container}>
       <Text type="body2">
-        {instructions ? instructions : "No Instructions here"}
+        {instructions ? instructions : pageSettings[page].noInstractiontext}
       </Text>
     </LayoutScroll>
   );

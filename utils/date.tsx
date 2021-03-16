@@ -32,3 +32,14 @@ export const dateFormat = (millisec) => {
   const time = `${hours}:${minutes}`.split(':').map((t) => t.length < 2 ? '0' + t : t).join(':');
   return `${date1} ${time}`
 } 
+
+export const correctFormat = () => {
+  const d = new Date();
+  const hours =`${d.getHours()}:${d.getMinutes()}`;
+  const times = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
+    .split("/")
+    .map((el) => (el.length === 1 ? "0" + el : el))
+    .join("-");
+  const format = times + " " + hours;
+  return format;
+}

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useContext } from "react";
 import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import { NavProps } from "../../components/interfaces";
 import { Divider } from "../../components/MyComponents";
@@ -9,7 +9,25 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 import Text from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
 import { useIsFocused } from "@react-navigation/native";
+import { Button } from "../../components/MyComponents";
 import { baseURL } from "../../url";
+import { pageSettings } from '../config'
+import EditModal from '../../components/newEditModal';
+import { AppContext } from "../../components/AppContext";
+import {
+  Fetching,
+  Memo,
+} from "../../components/interfaces";
+
+interface ModalData {
+  id: number;
+  name: string;
+  servings: number;
+  modalVisible: boolean;
+  creationTime: number;
+  data: object;
+}
+
 
 const empty = {
   image: "",
@@ -23,7 +41,20 @@ const empty = {
   dairyFree: false,
   veryPopular: false,
 };
-const PreviewInfo: FC<NavProps> = ({ navigation, route, page }) => {
+const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item }) => {
+  const { calendar, isFetching } = useContext<Memo>(AppContext);
+  const [fetching, setFetching] = useState<Fetching>({
+    clicked: false,
+    deactivate: false,
+  });
+  const { date } = calendar;
+  const [modalData, setModalData] = useState<ModalData>({
+      id: 0,
+      name: "",
+      servings: 1,
+      modalVisible: false,
+      creationTime: new Date(date).getTime(),
+    });
   const getInfo = () => {
     const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
     const Page =
@@ -69,6 +100,25 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page }) => {
     : [];
 
   const focus = useIsFocused();
+
+  const addMeal = async (id, { servings, creationTime }) => {
+    const result = await pageSettings[page].add({meal: modalData.meal, date: creationTime, quantity: servings});
+    if(result.ok) {
+      navigation.navigate('meals')
+    }
+  }
+
+  const modalAction = (data: object) => {
+    console.log(data)
+    setModalData({
+        ...modalData,
+        id: data.meal.id,
+        name: data.meal.name,
+        meal: data.meal,
+        modalVisible: true
+    });
+  }
+  console.log(item)
   useEffect(() => {
     if (focus) {
       const newFeed = getInfo();
@@ -78,80 +128,100 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page }) => {
   }, [focus]);
 
   return Object.keys(feed).length ? (
-    <LayoutScroll>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <View style={styles.imageContainer}>
-            {image !== "" ? (
-              <Image
-                source={{
-                  uri:
-                    image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
-                }}
-                style={styles.image}
-              />
-            ) : (
-              <View style={styles.image} />
-            )}
+    <View style={styles.container}>
+      <LayoutScroll>
+        <View>
+        <EditModal
+          clicked={fetching.clicked}
+          data={modalData}
+          date={date}
+          setData={(id, body) => addMeal(id, body)}
+          hideModal={() => {
+          if (fetching.clicked) return;
+          setModalData({ ...modalData, modalVisible: false });
+          }}
+          bg={pageSettings[page].bg}
+        />
+          <View style={styles.titleContainer}>
+            <View style={styles.imageContainer}>
+              {image !== "" ? (
+                <Image
+                  source={{
+                    uri:
+                      image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+                  }}
+                  style={styles.image}
+                />
+              ) : (
+                <View style={styles.image} />
+              )}
+            </View>
+            <View style={styles.nameContainer}>
+              <View style={styles.catagoryContainer}>
+                {getImage(
+                  vegetarian,
+                  vegan,
+                  glutenFree,
+                  dairyFree,
+                  veryPopular
+                ).map((icon: string, index: number) => (
+                  <SvgMaker key={index} style={styles.icons} name={icon} />
+                ))}
+              </View>
+              <Text type="h6">{name}</Text>
+            </View>
           </View>
-          <View style={styles.nameContainer}>
-            <View style={styles.catagoryContainer}>
-              {getImage(
-                vegetarian,
-                vegan,
-                glutenFree,
-                dairyFree,
-                veryPopular
-              ).map((icon: string, index: number) => (
-                <SvgMaker key={index} style={styles.icons} name={icon} />
+          <View>
+            <Nutrient
+              name={page === 'recipes' ? "Number of servings" : 'Price'}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price} €`}
+              recipe={true}
+              isUnit={true}
+            />
+            <View style={styles.boxContainer}>
+              {mainNutrients.map((item, index) => (
+                <View key={`${index}`} style={styles.box}>
+                  <Nutrient
+                    recipe={true}
+                    name={item.title}
+                    unit={item.unit}
+                    intakeNorm={item.intakeNorm}
+                    currentValue={item.amount}
+                  />
+                </View>
               ))}
             </View>
-            <Text type="h6">{name}</Text>
-          </View>
-        </View>
-        <View>
-          <Nutrient
-            name={page === 'recipes' ? "Number of servings" : 'Price'}
-            currentValue={page === 'recipes' ? (recipeServings || servings) : `${price} €`}
-            recipe={true}
-            isUnit={true}
-          />
-          <View style={styles.boxContainer}>
-            {mainNutrients.map((item, index) => (
-              <View key={`${index}`} style={styles.box}>
-                <Nutrient
-                  recipe={true}
-                  name={item.title}
-                  unit={item.unit}
-                  intakeNorm={item.intakeNorm}
-                  currentValue={item.amount}
-                />
+            <Divider style={styles.divider} />
+            <View style={styles.detailsContainer}>
+              <Text type="bodyBold" style={styles.detailTitle}>
+                Nutrition Details (per serving)
+              </Text>
+              <View>
+                {nutrients &&
+                  nutrients.map((elm, index) => (
+                    <NutritionItem
+                      key={index}
+                      item={{
+                        recipe: true,
+                        name: elm.title,
+                        unit: elm.unit,
+                        currentValue: elm.amount,
+                      }}
+                    />
+                  ))}
               </View>
-            ))}
-          </View>
-          <Divider style={styles.divider} />
-          <View style={styles.detailsContainer}>
-            <Text type="bodyBold" style={styles.detailTitle}>
-              Nutrition Details (per serving)
-            </Text>
-            <View>
-              {nutrients &&
-                nutrients.map((elm, index) => (
-                  <NutritionItem
-                    key={index}
-                    item={{
-                      recipe: true,
-                      name: elm.title,
-                      unit: elm.unit,
-                      currentValue: elm.amount,
-                    }}
-                  />
-                ))}
             </View>
           </View>
         </View>
-      </View>
-    </LayoutScroll>
+      </LayoutScroll>
+      {routeFrom !== 'mealsScreen' ? <View style={{left: 0, right: 0, bottom: 0}}>
+        <Button
+            label="ADD TO MEALS"
+            style={styles[`addToMealsFrom${page}`]}
+            onPress={() => modalAction(item)}
+        />
+    </View> : null}
+  </View>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
@@ -235,5 +305,13 @@ const styles = StyleSheet.create({
   icons: {
     margin: 2,
   },
+  addToMealsFromrestaurants: {
+    paddingHorizontal: 8,
+    backgroundColor: Col.Restaurants
+  },
+  addToMealsFromrecipes: {
+    paddingHorizontal: 8,
+    backgroundColor: Col.Recipes
+  }
 });
 export default PreviewInfo;

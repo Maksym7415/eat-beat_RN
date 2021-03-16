@@ -33,6 +33,7 @@ interface Props {
   blend?: string;
   clicked?: boolean;
   date?: Date;
+  bg: string
 }
 
 const newEditModal: FC<Props> = ({
@@ -42,6 +43,7 @@ const newEditModal: FC<Props> = ({
   blend = Col.Green,
   date,
   clicked,
+  bg
 }) => {
   const { id, name, servings, modalVisible, creationTime, source } = data;
   const handleFetch = (creationTime) => {
@@ -54,12 +56,6 @@ const newEditModal: FC<Props> = ({
     };
   };
   const [newTime, setNewTime] = useState(handleFetch(creationTime));
-  const handleEdit = () => {
-    const edit: Date = new Date();
-    edit.setHours(Math.round(parseInt(newTime.hrs, 10)));
-    edit.setMinutes(Math.round(parseInt(newTime.min, 10)));
-    return edit.getTime();
-  };
 
   const handleSubmit = () => {
     if (clicked) return;
@@ -70,7 +66,6 @@ const newEditModal: FC<Props> = ({
       .map((el) => (el.length === 1 ? "0" + el : el))
       .join("-");
     const format = times + " " + hours;
-    console.log(format)
     setData(id, {
       creationTime: format,
       servings: Number(newTime.portion),
@@ -115,11 +110,11 @@ const newEditModal: FC<Props> = ({
               </Text>
               <View style={styles.amountContainer}>
                 <TouchableOpacity
-                  style={[styles.btn, { borderColor: blend }]}
+                  style={[styles.btn, { borderColor: bg || Col.Main }]}
                   onPress={() => editServings(-0.5)}
                   disabled={Number(newTime.portion) < 1}
                 >
-                  <Icon style={{ color: blend }} name="minus" size={24} />
+                  <Icon style={{ color: bg || Col.Main }} name="minus" size={24} />
                 </TouchableOpacity>
                 <View style={styles.amountWrapper}>
                   <TextInput
@@ -133,10 +128,10 @@ const newEditModal: FC<Props> = ({
                   />
                 </View>
                 <TouchableOpacity
-                  style={[styles.btn, { borderColor: blend }]}
+                  style={[styles.btn, { borderColor: bg || Col.Main }]}
                   onPress={() => editServings(0.5)}
                 >
-                  <Icon style={{ color: blend }} name="plus" size={24} />
+                  <Icon style={{ color: bg || Col.Main }} name="plus" size={24} />
                 </TouchableOpacity>
               </View>
             </View>
