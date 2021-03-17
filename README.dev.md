@@ -109,7 +109,13 @@ Current version  =  **staging-v0-3-0**
 
 1. install expo globally
    npm i  expo-cli -g
-2. Run command in the consol
+   
+2. Enter login and password from the section
+      **ATTENTION ACCESS FOR THE EXPO**
+
+expo login      
+    
+3. Run command in the consol
 
    expo build:android --release-channel <Current version>
 
@@ -120,10 +126,8 @@ Current version  =  **staging-v0-3-0**
 expo build:android --release-channel staging-v0-3-0
 
 
-
 npm run build:expo
-3. Enter login and password from the section
-   **ATTENTION ACCESS FOR THE EXPO**
+
 
 4. When build is complete,  you can dowload apk at the section **Successfully built standalone app:**
 
