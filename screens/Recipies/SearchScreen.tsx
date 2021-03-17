@@ -165,7 +165,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
     let countConstraint = 0;
     Object.keys(filter).forEach((el) =>
       filter[el]?.forEach((constraint) => {
-        if (constraint.isUsers) {
+        if (constraint.isUsers && !constraint.disabled) {
           countConstraint++;
         }
       })
@@ -176,8 +176,8 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(response.data);
-      saveFilterConfig(response.data);
+      setFilter(pageSettings[page].searhFilter(response.data));
+      saveFilterConfig(pageSettings[page].searhFilter(response.data));
     }
   };
 

@@ -42,6 +42,7 @@ const UserSettings: FC<Props> = ({
 
   const updateIntole = (index: number) => {
     const arr = [...intole];
+    console.log(index)
     arr[index].isUsers = !arr[index].isUsers;
     setIntole(arr);
   };
@@ -69,13 +70,14 @@ const UserSettings: FC<Props> = ({
         <View style={styles.container}>
           <Text type="h6">Intolerances</Text>
           <View style={styles.chipsContainer}>
-            {intole.map(({ id, name, isUsers }, index) => (
+            {intole.map(({ id, name, isUsers, disabled }, index) => (
               <Chip
                 key={id + name}
                 title={name}
                 state={isUsers}
                 selectedColor={blend}
                 onPress={() => updateIntole(index)}
+                disabled={disabled}
               />
             ))}
           </View>
@@ -101,13 +103,14 @@ const UserSettings: FC<Props> = ({
             <View style={styles.container}>
               <Text type="h6">Meal Types</Text>
               <View style={styles.chipsContainer}>
-                {types.map(({ id, name, isUsers }, index) => (
+                {types.map(({ id, name, isUsers, disabled }, index) => (
                   <Chip
                     key={id + name}
                     title={name}
                     state={isUsers}
                     selectedColor={blend}
                     onPress={() => updateTypes(index)}
+                    disabled={disabled}
                   />
                 ))}
               </View>

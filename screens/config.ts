@@ -25,6 +25,7 @@ interface Navigation {
     page: string
 }
 
+const disabledItem = ['Side dish','Bread', 'Beverage', 'Fingerfood', 'Sauce', 'Marinade', 'Snack']
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -45,7 +46,36 @@ export const pageSettings: Pages = {
             title: 'previewRecommendedPage',
             page: 'restaurants'
         }],
-        noInstractiontext: 'No description here'
+        noInstractiontext: 'No description here',
+        searhFilter: (data: object) => {
+            const filterObject = {}
+            filterObject.intolerances = data.intolerances.map((el) =>  {
+                if(el.name === 'Dairy' || el.name === 'Gluten') {
+                    return {
+                        ...el,
+                        disabled: false
+                    }
+                }
+                return {
+                    ...el,
+                    disabled: true
+                }
+            });
+            filterObject.diets = data.diets.map((el) => ({...el, disabled: false}));
+            filterObject.mealTypes = data.mealTypes.map((el) => {
+                if(disabledItem.includes(el.name)) {
+                    return {
+                        ...el,
+                        disabled: true
+                    }
+                }
+                return {
+                    ...el,
+                    disabled: false
+                }
+            })
+        return filterObject
+        }
     },
     recipes: {
         title: 'recipes',
@@ -61,7 +91,14 @@ export const pageSettings: Pages = {
             title: 'previewRecommendedPage',
             page: 'recipes'
         }],
-        noInstractiontext: 'No instructions here'
+        noInstractiontext: 'No instructions here',
+        searhFilter: (data: Array<object>) => {
+            const filterObject = {}
+            filterObject.intolerances = data.intolerances.map((el) => ({...el, disabled: false}))
+            filterObject.diets = data.diets.map((el) => ({...el, disabled: false}));
+            filterObject.mealTypes = data.mealTypes.map((el) => ({...el, disabled: false}))
+        return filterObject
+        }
     },
         
 }
