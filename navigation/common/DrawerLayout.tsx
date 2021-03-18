@@ -112,7 +112,7 @@ const DrawerLayout = (props) => {
           focus={props.state.index}
           icon="foodStocks"
           label="Food Stocks"
-          disabled
+          onPress={() => navigate("stockDrawer")}
         />
         <Divider />
         <Item
@@ -149,7 +149,7 @@ const DrawerLayout = (props) => {
       </ScrollView>
     );
 };
-// 
+//
 const styles = StyleSheet.create({
   cont: {
     paddingHorizontal: 16,
