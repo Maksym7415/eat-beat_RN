@@ -102,33 +102,21 @@ Then make settings:
 * *run android on Android device/emulator*
 
 # Build android apk
+* make sure you have installed `expo-cli` globally
 
-# Build android apk
+```npm i expo-cli -g```
 
-Current version  =  **staging-v0-3-0**
+* make sure you have `url.js` file in the project's root folder (ignored by git)
 
-1. install expo globally
-   npm i  expo-cli -g
-   
-2. Enter login and password from the section
-      **ATTENTION ACCESS FOR THE EXPO**
-
-expo login      
-    
-3. Run command in the consol
-
-   expo build:android --release-channel <Current version>
-
-
-**just an example**
-
-
-expo build:android --release-channel staging-v0-3-0
-
-
+url.js content:
+```
+export const baseURL = "http://52.72.42.64:8081/";
+```
+* start Android build:
+```
+expo login
+expo build:android --release-channel <build version>
 npm run build:expo
+```
 
-
-4. When build is complete,  you can dowload apk at the section **Successfully built standalone app:**
-
-
+* open in browser link, displayed by `npm run build:expo` command
