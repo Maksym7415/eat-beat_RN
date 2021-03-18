@@ -33,7 +33,8 @@ const Item = ({
   focus,
   index,
   disabled = false,
-}: ItemProps) => (
+}: ItemProps) => {
+  return (
   <TouchableOpacity
     onPress={onPress}
     disabled={disabled}
@@ -59,9 +60,9 @@ const Item = ({
       {label}
     </Text>
   </TouchableOpacity>
-);
+)};
 
-const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks];
+const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks, Col.Stocks];
 
 const DrawerLayout = (props) => {
   const { navigation } = props;

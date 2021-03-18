@@ -71,14 +71,14 @@ export const DrawerNavigator = () => {
           component={RestaurantsStack}
         />
         <Drawer.Screen
-          options={{ title: "Stock" }}
-          name="stockDrawer"
-          component={StockStack}
-        />
-        <Drawer.Screen
           options={{ title: "Snacks" }}
           name="snacks"
           component={SnacksStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Stock" }}
+          name="stockDrawer"
+          component={StockStack}
         />
         <Drawer.Screen
           options={{ title: "About" }}
