@@ -35,7 +35,7 @@ export const Button: FC<ButtonProps> = ({
   type = "fill",
   clicked = false,
   onPress,
-  isShow,
+  isShow= true,
   label,
   style,
   labelStyle,
