@@ -6,25 +6,25 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import server from "../../server";
-import RecipeCard from "../../components/custom/RecipeCard";
-import EditModal from "../../components/EditModal";
+import server from "../server";
+import RecipeCard from "../components/custom/RecipeCard";
+import EditModal from "../components/EditModal";
 import {
   Fetching,
   Memo,
   NavProps,
   recipeSettings,
   RecommendedMeals,
-} from "../../components/interfaces";
-import { Col, Spacing } from "../../components/Config";
-import { AppContext } from "../../components/AppContext";
-import SearchModal from "../../components/SearchModal";
+} from "../components/interfaces";
+import { Col, Spacing } from "../components/Config";
+import { AppContext } from "../components/AppContext";
+import SearchModal from "../components/SearchModal";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
-import FilterModal from "../../components/FilterModal";
-import Text from "../../components/custom/Typography";
-import { Button } from "../../components/MyComponents";
+import FilterModal from "../components/FilterModal";
+import Text from "../components/custom/Typography";
+import { Button } from "../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import { pageSettings } from '../config';
+import { pageSettings } from '../screens/config';
 
 type constNum = () => number;
 

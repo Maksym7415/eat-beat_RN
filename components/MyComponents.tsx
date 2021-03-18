@@ -14,6 +14,7 @@ interface ButtonProps {
   onPress: () => void;
   label: string | number;
   clicked?: boolean;
+  isShow: boolean
   style?: object;
   labelStyle?: object;
   deactivate?: boolean;
@@ -34,6 +35,7 @@ export const Button: FC<ButtonProps> = ({
   type = "fill",
   clicked = false,
   onPress,
+  isShow,
   label,
   style,
   labelStyle,
@@ -41,7 +43,7 @@ export const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <Pressable disabled={clicked || deactivate} onPress={onPress}>
-      <View
+      {isShow && <View
         style={[
           styles.button,
           styles[type],
@@ -62,7 +64,7 @@ export const Button: FC<ButtonProps> = ({
             {type === "text" ? label : label.toString().toUpperCase()}
           </Text>
         )}
-      </View>
+      </View>}
     </Pressable>
   );
 };
