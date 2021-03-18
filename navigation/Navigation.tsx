@@ -17,6 +17,7 @@ import { StockStack } from "./routes/StockNav";
 import { ProfileStack } from "./routes/ProfileNav";
 import { RestaurantsStack } from "./routes/RestaurantsNav";
 import { AboutStack } from './routes/AboutNav';
+import { SnacksStack } from './routes/SnacksNav';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -73,6 +74,11 @@ export const DrawerNavigator = () => {
           options={{ title: "Stock" }}
           name="stockDrawer"
           component={StockStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Snacks" }}
+          name="snacks"
+          component={SnacksStack}
         />
         <Drawer.Screen
           options={{ title: "About" }}

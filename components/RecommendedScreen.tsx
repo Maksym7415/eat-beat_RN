@@ -1,19 +1,19 @@
 import React, { FC, useState, useEffect, useContext } from "react";
 import { StyleSheet, ScrollView, View, Alert, Text } from "react-native";
-import { Col, Spacing, Typ } from "../../components/Config";
-import RecipeCard from "./RecipeCard";
+import { Col, Spacing, Typ } from "./Config";
+import RecipeCard from "./custom/RecipeCard";
 import {
   Fetching,
   Memo,
   NavProps,
   RecommendedMeals,
-} from "../../components/interfaces";
-import { AppContext } from "../../components/AppContext";
-import EditModal from "../EditModal";
-import { Button } from "../../components/MyComponents";
+} from "./interfaces";
+import { AppContext } from "./AppContext";
+import EditModal from "./EditModal";
+import { Button } from "./MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import { pageSettings } from '../../screens/config';
-import { ModalData, AddMealsProps } from '../interfaces'
+import { pageSettings } from '../screens/config';
+import { ModalData, AddMealsProps } from './interfaces'
 
 
 
@@ -39,7 +39,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const serveData = async () => {
     setFetching({ clicked: true, deactivate: true });
-    console.log(pageSettings[page])
     const response = await pageSettings[page].get(date);
     if (response.ok) {
       setFetching({ clicked: false, deactivate: false });
@@ -132,10 +131,15 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const focus = useIsFocused();
+
   useEffect(() => {
     if (!focus) {
       setModalData({ ...modalData, modalVisible: false });
       DontRefresh ? (DontRefresh = false) : setFeed([]);
+    }
+    if(page === 'snacks') {
+      pageSettings[page].get().then((res) => setFeed(res))
+
     }
   }, [focus]);
   return feed?.length ? (
@@ -172,7 +176,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
     <>
     <View style={styles.noRecommendationContainer}>
         <Text style={styles.noRecommendationText}>
-            No recommendations
+            {pageSettings[page].recommendText}
         </Text>
     </View>
         <View style={styles.btnContainer}>
@@ -180,6 +184,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
             label="GET RECOMMENDATION"
             onPress={serveData}
             deactivate={fetching.deactivate}
+            isShow={pageSettings[page].isShowGetRecommendBtn}
             clicked={fetching.clicked}
             style={{ backgroundColor: pageSettings[page].bg }}
         />

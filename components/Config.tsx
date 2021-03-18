@@ -28,6 +28,7 @@ export const Col = {
   Profile: "#616161",
   Recipes: "#4C9C05",
   Restaurants: '#1CA287',
+  Snacks: '#C4362C',
   Primary: "#107dcb",
   Stocks: "#289BDC",
   Primary1: "#3096df",
