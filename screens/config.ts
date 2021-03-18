@@ -14,6 +14,8 @@ interface Page {
     preview: () => Function
     navigation: Array<object>
     noInstractiontext: string
+    recommendText: string
+    isShowGetRecommendBtn: boolean
 }
 
 interface Pages {
@@ -34,6 +36,8 @@ const restrauntsPreview = (id, item) => new Promise((resolve) => resolve(item));
 export const pageSettings: Pages = {
     restaurants: {
         title: 'restaurants',
+        recommendText: 'No recommendations',
+        isShowGetRecommendBtn: true,
         previewTabTitle: 'description',
         width: deviceWidth/2,
         bg: Col.Restaurants,
@@ -79,6 +83,8 @@ export const pageSettings: Pages = {
     },
     recipes: {
         title: 'recipes',
+        recommendText: 'No recommendations',
+        isShowGetRecommendBtn: true,
         previewTabTitle: 'instruction',
         width: deviceWidth/3,
         bg: Col.Recipes,
@@ -100,5 +106,38 @@ export const pageSettings: Pages = {
         return filterObject
         }
     },
+    snacks: {
+        title: 'snacks',
+        recommendText: '',
+        isShowGetRecommendBtn: false,
+        width: deviceWidth/3,
+        bg: Col.Snacks,
+        get: () => new Promise((res, rej) => res(
+            [
+                {
+                    id: 1,
+                    image: 'https://i.pinimg.com/originals/e5/a8/c3/e5a8c3b39aa8d0f5c8301f82d392b994.jpg',
+                    title: 'Apple',
+                    healthScore: 95,
+                    vegetarian: true,
+                    vegan: true,
+                    glutenFree: true,
+                    dairyFree: false,
+                    veryPopular: true,
+                },
+                {
+                    id: 2,
+                    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Orange-Fruit-Pieces.jpg/1280px-Orange-Fruit-Pieces.jpg',
+                    title: 'Orange',
+                    healthScore: 87,
+                    vegetarian: true,
+                    vegan: true,
+                    glutenFree: false,
+                    dairyFree: false,
+                    veryPopular: true,
+                }
+        ]
+        )),
+    }
         
 }

@@ -16,6 +16,7 @@ import { RecommendedStack } from "./routes/RecipesNav";
 import { ProfileStack } from "./routes/ProfileNav";
 import { RestaurantsStack } from "./routes/RestaurantsNav";
 import { AboutStack } from './routes/AboutNav';
+import { SnacksStack } from './routes/SnacksNav';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -67,6 +68,11 @@ export const DrawerNavigator = () => {
           options={{ title: "Restaurants" }}
           name="restaurants"
           component={RestaurantsStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Snacks" }}
+          name="snacks"
+          component={SnacksStack}
         />
         <Drawer.Screen
           options={{ title: "About" }}
