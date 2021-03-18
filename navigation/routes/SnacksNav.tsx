@@ -34,7 +34,6 @@ const SnackTopNavigator = () => (
     </TopTabs.Screen>
     <TopTabs.Screen name="search" >
         {(props) => <Text>Search</Text>}
-      {/* {(props) => <SearchScreen {...props} page={'snacks'} />} */}
     </TopTabs.Screen>
     <TopTabs.Screen name="Scanner" >
         {(props) => <Text>Scanner</Text>}
