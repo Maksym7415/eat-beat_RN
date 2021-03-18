@@ -33,7 +33,8 @@ const Item = ({
   focus,
   index,
   disabled = false,
-}: ItemProps) => (
+}: ItemProps) => {
+  return (
   <TouchableOpacity
     onPress={onPress}
     disabled={disabled}
@@ -59,9 +60,9 @@ const Item = ({
       {label}
     </Text>
   </TouchableOpacity>
-);
+)};
 
-const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks];
+const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks, Col.Stocks];
 
 const DrawerLayout = (props) => {
   const { navigation } = props;
@@ -112,7 +113,7 @@ const DrawerLayout = (props) => {
           focus={props.state.index}
           icon="foodStocks"
           label="Food Stocks"
-          disabled
+          onPress={() => navigate("stockDrawer")}
         />
         <Divider />
         <Item
@@ -149,7 +150,7 @@ const DrawerLayout = (props) => {
       </ScrollView>
     );
 };
-// 
+//
 const styles = StyleSheet.create({
   cont: {
     paddingHorizontal: 16,

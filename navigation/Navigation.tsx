@@ -13,6 +13,7 @@ import ChangePassword from "../screens/Auth/ChangePassword";
 import ResetSuccess from "../screens/Auth/ResetSuccessScreen";
 import { MainStack } from "./routes/FoodDiaryNav";
 import { RecommendedStack } from "./routes/RecipesNav";
+import { StockStack } from "./routes/StockNav";
 import { ProfileStack } from "./routes/ProfileNav";
 import { RestaurantsStack } from "./routes/RestaurantsNav";
 import { AboutStack } from './routes/AboutNav';
@@ -73,6 +74,11 @@ export const DrawerNavigator = () => {
           options={{ title: "Snacks" }}
           name="snacks"
           component={SnacksStack}
+        />
+        <Drawer.Screen
+          options={{ title: "Stock" }}
+          name="stockDrawer"
+          component={StockStack}
         />
         <Drawer.Screen
           options={{ title: "About" }}

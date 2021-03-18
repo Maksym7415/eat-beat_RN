@@ -30,6 +30,7 @@ export const Col = {
   Restaurants: '#1CA287',
   Snacks: '#C4362C',
   Primary: "#107dcb",
+  Stocks: "#289BDC",
   Primary1: "#3096df",
   Primary2: "rgba(16, 170, 204, 0.2)",
   Primary3: "rgba(0, 153, 255, 0.09)",
