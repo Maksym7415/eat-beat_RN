@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { IconMaker } from "../../components/SvgMaker";
 import { Col, Spacing } from "../../components/Config";
-import { APP_VERSION } from '../../constants';
 
 interface ItemProps {
   icon: string;
@@ -139,14 +138,6 @@ const DrawerLayout = (props) => {
           label="About"
           onPress={() => navigate("about")}
         />
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: Col.Inactive }}>{`v ${APP_VERSION}`}</Text>
-        </View>
       </ScrollView>
     );
 };

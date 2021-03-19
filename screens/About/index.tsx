@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Col } from '../../components/Config';
 import SvgMaker from '../../components/SvgMaker';
 import Typography from '../../components/custom/Typography';
-import { APP_VERSION } from '../../constants';
+import Constants from 'expo-constants';
 
 function About(params) {
     const [aboutInfo, setAboutInfo] = useState({})
@@ -14,7 +14,7 @@ function About(params) {
                 const data = await AsyncStorage.getItem('@doc');
                 const parseData =JSON.parse(data)
                 setAboutInfo({link: parseData.link, about: parseData.aboutApp})
-        })()    
+        })()
     }, [])
 
     return (
@@ -26,10 +26,10 @@ function About(params) {
                     </View>
                     <View style={styles.version}>
                         <Typography type='cap' style={{color: Col.White}}>
-                                {`version ${APP_VERSION}`}
+                                {`version ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}
                         </Typography>
                     </View>
-                    
+
                 </View>
                 <View style={styles.aboutAppContainer}>
                     <View style={styles.itemContainer}>
@@ -58,7 +58,7 @@ export default About;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, 
+        flex: 1,
         paddingBottom: 20
     },
     header: {
