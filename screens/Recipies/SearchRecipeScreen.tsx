@@ -6,25 +6,24 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import server from "../server";
-import RecipeCard from "../components/custom/RecipeCard";
-import EditModal from "../components/EditModal";
+import server from "../../server";
+import RecipeCard from "../../components/custom/RecipeCard";
+import EditModal from "../../components/EditModal";
 import {
   Fetching,
   Memo,
   NavProps,
   recipeSettings,
   RecommendedMeals,
-} from "../components/interfaces";
-import { Col, Spacing } from "../components/Config";
-import { AppContext } from "../components/AppContext";
-import SearchModal from "../components/SearchModal";
+} from "../../components/interfaces";
+import { Col, Spacing } from "../../components/Config";
+import { AppContext } from "../../components/AppContext";
+import SearchModal from "../../components/SearchModal";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
-import FilterModal from "../components/FilterModal";
-import Text from "../components/custom/Typography";
-import { Button } from "../components/MyComponents";
+import FilterModal from "../../components/FilterModal";
+import Text from "../../components/custom/Typography";
+import { Button } from "../../components/MyComponents";
 import { useIsFocused } from "@react-navigation/native";
-import { pageSettings } from '../screens/config';
 
 type constNum = () => number;
 
@@ -48,7 +47,7 @@ interface Feed {
   totalResults: number;
 }
 
-const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
+const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   const { isShow, showModal, calendar, isFetching } = useContext<Memo>(
     AppContext
   );
@@ -58,7 +57,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
     deactivate: false,
     myFetching: false,
   });
-  const [feed, setFeed] = useState<Feed | null | string>(pageSettings[page].pageText);
+  const [feed, setFeed] = useState<Feed | null | string>('Search the meals');
   const [filter, setFilter] = useState<recipeSettings>({
     intolerances: [],
     diets: [],
@@ -92,7 +91,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
       config += `&type=${filterConfig.mealTypes}`;
     showModal(false, page);
     setFetching({ ...fetching, myFetching: true });
-    const response = await pageSettings[page].search(state, config, 0);
+    const response = await server.getRecipeByName(state, config, 0);
     if (response.ok) {
       if (!response.data.results.length) {
         setFetching({ ...fetching, myFetching: false });
@@ -153,13 +152,10 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
     const data = {
       mealId: modalData.data.id,
-      meal: { ...modalData.data, title: modalData.data.name },
       quantity: servings,
       date: creationTime,
     }
-    if(page === 'restaurants') delete data.mealId;
-    else delete data.meal
-    const result = await pageSettings[page].add(data);
+    const result = await server.addCookedMeal(data);
     if(!result.ok) return;
     setModalData({ ...modalData, modalVisible: false });
     navigation.navigate("meals");
@@ -178,11 +174,20 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
     return countConstraint;
   };
 
+  const getPreferences = (data) => {
+    const filterObject = {}
+    filterObject.intolerances = data.intolerances.map((el) => ({...el, disabled: false}))
+    filterObject.diets = data.diets.map((el) => ({...el, disabled: false}));
+    filterObject.mealTypes = data.mealTypes.map((el) => ({...el, disabled: false}))
+    return filterObject;
+    }
+
+
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(pageSettings[page].searhFilter(response.data));
-      saveFilterConfig(pageSettings[page].searhFilter(response.data));
+      setFilter(() => getPreferences(response.data));
+      saveFilterConfig(getPreferences(response.data));
     }
   };
 
@@ -196,7 +201,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
     if (filterConfig.mealTypes.length)
       config += `&type=${filterConfig.mealTypes}`;
     showModal(false, page);
-    const response = await pageSettings[page].search(
+    const response = await server.getRecipeByName(
       state,
       config,
       feed.offset + 10
@@ -216,11 +221,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const onPreview = async (item) => {
-    const data = await pageSettings[page].preview(item.id);
-    const pageData = {
-      recipes: data,
-      restaurants: item
-    }
+    const data = await server.getPreview(item.id);
     const {
       image,
       servings,
@@ -232,11 +233,9 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
       nutrition,
       analyzedInstructions,
       price,
-      description,
       title,
       name,
-    } = pageData[page];
-    if(page === 'recipes') {
+    } = data;
       let ing = "";
         analyzedInstructions && analyzedInstructions.forEach((el) => {
           el.steps.forEach((ele) => {
@@ -257,32 +256,11 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
         veryPopular,
         price
       };
-      navigation.navigate(pageSettings[page].navigation[0].title, {
+      navigation.navigate('previewRecommendedPage', {
         title,
-        details: { ...details, page: pageSettings[page].navigation[0].page },
+        details: { ...details, page: 'recipes' },
         item: {meal: { id: item.id }}
       });
-    } else if(page === 'restaurants') {
-      const details = {
-        image: image ,
-        name: title || name,
-        servings,
-        nutrients: [...nutrition.nutrients],
-        ingredients:  null,
-        instructions: description, 
-        vegetarian,
-        vegan,
-        glutenFree,
-        dairyFree,
-        veryPopular,
-        price
-      };
-      navigation.navigate(pageSettings[page].navigation[0].title, {
-        title,
-        details: { ...details, page: pageSettings[page].navigation[0].page },
-        item: {meal: {...details, title: details.name, nutrition: {nutrients: nutrition.nutrients}}}
-      });
-    }
   };
 
   useEffect(() => {
@@ -301,7 +279,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
         date={calendar.date}
         setData={(id, body) => addMeal(id, body)}
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
-        bg={pageSettings[page].bg}
+        bg={Col.Recipes}
       />
       <SearchModal
         modalVisible={isShow[page]}
@@ -417,4 +395,4 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Restaurants
   },
 });
-export default SearchScreen;
+export default SearchRecipeScreen;

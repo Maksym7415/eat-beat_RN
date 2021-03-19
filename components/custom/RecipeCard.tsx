@@ -30,13 +30,13 @@ const RecipeCard: FC<Props> = ({
     id,
     image,
     title,
-    name,
     healthScore,
     vegetarian,
     vegan,
     glutenFree,
     dairyFree,
     veryPopular,
+    name
   } = details;
   const getImage = (
     vegetarian: boolean,
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
   },
   catagoryContainer: {
     flexDirection: "row",
+    minHeight: 30
   },
   icons: {
     margin: 2,

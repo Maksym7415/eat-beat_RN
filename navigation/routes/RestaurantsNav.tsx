@@ -9,7 +9,7 @@ import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
 import RestaurantMenu from '../../screens/Restaurants/RestaurantMenu';
 import RecommendScreen from '../../components/RecommendedScreen';
-import SearchScreen from "../../components/SearchScreen";
+import SearchRestaurantsScreen from "../../screens/Restaurants/SearchRestaurantsScreen";
 import PreviewRecipeTopNavigator from "./PreviewTab";
 import RestaurantMap from '../../screens/Restaurants/RestaurantMap';
 
@@ -35,7 +35,7 @@ const RestaurantsTopNavigator = () => (
       {(props) => <RecommendScreen {...props} page='restaurants' />}
     </TopTabs.Screen>
     <TopTabs.Screen name="search" >
-      {(props) => <SearchScreen {...props} page={'restaurants'} />}
+      {(props) => <SearchRestaurantsScreen {...props} page={'restaurants'} />}
     </TopTabs.Screen>
     <TopTabs.Screen
       name="restaurant_map"

@@ -111,7 +111,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
       restaurants: {
         date: creationTime, 
         quantity: servings,
-        eal: modalData.meal, 
+        meal: modalData.meal, 
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
