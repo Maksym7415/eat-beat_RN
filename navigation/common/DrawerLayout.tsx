@@ -13,7 +13,8 @@ import { Col, Spacing } from "../../components/Config";
 interface ItemProps {
   icon: string;
   label: string;
-  onPress: () => void;
+  onPress?: () => void;
+  disabled?: boolean;
   focus: number;
   index: number;
 }
@@ -24,22 +25,43 @@ const Divider = () => (
   </View>
 );
 
-const Item = ({ icon, label, onPress, focus, index }: ItemProps) => (
+const Item = ({
+  icon,
+  label,
+  onPress,
+  focus,
+  index,
+  disabled = false,
+}: ItemProps) => {
+  return (
   <TouchableOpacity
     onPress={onPress}
+    disabled={disabled}
     style={[
       styles.itemContainer,
       focus === index && { backgroundColor: Colors[index] },
     ]}
   >
-    <IconMaker name={icon} fill={focus === index ? "#fff" : "#737373"} />
-    <Text style={[styles.item, focus === index && { color: "white" }]}>
+    <View style={{ width: 24 }}>
+      <IconMaker
+        name={icon}
+        fill={disabled ? Col.Inactive : focus === index ? "#fff" : "#737373"}
+      />
+    </View>
+    <Text
+      style={[
+        styles.item,
+        disabled
+          ? { color: Col.Inactive }
+          : focus === index && { color: "white" },
+      ]}
+    >
       {label}
     </Text>
   </TouchableOpacity>
-);
+)};
 
-const Colors = [Col.Main, Col.Recipes, Col.Profile];
+const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks, Col.Stocks];
 
 const DrawerLayout = (props) => {
   const { navigation } = props;
@@ -48,7 +70,7 @@ const DrawerLayout = (props) => {
   if (cust)
     return (
       <ScrollView {...props}>
-        <UserCard color={Colors[props.state.index]} />
+        <UserCard color={Colors[props.state.index]} isDrawer/>
         <Item
           index={2}
           focus={props.state.index}
@@ -76,49 +98,50 @@ const DrawerLayout = (props) => {
           focus={props.state.index}
           icon="restaurants"
           label="Restaurants"
-          onPress={() => console.log("hi")}
+          onPress={() => navigate("restaurants")}
         />
         <Item
-          index={3}
+          index={4}
           focus={props.state.index}
           icon="snacks"
           label="Snacks"
-          onPress={() => console.log("hi")}
+          onPress={() => navigate("snacks")}
         />
         <Item
-          index={3}
+          index={5}
           focus={props.state.index}
           icon="foodStocks"
           label="Food Stocks"
-          onPress={() => console.log("hi")}
+          onPress={() => navigate("stockDrawer")}
         />
         <Divider />
         <Item
-          index={3}
+          index={6}
           focus={props.state.index}
           icon="shoppingList"
           label="Shopping List"
-          onPress={() => console.log("hi")}
+          disabled
         />
         <Divider />
         <Item
-          index={3}
+          index={7}
           focus={props.state.index}
           icon="barcodeScanner"
           label="Barcode Scanner"
-          onPress={() => console.log("hi")}
+          disabled
         />
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-          }}
-        >
-          <Text>v 0.1.4</Text>
-        </View>
+        <Divider />
+        <Item
+          index={8}
+          focus={props.state.index}
+          icon="about"
+          label="About"
+          onPress={() => navigate("about")}
+        />
       </ScrollView>
     );
 };
+//
 const styles = StyleSheet.create({
   cont: {
     paddingHorizontal: 16,

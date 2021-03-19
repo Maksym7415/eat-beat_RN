@@ -45,6 +45,7 @@ const InputFeild: FC<Props> = ({
           keyboardType="number-pad"
           placeholder={value ? value?.toString() : "---"}
           onChangeText={(value) => setValue(value)}
+          onBlur={handleChange}
           onEndEditing={handleChange}
           placeholderTextColor={required || value ? Col.Error : Col.Black}
           style={styles.input}

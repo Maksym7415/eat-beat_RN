@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import FormikInput from "../../components/FormikInput";
@@ -11,6 +11,7 @@ import server from "../../server";
 import Modal from "../../components/Modal";
 import Logo from "./common/Logo";
 import CheckBox from "../../components/custom/CheckBox";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -33,7 +34,6 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     if (response.ok) {
       navigation.navigate("confirm", value);
     } else {
-      //Alert.alert("Error", `${response.data.message}`);
       if (response.status === 400) setError(true);
       setClicked(false);
     }
@@ -43,83 +43,86 @@ const RegisterScreen: FC<NavProps> = ({ navigation }) => {
     setDoc({ label, desc });
     setVisible(true);
   };
-
   return (
-    <View style={styles.container}>
+    <>
       <Modal
         modalVisible={visible}
         label={doc.label}
         content={doc.desc}
         showModal={() => setVisible(false)}
       />
-      <Logo />
-      <View style={styles.boxContainer}>
-        <Text type="h6" style={styles.header}>
-          Create account
-        </Text>
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={Validation}
-          onSubmit={(value) => signUp(value)}
-        >
-          {({ handleSubmit }) => (
-            <>
-              <FormikInput value="email" label="Email" />
-              <FormikInput value="password" label="Password" maxLength={50} />
-              <ErrorMessage
-                visible={error}
-                error={`this email is already registered`}
-                style={styles.errorContainer}
-              />
-              <View style={styles.termsContainer}>
-                <CheckBox
-                  blend={Col.Main}
-                  value={toggleTerms}
-                  name={"reg"}
-                  onCheck={(name, newValue) => setToggleTerms(newValue)}
-                />
-                <View style={styles.textContainer}>
-                  <Text>By creating an account, you agree to EatBeat's</Text>
-                  <Text
-                    onPress={() =>
-                      showModal("EAT BEAT Terms of Use", "TermsOfUse")
-                    }
-                    style={{ color: Col.Main }}
-                  >
-                    Terms of Use
-                  </Text>
-                  <Text> and </Text>
-                  <Text
-                    onPress={() => showModal("Privacy Policy", "PrivacyPolicy")}
-                    style={{ color: Col.Main }}
-                  >
-                    Privacy Policy
-                  </Text>
-                </View>
-              </View>
-              <Button
-                clicked={clicked}
-                deactivate={!toggleTerms}
-                onPress={handleSubmit}
-                label="REGISTER"
-              />
-            </>
-          )}
-        </Formik>
-        <View style={styles.footer}>
-          <Text type="body2">
-            Already have an account?
-            <Text
-              type="bodyBold2"
-              style={styles.txtBtn}
-              onPress={() => navigation.navigate("login")}
-            >
-              {"  Sign in"}
-            </Text>
+      <LayoutScroll style={styles.container}>
+        <Logo />
+        <View style={styles.boxContainer}>
+          <Text type="h6" style={styles.header}>
+            Create account
           </Text>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={Validation}
+            onSubmit={(value) => signUp(value)}
+          >
+            {({ handleSubmit }) => (
+              <>
+                <FormikInput value="email" label="Email" />
+                <FormikInput value="password" label="Password" maxLength={50} />
+                <ErrorMessage
+                  visible={error}
+                  error={`this email is already registered`}
+                  style={styles.errorContainer}
+                />
+                <View style={styles.termsContainer}>
+                  <CheckBox
+                    blend={Col.Main}
+                    value={toggleTerms}
+                    name={"reg"}
+                    onCheck={(name, newValue) => setToggleTerms(newValue)}
+                  />
+                  <View style={styles.textContainer}>
+                    <Text>By creating an account, you agree to EatBeat's</Text>
+                    <Text
+                      onPress={() =>
+                        showModal("EAT BEAT Terms of Use", "TermsOfUse")
+                      }
+                      style={{ color: Col.Main }}
+                    >
+                      Terms of Use
+                    </Text>
+                    <Text> and </Text>
+                    <Text
+                      onPress={() =>
+                        showModal("Privacy Policy", "PrivacyPolicy")
+                      }
+                      style={{ color: Col.Main }}
+                    >
+                      Privacy Policy
+                    </Text>
+                  </View>
+                </View>
+                <Button
+                  clicked={clicked}
+                  deactivate={!toggleTerms}
+                  onPress={handleSubmit}
+                  label="REGISTER"
+                />
+              </>
+            )}
+          </Formik>
+          <View style={styles.footer}>
+            <Text type="body2">
+              Already have an account?
+              <Text
+                type="bodyBold2"
+                style={styles.txtBtn}
+                onPress={() => navigation.navigate("login")}
+              >
+                {"  Sign in"}
+              </Text>
+            </Text>
+          </View>
         </View>
-      </View>
-    </View>
+      </LayoutScroll>
+    </>
   );
 };
 

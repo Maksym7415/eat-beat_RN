@@ -14,7 +14,6 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
   const [newValue, setNewValue] = useState("");
   const [edit, setEdit] = useState(false);
   const onSubmit = () => {
-    console.log(value.length > 5 && value !== newValue && newValue.length > 5);
     if (value.length > 5 && value !== newValue && newValue.length > 5) {
       onEdit(value, newValue);
     }
@@ -39,8 +38,8 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
           <TextInput
             maxLength={50}
             value={newValue}
-            style={edit ? styles.editInput : styles.textInput}
-            secureTextEntry={!edit}
+            style={styles.editInput}
+            secureTextEntry={true}
             placeholder="New Password"
             onChangeText={(val) => setNewValue(val)}
           />
@@ -66,14 +65,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 14,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   editInput: {
     fontSize: 16,
     borderBottomWidth: 1,
+    color: Col.Black,
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   button: {
     width: 48,

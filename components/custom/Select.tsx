@@ -49,7 +49,6 @@ const Select: FC<Props> = ({
       onSelect(value);
       setItem({ title, value });
     }
-    console.log(value);
     setShow(!show);
   };
 

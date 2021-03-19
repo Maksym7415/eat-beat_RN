@@ -3,7 +3,7 @@ import { Modal, View, StyleSheet } from "react-native";
 import { Col, Spacing } from "./Config";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import UserSettings from "./UserSettings";
-import { recipeSettings } from "./interfaces";
+import { recipeSettings, Styles } from "./interfaces";
 import Text from "./custom/Typography";
 
 interface Props {
@@ -12,6 +12,12 @@ interface Props {
   constaintNumber: number;
   hideModal: () => void;
   saveFilterData: (value: recipeSettings) => void;
+  fetching: {
+    clicked: boolean;
+    deactivate: boolean;
+    myFetching: boolean;
+  };
+  page: string
 }
 
 const FilterModal: FC<Props> = ({
@@ -21,15 +27,15 @@ const FilterModal: FC<Props> = ({
   saveFilterData,
   constaintNumber,
   fetching,
+  page
 }) => {
   const saveFilterConfig = (value: recipeSettings) => {
     saveFilterData(value);
-    hideModal();
   };
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
-      <View style={styles.container}>
+      <View style={styles[`container${page}`]}>
         <Icon
           onPress={hideModal}
           name={"arrow-back"}
@@ -39,11 +45,11 @@ const FilterModal: FC<Props> = ({
         <Text
           type="h6"
           style={styles.text}
-        >{`Constraint(${constaintNumber})`}</Text>
+        >{`Filters(${constaintNumber})`}</Text>
       </View>
       <UserSettings
         data={data}
-        blend={Col.Recipes}
+        blend={styles[`bg${page}`].backgroundColor}
         onSave={saveFilterConfig}
         showMealsTypes={true}
         backgroundColor={Col.Background}
@@ -52,12 +58,20 @@ const FilterModal: FC<Props> = ({
     </Modal>
   );
 };
-const styles = StyleSheet.create({
-  container: {
+
+const styles: Styles = StyleSheet.create({
+  containerrecipes: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: Col.Recipes,
+    padding: Spacing.medium,
+  },
+  containerrestaurants: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: Col.Restaurants,
     padding: Spacing.medium,
   },
   input: {
@@ -71,6 +85,13 @@ const styles = StyleSheet.create({
     color: Col.White,
     alignSelf: "center",
   },
+  bgrecipes: {
+    backgroundColor: Col.Recipes
+  },
+  bgrestaurants: {
+    backgroundColor: Col.Restaurants
+  }
+
 });
 
 export default FilterModal;

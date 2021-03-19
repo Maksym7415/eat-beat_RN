@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native';
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import KeyboardShift from '../KeyboardShift';
 import { Col } from '../Config';

@@ -10,19 +10,16 @@ import {
 import * as Device from "expo-device";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert, Platform } from "react-native";
-import Axios from "axios";
 import { AuthProps } from "../components/interfaces";
+import { baseURL } from "../url";
+import encryption from '../utils/dataEncryption';
+import Axios from "axios";
 
-//process.env.ENVIRONMENT === 'production' ? process.env.API_BASE_PROD : process.env.ENVIRONMENT === 'development' ? process.env.API_BASE_DEV : process.env.API_BASE_TEST,
-
-// console.log(Device, )
 const apiConfig: apiProps = {
-  //baseURL: "http://10.4.30.212:8081/api",
-  baseURL: "https://logisticbrocker.hopto.org/eat-beat/api",
-  testURL: "https://logisticbrocker.hopto.org/eat-beat-test/api",
+  baseURL: baseURL + "api",
   get: {
     profile: "/user/profile-data",
-    cookedMeals: "/meals/cooked-meals?date=",
+    cookedMeals: "/meals/day-meals?date=",
     history: "/meals/healthscore-history?offset=",
     dailyConsumption: "/meals/daily-consumption?date=",
     recommendedMeals: "/meals/recommend-meals?date=",
@@ -31,10 +28,14 @@ const apiConfig: apiProps = {
     verification: "/auth/verify-account?verificationCode=",
     resetPassword: "/auth/reset-password",
     recipeInfo: "/recipe/my-recipes/",
-    docs: "/main/terms-of-use",
+    docs: "/main/app-info",
     userAcitvities: "/main/user-activities",
     resendVerificationCode: "/auth/resend-verification-code?email=",
     resendResetPasswordCode: "/auth/resend-reset-password-code?email=",
+    recommendRestaurant: "/restaurants/recommend-dish?date=",
+    getRestaurants: "/restaurants/all-restaurants",
+    getRestaurantMenu: "/restaurants/restaurant-menu/",
+    restaurantSearch: "/restaurants/search?name="
   },
   post: {
     signIn: "/auth/sign-in",
@@ -45,16 +46,18 @@ const apiConfig: apiProps = {
     refresh: "/auth/refresh-token",
     addRecipe: "/recipe/add-own-recipe",
     addRecipeAvatar: "/upload/recipe-image/",
+    addUserRecipeToMeals: "/meals/add-meal-own-recipe",
+    addRestaurantMeal: '/restaurants/eat-dish',
   },
   del: {
     user: "/user/delete-user",
-    cookedMeal: "/meals/cooked-meal/",
+    cookedMeal: "/meals/day-meal/",
   },
   put: {
     profile: "/user/update-profile",
     intakeNorms: "/user/intake-norms",
     password: "/user/update-password",
-    updateCookedMeal: "/meals/update-cooked-meal/",
+    updateCookedMeal: "/meals/update-meal/",
     updateUserReferences: "/user/update-preferences",
     updateIntakeNorms: "/user/intake-norms",
     updateRecipe: "​/recipe/update-recipe/",
@@ -97,11 +100,30 @@ const refreshToken = async () => {
   api.deleteHeader("Authorization");
   const address = apiConfig.post.refresh;
   const token = await getRefresh();
-  console.log(token, address)
-  const response = await api.post(address, { refreshToken: token });
-  console.log(response)
-  if (response.ok) setToken(response.data);
-  return response;
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append(
+    "User-Agent",
+    Platform.OS === "ios"
+      ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+      : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+  );
+  const raw = JSON.stringify({ refreshToken: `${token}` });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const res = await fetch(
+    apiConfig.baseURL + apiConfig.post.refresh,
+    requestOptions
+  );
+  const result = await res.json();
+  if (result.code !== 110) setToken(result);
+  return result;
 };
 
 const setHeader = (token: string) => {
@@ -122,6 +144,11 @@ const logError = async ({
   headers,
   data,
 }: errorProps) => {
+  console.log(problem,
+    config,
+    status,
+    headers,
+    data,)
   if (status < 401) Alert.alert("error", data?.message);
   //console.log(config, "\nstatus => ", status, "\ndata => ", data);
 };
@@ -181,13 +208,18 @@ const getProfile = async () => {
 
 const getHistory = async (days: number) => {
   const address = apiConfig.get.history + days;
-  const response = await api.get(address);  
+  const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
 };
 
-const getRecipeByName = async (name: string, config: string) => {
-  const address = apiConfig.get.recipeByName + name + config;
+const getRecipeByName = async (
+  name: string,
+  config: string,
+  offset: number
+) => {
+  const address =
+    apiConfig.get.recipeByName + name + config + `&offset=${offset}`;
   const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;
@@ -231,16 +263,26 @@ const getRecipes = async () => {
 
 const addRecipe = async (data: any) => {
   const address = apiConfig.post.addRecipe;
+  const params = { ...data }
+  if (!params.servings) delete params.servings
+  const response = await api.post(address, params);
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const addRecipeToMeals = async (data: any) => {
+  const address = apiConfig.post.addUserRecipeToMeals;
   const response = await api.post(address, data);
+  // console.log(response)
   if (!response.ok) logError(response);
   return response;
 };
 
 const updateRecipe = async (
   id: number,
-  { avatar, title, ingredientList, instruction }
+  { avatar, title, ingredientList, instruction, servings }
 ) => {
-  const params = { title, ingredientList, instruction };
+  const params = { title, ingredientList, instruction, servings };
   const bodyParams = {};
   Object.keys(params).forEach((el) =>
     params[el] ? (bodyParams[el] = params[el]) : el
@@ -257,9 +299,47 @@ const addRecipeAvatar = async (formData: FormData, id: number) => {
   return response;
 };
 
+const getRecommendedRestaurant = async (date: Date) => {
+  const address = apiConfig.get.recommendRestaurant + getCalendar(date);
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+};
+
+const addRestaurantsMeal = async (data: any) => {
+  const address = apiConfig.post.addRestaurantMeal
+  console.log(data)
+  const response = await api.post(address, data);
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const getRestaurants = async () => {
+  const address = apiConfig.get.getRestaurants;
+  console.log(address, 'address')
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const getRestaurantMenu = async (id: number) => {
+  const address = `${apiConfig.get.getRestaurantMenu}${id}`;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const restaurantSearch = async ( name: string, config: string, offset: number) => {
+  const address = apiConfig.get.restaurantSearch + name + config + `&offset=${offset}`;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+}
+
 const signIn = async (payload: AuthProps) => {
+  const encrypted = await encryption(payload)
   const address = apiConfig.post.signIn;
-  const response = await api.post(address, payload);
+  const response = await api.post(address, encrypted);
   if (response.ok) {
     setToken(response.data);
   }
@@ -267,11 +347,11 @@ const signIn = async (payload: AuthProps) => {
 };
 
 const register = async (payload: AuthProps) => {
+  const encrypted = await encryption(payload)
   const address = apiConfig.post.register;
-  const response = await api.post(address, payload);
+  const response = await api.post(address, encrypted);
   return response;
 };
-
 const upload = async (uri) => {
   const address = apiConfig.baseURL + apiConfig.post.upload;
   const token = await getToken();
@@ -283,7 +363,6 @@ const upload = async (uri) => {
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
   });
-  console.log(address)
   const response = await api.post(address, formData, {
     headers: {
       Accept: "application/json",
@@ -295,10 +374,21 @@ const upload = async (uri) => {
   return response.ok;
 };
 
-const delCookedMeal = async (id: number) => {
-  const address = apiConfig.del.cookedMeal + id;
-  const response = await api.delete(address);
-  if (!response.ok) logError(response);
+const delCookedMeal = async (id: number, data: Object) => {
+  const address = baseURL.slice(0, baseURL.length-1) + '/api' + apiConfig.del.cookedMeal + id;
+  const token = await getToken();
+  const response = await Axios(address, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      'User-Agent':   Platform.OS === "ios"
+        ? `${Device.manufacturer}/${Device.modelId}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+        : `${Device.manufacturer}/${Device.productName}/${Device.modelName}/${Device.osBuildId}/${Device.osName}/${Device.osVersion}`
+    },
+    data
+  }).then(res=> res).catch((error) => console.log(error, 'error'));
+  if (response.status >= 400) logError(response);
   return response;
 };
 
@@ -324,14 +414,17 @@ const updateProfile = async (data: object) => {
 
 const changePassword = async (options: changePassProps) => {
   const address = apiConfig.put.password;
-  const response = await api.patch(address, options);
+  const encrypted = await encryption(options)
+  const response = await api.patch(address, encrypted);
   if (!response.ok) logError(response);
   return response;
 };
 
 const updatePassword = async (options: updatePassProps) => {
   const address = apiConfig.post.updatePassword;
-  const response = await api.post(address, options);
+  const encrypted = await encryption(options);
+  const response = await api.post(address, encrypted);
+  console.log(response)
   if (!response.ok) logError(response);
   return response.ok;
 };
@@ -385,6 +478,12 @@ const changeURL = () => {
   Alert.alert("change", `changed from: ${current}\nto: ${change}`);
 };
 
+const getPreview = async (id) => {
+  const response = await api.get(`${baseURL}api/meals/recipe-info/${id}`);
+  if (!response.ok) logError(response);
+  return response.data;
+}
+
 export default {
   api,
   setup,
@@ -421,4 +520,11 @@ export default {
   updateRecipe,
   getDocs,
   refreshToken,
+  addRecipeToMeals,
+  getPreview,
+  getRecommendedRestaurant,
+  addRestaurantsMeal,
+  getRestaurants,
+  getRestaurantMenu,
+  restaurantSearch
 };

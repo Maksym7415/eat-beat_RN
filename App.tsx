@@ -1,39 +1,32 @@
 import React, { useState, useMemo, useEffect } from "react";
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold,
+} from "@expo-google-fonts/roboto";
+import server, { api } from "./server";
 import Splash from "./screens/SplashScreen";
-import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
+import { ProfileData } from "./components/Config";
 import { AppContext } from "./components/AppContext";
+import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
-import * as Font from "expo-font";
-import server, { api } from "./server";
-import { ProfileData } from "./components/Config";
-
-let customFonts = {
-  Inter_400Regular: require("./assets/font/Roboto-Regular.ttf"),
-  Inter_500Medium: require("./assets/font/Roboto-Medium.ttf"),
-  Inter_700Bold: require("./assets/font/Roboto-Bold.ttf"),
-};
+import pingServer from './utils/pingServer';
 
 let flag = false;
-let failedQueue = [];
+let failedQueue: object[] = [];
 const processQueue = (error, token = null) => {
   failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
+    error ? prom.reject(error) : prom.resolve(token);
   });
-
   failedQueue = [];
 };
 
 export default function App() {
-  //AsyncStorage.clear();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
-  const [getRecommend, setGetrecommend] = useState<boolean>(false);
-  const [show, setShow] = useState<boolean>(false);
+  const [show, setShow] = useState<object>({recipes: false, restaurants: false});
   const [fetching, setFetching] = useState<number>(0);
   const [cal, setCal] = useState<Cal>({
     visible: false,
@@ -44,51 +37,46 @@ export default function App() {
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const ApiInterceptor = async () => {
-
     api.addAsyncResponseTransform(async (Res) => {
-      const { ok, status, data, config } = Res
+      const { ok, status, data, config } = Res;
       if (status === 401) {
-        console.log('failedq',flag )
-        if(flag) {
+        if (flag) {
           return new Promise((resolve, reject) => {
-
             failedQueue.push({ resolve, reject });
           })
-            .then( async (token) => {
+            .then(async (token) => {
               const newConfig = { ...config };
               newConfig.headers.Authorization = `Bearer ${token}`;
               const newRes = await api.any(newConfig);
-              Res.ok = newRes.ok
-              Res.status = newRes.status
+              Res.ok = newRes.ok;
+              Res.status = newRes.status;
               Res.data = newRes.data;
               return;
-
             })
             .catch((err) => Promise.reject(err));
         }
-        flag = true
+        flag = true;
         const res = await server.refreshToken();
-        if (res.status === 401) {
+        if (res?.code === 110) {
           processQueue(true, null);
           return removeToken();
         }
         const newConfig = { ...config };
-        newConfig.headers.Authorization = ` Bearer ${res.data.accessToken}`;
-        processQueue(null, res.data.accessToken);
+        newConfig.headers.Authorization = ` Bearer ${res.accessToken}`;
+        processQueue(null, res.accessToken);
         const newRes = await api.any(newConfig);
-        Res.ok = newRes.ok
-        Res.status = newRes.status
-        Res.data = newRes.data
+        Res.ok = newRes.ok;
+        Res.status = newRes.status;
+        Res.data = newRes.data;
       }
       flag = false;
       if (status === 403 && data.code === 120) removeToken();
-      // (ok)? api.any(failedQueue[0]):failedQueue.unshift()
     });
   };
 
   const loadUser = async () => {
     if (logged) return;
-    console.log("new log", new Date(), "\n");
+
     await server.setup();
     const token = await AsyncStorage.getItem("@token");
     const user = await AsyncStorage.getItem("@user");
@@ -96,7 +84,6 @@ export default function App() {
       ApiInterceptor();
       setLogged(true);
     }
-    await Font.loadAsync(customFonts);
     if (user) setUserData(JSON.parse(user));
     setLoaded(true);
   };
@@ -121,12 +108,13 @@ export default function App() {
   const loadDocs = async () => {
     const response = await server.getDocs();
     if (response.ok)
-      await AsyncStorage.mergeItem("@doc", JSON.stringify(response.data.data));
+      await AsyncStorage.mergeItem("@doc", JSON.stringify(response.data));
   };
 
-  const loginHandler = async () => {
+  const loginHandler = async (successPage: boolean) => {
     ApiInterceptor();
     await getUserData();
+    if (successPage) return;
     setLogged(true);
   };
 
@@ -140,23 +128,21 @@ export default function App() {
       myData: userData,
       refresh: fetching,
       saveCal: (value) => setCal(value),
-      login: () => loginHandler(),
+      login: (successPage: boolean) => loginHandler(successPage),
       signOut: () => removeToken(),
       getData: () => getUserData(),
       pushData: () => console.log("push data"),
       isFetching: () => setFetching(fetching + 1),
-      showModal: (value: boolean) => {
-        setShow(value);
+      showModal: (value: boolean, page: string) => {
+        setShow({...show, [page]: value});
       },
       recipeId,
       getRecipeId: getId,
       isShow: show,
       editMode,
       toggleEdit: (v: boolean) => setEditMode(v),
-      getRecommend,
-      getRecomendation: (v: boolean) => setGetrecommend(v),
     }),
-    [cal, show, userData, fetching, recipeId, editMode, getRecommend]
+    [cal, show, userData, fetching, recipeId, editMode]
   );
 
   useEffect(() => {
@@ -164,10 +150,20 @@ export default function App() {
     loadDocs();
   }, [logged]);
 
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+    Roboto_700Bold,
+  });
+
+  useEffect(() => {
+    pingServer();
+  }, [])
+
+
   return (
     <AppContext.Provider value={appContext}>
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
     </AppContext.Provider>
   );
 }
-// Reminder Notes

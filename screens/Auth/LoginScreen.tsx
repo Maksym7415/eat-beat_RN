@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
 import FormikInput from "../../components/FormikInput";
@@ -10,6 +10,8 @@ import { AuthProps, NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import Constants from 'expo-constants';
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -23,18 +25,18 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
   const signIn = async (value: AuthProps) => {
     setClicked(true);
     const response = await server.signIn(value);
-    console.log(response.status);
     if (response.ok) {
-      login();
+      login(false);
     } else {
-      if (response.status === 401) navigation.navigate("confirm", value);
+      if (response.status === 403 && response.data.code == 121)
+        navigation.navigate("confirm", value);
       setClicked(false);
       setError(true);
     }
   };
 
   return (
-    <View style={styles.container}>
+    <LayoutScroll style={styles.container}>
       <Text
         style={{
           position: "absolute",
@@ -42,9 +44,10 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           bottom: 10,
           color: "white",
           fontSize: 14,
+          opacity: 0.5,
         }}
       >
-        v 0.1.4 t
+        {`v ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}
       </Text>
       <Logo />
       <View style={styles.boxContainer}>
@@ -93,7 +96,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </LayoutScroll>
   );
 };
 

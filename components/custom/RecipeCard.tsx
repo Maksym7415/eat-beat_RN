@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -11,13 +11,21 @@ import HealthCircle from "../HealthCircle";
 import SvgMaker from "../SvgMaker";
 import Text from "./Typography";
 import { RecommendedMeals } from "../../components/interfaces";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 
 interface Props {
   details: RecommendedMeals;
   actionHandler: (id: string, title: string, data: object) => void;
+  onPreview?: () => void;
+  notShowScore?: boolean;
 }
 
-const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
+const RecipeCard: FC<Props> = ({
+  details,
+  actionHandler,
+  onPreview,
+  notShowScore,
+}) => {
   const {
     id,
     image,
@@ -28,6 +36,7 @@ const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
     glutenFree,
     dairyFree,
     veryPopular,
+    name
   } = details;
   const getImage = (
     vegetarian: boolean,
@@ -45,7 +54,7 @@ const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
     return iconsArray;
   };
   return (
-    <TouchableOpacity onPress={() => actionHandler(id, title, details)}>
+    <TouchableOpacity activeOpacity={0.9} onPress={onPreview}>
       <View style={styles.container}>
         <ImageBackground style={styles.imageContainer} source={{ uri: image }}>
           <LinearGradient
@@ -59,30 +68,33 @@ const RecipeCard: FC<Props> = ({ details, actionHandler }) => {
             <View style={{ height: 80 }} />
             <View
               style={{
-                display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
               }}
             >
-              <HealthCircle
-                showText
-                radius={32}
-                percentage={healthScore}
-                textColor="white"
-                background="#fff3"
+              {notShowScore ? (
+                <View style={{ height: 32 }} />
+              ) : (
+                  <HealthCircle
+                    showText
+                    radius={32}
+                    percentage={healthScore}
+                    textColor="white"
+                    background="#fff3"
+                  />
+                )}
+              <Icon
+                onPress={() => actionHandler(id, title || name, details)}
+                name={"add-box"}
+                color={Col.White}
+                size={32}
               />
-              {/* <Icon
-          onPress={addFavourMeal}
-          name={!state ? 'heart-outline' : 'heart'}
-          color={!state ? Col.White : Col.Red}
-          size={24}
-        /> */}
             </View>
           </LinearGradient>
         </ImageBackground>
         <View style={styles.infoContainer}>
-          <Text type="bodyBold2">{title}</Text>
+          <Text type="bodyBold2">{title || name}</Text>
           <View style={styles.catagoryContainer}>
             {getImage(
               vegetarian,
@@ -117,6 +129,7 @@ const styles = StyleSheet.create({
   },
   catagoryContainer: {
     flexDirection: "row",
+    minHeight: 30
   },
   icons: {
     margin: 2,

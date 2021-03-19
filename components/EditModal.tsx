@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -12,46 +12,68 @@ import Text from "./custom/Typography";
 import { Col, Typ, Spacing } from "./Config";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Button } from "./MyComponents";
-interface dataProps {
-  id: number;
-  name: string;
-  servings: number;
-  creationTime: number;
-  modalVisible: boolean;
-}
+import { PropsEditModal } from './interfaces'
 
-interface Body {
-  creationTime: number;
-  servings: number;
-}
 
-interface Props {
-  setData: (id: number, body: Body) => void;
-  hideModal: () => void;
-  data: dataProps;
-}
-
-const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
-  const { id, name, servings, modalVisible, creationTime } = data;
-  const [newTime, setNewTime] = useState({
-    hrs: new Date(creationTime).getHours().toString(),
-    min: new Date(creationTime).getMinutes().toString(),
-    portion: servings.toString(),
-  });
-
-  const handleEdit = () => {
-    const edit: Date = new Date(creationTime);
-    edit.setHours(Math.round(parseInt(newTime.hrs)));
-    edit.setMinutes(Math.round(parseInt(newTime.min)));
-    return edit.getTime();
+const newEditModal: FC<PropsEditModal> = ({
+  setData,
+  data,
+  hideModal,
+  blend = Col.Green,
+  date,
+  clicked,
+  bg
+}) => {
+  const { id, name, servings, modalVisible, creationTime, source } = data;
+  const handleFetch = (creationTime: string) => {
+    const hrs = new Date(creationTime).getHours().toString();
+    const min = new Date(creationTime).getMinutes().toString();
+    return {
+      hrs: hrs.length > 1 ? hrs : "0" + hrs,
+      min: min.length > 1 ? min : "0" + min,
+      portion: servings.toString(),
+    };
   };
+  const [newTime, setNewTime] = useState(handleFetch(creationTime));
 
   const handleSubmit = () => {
+    if (clicked) return;
+    const d = new Date(date);
+    const hours = `${newTime.hrs}:${newTime.min}`;
+    const times = `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
+      .split("/")
+      .map((el) => (el.length === 1 ? "0" + el : el))
+      .join("-");
+    const format: string = times + " " + hours;
     setData(id, {
-      creationTime: handleEdit(),
-      servings: parseInt(newTime.portion),
+      creationTime: format,
+      servings: Number(newTime.portion),
+      source
     });
   };
+
+  const editServings = (value: number) => {
+    const initialValue = Number(newTime.portion);
+    setNewTime({
+      ...newTime,
+      portion: `${initialValue + value}`,
+    });
+  };
+  const beautifyTime = () => {
+    let h = newTime.hrs.length > 1 ? newTime.hrs : "0" + newTime.hrs;
+    h = +h > 23 || isNaN(+h) ? "23" : h;
+    let m = newTime.min.length > 1 ? newTime.min : "0" + newTime.min;
+    m = +m > 59 || isNaN(+m) ? "59" : m;
+    setNewTime({
+      ...newTime,
+      hrs: h,
+      min: m,
+    });
+  };
+
+  useEffect(() => {
+    setNewTime(handleFetch(creationTime));
+  }, [data]);
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
@@ -62,49 +84,33 @@ const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
               {name}
             </Text>
             <View>
-              <Text
-                type="bodyBold2"
-                style={{
-                  marginBottom: 8,
-                  marginTop: 16,
-                }}
-              >
+              <Text type="bodyBold2" style={styles.title}>
                 Servings
               </Text>
               <View style={styles.amountContainer}>
                 <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() =>
-                    setNewTime({
-                      ...newTime,
-                      portion: `${+newTime.portion - 0.5}`,
-                    })
-                  }
-                  disabled={newTime.portion === "0.5"}
+                  style={[styles.btn, { borderColor: bg || Col.Main }]}
+                  onPress={() => editServings(-0.5)}
+                  disabled={Number(newTime.portion) < 1}
                 >
-                  <Icon style={{ color: Col.Green }} name="minus" size={24} />
+                  <Icon style={{ color: bg || Col.Main }} name="minus" size={24} />
                 </TouchableOpacity>
-
                 <View style={styles.amountWrapper}>
                   <TextInput
+                    maxLength={4}
                     style={styles.amount}
                     keyboardType="numeric"
                     value={newTime.portion}
-                    onChangeText={(portion) =>
-                      setNewTime({ ...newTime, portion })
-                    }
+                    onChangeText={(portion) => {
+                      if (!isNaN(+portion)) setNewTime({ ...newTime, portion });
+                    }}
                   />
                 </View>
                 <TouchableOpacity
-                  style={styles.btn}
-                  onPress={() =>
-                    setNewTime({
-                      ...newTime,
-                      portion: `${+newTime.portion + 0.5}`,
-                    })
-                  }
+                  style={[styles.btn, { borderColor: bg || Col.Main }]}
+                  onPress={() => editServings(0.5)}
                 >
-                  <Icon style={{ color: Col.Green }} name="plus" size={24} />
+                  <Icon style={{ color: bg || Col.Main }} name="plus" size={24} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -120,9 +126,11 @@ const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
               <View style={styles.timeContainer}>
                 <View style={[styles.amountWrapper, { width: "48%" }]}>
                   <TextInput
-                    style={styles.amount}
                     keyboardType="numeric"
+                    style={styles.amount}
                     value={newTime.hrs}
+                    maxLength={2}
+                    onEndEditing={beautifyTime}
                     onChangeText={(hrs) => setNewTime({ ...newTime, hrs })}
                   />
                 </View>
@@ -140,6 +148,8 @@ const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
                     keyboardType="numeric"
                     style={styles.amount}
                     value={newTime.min}
+                    maxLength={2}
+                    onEndEditing={beautifyTime}
                     onChangeText={(min) => setNewTime({ ...newTime, min })}
                   />
                 </View>
@@ -152,14 +162,14 @@ const EditModal: FC<Props> = ({ setData, data, hideModal }) => {
                 label="CANCEL"
                 onPress={hideModal}
                 style={{ marginVertical: 0 }}
-                labelStyle={{ color: "black" }}
+                labelStyle={{ color: clicked ? "grey" : "black" }}
               />
               <Button
                 type="text"
                 label="OK"
                 onPress={handleSubmit}
                 style={{ marginVertical: 0 }}
-                labelStyle={{ color: "black" }}
+                labelStyle={{ color: clicked ? "grey" : "black" }}
               />
             </View>
           </View>
@@ -191,8 +201,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
   },
+  title: {
+    marginBottom: Spacing.small,
+    marginTop: Spacing.medium,
+  },
   amountContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -201,19 +214,18 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 8,
     backgroundColor: Col.Grey4,
-    borderColor: Col.Green,
     borderWidth: 1.5,
     alignItems: "center",
   },
   amountWrapper: {
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 29,
-    paddingVertical: 6,
+    paddingHorizontal: "7%",
+    paddingVertical: Spacing.small,
     borderRadius: 8,
-    backgroundColor: Col.Grey4,
-    borderColor: Col.Grey3,
     borderWidth: 1.5,
+    borderColor: Col.Grey3,
+    backgroundColor: Col.Background,
   },
   amount: {
     fontSize: Typ.H1,
@@ -221,15 +233,13 @@ const styles = StyleSheet.create({
     color: Col.Grey,
   },
   timeContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
   },
   btnContainer: {
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: Spacing.medium,
   },
 });
-export default EditModal;
+export default newEditModal;

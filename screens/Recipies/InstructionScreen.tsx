@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Image, Text, ActivityIndicator } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { View, StyleSheet, ActivityIndicator, TextInput } from "react-native";
 import { AppContext } from "../../components/AppContext";
-import { Col, Spacing, Typ } from "../../components/Config";
+import { Col, Spacing } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
-import IngradientRow from "./Components/IngradientRow";
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import Text from "../../components/custom/Typography";
 
 export default function InstructionScreen({ navigation }) {
   const { recipeId, editMode, toggleEdit } = useContext(AppContext);
@@ -16,18 +16,7 @@ export default function InstructionScreen({ navigation }) {
     const { data, ok } = await server.getRecipeInfo(recipeId);
     if (ok) {
       setFeed({
-        title: data.title,
-        instruction: data.instruction,
-        mainNutrients: data.nutrition.nutrients.filter(
-          (el) =>
-            el.title === "Calories" ||
-            el.title === "Protein" ||
-            el.title === "Fat" ||
-            el.title === "Carbs"
-        ),
-        nutrients: data.nutrition.nutrients,
-        servings: data.servings,
-        ingredients: data.nutrition.ingredients,
+        instruction: data.instructions,
       });
     }
   }, [recipeId]);
@@ -57,46 +46,32 @@ export default function InstructionScreen({ navigation }) {
   };
 
   return Object.keys(feed).length ? (
-    <View>
-      <ScrollView>
-        <View style={styles.ingradientContainer}>
-          {!editMode ? (
-            <View style={styles.InstructionContainer}>
-              <Text style={styles.ingradientTitle}>Instruction</Text>
-              <Text>
-                {feed.instruction ||
-                  "You have not added any instruction for your recipe yet"}
-              </Text>
-            </View>
-          ) : (
+    <LayoutScroll style={{ flexGrow: 1, backgroundColor: Col.Background }}>
+      <View style={styles.ingradientContainer}>
+        {!editMode ? (
+          <View style={styles.InstructionContainer}>
+            <Text type="body2">
+              {feed.instruction ||
+                "You have not added any instructions for your recipe yet"}
+            </Text>
+          </View>
+        ) : (
+          <View style={{ flex: 1 }}>
             <View>
-              <View>
-                <TextInput
-                  multiline
-                  value={value}
-                  onChangeText={changeHandler}
-                />
-                <Divider styler={styles.divider} />
-              </View>
-              <View>
-                <Button
-                  label="SAVE"
-                  onPress={saveChanges}
-                  style={{ backgroundColor: Col.Recipes }}
-                />
-                <Button
-                  label="CANCEL"
-                  type="text"
-                  onPress={() => toggleEdit(!editMode)}
-                  style={{ marginVertical: 0 }}
-                  labelStyle={{ color: Col.Grey }}
-                />
-              </View>
+              <TextInput multiline value={value} onChangeText={changeHandler} />
+              <Divider styler={styles.divider} />
             </View>
-          )}
-        </View>
-      </ScrollView>
-    </View>
+            <View style={styles.buttons}>
+              <Button
+                label="SAVE"
+                onPress={saveChanges}
+                style={{ backgroundColor: Col.Recipes }}
+              />
+            </View>
+          </View>
+        )}
+      </View>
+    </LayoutScroll>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
@@ -106,17 +81,18 @@ export default function InstructionScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   ingradientContainer: {
-    paddingHorizontal: 16,
+    flexGrow: 1,
+    paddingHorizontal: Spacing.medium,
     paddingVertical: 12,
   },
   ingradientTitle: {
     fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: Spacing.r_small,
   },
   ingradientTextField: {
-    paddingHorizontal: 16,
-    paddingTop: 22,
+    paddingHorizontal: Spacing.medium,
+    paddingTop: Spacing.large,
   },
   divider: {
     borderBottomWidth: 1,
@@ -124,14 +100,21 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(0, 0, 0, 0.6)",
   },
   btnConatiner: {
-    paddingHorizontal: 16,
+    paddingHorizontal: Spacing.medium,
   },
-  InstructionContainer: {},
+  InstructionContainer: {
+    paddingHorizontal: Spacing.xlarge,
+    paddingVertical: Spacing.medium,
+  },
   loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: Spacing.medium,
     backgroundColor: Col.Background,
+  },
+  buttons: {
+    flexGrow: 1,
+    justifyContent: "flex-end",
   },
 });

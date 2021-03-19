@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Col, Font, Spacing } from "../../../components/Config";
 import Text from "../../../components/custom/Typography";
@@ -11,12 +11,16 @@ interface Props {
   };
   onEdit: (key: string, val: number) => void;
   editable: boolean;
+  refresh?: number;
 }
 
-const IntakeSlot: FC<Props> = ({ item, onEdit, editable }) => {
+const IntakeSlot: FC<Props> = ({ item, onEdit, editable, refresh }) => {
   const { label, value, edit } = item;
   const [digit, setDigit] = useState(value ? `${value}` : "");
   const suffix = label === "Calories" ? " (kcal)" : edit ? " (g)" : "";
+  useEffect(() => {
+    setDigit(value ? `${value}` : "");
+  }, [refresh]);
   return (
     <View style={styles.container}>
       <Text type="body2">{label + suffix}</Text>

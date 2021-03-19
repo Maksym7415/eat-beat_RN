@@ -14,9 +14,13 @@ export interface apiProps {
     resetPassword: string;
     recipeInfo: string;
     docs: string
-    userAcitvities:string
+    userAcitvities: string
     resendVerificationCode: string
-    resendResetPasswordCode:string
+    resendResetPasswordCode: string
+    recommendRestaurant: string
+    getRestaurants: string
+    getRestaurantMenu: string
+    restaurantSearch: string
   };
   post: {
     addCookedMeal: string;
@@ -27,6 +31,8 @@ export interface apiProps {
     updatePassword: string;
     addRecipe: string;
     addRecipeAvatar: string;
+    addUserRecipeToMeals: string
+    addRestaurantMeal: string
   };
   del: {
     cookedMeal: string;

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
@@ -9,6 +9,8 @@ import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import Logo from "./common/Logo";
 import server from "../../server";
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -32,8 +34,16 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
+  const focus = useIsFocused();
+  useEffect(() => {
+    if (!focus) {
+      setClicked(false);
+      setError(false);
+    }
+  }, [focus]);
+
   return (
-    <View style={styles.container}>
+    <LayoutScroll style={styles.container}>
       <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
@@ -82,7 +92,7 @@ const RestoreScreen: FC<NavProps> = ({ navigation }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </LayoutScroll>
   );
 };
 

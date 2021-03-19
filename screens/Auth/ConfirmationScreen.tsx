@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, ErrorMessage } from "../../components/MyComponents";
 import { Formik } from "formik";
@@ -9,6 +9,7 @@ import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const Validation = Yup.object().shape({
   verificationCode: Yup.number()
@@ -17,6 +18,10 @@ const Validation = Yup.object().shape({
     .label("verification Code")
     .typeError("Code must be a number"),
 });
+
+interface Val {
+  verificationCode: number;
+}
 
 const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const Email = route.params.email;
@@ -54,14 +59,14 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LayoutScroll style={styles.container}>
       <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
           Confirmation
         </Text>
         <Text type="body2" style={styles.header}>
-          Thanks for registration. You'll recieve a verification code in “
+          Thanks for registration. You'll receive a verification code in “
           {Email}” in order to activate your account.
         </Text>
         <Formik
@@ -79,7 +84,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
               />
               <ErrorMessage
                 visible={error}
-                error="The Code you Entered is incorrect"
+                error="The Code you entered is incorrect"
                 style={styles.errorContainer}
               />
               <Button
@@ -100,7 +105,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
           )}
         </Formik>
       </View>
-    </View>
+    </LayoutScroll>
   );
 };
 

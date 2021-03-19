@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useContext } from "react";
+import React, { FC, useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -6,21 +6,18 @@ import {
   NativeScrollEvent,
   View,
 } from "react-native";
-import { Memo, NavProps } from "../../components/interfaces";
+import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import server from "../../server";
 import { Col, Spacing } from "../../components/Config";
 import Text from "../../components/custom/Typography";
-import { AppContext } from "../../components/AppContext";
+import { useIsFocused } from "@react-navigation/native";
+import ActionButton from "./common/ActionButton";
+import ActionModal from "../../components/ActionModal";
 
 interface HealthScore {
   date: string;
   healthScore: number;
-}
-
-interface Data {
-  dates: string[];
-  scores: number[];
 }
 
 interface Offset {
@@ -29,41 +26,54 @@ interface Offset {
 }
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
-  const { refresh } = useContext<Memo>(AppContext);
-  const [data, setData] = useState<Data>({ dates: [], scores: [] });
+  const [data, setData] = useState({});
+  const [actionBtn, setActionBtn] = useState<boolean>(false);
   const [offset, setOffset] = useState<Offset>({ count: 0, offset: 0 });
 
   const getHealthsScore = async () => {
-    console.log(124)
     const response = await server.getHistory(offset.offset);
+    const newFeed = { ...data };
     if (response.ok) {
       const historyFeed: HealthScore[] = response.data.data;
-      const dates: string[] = historyFeed.map((el) => `${el.date}`);
-      const scores: number[] = historyFeed.map((el) => el.healthScore);
-      setData((value) => ({ ...value, dates, scores }));
+      historyFeed.forEach(({ date, healthScore }) => {
+        Object.assign(newFeed, { [date]: healthScore });
+      });
+      setData(newFeed);
     }
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     event.persist();
-    if (event?.nativeEvent?.contentOffset?.x > offset.count + 650) {
+    if (event?.nativeEvent?.contentOffset?.x >= offset.count + 586) {
       setOffset((value) => ({
         ...value,
         count: event.nativeEvent.contentOffset.x,
         offset: value.offset + 10,
       }));
-      getHealthsScore();
     }
   };
 
+  const addRecommended = (value: number) => {
+    setActionBtn(false);
+    navigation.navigate("recommendedDrawer");
+  };
+
+  let focus = useIsFocused();
   useEffect(() => {
-    navigation.addListener('focus', () => {
-      getHealthsScore();
-    });
-  }, []);
+    if (focus) getHealthsScore();
+  }, [focus, offset.offset]);
 
   return (
     <View style={styles.canvas}>
+      <ActionButton
+        style={styles.actionButton}
+        onPress={() => setActionBtn(!actionBtn)}
+      />
+      <ActionModal
+        visible={actionBtn}
+        onClick={(value: number) => addRecommended(value)}
+        onClose={() => setActionBtn(false)}
+      />
       <View style={styles.header}>
         <Text type="h6">Your health score</Text>
       </View>
@@ -86,6 +96,12 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Col.White,
     padding: Spacing.large,
+  },
+  actionButton: {
+    zIndex: 1,
+    position: "absolute",
+    right: Spacing.medium,
+    bottom: Spacing.large,
   },
 });
 export default HistoryScreen;

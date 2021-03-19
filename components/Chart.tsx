@@ -3,15 +3,9 @@ import { Dimensions, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { Col } from "./Config";
 
-interface Props {
-  data: {
-    dates: string[];
-    scores: number[];
-  };
-}
-
-const Chart: FC<Props> = ({ data }) => {
-  const { dates, scores } = data;
+const Chart: FC = ({ data }) => {
+  const dates = Object.keys(data);
+  const scores = Object.values(data);
   return scores.length ? (
     <LineChart
       data={{
@@ -29,6 +23,8 @@ const Chart: FC<Props> = ({ data }) => {
       withHorizontalLines={false}
       withVerticalLines={false}
       onDataPointClick={({ value }) => console.log(value)}
+      fromZero
+      yAxisInterval={1}
       chartConfig={{
         backgroundGradientFrom: Col.White,
         backgroundGradientTo: Col.White,

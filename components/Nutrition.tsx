@@ -1,19 +1,26 @@
 import React, { FC } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Col } from "./Config";
+import Text from "./custom/Typography";
 interface Props {
   item: {
     name: string;
     currentValue: number;
     unit: string;
-    defaultValue: number;
-    percenatage: number;
-    recipe: boolean
+    defaultValue?: number;
+    percenatage?: number;
+    recipe?: boolean;
   };
 }
 const NutritionItem: FC<Props> = ({ item }) => {
-  const { name, currentValue, unit, defaultValue, percenatage = 0, recipe } = item;
-  // const precent = Math.round((nutrition_measure / nutrition_number) * 100);
+  const {
+    name,
+    currentValue,
+    unit,
+    defaultValue,
+    percenatage = 0,
+    recipe,
+  } = item;
   const color =
     percenatage < 100
       ? `rgb(${45 + percenatage * 1.9},${175 - percenatage * 0.73},${
@@ -22,14 +29,28 @@ const NutritionItem: FC<Props> = ({ item }) => {
       : Col.Red;
   return (
     <View style={styles.itemContainer}>
-      <Text style={{ width: "25%" }}>{name}</Text>
-      <Text style={{ width: "15%" }}>{unit}</Text>
-      <Text style={{ width: "20%" }}>{currentValue}/</Text>
-     {!recipe &&<Text style={{ width: "15%" }}>{defaultValue}</Text>}
-      {!recipe &&<Text style={{ width: "15%" }}>{`${percenatage || 0} %`}</Text>}
-      {!recipe && <View
-        style={{ width: "8%", backgroundColor: color, borderRadius: 20 }}
-      ></View>}
+      <Text type="body2" style={{ width: "37%", color: Col.Dark }}>
+        {name}
+      </Text>
+      <Text type="body2" style={{ width: "15%", color: Col.Faded }}>
+        ({unit})
+      </Text>
+      <Text
+        type="body2"
+        style={{ width: "20%", textAlign: "right", color: Col.Dark }}
+      >
+        {currentValue}
+      </Text>
+      {!recipe && (
+        <Text type="body2" style={{ width: "18%", color: Col.Faded }}>
+          /{defaultValue}
+        </Text>
+      )}
+      {!recipe && (
+        <Text type="body2" style={{ width: "15%", color }}>{`${
+          percenatage || 0
+        }%`}</Text>
+      )}
     </View>
   );
 };

@@ -4,63 +4,91 @@ import {
   StyleSheet,
   View,
   Image,
-  ScrollView,
   ActivityIndicator,
   Alert,
   Pressable,
+  TextInput,
 } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../../components/Config";
-import { Button, Divider } from "../../components/MyComponents";
-import { TextInput } from "react-native-gesture-handler";
+import { Button } from "../../components/MyComponents";
 import server from "../../server";
 import Text from "../../components/custom/Typography";
-
-interface Item {
-  title: string;
-  max: number;
-  value: string;
-  error: string;
-}
-
-interface Data {
-  [key: string]: Item;
-}
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import useValidation from "../../utils/validation";
+import * as ImageManipulator from "expo-image-manipulator";
 
 interface Loading {
   loading: boolean;
   disabled: boolean;
 }
 
+const config = {
+  title: {
+    id: 0,
+    title: "title",
+    maxLength: 50,
+    value: null,
+    required: true,
+    errors: {
+      maxLegnth: "Title length can not be more than 50 symbols",
+      value: "This field can not be empty",
+    },
+  },
+  servings: {
+    id: 1,
+    title: "servings",
+    minLength: 1,
+    maxLength: 1000,
+    value: null,
+    type: "number",
+    integer: true,
+    errors: {
+      maxLength: "should be smaller than 1000",
+      minLength: "should be bigger than 0",
+      isNumber: "should be number",
+      integer: "should not contain decimals",
+    },
+  },
+  ingredients: {
+    id: 2,
+    title: "ingredients",
+    maxLength: 10000,
+    required: true,
+    value: null,
+    errors: {
+      maxLength: "error message for max length",
+      value: "This field can not be empty",
+    },
+  },
+  instruction: {
+    id: 3,
+    title: "instruction",
+    maxLength: 10000,
+    value: null,
+    errors: {
+      maxLength: "error message for max length",
+    },
+  },
+};
+
 export default function CreateRecipeScreen({ navigation }) {
+  const [
+    title,
+    servings,
+    ingredients,
+    instruction,
+    fieldValues,
+    changeHandler,
+    startValidation,
+  ] = useValidation(config);
   const { getRecipeId } = useContext(AppContext);
   const [image, setImage] = useState<null>(null);
   const [loading, setLoading] = useState<Loading>({
     loading: false,
     disabled: false,
   });
-  const [data, setData] = useState<Data>({
-    title: {
-      title: "title",
-      max: 64,
-      value: "",
-      error: "",
-    },
-    ingredients: {
-      title: "ingredients",
-      max: 10000,
-      value: "",
-      error: "",
-    },
-    instruction: {
-      title: "instruction",
-      max: 10000,
-      value: "",
-      error: "",
-    },
-  });
-
   const checkPermission = async () => {
     const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
     if (granted) {
@@ -86,45 +114,29 @@ export default function CreateRecipeScreen({ navigation }) {
       quality: 1,
     });
     if (!result.cancelled) {
-      setImage(result.uri);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 600, height: 600 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      setImage(manipResult.uri);
     }
   };
 
-  const onCnangeHandler = (text: string, name: string) => {
-    setData((state) => ({
-      ...state,
-      [name]: {
-        ...state[name],
-        value: text,
-        error:
-          text.length > state[name].max
-            ? `Title length can not be more than ${state[name].max} symbols`
-            : "",
-      },
-    }));
-  };
-
-  const saveChanges = async () => {
-    let error = false;
-    setData((state) => {
-      const obj: Data = {};
-      Object.values(state).forEach((item: Item) => {
-        if (!item.value && item.title !== "instruction") {
-          obj[item.title] = { ...item, error: "This field can not be empty" };
-          error = true;
-        } else obj[item.title] = item;
-      });
-      return obj;
-    });
+  const saveChanges = async (
+    [title, servings, ingredients, instruction],
+    error: boolean
+  ) => {
     if (error) return;
     setLoading({ ...loading, loading: true, disabled: true });
     const {
       data: { id },
       ok,
     } = await server.addRecipe({
-      title: data.title.value,
-      instruction: data.instruction.value,
-      ingredientList: data.ingredients.value,
+      title: title.value,
+      instruction: instruction.value,
+      ingredientList: ingredients.value,
+      servings: servings.value === null ? "" : +servings.value,
     });
     if (ok) {
       let formData;
@@ -141,9 +153,7 @@ export default function CreateRecipeScreen({ navigation }) {
       }
       getRecipeId(id);
       setLoading({ ...loading, loading: false, disabled: false });
-      navigation.navigate("user_recipe", {
-        title: data.title.value,
-      });
+      navigation.navigate("user_recipe", { title: title.value });
     }
     setLoading({ ...loading, loading: false, disabled: false });
   };
@@ -156,7 +166,7 @@ export default function CreateRecipeScreen({ navigation }) {
     );
 
   return (
-    <ScrollView contentContainerStyle={styles.scroll}>
+    <LayoutScroll style={styles.scroll}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Pressable onPress={checkPermission}>
@@ -168,58 +178,84 @@ export default function CreateRecipeScreen({ navigation }) {
               )}
             </View>
           </Pressable>
-          <Divider />
-          <View style={{ paddingHorizontal: Spacing.medium }}>
-            <Text style={{ marginBottom: 10 }}>Title*</Text>
+          <View style={{ padding: Spacing.medium }}>
+            <Text type="bodyBold" style={{ marginBottom: 10 }}>
+              Title*
+            </Text>
             <TextInput
-              value={data.title.value}
-              onChangeText={(text) => onCnangeHandler(text, "title")}
-              placeholder={"Add recipe title"}
+              value={fieldValues?.title?.value || ""}
+              onChangeText={(text) => changeHandler(text, "title")}
+              placeholder="Add recipe title"
               style={{
-                borderColor: data.title.error ? Col.Error : Col.Grey2,
+                borderColor: title.errors ? Col.Error : Col.Grey2,
                 borderBottomWidth: 1,
               }}
             />
-            {data.title.error ? (
-              <Text style={{ color: Col.Error, marginTop: 10 }}>
-                {data.title.error}
-              </Text>
-            ) : null}
+            <Text style={{ color: Col.Error, marginTop: 10 }}>
+              {title?.errors}
+            </Text>
           </View>
         </View>
         <View style={styles.editContainer}>
-          <Text style={{ marginBottom: 10 }}>Ingradients*</Text>
+          <Text type="bodyBold" style={{ marginBottom: 10 }}>
+            Servings
+          </Text>
           <TextInput
-            value={data.ingredients.value}
-            onChangeText={(text) => onCnangeHandler(text, "ingredients")}
+            keyboardType="number-pad"
+            value={fieldValues?.servings?.value || ""}
+            onChangeText={(text) => changeHandler(text, "servings")}
             style={{
-              borderColor: data.ingredients.error ? Col.Error : Col.Grey2,
+              borderColor: servings.errors ? Col.Error : Col.Grey2,
               borderBottomWidth: 1,
             }}
-            placeholder={"One ingredient per line"}
-            multiline
+            placeholder="Add serving for recipe"
           />
-          {data.ingredients.error ? (
-            <Text style={{ color: Col.Error, marginTop: 10 }}>
-              {data.ingredients.error}
-            </Text>
-          ) : null}
+          <Text style={{ color: Col.Error, marginTop: 10 }}>
+            {servings?.errors}
+          </Text>
         </View>
         <View style={styles.editContainer}>
-          <Text style={{ marginBottom: 10 }}>Instruction</Text>
+          <Text type="bodyBold" style={{ marginBottom: 10 }}>
+            Ingredients*
+          </Text>
           <TextInput
-            value={data.instruction.value}
-            onChangeText={(text) => onCnangeHandler(text, "instruction")}
-            style={{ borderColor: Col.Grey2, borderBottomWidth: 1 }}
-            placeholder={"Add instruction for recipe"}
+            value={fieldValues?.ingredients?.value || ""}
+            onChangeText={(text) => changeHandler(text, "ingredients")}
+            style={{
+              borderColor: ingredients.errors ? Col.Error : Col.Grey2,
+              borderBottomWidth: 1,
+            }}
+            placeholder="One ingredient per line"
             multiline
           />
+
+          <Text style={{ color: Col.Error, marginTop: 10 }}>
+            {ingredients?.errors}
+          </Text>
+        </View>
+        <View style={styles.editContainer}>
+          <Text type="bodyBold" style={{ marginBottom: 10 }}>
+            Instruction
+          </Text>
+          <TextInput
+            value={fieldValues?.instruction?.value || ""}
+            onChangeText={(text) => changeHandler(text, "instruction")}
+            style={{
+              borderColor: instruction.errors ? Col.Error : Col.Grey2,
+              borderBottomWidth: 1,
+            }}
+            placeholder="Add instruction for recipe"
+            multiline
+          />
+          <Text style={{ color: Col.Error, marginTop: 10 }}>
+            {instruction?.errors}
+          </Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
         <Button
           label="SAVE"
-          onPress={saveChanges}
+          onPress={() => startValidation(saveChanges)}
           style={{ backgroundColor: Col.Recipes }}
         />
         <Button
@@ -230,7 +266,7 @@ export default function CreateRecipeScreen({ navigation }) {
           labelStyle={{ color: Col.Grey }}
         />
       </View>
-    </ScrollView>
+    </LayoutScroll>
   );
 }
 
@@ -271,8 +307,7 @@ const styles = StyleSheet.create({
     minHeight: 109,
     backgroundColor: Col.White,
     borderRadius: 8,
-    paddingHorizontal: Spacing.medium,
-    paddingVertical: Spacing.r_small,
+    padding: Spacing.medium,
     marginBottom: Spacing.r_small,
   },
   editText: {

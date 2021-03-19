@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext, FC } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, Pressable, ActivityIndicator } from "react-native";
 import server from "../../server";
 import Modal from "../../components/Modal";
 import { AntDesign } from "@expo/vector-icons";
@@ -21,10 +15,18 @@ import { AppContext } from "../../components/AppContext";
 import { ConsumptionProps, Memo, NavProps } from "../../components/interfaces";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ActionButton from "./common/ActionButton";
+import LayoutScroll from "../../components/custom/LayoutScroll";
+import { useIsFocused } from "@react-navigation/native";
+
+const recommendScreens = {
+  0: 'recommendedDrawer',
+  1: 'restaurants'
+}
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [actionBtn, setActionBtn] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [feed, setFeed] = useState<ConsumptionProps | null>(null);
   const { calendar, saveCal, refresh } = useContext<Memo>(AppContext);
   const { visible, date } = calendar;
@@ -32,19 +34,17 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
-      setFeed(data);
+      console.log(data?.healthScore)
+      Object.keys(data).length && data?.totalMeals > 0
+        ? setFeed(data)
+        : setFeed({});
     }
   };
-
-  useEffect(() => {
-    serveData();
-  }, [date, refresh]);
 
   const onChange = (event: Event, selectedDate: Date) => {
     if (event.type === "dismissed")
       return saveCal({ visible: false, date: date });
     if (selectedDate && selectedDate !== date) {
-      setFeed(null);
       const currentDate = selectedDate || date;
       saveCal({ visible: false, date: currentDate });
     }
@@ -52,17 +52,31 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
 
   const addRecommended = (value: number) => {
     setActionBtn(false);
-    navigation.navigate("recommendedDrawer");
+    navigation.navigate(recommendScreens[value]);
   };
 
-  if (feed === null)
+  const onRefresh = async () => {
+    setRefreshing(true);
+    serveData().then(() => setRefreshing(false));
+  };
+
+  useEffect(() => {
+    onRefresh();
+  }, [date, refresh]);
+
+  let focus = useIsFocused();
+  useEffect(() => {
+    if (focus) serveData();
+  }, [focus]);
+
+  if (feed === null || refreshing)
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="small" color={Col.Black} />
       </View>
     );
 
-  if (Object.keys(feed).length && feed?.totalMeals > 0) {
+  if (Object.keys(feed).length) {
     return (
       <View style={styles.canvas}>
         <ActionButton
@@ -91,7 +105,11 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
             style={{ shadowColor: "pink" }}
           />
         )}
-        <ScrollView>
+        <LayoutScroll
+          pullToRefresh
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        >
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <Text type="bodyBold" style={styles.title}>
@@ -140,21 +158,26 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
               title={`Too much (${feed.tooMuchNutrients.length})`}
               styler={{ color: Col.Error }}
               icon_type={"alert"}
+              isPrecent
             />
             <Collapse
               data={feed.notEnough}
               title={`Not enough (${feed.notEnough.length})`}
               styler={{ color: Col.Info }}
               icon_type={"verify"}
+              isPrecent
             />
           </View>
           <Divider styler={styles.divider} />
           <View style={styles.nutritionContainer}>
+            <Text type="bodyBold" style={{ paddingVertical: Spacing.tiny }}>
+              Nutrition Details
+            </Text>
             {feed.nutrientsData.map((item, index) => (
               <Nutrition key={`${index}`} item={item} />
             ))}
           </View>
-        </ScrollView>
+        </LayoutScroll>
       </View>
     );
   } else {

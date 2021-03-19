@@ -22,17 +22,16 @@ const ToggleChip: FC<Props> = ({
 }) => {
   return (
     <Pressable
-      disabled={disabled}
       onPress={() => onPress(title)}
       style={[
         styles.container,
         {
-          backgroundColor: state ? selectedColor : Col.White,
+          backgroundColor: disabled ? styles.disabled : state ? selectedColor : Col.White,
         },
         style,
       ]}
     >
-      <Text type="body2" style={{ color: state ? Col.White : Col.Grey }}>
+      <Text type="body2" style={{ color: disabled ? "#C2C2C2" : state ? Col.White : Col.Grey }}>
         {title}
       </Text>
     </Pressable>
@@ -50,5 +49,8 @@ const styles = StyleSheet.create({
     borderColor: Col.Divider,
     alignItems: "center",
   },
+  disabled: {
+    backgroundColor: "#EAEAEA"
+  }
 });
 export default ToggleChip;

@@ -15,10 +15,11 @@ export default function SearchModal({
   onChangeHandler,
   value,
   searchHandler,
+  page
 }: any) {
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
-      <View style={styles.container}>
+      <View style={styles[`container${page}`]}>
         <Icon
           onPress={hideModal}
           name={"arrow-back"}
@@ -54,11 +55,18 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     backgroundColor: Col.Background,
   },
-  container: {
+  containerrecipes: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: Col.Recipes,
+    padding: Spacing.medium,
+  },
+  containerrestaurants: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: Col.Restaurants,
     padding: Spacing.medium,
   },
   input: {

@@ -4,6 +4,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing, Typ } from "./Config";
 import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
+import { baseURL } from "../url";
 
 interface editProps {
   id: number;
@@ -19,10 +20,13 @@ interface Props {
     image: string;
     creationTime: number;
     servings: number;
+    isPartner?: boolean
+    source: string
   };
-  onClick?: (id: number) => void;
+  onClick?: () => void;
   actionHandler: (value: editProps) => void;
   onDelete: (id: number, name: string) => void;
+  bgColor: string
 }
 
 const getTime = (value: number) => {
@@ -39,11 +43,12 @@ const CookedMealCard: FC<Props> = ({
   onClick,
   actionHandler,
   onDelete,
+  bgColor
 }) => {
-  const { id, name, image, creationTime, servings } = item;
-  const time = getTime(creationTime);
+  const { id, name, image, creationTime, servings, isPartner, source } = item;
+  const [date, time] = creationTime.split(' ');
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, borderLeftColor: bgColor}}>
       <View
         style={{
           display: "flex",
@@ -57,7 +62,7 @@ const CookedMealCard: FC<Props> = ({
         <View style={styles.iconsContainer}>
           <Icon
             style={{ alignSelf: "flex-end" }}
-            onPress={() => onDelete(id, name)}
+            onPress={() => onDelete(id, name, source)}
             name="delete"
             size={24}
             color={Col.Grey5}
@@ -65,7 +70,7 @@ const CookedMealCard: FC<Props> = ({
           <Divider styler={styles.verticalDivider} />
           <Icon
             style={{ alignSelf: "flex-end" }}
-            onPress={() => actionHandler({ id, name, servings, creationTime })}
+            onPress={() => actionHandler({ id, name, servings, creationTime: new Date(`${date.replace(/-/g, '/')} ${time}`), source})}
             name="pencil"
             size={24}
             color={Col.Grey5}
@@ -82,13 +87,20 @@ const CookedMealCard: FC<Props> = ({
       ></View>
       <View style={styles.imageDetails}>
         <View>
-          <Image style={styles.image} source={{ uri: image }} />
+          <Image
+            style={styles.image}
+            source={{
+              uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+            }}
+          />
         </View>
         <View style={styles.bodyContainer}>
           <Text type="cap" style={styles.recipe}>
-            Recipe
+            {source}
           </Text>
-          <Text style={styles.recipeName}>{name}</Text>
+          <Text onPress={onClick} style={styles.recipeName}>
+            {name}
+          </Text>
         </View>
       </View>
     </View>
@@ -98,6 +110,7 @@ const CookedMealCard: FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
+    borderLeftWidth: 5,
     paddingHorizontal: Spacing.r_small,
     paddingVertical: Spacing.r_small,
     backgroundColor: Col.White,

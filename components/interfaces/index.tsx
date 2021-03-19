@@ -1,3 +1,6 @@
+import { NavigationProps } from "./navInterface";
+import { GestureResponderEvent } from 'react-native'
+
 export interface InputProps {
   value: string;
   label: string;
@@ -31,17 +34,13 @@ export interface UserData {
 }
 
 export interface NavProps {
-  navigation: {
-    navigate: (name: string, params?: object) => void;
-    reset: (name: string, params?: object) => void;
-    push: (name: string) => void;
-    goBack: () => void;
-    setOptions: (props: object) => void;
-    setParams: (props: object) => void;
-  };
+  navigation: NavigationProps;
+  restaurants: boolean
   route: {
     params?: any;
   };
+  page: string
+  routeFrom: string
 }
 
 export interface Cal {
@@ -57,15 +56,15 @@ export interface Memo {
   refresh: number;
   myData: UserData;
   saveCal: (currentDate: Cal) => void;
-  login: () => void;
+  login: (successPage: boolean) => void;
   signOut: () => void;
   getData: () => void;
   pushData: () => void;
   isFetching: () => void;
-  showModal: (value: boolean) => void;
+  showModal: (value: boolean, page: string) => void;
   recipeId: number;
   getRecipeId: (id: number) => void;
-  isShow: boolean;
+  isShow: object;
   editMode: boolean;
   toggleEdit: (v: boolean) => void;
 }
@@ -142,6 +141,7 @@ export interface RecommendedMeals {
   diets: [string[]];
   occasions: string[];
   analyzedInstructions: string[];
+  name?: string
 }
 
 export interface ConsumptionProps {
@@ -256,4 +256,60 @@ export interface recipeSettings {
 export interface Fetching {
   clicked: boolean;
   deactivate: boolean;
+}
+
+ interface DataProps {
+  id: number;
+  name: string;
+  servings: number;
+  creationTime: string;
+  modalVisible: boolean;
+  source: string
+}
+
+ interface BodyEditModal {
+  creationTime: string;
+  servings: number;
+  source: string
+}
+
+export interface PropsEditModal {
+  setData: (id: number, body: BodyEditModal) => void;
+  hideModal: () => void;
+  data: DataProps;
+  blend?: string;
+  clicked?: boolean;
+  date?: Date;
+  bg: string
+}
+
+export interface Styles {
+  [key: string]: any
+}
+
+export interface ConfirmationButton {
+  title: string
+  onClickHandler: (event: GestureResponderEvent) => void
+  bckColor: string 
+  textColor: string
+  fts: string 
+  ftw: string 
+  border: object
+  disabled: boolean
+}
+
+export interface ModalData {
+  id: number;
+  name: string;
+  servings: number;
+  modalVisible: boolean;
+  creationTime: number;
+  data: {
+    id?: number
+  };
+}
+
+export interface AddMealsProps {
+  creationTime: number;
+  servings: number;
 }

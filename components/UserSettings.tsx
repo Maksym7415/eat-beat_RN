@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Button, Divider } from "./MyComponents";
 import { Col, Spacing } from "./Config";
 import Chip from "./custom/ToggleChip";
 import Text from "./custom/Typography";
 import RadioInput from "./custom/RadioInput";
 import { recipeSettings, Fetching } from "./interfaces";
+import { useIsFocused } from "@react-navigation/native";
+import LayoutScroll from "./custom/LayoutScroll";
 
 interface Props {
   data: recipeSettings;
@@ -26,9 +28,9 @@ const UserSettings: FC<Props> = ({
 }) => {
   const { diets, intolerances, mealTypes } = data;
   if (!diets || !intolerances || !mealTypes) return <View />;
-  const [diet, setDiet] = useState(0);
-  const [intole, setIntole] = useState(intolerances);
-  const [types, setTypes] = useState(mealTypes);
+  const [diet, setDiet] = useState(diets.filter((item) => item.isUsers)[0].id);
+  const [intole, setIntole] = useState(intolerances.map((el) => ({ ...el })));
+  const [types, setTypes] = useState(mealTypes.map((el) => ({ ...el })));
 
   const getRadioState = () => {
     const arr = [...diets];
@@ -40,6 +42,7 @@ const UserSettings: FC<Props> = ({
 
   const updateIntole = (index: number) => {
     const arr = [...intole];
+    console.log(index)
     arr[index].isUsers = !arr[index].isUsers;
     setIntole(arr);
   };
@@ -50,78 +53,89 @@ const UserSettings: FC<Props> = ({
     setTypes(arr);
   };
 
+  const refreshPage = () => {
+    setDiet(diets.filter((item) => item.isUsers)[0].id);
+    setIntole(intolerances.map((el) => ({ ...el })));
+    setTypes(mealTypes.map((el) => ({ ...el })));
+  };
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isFocused) refreshPage();
+  }, [isFocused]);
+
   return (
-    <View style={[styles.canvas, { backgroundColor }]}>
-      <ScrollView overScrollMode="always">
-        <View style={{ flexGrow: 1 }}>
-          <View style={styles.container}>
-            <Text type="h6">Intolerances</Text>
-            <View style={styles.chipsContainer}>
-              {intole.map(({ id, name, isUsers }, index) => (
-                <Chip
-                  key={id + name}
-                  title={name}
-                  state={isUsers}
-                  selectedColor={blend}
-                  onPress={() => updateIntole(index)}
-                />
-              ))}
-            </View>
-          </View>
-          <Divider />
-          <View style={styles.container}>
-            <Text type="h6">Diet</Text>
-            {diets.map(({ id, name, isUsers }) => (
-              <RadioInput
+    <LayoutScroll style={{ backgroundColor, flexGrow: 1 }}>
+      <View style={{ flexGrow: 1 }}>
+        <View style={styles.container}>
+          <Text type="h6">Intolerances</Text>
+          <View style={styles.chipsContainer}>
+            {intole.map(({ id, name, isUsers, disabled }, index) => (
+              <Chip
                 key={id + name}
-                value={id}
-                label={name}
-                selected={diet}
-                disabled={false}
-                onSelect={() => setDiet(id)}
-                blend={blend}
+                title={name}
+                state={isUsers}
+                selectedColor={blend}
+                onPress={() => updateIntole(index)}
+                disabled={disabled}
               />
             ))}
           </View>
-          {showMealsTypes ? (
-            <>
-              <Divider />
-              <View style={styles.container}>
-                <Text type="h6">Meal Types</Text>
-                <View style={styles.chipsContainer}>
-                  {types.map(({ id, name, isUsers }, index) => (
-                    <Chip
-                      key={id + name}
-                      title={name}
-                      state={isUsers}
-                      selectedColor={blend}
-                      onPress={() => updateTypes(index)}
-                    />
-                  ))}
-                </View>
+        </View>
+        <Divider />
+        <View style={styles.container}>
+          <Text type="h6">Diet</Text>
+          {diets.map(({ id, name, isUsers }) => (
+            <RadioInput
+              key={id + name}
+              value={id}
+              label={name}
+              selected={diet}
+              disabled={false}
+              onSelect={() => setDiet(id)}
+              blend={blend}
+            />
+          ))}
+        </View>
+        {showMealsTypes ? (
+          <>
+            <Divider />
+            <View style={styles.container}>
+              <Text type="h6">Meal Types</Text>
+              <View style={styles.chipsContainer}>
+                {types.map(({ id, name, isUsers, disabled }, index) => (
+                  <Chip
+                    key={id + name}
+                    title={name}
+                    state={isUsers}
+                    selectedColor={blend}
+                    onPress={() => updateTypes(index)}
+                    disabled={disabled}
+                  />
+                ))}
               </View>
-            </>
-          ) : (
-            <View />
-          )}
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            deactivate={fetching.deactivate}
-            clicked={fetching.clicked}
-            label="SAVE CHANGES"
-            onPress={() =>
-              onSave({
-                intolerances: intole,
-                diets: getRadioState(),
-                mealTypes: types,
-              })
-            }
-            style={{ backgroundColor: blend }}
-          />
-        </View>
-      </ScrollView>
-    </View>
+            </View>
+          </>
+        ) : (
+          <View />
+        )}
+      </View>
+      <View style={[styles.buttonContainer, { backgroundColor }]}>
+        <Button
+          deactivate={fetching.deactivate}
+          clicked={fetching.clicked}
+          label="SAVE CHANGES"
+          onPress={() =>
+            onSave({
+              intolerances: intole,
+              diets: getRadioState(),
+              mealTypes: types,
+            })
+          }
+          style={{ backgroundColor: blend }}
+        />
+      </View>
+    </LayoutScroll>
   );
 };
 

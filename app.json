@@ -2,7 +2,7 @@
   "expo": {
     "name": "eat-beat",
     "slug": "eat-beat",
-    "version": "0.1.4",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -22,7 +22,11 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.prod.eatbeat"
+      "package": "com.prod.eatbeat",
+      "versionCode": 101,
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyDXUf622T_5pXNoTVXrOC0VIbt3x0iCNho" }
+     }
     }
   }
 }

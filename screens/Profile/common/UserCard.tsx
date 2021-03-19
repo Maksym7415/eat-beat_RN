@@ -13,6 +13,8 @@ import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
 import server from "../../../server";
 import Text from "../../../components/custom/Typography";
+import * as ImageManipulator from "expo-image-manipulator";
+import { baseURL } from "../../../url";
 
 interface Props {
   image: string | null;
@@ -58,7 +60,12 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
       quality: 1,
     });
     if (!result.cancelled) {
-      uploadAvatar(result.uri);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 600, height: 600 } }],
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      uploadAvatar(manipResult.uri);
     }
   };
 
@@ -72,9 +79,11 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
 
   const submitChange = async () => {
     setEdit(!edit);
-    if (userName !== name) {
+    if (userName !== name && userName !== "") {
       const response = await server.updateProfile({ name: userName });
       response ? onUpdate() : setUserName(name);
+    } else {
+      setUserName(name);
     }
   };
 
@@ -94,7 +103,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
           <Image
             style={styles.image}
             source={{
-              uri: "https://logisticbrocker.hopto.org/eat-beat/" + image,
+              uri: `${baseURL}/${image}`,
             }}
           />
         )}
@@ -107,6 +116,7 @@ const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
           autoFocus={edit}
           value={userName}
           editable={edit}
+          maxLength={50}
           style={edit ? styles.editInput : styles.nameInput}
           onChangeText={(val) => setUserName(val)}
         />
@@ -150,7 +160,7 @@ const styles = StyleSheet.create({
   },
   nameInput: {
     color: Col.Black,
-    fontFamily: "Inter_500Medium",
+    fontFamily: "Roboto_500Medium",
     fontSize: 18,
   },
   editInput: {
@@ -159,7 +169,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     padding: Spacing.tiny,
     borderColor: Col.Inactive,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Roboto_400Regular",
   },
   emailInput: {
     fontFamily: Font,

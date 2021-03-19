@@ -9,9 +9,14 @@ import { NavProps } from "../../components/interfaces";
 import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
+import LayoutScroll from "../../components/custom/LayoutScroll";
 
 const Validation = Yup.object().shape({
-  verificationCode: Yup.number().required().min(5).label("verification Code"),
+  verificationCode: Yup.number()
+    .required()
+    .min(5)
+    .label("verification Code")
+    .typeError("Code must be a number"),
   password: Yup.string().required().min(6).label("Reset Password"),
 });
 
@@ -55,7 +60,7 @@ const ChangePasswordScreen: FC<NavProps> = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <LayoutScroll style={styles.container}>
       <Logo />
       <View style={styles.boxContainer}>
         <Text type="h6" style={styles.header}>
@@ -106,7 +111,7 @@ const ChangePasswordScreen: FC<NavProps> = ({ navigation, route }) => {
           )}
         </Formik>
       </View>
-    </View>
+    </LayoutScroll>
   );
 };
 
