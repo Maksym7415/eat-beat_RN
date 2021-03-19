@@ -283,13 +283,6 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
         item: {meal: {...details, title: details.name, nutrition: {nutrients: nutrition.nutrients}}}
       });
     }
-
-    // navigation.navigate(pageSettings[page].navigation[0].title, {
-    //   title,
-    //   details: { ...details, page: pageSettings[page].navigation[0].page },
-    //   item: {meal: {...details, id: item.id, title: details.name, nutrition: {nutrients: nutrition.nutrients}}}
-    // });
-    
   };
 
   useEffect(() => {
