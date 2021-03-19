@@ -11,7 +11,7 @@ import { Text } from "../../components/custom/Typography";
 import server from "../../server";
 import Logo from "./common/Logo";
 import LayoutScroll from "../../components/custom/LayoutScroll";
-import { APP_VERSION } from '../../constants';
+import Constants from 'expo-constants';
 
 const Validation = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -47,7 +47,7 @@ const LoginScreen: FC<NavProps> = ({ navigation }) => {
           opacity: 0.5,
         }}
       >
-        {`v ${APP_VERSION}`}
+        {`v ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}
       </Text>
       <Logo />
       <View style={styles.boxContainer}>
