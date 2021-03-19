@@ -34,7 +34,8 @@ const apiConfig: apiProps = {
     resendResetPasswordCode: "/auth/resend-reset-password-code?email=",
     recommendRestaurant: "/restaurants/recommend-dish?date=",
     getRestaurants: "/restaurants/all-restaurants",
-    getRestaurantMenu: "/restaurants/restaurant-menu/"
+    getRestaurantMenu: "/restaurants/restaurant-menu/",
+    restaurantSearch: "/restaurants/search?name="
   },
   post: {
     signIn: "/auth/sign-in",
@@ -328,6 +329,13 @@ const getRestaurantMenu = async (id: number) => {
   return response;
 }
 
+const restaurantSearch = async ( name: string, config: string, offset: number) => {
+  const address = apiConfig.get.restaurantSearch + name + config + `&offset=${offset}`;
+  const response = await api.get(address);
+  if (!response.ok) logError(response);
+  return response;
+}
+
 const signIn = async (payload: AuthProps) => {
   const encrypted = await encryption(payload)
   const address = apiConfig.post.signIn;
@@ -517,5 +525,6 @@ export default {
   getRecommendedRestaurant,
   addRestaurantsMeal,
   getRestaurants,
-  getRestaurantMenu
+  getRestaurantMenu,
+  restaurantSearch
 };

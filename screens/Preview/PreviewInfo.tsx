@@ -102,14 +102,25 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   const focus = useIsFocused();
 
   const addMeal = async (id, { servings, creationTime }) => {
-    const result = await pageSettings[page].add({meal: modalData.meal, date: creationTime, quantity: servings});
+    const pageData = {
+      recipes: {
+        date: creationTime, 
+        quantity: servings,
+        mealId: id
+      },
+      restaurants: {
+        date: creationTime, 
+        quantity: servings,
+        eal: modalData.meal, 
+      }
+    }
+    const result = await pageSettings[page].add(pageData[page]);
     if(result.ok) {
       navigation.navigate('meals')
     }
   }
 
   const modalAction = (data: object) => {
-    console.log(data)
     setModalData({
         ...modalData,
         id: data.meal.id,

@@ -43,7 +43,7 @@ export const pageSettings: Pages = {
         bg: Col.Restaurants,
         pageText: "Search the restaurant meals",
         get: server.getRecommendedRestaurant,
-        search: (search:string) => console.log(search),
+        search: server.restaurantSearch,
         add: server.addRestaurantsMeal,
         preview: restrauntsPreview,
         navigation: [{

@@ -151,11 +151,16 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
-    await pageSettings[page].add({
+    const data = {
       mealId: modalData.data.id,
+      meal: { ...modalData.data, title: modalData.data.name },
       quantity: servings,
       date: creationTime,
-    });
+    }
+    if(page === 'restaurants') delete data.mealId;
+    else delete data.meal
+    const result = await pageSettings[page].add(data);
+    if(!result.ok) return;
     setModalData({ ...modalData, modalVisible: false });
     navigation.navigate("meals");
     isFetching();
@@ -211,8 +216,11 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const onPreview = async (item) => {
-    const title = item.title;
     const data = await pageSettings[page].preview(item.id);
+    const pageData = {
+      recipes: data,
+      restaurants: item
+    }
     const {
       image,
       servings,
@@ -223,32 +231,65 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
       veryPopular,
       nutrition,
       analyzedInstructions,
-    } = item;
-    let ing = "";
-    analyzedInstructions.forEach((el) => {
-      el.steps.forEach((ele) => {
-        ing += "\n" + ele.step;
-      });
-    });
-    const details = {
-      image,
-      name: item.title,
-      servings,
-      nutrients: [...nutrition.nutrients],
-      ingredients: data.code
-        ? [...nutrition.ingredients]
-        : [...data.nutrition.ingredients],
-      instructions: ing,
-      vegetarian,
-      vegan,
-      glutenFree,
-      dairyFree,
-      veryPopular,
-    };
-    navigation.navigate(pageSettings[page].navigation[0].title, {
+      price,
+      description,
       title,
-      details: {...details, page: pageSettings[page].navigation[0].page},
-    });
+      name,
+    } = pageData[page];
+    if(page === 'recipes') {
+      let ing = "";
+        analyzedInstructions && analyzedInstructions.forEach((el) => {
+          el.steps.forEach((ele) => {
+            ing += "\n" + ele.step;
+          });
+        });
+      const details = {
+        image: image ,
+        name: title || name,
+        servings,
+        nutrients: [...nutrition.nutrients],
+        ingredients:  [...nutrition.ingredients],
+        instructions: ing, 
+        vegetarian,
+        vegan,
+        glutenFree,
+        dairyFree,
+        veryPopular,
+        price
+      };
+      navigation.navigate(pageSettings[page].navigation[0].title, {
+        title,
+        details: { ...details, page: pageSettings[page].navigation[0].page },
+        item: {meal: { id: item.id }}
+      });
+    } else if(page === 'restaurants') {
+      const details = {
+        image: image ,
+        name: title || name,
+        servings,
+        nutrients: [...nutrition.nutrients],
+        ingredients:  null,
+        instructions: description, 
+        vegetarian,
+        vegan,
+        glutenFree,
+        dairyFree,
+        veryPopular,
+        price
+      };
+      navigation.navigate(pageSettings[page].navigation[0].title, {
+        title,
+        details: { ...details, page: pageSettings[page].navigation[0].page },
+        item: {meal: {...details, title: details.name, nutrition: {nutrients: nutrition.nutrients}}}
+      });
+    }
+
+    // navigation.navigate(pageSettings[page].navigation[0].title, {
+    //   title,
+    //   details: { ...details, page: pageSettings[page].navigation[0].page },
+    //   item: {meal: {...details, id: item.id, title: details.name, nutrition: {nutrients: nutrition.nutrients}}}
+    // });
+    
   };
 
   useEffect(() => {
@@ -267,6 +308,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
         date={calendar.date}
         setData={(id, body) => addMeal(id, body)}
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
+        bg={pageSettings[page].bg}
       />
       <SearchModal
         modalVisible={isShow[page]}
@@ -317,7 +359,7 @@ const SearchScreen: FC<NavProps> = ({ navigation, page }) => {
                   </View>
                 ))}
               </View>
-              <View style={styles.button}>
+              <View style={styles.btnContainer}>
                 <Button
                   label="SHOW MORE"
                   onPress={showMore}
@@ -369,12 +411,16 @@ const styles = StyleSheet.create({
     padding: Spacing.medium,
     backgroundColor: Col.Background,
   },
+  btnContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    paddingHorizontal: Spacing.r_small,
+    backgroundColor: Col.Background,
+  },
   buttonrecipes: {
-    paddingHorizontal: Spacing.medium,
     backgroundColor: Col.Recipes
   },
   buttonrestaurants: {
-    paddingHorizontal: Spacing.medium,
     backgroundColor: Col.Restaurants
   },
 });

@@ -30,6 +30,7 @@ const RecipeCard: FC<Props> = ({
     id,
     image,
     title,
+    name,
     healthScore,
     vegetarian,
     vegan,
@@ -84,7 +85,7 @@ const RecipeCard: FC<Props> = ({
                   />
                 )}
               <Icon
-                onPress={() => actionHandler(id, title, details)}
+                onPress={() => actionHandler(id, title || name, details)}
                 name={"add-box"}
                 color={Col.White}
                 size={32}
@@ -93,7 +94,7 @@ const RecipeCard: FC<Props> = ({
           </LinearGradient>
         </ImageBackground>
         <View style={styles.infoContainer}>
-          <Text type="bodyBold2">{title}</Text>
+          <Text type="bodyBold2">{title || name}</Text>
           <View style={styles.catagoryContainer}>
             {getImage(
               vegetarian,
