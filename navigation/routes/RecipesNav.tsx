@@ -9,7 +9,7 @@ import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
 // import RecommendedScreen from "../../screens/Recipies/RecommendedScreen";
 import RecommendedScreen from '../../components/RecommendedScreen';
-import SearchScreen from "../../components/SearchScreen";
+import SearchRecipeScreen from "../../screens/Recipies/SearchRecipeScreen";
 import UserRecipes from "../../screens/Recipies/UserRecipe";
 import NewRecipe from "../../screens/Recipies/CreateRecipesScreen";
 import RecipeInfoScreen from "../../screens/Recipies/RecipeInfoScreen";
@@ -59,7 +59,7 @@ const RecipesTopNavigator = () => (
       {(props) => <RecommendedScreen {...props} page={'recipes'}/>}
     </TopTabs.Screen>
     <TopTabs.Screen name="search">
-      {(props) => <SearchScreen {...props} page={'recipes'}/>}
+      {(props) => <SearchRecipeScreen {...props} page={'recipes'}/>}
     </TopTabs.Screen>
     <TopTabs.Screen
       name="user_recipies"

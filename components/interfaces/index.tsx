@@ -141,6 +141,7 @@ export interface RecommendedMeals {
   diets: [string[]];
   occasions: string[];
   analyzedInstructions: string[];
+  name?: string
 }
 
 export interface ConsumptionProps {
