@@ -111,7 +111,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
       restaurants: {
         date: creationTime, 
         quantity: servings,
-        meal: modalData.meal, 
+        meal: {...modalData.meal, title: modalData.meal.name}, 
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
@@ -123,7 +123,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   const modalAction = (data: object) => {
     setModalData({
         ...modalData,
-        id: data.meal.id,
+        id: data.id,
         name: data.meal.name,
         meal: data.meal,
         modalVisible: true
@@ -131,9 +131,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   }
   useEffect(() => {
     if (focus) {
-      const newFeed = getInfo();
-      // console.log(newFeed)
-      if (newFeed.name !== "" || newFeed.title !== "") setFeed(newFeed);
+      setFeed(item.meal)
     }
   }, [focus]);
 
@@ -226,9 +224,9 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
       </LayoutScroll>
       {routeFrom !== 'mealsScreen' ? <View style={{left: 0, right: 0, bottom: 0}}>
         <Button
-            label="ADD TO MEALS"
-            style={styles[`addToMealsFrom${page}`]}
-            onPress={() => modalAction(item)}
+          label="ADD TO MEALS"
+          style={styles[`addToMealsFrom${page}`]}
+          onPress={() => modalAction(item)}
         />
     </View> : null}
   </View>
@@ -321,6 +319,10 @@ const styles = StyleSheet.create({
   addToMealsFromrecipes: {
     paddingHorizontal: 8,
     backgroundColor: Col.Recipes
+  },
+  addToMealsFromsnacks: {
+    paddingHorizontal: 8,
+    backgroundColor: Col.Snacks
   }
 });
 export default PreviewInfo;

@@ -259,7 +259,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
       navigation.navigate('previewRecommendedPage', {
         title,
         details: { ...details, page: 'recipes' },
-        item: {meal: { id: item.id }}
+        item: {meal: details, id: item.id}
       });
   };
 

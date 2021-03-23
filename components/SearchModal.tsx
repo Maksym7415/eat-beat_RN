@@ -69,6 +69,13 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Restaurants,
     padding: Spacing.medium,
   },
+  containersnacks: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: Col.Snacks,
+    padding: Spacing.medium,
+  },
   input: {
     width: "70%",
     borderRadius: 4,

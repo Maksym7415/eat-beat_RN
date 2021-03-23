@@ -37,16 +37,19 @@ return (
     >
       {(tabsProps) => <PreviewInfo {...tabsProps} page={page} routeFrom={routeFrom} item={item}/>}
     </TopTabs.Screen>
-    {page === "recipes" ? <TopTabs.Screen
+    {page === "recipes" ? 
+    <TopTabs.Screen
       name="previewIngredients"
-      component={PreviewIngredients}
       options={{ title: "ingredients" }}
-    /> : null}
+    >
+      {(props) => <PreviewIngredients {...props} item={item}/>}
+    </TopTabs.Screen>
+     : null}
     <TopTabs.Screen
       name="previewInstruction"
       options={{ title: pageSettings[page].previewTabTitle }}
     >
-      {(instructionProps) => <PreviewInstructions {...instructionProps} page={page}/>}
+      {(instructionProps) => <PreviewInstructions {...instructionProps} page={page} item={item}/>}
     </TopTabs.Screen>
   </TopTabs.Navigator>
 )};

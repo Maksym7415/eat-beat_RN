@@ -8,8 +8,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
-import SearchScreen from "../../components/SearchScreen";
-import RecommendedScreen from "../../components/RecommendedScreen";
+import SearchSnackScreen from '../../screens/Snacks/SearchSnackScreen';
+import RecommendedScreen from '../../screens/Snacks/PopularSnacksScreen';
+import PreviewScreen from '../../screens/Preview/PreviewInfo';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -33,7 +34,7 @@ const SnackTopNavigator = () => (
       {(props) => <RecommendedScreen {...props} page='snacks'/>}
     </TopTabs.Screen>
     <TopTabs.Screen name="search" >
-        {(props) => <Text>Search</Text>}
+        {(props) => <SearchSnackScreen {...props}  page='snacks'/>}
     </TopTabs.Screen>
     <TopTabs.Screen name="Scanner" >
         {(props) => <Text>Scanner</Text>}
@@ -41,7 +42,7 @@ const SnackTopNavigator = () => (
   </TopTabs.Navigator>
 );
 
-export const SnacksStack = () => {
+export const SnacksStack =  (props) => {
   return (
     <Stack.Navigator initialRouteName="snacksPage">
       <Stack.Screen
@@ -61,7 +62,7 @@ export const SnacksStack = () => {
                 return (
                   <Icon
                     style={{ marginRight: 16 }}
-                    onPress={() => showModal(true, 'restaurants')}
+                    onPress={() => showModal(true, 'snacks')}
                     name={"search"}
                     color={Col.White}
                     size={24}
@@ -83,6 +84,23 @@ export const SnacksStack = () => {
         name="snacksPage"
         component={SnackTopNavigator}
       />
+      <Stack.Screen
+        options={({ navigation, route, }) => {
+          return {
+            title: "previewSnack",
+            headerStyle: {
+              elevation: 1,
+              backgroundColor: Col.Snacks,
+            },
+            headerTitleStyle: {
+              color: "white",
+            },
+          };
+        }}
+        name="previewSnack"
+      >
+      {(previewProps) => <PreviewScreen page={'snacks'} {...previewProps} item={previewProps.route.params.item}/>}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };
