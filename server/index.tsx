@@ -35,7 +35,8 @@ const apiConfig: apiProps = {
     recommendRestaurant: "/restaurants/recommend-dish?date=",
     getRestaurants: "/restaurants/all-restaurants",
     getRestaurantMenu: "/restaurants/restaurant-menu/",
-    restaurantSearch: "/restaurants/search?name="
+    restaurantSearch: "/restaurants/search?name=",
+    popularSnacks: "/snacks/popular"
   },
   post: {
     signIn: "/auth/sign-in",
@@ -336,6 +337,12 @@ const restaurantSearch = async ( name: string, config: string, offset: number) =
   return response;
 }
 
+const popularSnacks = async () => {
+  const response = await api.get(apiConfig.get.popularSnacks);
+  if (!response.ok) logError(response);
+  return response;
+}
+
 const signIn = async (payload: AuthProps) => {
   const encrypted = await encryption(payload)
   const address = apiConfig.post.signIn;
@@ -526,5 +533,6 @@ export default {
   addRestaurantsMeal,
   getRestaurants,
   getRestaurantMenu,
-  restaurantSearch
+  restaurantSearch,
+  popularSnacks
 };

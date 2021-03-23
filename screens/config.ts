@@ -136,7 +136,7 @@ export const pageSettings: Pages = {
                     dairyFree: false,
                     veryPopular: true,
                 }
-        ]
+            ]
         )),
     }
         
