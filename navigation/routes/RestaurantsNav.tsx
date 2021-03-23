@@ -8,7 +8,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
 import RestaurantMenu from '../../screens/Restaurants/RestaurantMenu';
-import RecommendScreen from '../../components/RecommendedScreen';
+import RecommendScreen from '../../screens/Restaurants/RestaurantRecommendScreen';
 import SearchRestaurantsScreen from "../../screens/Restaurants/SearchRestaurantsScreen";
 import PreviewRecipeTopNavigator from "./PreviewTab";
 import RestaurantMap from '../../screens/Restaurants/RestaurantMap';

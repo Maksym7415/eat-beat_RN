@@ -65,28 +65,11 @@ const Ingredient = ({ item }: IngProps) => {
   );
 };
 
-const PreviewIngredients: FC<NavProps> = ({ navigation }) => {
-  const getInfo = () => {
-    const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const Page =
-      fetcher.routes.map((el) => el.name)[0] === "homePage"
-        ? "previewPage"
-        : "previewRecommendedPage";
-    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
-      ?.details;
-    return spread ? { ...spread } : { ingredients: [] };
-  };
-  const [feed, setFeed] = useState(getInfo());
-  const { ingredients } = feed;
-  useEffect(() => {
-    if (navigation.isFocused()) {
-      const newFeed = getInfo();
-      if (newFeed.ingredients.length) setFeed(newFeed);
-    }
-  }, [navigation]);
+const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
+
   return (
     <LayoutScroll style={styles.container}>
-      {ingredients.map((ele, ind) => (
+      {item.meal.ingredients.map((ele, ind) => (
         <Ingredient key={`_${ind}`} item={ele} />
       ))}
       <Button

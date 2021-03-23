@@ -9,7 +9,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
 import SearchSnackScreen from '../../screens/Snacks/SearchSnackScreen';
-import RecommendedScreen from "../../components/RecommendedScreen";
+import RecommendedScreen from '../../screens/Snacks/PopularSnacksScreen';
 import PreviewScreen from '../../screens/Preview/PreviewInfo';
 
 const Stack = createStackNavigator();

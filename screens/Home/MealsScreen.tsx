@@ -79,7 +79,8 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     }
     navigation.navigate("previewPage", {
       title: item.name,
-      details: { ...item, instructions, page: data[page].page, nutrients: item.nutrients, from: 'mealsScreen' },
+      details: {page: data[page].page },
+      item: { from: 'mealsScreen', meal: {...item, instructions: instructions || item.description, nutrients: item.nutrients}, id: item.id,  },
     });
   };
 

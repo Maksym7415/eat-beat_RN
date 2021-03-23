@@ -7,30 +7,12 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 import { useIsFocused } from "@react-navigation/native";
 import { pageSettings } from "../config";
 
-const PreviewInstructions: FC<NavProps> = ({ navigation, page }) => {
-  const getInfo = () => {
-    const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const Page =
-      fetcher.routes.map((el) => el.name)[0] === "homePage"
-        ? "previewPage"
-        : "previewRecommendedPage";
-    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
-      ?.details;
-    return spread ? { ...spread } : { instructions: "" };
-  };
-  const [feed, setFeed] = useState({ instructions: "" });
-  const { instructions } = feed;
-  const focus = useIsFocused();
-  useEffect(() => {
-    if (focus) {
-      const newFeed = getInfo();
-      if (newFeed.instructions) setFeed(newFeed);
-    }
-  }, [focus]);
+const PreviewInstructions: FC<NavProps> = ({ navigation, page, item }) => {
+
   return (
     <LayoutScroll style={styles.container}>
       <Text type="body2">
-        {instructions ? instructions : pageSettings[page].noInstractiontext}
+        {item.meal.instructions ? item.meal.instructions : pageSettings[page].noInstractiontext}
       </Text>
     </LayoutScroll>
   );

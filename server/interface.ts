@@ -21,6 +21,7 @@ export interface apiProps {
     getRestaurants: string
     getRestaurantMenu: string
     restaurantSearch: string
+    popularSnacks: string
   };
   post: {
     addCookedMeal: string;
