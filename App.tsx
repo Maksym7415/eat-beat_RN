@@ -26,7 +26,7 @@ const processQueue = (error, token = null) => {
 export default function App() {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
-  const [show, setShow] = useState<object>({recipes: false, restaurants: false});
+  const [show, setShow] = useState<object>({recipes: false, restaurants: false, snacks: false});
   const [fetching, setFetching] = useState<number>(0);
   const [cal, setCal] = useState<Cal>({
     visible: false,
