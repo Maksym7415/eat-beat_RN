@@ -112,6 +112,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
       name: title,
       servings,
       nutrients: [...nutrition.nutrients],
+      nutrition: {
+        nutrients: [...nutrition.nutrients]
+      },
       ingredients: page === 'recipes' ? data.code
         ? [...nutrition.ingredients]
         : [...data.nutrition.ingredients] : null,
@@ -126,6 +129,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
     navigation.navigate(pageSettings[page].navigation[0].title, {
       title: item.title,
       details: {...details, page: pageSettings[page].navigation[0].page},
+      item: {meal: details, id: item.id}
     });
     DontRefresh = true;
   };
