@@ -94,6 +94,17 @@ interface Ingredients extends Properties {
   };
 }
 
+export interface RecipeIngredient {
+  id: number
+  amount: number
+  consistency: string
+  name: string
+  image: string
+  aisle: string
+  unit: string,
+  possibleUnits?: string[]
+}
+
 interface Nutrition {
   nutrients: Array<Nutrients>;
   properties: Array<Properties>;
@@ -290,10 +301,10 @@ export interface Styles {
 export interface ConfirmationButton {
   title: string
   onClickHandler: (event: GestureResponderEvent) => void
-  bckColor: string 
+  bckColor: string
   textColor: string
-  fts: string 
-  ftw: string 
+  fts: string
+  ftw: string
   border: object
   disabled: boolean
 }
