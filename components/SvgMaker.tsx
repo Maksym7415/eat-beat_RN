@@ -7,6 +7,17 @@ interface IIcons {
 
 const Icons: IIcons = {
   default: ``,
+  arrowUp: `
+<svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 5L5 -4.37114e-07L0 5L10 5Z" fill="#333942"/>
+</svg>
+`,
+  arrowDown: `
+<svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0L5 5L10 0L0 0Z" fill="#333942"/>
+</svg>
+`,
+  edit: `<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 15.2505V19.0005H3.75L14.81 7.94055L11.06 4.19055L0 15.2505ZM17.71 5.04055C18.1 4.65055 18.1 4.02055 17.71 3.63055L15.37 1.29055C14.98 0.900547 14.35 0.900547 13.96 1.29055L12.13 3.12055L15.88 6.87055L17.71 5.04055Z" fill="#ADB4BB"/></svg>`,
   alert: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
  <path fill-rule="evenodd" clip-rule="evenodd" d="M16.8311 11.965L11.5771 2.98334C11.0496 2.06892 10.0665 1.50137 9.00325 1.50012C7.93993 1.49888 6.95646 2.06409 6.42243 2.98337L1.16648 11.9683C0.621472 12.8847 0.609142 14.033 1.13704 14.9695C1.66538 15.9068 2.65465 16.4901 3.73071 16.4988L14.2591 16.4989C15.3463 16.4883 16.3337 15.9068 16.862 14.9704C17.3896 14.035 17.3778 12.8893 16.8311 11.965ZM2.45847 12.7305L7.71832 3.73889C7.98469 3.28037 8.47323 2.9996 9.0015 3.00021C9.52971 3.00083 10.0181 3.28276 10.28 3.73688L15.5382 12.7256C15.8138 13.1916 15.8197 13.7652 15.5555 14.2335C15.291 14.7024 14.7964 14.9937 14.2518 14.999L3.73681 14.9989C3.20385 14.9946 2.70833 14.7024 2.44374 14.233C2.17944 13.7642 2.18561 13.1893 2.45847 12.7305ZM9.00016 13.4989C9.41451 13.4989 9.7504 13.1632 9.7504 12.7489C9.7504 12.3347 9.41451 11.9989 9.00016 11.9989C8.58581 11.9989 8.24991 12.3347 8.24991 12.7489C8.24991 13.1632 8.58581 13.4989 9.00016 13.4989ZM9.75262 5.99912H8.25213V11.2491H9.75262V5.99912Z" fill="#EB665E"/>
  </svg>`,
@@ -195,11 +206,41 @@ eatBeatLogo: `<svg width="157" height="150" viewBox="0 0 157 150" fill="none" xm
 <path d="M33.6289 69.9566C33.6289 65.3376 33.6289 57.7793 33.6289 53.1588C33.6289 48.5398 37.9813 46.6498 43.2989 48.9601C48.618 51.2718 57.3212 55.0502 62.6417 57.3604C67.9594 59.6707 67.9594 63.4477 62.6417 65.7594C57.3227 68.0682 48.618 71.8466 43.2989 74.1583C37.9813 76.4671 33.6289 74.5757 33.6289 69.9566Z" fill="white"/>
 <path d="M69.7421 16.3486C74.3625 16.3486 81.9208 16.3486 86.5413 16.3486C91.1604 16.3486 93.0489 20.701 90.7386 26.0186C88.4269 31.3377 84.6499 40.0424 82.3383 45.3615C80.0309 50.6805 76.251 50.6805 73.9422 45.3615C71.6305 40.0424 67.8521 31.3377 65.5419 26.0186C63.2345 20.701 65.1245 16.3486 69.7421 16.3486Z" fill="white"/>
 </svg>
-`  
+`
 };
 
 const newIcon = (name = "profile", fill = "#737373") => {
   switch (name) {
+    case "addRounded":
+      return `
+<svg width="92" height="92" viewBox="0 0 92 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_ddd)">
+<circle cx="46" cy="45" r="28" fill="#289BDC"/>
+<path d="M40.3281 50.6719C41.9219 52.2344 43.8125 53.0156 46 53.0156C48.1875 53.0156 50.0625 52.2344 51.625 50.6719C53.2188 49.0781 54.0156 47.1875 54.0156 45C54.0156 42.8125 53.2188 40.9375 51.625 39.375C50.0625 37.7812 48.1875 36.9844 46 36.9844C43.8125 36.9844 41.9219 37.7812 40.3281 39.375C38.7656 40.9375 37.9844 42.8125 37.9844 45C37.9844 47.1875 38.7656 49.0781 40.3281 50.6719ZM38.9219 37.9688C40.8906 36 43.25 35.0156 46 35.0156C48.75 35.0156 51.0938 36 53.0312 37.9688C55 39.9062 55.9844 42.25 55.9844 45C55.9844 47.75 55 50.1094 53.0312 52.0781C51.0938 54.0156 48.75 54.9844 46 54.9844C43.25 54.9844 40.8906 54.0156 38.9219 52.0781C36.9844 50.1094 36.0156 47.75 36.0156 45C36.0156 42.25 36.9844 39.9062 38.9219 37.9688ZM46.9844 39.9844V44.0156H51.0156V45.9844H46.9844V50.0156H45.0156V45.9844H40.9844V44.0156H45.0156V39.9844H46.9844Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_ddd" x="0" y="0" width="92" height="92" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="3"/>
+<feGaussianBlur stdDeviation="2.5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="9"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="6"/>
+<feGaussianBlur stdDeviation="5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.14 0"/>
+<feBlend mode="normal" in2="effect2_dropShadow" result="effect3_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow" result="shape"/>
+</filter>
+</defs>
+</svg>
+`;
     case "profile":
       return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
   <path id="Path_23" data-name="Path 23" d="M28,14A10,10,0,1,0,38,24,10,10,0,0,0,28,14Zm0,3a3,3,0,1,1-3,3A3,3,0,0,1,28,17Zm0,14.2a7.2,7.2,0,0,1-6-3.22c.03-1.99,4-3.08,6-3.08s5.97,1.09,6,3.08A7.2,7.2,0,0,1,28,31.2Z" transform="translate(-18 -14)" fill=${fill}/>
@@ -267,7 +308,7 @@ const newIcon = (name = "profile", fill = "#737373") => {
     <rect id="Rectangle_19" data-name="Rectangle 19" width="2" height="2" transform="translate(1365 992)" fill=${fill}/>
   </g>
 </svg>`;
-case 'about': 
+case 'about':
 return `<svg width="24" height="24" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
 <path fill=${fill} clip-rule="evenodd" d="M1 12C1 18.0751 5.92487 23 12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM13.0036 13.9983H14.003V15.9983H10.003V13.9983H11.003V11.9983H10.003V9.99835H13.0036V13.9983ZM13.0007 7.99835C13.0007 8.55063 12.5528 8.99835 12.0003 8.99835C11.4479 8.99835 11 8.55063 11 7.99835C11 7.44606 11.4479 6.99835 12.0003 6.99835C12.5528 6.99835 13.0007 7.44606 13.0007 7.99835Z" />
 </svg>
@@ -283,6 +324,9 @@ return `<svg width="24" height="24" viewBox="0 0 24 24"  xmlns="http://www.w3.or
 interface Props {
   name:
   | "default"
+  | "arrowUp"
+  | "arrowDown"
+  | "edit"
   | "alert"
   | "verify"
   | "actionButton"
@@ -301,6 +345,7 @@ interface Props {
 
 interface IconProps {
   name:
+  | "addRounded"
   | "profile"
   | "foodDiary"
   | "recipes"

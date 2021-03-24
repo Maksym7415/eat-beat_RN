@@ -12,6 +12,7 @@ declare interface Props {
     | "bodyBold"
     | "body2"
     | "bodyBold2"
+    | "label"
     | "cap";
   children?: string | ReactText | ReactNode[];
   ellipsizeMode?: "head" | "middle" | "tail" | "clip" | undefined;
@@ -81,5 +82,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Col.Dark,
   },
+  label: {
+    fontFamily: "Roboto_700Bold",
+    fontSize: 14,
+    color: Col.Grey1
+  }
 });
 export default Text;

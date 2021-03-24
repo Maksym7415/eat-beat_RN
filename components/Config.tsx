@@ -23,6 +23,8 @@ export const Col = {
   Header: "#EFF0F4",
   Error: "#FF364F",
   Ghost: "#6E7882",
+  InputDefaultBorder: '#DADDDF',
+  Disabled: '#C2C2C2',
 
   Faded: "#757575",
   Profile: "#616161",
