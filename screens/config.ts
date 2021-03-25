@@ -138,6 +138,7 @@ export const pageSettings: Pages = {
                 }
             ]
         )),
+        add: server.addSnacks,
     }
         
 }

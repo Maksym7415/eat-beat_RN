@@ -107,7 +107,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
       veryPopular,
       price
     };
-    navigation.navigate('previewRecommendedPage', {
+    navigation.navigate('previewRestaurantScreen', {
       title: name,
       details: {...details, page: 'restaurants'},
       item: {meal: details, id: item.id}

@@ -40,7 +40,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const serveData = async () => {
     setFetching({ clicked: true, deactivate: true });
-    const response = await server.popularSnacks();
+    const response = await server.popularSnacks(date);
     console.log(response)
     if (response.ok) {
       setFetching({ clicked: false, deactivate: false });
@@ -64,7 +64,16 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
-    console.log('add snack')
+    setFetching({ clicked: true, deactivate: true });
+    console.log(modalData.data.servings)
+    const result = await server.addSnacks({meal: modalData.data, quantity: servings, date: creationTime});
+    if(result.ok) {
+      setFetching({ clicked: false, deactivate: false });
+      setModalData({ ...modalData, modalVisible: false });
+      navigation.navigate("meals");
+      return isFetching();
+    }
+    setFetching({ clicked: false, deactivate: false });
   };
 
   const onPreview = async (item) => {

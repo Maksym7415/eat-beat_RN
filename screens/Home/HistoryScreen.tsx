@@ -25,6 +25,12 @@ interface Offset {
   offset: number;
 }
 
+const recommendScreens = {
+  0: 'recommendedDrawer',
+  1: 'restaurants',
+  2: 'snacks'
+}
+
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
   const [data, setData] = useState({});
   const [actionBtn, setActionBtn] = useState<boolean>(false);
@@ -55,7 +61,7 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   const addRecommended = (value: number) => {
     setActionBtn(false);
-    navigation.navigate("recommendedDrawer");
+    navigation.navigate(recommendScreens[value]);
   };
 
   let focus = useIsFocused();

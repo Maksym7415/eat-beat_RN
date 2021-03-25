@@ -85,12 +85,13 @@ function RestaurantMenu({ navigation, route }) {
             id: data.id,
             name: data.name,
             meal: data,
-            modalVisible: true
+            modalVisible: true,
+            creationTime: new Date().getTime(),
         });
       }
 
       const previewPage = (item) => {
-        navigation.navigate("previewPage", {
+        navigation.navigate("previewRestaurantScreen", {
             title: item.name,
             details: { ...item, instructions: item.description, page: 'restaurants', nutrients: item.nutrition.nutrients, from: 'restaurantMenu' },
             item: {meal: {...item, title: item.name, is_partner: route.params.is_partner}, quantity: 1, date: correctFormat()}

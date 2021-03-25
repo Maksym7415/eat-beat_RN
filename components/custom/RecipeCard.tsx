@@ -12,6 +12,7 @@ import SvgMaker from "../SvgMaker";
 import Text from "./Typography";
 import { RecommendedMeals } from "../../components/interfaces";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
+import { Divider } from "../../components/MyComponents";
 
 interface Props {
   details: RecommendedMeals;
@@ -36,7 +37,9 @@ const RecipeCard: FC<Props> = ({
     glutenFree,
     dairyFree,
     veryPopular,
-    name
+    name,
+    is_partner,
+    restName,
   } = details;
   const getImage = (
     vegetarian: boolean,
@@ -94,6 +97,13 @@ const RecipeCard: FC<Props> = ({
           </LinearGradient>
         </ImageBackground>
         <View style={styles.infoContainer}>
+          {is_partner !== undefined ? <View>
+            <View style={styles.restaurantContainer}>
+              <SvgMaker style={styles.icons} name={'partnerStar'} />
+              <Text type="bodyBold2">{restName || 'without name'}</Text>
+            </View>
+            <Divider styler={styles.horizontalDivider} />
+          </View> : null}
           <Text type="bodyBold2">{title || name}</Text>
           <View style={styles.catagoryContainer}>
             {getImage(
@@ -118,6 +128,11 @@ const styles = StyleSheet.create({
     backgroundColor: Col.White,
     margin: Spacing.tiny,
   },
+  restaurantContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   imageContainer: {
     borderRadius: 8,
     resizeMode: "cover",
@@ -133,6 +148,14 @@ const styles = StyleSheet.create({
   },
   icons: {
     margin: 2,
+  },
+  horizontalDivider: {
+    marginTop: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    borderLeftColor: Col.Divider,
   },
 });
 

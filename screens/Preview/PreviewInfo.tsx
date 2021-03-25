@@ -112,11 +112,18 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
         date: creationTime, 
         quantity: servings,
         meal: {...modalData.meal, title: modalData.meal.name}, 
+      },
+      snacks: {
+        date: creationTime, 
+        quantity: servings,
+        meal: {...modalData.meal, title: modalData.meal.name}, 
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
     if(result.ok) {
-      navigation.navigate('meals')
+      setModalData({ ...modalData, modalVisible: false });
+      navigation.navigate('meals');
+
     }
   }
 
@@ -126,7 +133,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
         id: data.id,
         name: data.meal.name,
         meal: data.meal,
-        modalVisible: true
+        modalVisible: true,
+        creationTime: new Date().getTime(),
     });
   }
   useEffect(() => {
@@ -139,6 +147,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
     <View style={styles.container}>
       <LayoutScroll>
         <View>
+          {console.log(new Date(modalData.creationTime))}
         <EditModal
           clicked={fetching.clicked}
           data={modalData}
@@ -181,8 +190,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           </View>
           <View>
             <Nutrient
-              name={page === 'recipes' ? "Number of servings" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price} €`}
+              name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price}`}
               recipe={true}
               isUnit={true}
             />
@@ -325,4 +334,5 @@ const styles = StyleSheet.create({
     backgroundColor: Col.Snacks
   }
 });
+
 export default PreviewInfo;

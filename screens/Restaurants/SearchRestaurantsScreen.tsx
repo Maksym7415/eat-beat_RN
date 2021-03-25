@@ -278,7 +278,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
         veryPopular,
         price
       };
-      navigation.navigate('previewRecommendedPage', {
+      navigation.navigate('previewRestaurantScreen', {
         title,
         details: { ...details, page: 'restaurants' },
         item: {meal: {...details, title: details.name, nutrition: {nutrients: nutrition.nutrients}}}
