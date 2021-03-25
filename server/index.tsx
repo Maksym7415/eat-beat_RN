@@ -36,7 +36,8 @@ const apiConfig: apiProps = {
     getRestaurants: "/restaurants/all-restaurants",
     getRestaurantMenu: "/restaurants/restaurant-menu/",
     restaurantSearch: "/restaurants/search?name=",
-    popularSnacks: "/snacks/popular"
+    popularSnacks: "/snacks/popular?date=",
+    addSnacks: "/snacks/eat-snack"
   },
   post: {
     signIn: "/auth/sign-in",
@@ -337,8 +338,14 @@ const restaurantSearch = async ( name: string, config: string, offset: number) =
   return response;
 }
 
-const popularSnacks = async () => {
-  const response = await api.get(apiConfig.get.popularSnacks);
+const popularSnacks = async (date) => {
+  const response = await api.get(apiConfig.get.popularSnacks +  getCalendar(date));
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const addSnacks = async (data) => {
+  const response = await api.post(apiConfig.get.addSnacks, data);
   if (!response.ok) logError(response);
   return response;
 }
@@ -534,5 +541,6 @@ export default {
   getRestaurants,
   getRestaurantMenu,
   restaurantSearch,
-  popularSnacks
+  popularSnacks,
+  addSnacks,
 };

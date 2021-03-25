@@ -20,7 +20,8 @@ import { useIsFocused } from "@react-navigation/native";
 
 const recommendScreens = {
   0: 'recommendedDrawer',
-  1: 'restaurants'
+  1: 'restaurants',
+  2: 'snacks'
 }
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {
@@ -34,7 +35,6 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
   const serveData = async () => {
     const { data, ok } = await server.getDailyConsumption(date);
     if (ok) {
-      console.log(data?.healthScore)
       Object.keys(data).length && data?.totalMeals > 0
         ? setFeed(data)
         : setFeed({});

@@ -142,6 +142,8 @@ export interface RecommendedMeals {
   occasions: string[];
   analyzedInstructions: string[];
   name?: string
+  is_partner?: boolean
+  restName?: string
 }
 
 export interface ConsumptionProps {
