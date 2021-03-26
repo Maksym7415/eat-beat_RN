@@ -48,9 +48,15 @@ interface Feed {
 }
 
 const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
-  const { isShow, showModal, calendar, isFetching } = useContext<Memo>(
-    AppContext
-  );
+  const {
+    isShow,
+    showModal,
+    calendar,
+    isFetching,
+    searchByIngredientsParams,
+    setSearchByIngredientsParams
+  } = useContext<Memo>(AppContext);
+
   const [state, setState] = useState<string>("");
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -248,7 +254,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
         servings,
         nutrients: [...nutrition.nutrients],
         ingredients:  [...nutrition.ingredients],
-        instructions: ing, 
+        instructions: ing,
         vegetarian,
         vegan,
         glutenFree,
@@ -271,6 +277,22 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   useEffect(() => {
     if (isFocused) getFilter();
   }, [isFocused]);
+
+  const getResultsForText = (): string => {
+    let resultsFor: string = null
+    if (!!state) {
+      resultsFor = 'Results for: ' + state
+    } else if (searchByIngredientsParams.length) {
+      resultsFor = 'Results for: '
+      searchByIngredientsParams.forEach((ing) => {
+        resultsFor += ing.name + ', '
+      })
+      resultsFor = resultsFor.substring(0, resultsFor.length -2)
+    }
+    return resultsFor
+  }
+
+  const resultsForText = getResultsForText()
 
   return (
     <View style={styles.canvas}>
@@ -318,6 +340,11 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
             </View>
           ) : (
             <>
+              {!!resultsForText &&
+                <View style={{paddingHorizontal: 16, paddingTop: 12, width: '100%'}} >
+                  <Text type={'body'} numberOfLines={2} ellipsizeMode={'tail'}>{resultsForText}</Text>
+                </View>
+              }
               <View style={styles.container}>
                 {feed.results?.map((item, index) => (
                   <View key={`${index}`} style={styles.cardContainer}>

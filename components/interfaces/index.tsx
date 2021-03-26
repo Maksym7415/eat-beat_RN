@@ -48,6 +48,11 @@ export interface Cal {
   date: Date;
 }
 
+export interface SearchByIngredientsParam {
+  id: number
+  name: string
+}
+
 export interface Memo {
   calendar: {
     visible: boolean;
@@ -67,6 +72,8 @@ export interface Memo {
   isShow: object;
   editMode: boolean;
   toggleEdit: (v: boolean) => void;
+  searchByIngredientsParams: SearchByIngredientsParam[]
+  setSearchByIngredientsParams: (params: SearchByIngredientsParam[]) => void
 }
 
 export interface CalendarInterface {
