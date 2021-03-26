@@ -1,13 +1,13 @@
 import axios from "axios";
 import generator from "./randomNumberGenerator";
-import { baseURL } from "../url";
 import * as SecureStore from "expo-secure-store";
+import AppBackend from '../components/BackendSwitcher/store'
 
 async function ping() {
   await SecureStore.deleteItemAsync("public_key");
   if (await SecureStore.getItemAsync("public_key")) return;
   const id = generator();
-  const url = `${baseURL}api/main/generate-rsa`;
+  const url = `${AppBackend.getBaseUrl()}api/main/generate-rsa`;
   try {
     const {
       data: { public_key, exponent },

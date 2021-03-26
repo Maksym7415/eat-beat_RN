@@ -12,6 +12,8 @@ import { AppContext } from "./components/AppContext";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
 import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
 import AsyncStorage from "@react-native-community/async-storage";
+import BackendSwitcher from './components/BackendSwitcher'
+import AppBackend from './components/BackendSwitcher/store';
 import pingServer from './utils/pingServer';
 
 let flag = false;
@@ -24,6 +26,7 @@ const processQueue = (error, token = null) => {
 };
 
 export default function App() {
+  const [prepared, setPrepared] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [logged, setLogged] = useState<boolean>(false);
   const [show, setShow] = useState<object>({recipes: false, restaurants: false, snacks: false});
@@ -146,9 +149,13 @@ export default function App() {
   );
 
   useEffect(() => {
-    loadUser();
-    loadDocs();
-  }, [logged]);
+    if (prepared) {
+      // throw new Error('BLOCK')
+      AppBackend.getBaseUrl()
+      loadUser();
+      loadDocs();
+    }
+  }, [logged, prepared]);
 
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
@@ -157,13 +164,22 @@ export default function App() {
   });
 
   useEffect(() => {
-    pingServer();
+    BackendSwitcher.setup(() => {
+      setPrepared(true)
+      api.setBaseURL(AppBackend.getBaseUrl() + "api")
+      pingServer();
+    })
   }, [])
 
+
+  if (!prepared) {
+    return (<Splash />)
+  }
 
   return (
     <AppContext.Provider value={appContext}>
       {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
+      <BackendSwitcher />
     </AppContext.Provider>
   );
 }

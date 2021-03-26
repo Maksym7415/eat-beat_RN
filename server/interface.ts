@@ -1,6 +1,6 @@
 import { AuthProps } from "./../components/interfaces/index";
 export interface apiProps {
-  baseURL: string;
+  baseURL: () => string;
   testURL: string;
   get: {
     dailyConsumption: string;

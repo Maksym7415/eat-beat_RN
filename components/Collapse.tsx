@@ -6,7 +6,7 @@ import SvgMaker from "./SvgMaker";
 import { Text } from "../components/custom/Typography";
 import { Divider } from "./MyComponents";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { baseURL } from "../url";
+import AppBackend from '../components/BackendSwitcher/store'
 
 
 interface dataArray {
@@ -60,10 +60,10 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, ro
                     <Text style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}} onPress={() => routeToCb(item)}>{item.name}</Text>
                   </View>
                   {isPrecent && <Divider styler={styles.verticalDivider} />}
-                  {isPrecent ? 
+                  {isPrecent ?
                     <Text style={styles.collapseText}>{`${
                       item.value || 0
-                    } %`}</Text> : 
+                    } %`}</Text> :
                     <TouchableOpacity onPress={() => cb(item)}>
                       <SvgMaker name='addMenuIcon'/>
                     </TouchableOpacity>

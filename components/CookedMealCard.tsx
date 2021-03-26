@@ -4,7 +4,8 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing, Typ } from "./Config";
 import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
-import { baseURL } from "../url";
+import AppBackend from '../components/BackendSwitcher/store'
+
 
 interface editProps {
   id: number;
@@ -90,7 +91,7 @@ const CookedMealCard: FC<Props> = ({
           <Image
             style={styles.image}
             source={{
-              uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+              uri: image && image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
             }}
           />
         </View>

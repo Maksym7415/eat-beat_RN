@@ -8,8 +8,9 @@ import { Button } from "../../components/MyComponents";
 import server from "../../server";
 import CreatedRecipeCard from "./Components/CreatedRecipeCard";
 import LayoutScroll from "../../components/custom/LayoutScroll";
-import { baseURL } from "../../url";
 import EditModal from "../../components/EditModal";
+import AppBackend from '../../components/BackendSwitcher/store'
+
 
 interface ModalData {
   id: number;
@@ -106,7 +107,7 @@ export default function UserRecipes({ navigation }) {
                   recipe={true}
                   title={title}
                   actionHandler={actionHandler}
-                  image={`${baseURL}/${recipe.image}`}
+                  image={`${AppBackend.getBaseUrl()}/${recipe.image}`}
                 />
               </View>
             ))
