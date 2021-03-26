@@ -27,6 +27,20 @@ interface editProps {
   creationTime: number;
 }
 let Busy = false;
+
+const recommendScreens = {
+  0: 'recommendedDrawer',
+  1: 'restaurants',
+  2: 'snacks'
+}
+
+const screens = {
+  'recipe': Col.Green,
+  'restaurant': Col.Grey5,
+  'snack': Col.Snacks
+} 
+
+
 const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
   const [feed, setFeed] = useState(null);
   const [popAlert, setPopAlert] = useState({ visible: false, name: "", id: 0, source: '' });
@@ -55,7 +69,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
   const addRecommended = (value: number) => {
     setActionBtn(false);
-    navigation.navigate("recommendedDrawer");
+    navigation.navigate(recommendScreens[value]);
   };
 
   const updateMeal = async (id, body) => {
@@ -68,19 +82,28 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
     const instructions = item.instructions
       ? item.instructions.replace(/(<([^>]+)>)/g, "\n")
       : "";
-    const page = 'isPartner' in item  ? 'restaurants' : 'recipes'
+    const page = item.source
     const data = {
       recipes: {
-        page: 'recipes'
+        page: 'recipes',
+        data: {...item, instructions: instructions || item.description, nutrients: item.nutrients},
+        previewScreen: 'previewPage'
       },
       restaurants: {
-        page: 'restaurants'
+        page: 'restaurants',
+        data: {...item, instructions: instructions || item.description, nutrients: item.nutrients},
+        previewScreen: 'previewPage'
+      },
+      snacks: {
+        page: 'snacks',
+        data: {...item, instructions: '', nutrients: item.nutrients, ingredients: [], price: 0},
+        previewScreen: 'previewSnack'
       }
     }
-    navigation.navigate("previewPage", {
+    navigation.navigate(data[page].previewScreen, {
       title: item.name,
       details: {page: data[page].page },
-      item: { from: 'mealsScreen', meal: {...item, instructions: instructions || item.description, nutrients: item.nutrients}, id: item.id,  },
+      item: { from: 'mealsScreen', meal: data[page].data, id: item.id,  },
     });
   };
 
@@ -124,10 +147,11 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         ListEmptyComponent={() => <EmptyList />}
         keyExtractor={(item) => `${item.id}`}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item, index }) => (
+        renderItem={({ item, index }) => 
+         (
           <CookedMealCard
             item={item}
-            bgColor={item.source === 'restaurant' ? item.isPartner ?  Col.Main : Col.Grey5 : Col.Green}
+            bgColor={item.isPartner ? Col.Main : screens[item.source]}
             actionHandler={(props: editProps) =>
               setModalData({ ...props, modalVisible: true })
             }

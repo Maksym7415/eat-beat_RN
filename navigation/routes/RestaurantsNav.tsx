@@ -88,7 +88,9 @@ export const RestaurantsStack = () => {
         component={RestaurantsTopNavigator}
       />
       <Stack.Screen
-        options={({ navigation, route }) => ({
+        options={({ navigation, route }) => {
+          console.log('preview')
+          return {
           headerLeft: () => (
             <Icon
               style={{ marginLeft: 16 }}
@@ -106,8 +108,8 @@ export const RestaurantsStack = () => {
           headerTitleStyle: {
             color: "white",
           },
-        })}
-        name="previewRecommendedPage"
+        }}}
+        name="previewRestaurantScreen"
         component={PreviewRecipeTopNavigator}
       />
       <Stack.Screen
@@ -131,8 +133,11 @@ export const RestaurantsStack = () => {
           },
         })}
         name="restaurantMenu"
-        component={RestaurantMenu}
-      />
+      >
+        {(props) => {
+          return <RestaurantMenu {...props}/>
+        }}
+        </Stack.Screen>
     </Stack.Navigator>
   );
 };

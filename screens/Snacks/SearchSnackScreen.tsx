@@ -73,66 +73,11 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
     console.log('start search')
     showModal(false, page);
     setFetching({ ...fetching, myFetching: true });
-
-    setTimeout(() => {
-      setFeed({
-        results: [
-          {
-              id: 1,
-              image: 'https://i.pinimg.com/originals/e5/a8/c3/e5a8c3b39aa8d0f5c8301f82d392b994.jpg',
-              title: 'Apple',
-              healthScore: 95,
-              price: 10,
-              vegetarian: true,
-              vegan: true,
-              glutenFree: true,
-              dairyFree: false,
-              veryPopular: true,
-              nutrition: {
-                nutrients: [{
-                  "title": "Calories",
-                  "amount": 505.2,
-                  "unit": "cal",
-                  "percentOfDailyNeeds": 25.26
-                },
-                {
-                  "title": "Protein",
-                  "amount": 250.2,
-                  "unit": "prot",
-                  "percentOfDailyNeeds": 25.26
-                }]
-              }
-          },
-          {
-              id: 2,
-              image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Orange-Fruit-Pieces.jpg/1280px-Orange-Fruit-Pieces.jpg',
-              title: 'Orange',
-              healthScore: 87,
-              price: 8,
-              vegetarian: true,
-              vegan: true,
-              glutenFree: false,
-              dairyFree: false,
-              veryPopular: true,
-              nutrition: {
-                nutrients: [{
-                  "title": "Calories",
-                  "amount": 505.2,
-                  "unit": "cal",
-                  "percentOfDailyNeeds": 25.26
-                },
-                {
-                  "title": "Protein",
-                  "amount": 250.2,
-                  "unit": "prot",
-                  "percentOfDailyNeeds": 25.26
-                }]
-              }
-          }
-      ]
-      })
+    const result  = await server.snackSearch(state);
+    if(result.ok) {
+      setFeed({results: result.data});  
+    }
     setFetching({ ...fetching, myFetching: false });
-    }, 500)
   };
 
   const actionHandler = (id: string, name: string, data: object) => {
@@ -147,7 +92,15 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
-    console.log(id, modalData, 'add meal')
+    setFetching({ clicked: true, deactivate: true });
+    const result = await server.addSnacks({meal: modalData.data, quantity: servings, date: creationTime});
+    if(result.ok) {
+      setFetching({ clicked: false, deactivate: false });
+      setModalData({ ...modalData, modalVisible: false });
+      navigation.navigate("meals");
+      return isFetching();
+    }
+    setFetching({ clicked: false, deactivate: false });
   };
 
   const showMore = async () => {
@@ -165,24 +118,27 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
       veryPopular,
       nutrition,
       price,
-      title,
+      name,
     } = item;
     const details = {
       image: image ,
-      name: title || name,
+      name,
       servings,
       nutrients: [...nutrition.nutrients],
+      nutrition: {
+        nutrients: [...nutrition.nutrients]
+      },
       vegetarian,
       vegan,
       glutenFree,
       dairyFree,
       veryPopular,
-      price
+      price: price || '0'
     };
     navigation.navigate('previewSnack', {
-      title,
+      name,
       details: { page: 'snacks' },
-      item: details
+      item: {meal: details, id: item.id}
     });
   };
 

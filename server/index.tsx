@@ -11,12 +11,13 @@ import * as Device from "expo-device";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Alert, Platform } from "react-native";
 import { AuthProps } from "../components/interfaces";
-import { baseURL } from "../url";
 import encryption from '../utils/dataEncryption';
 import Axios from "axios";
+import AppBackend from '../components/BackendSwitcher/store'
+import App from '../App';
 
 const apiConfig: apiProps = {
-  baseURL: baseURL + "api",
+  baseURL: () => AppBackend.getBaseUrl() + "api",
   get: {
     profile: "/user/profile-data",
     cookedMeals: "/meals/day-meals?date=",
@@ -36,7 +37,9 @@ const apiConfig: apiProps = {
     getRestaurants: "/restaurants/all-restaurants",
     getRestaurantMenu: "/restaurants/restaurant-menu/",
     restaurantSearch: "/restaurants/search?name=",
-    popularSnacks: "/snacks/popular"
+    popularSnacks: "/snacks/popular?date=",
+    addSnacks: "/snacks/eat-snack",
+    snackSearch: "/snacks/search?name=",
   },
   post: {
     signIn: "/auth/sign-in",
@@ -66,7 +69,7 @@ const apiConfig: apiProps = {
 };
 
 export const api = create({
-  baseURL: apiConfig.baseURL,
+  baseURL: apiConfig.baseURL(),
   headers: {
     Accept: "application/json",
     "User-Agent":
@@ -119,7 +122,7 @@ const refreshToken = async () => {
   };
 
   const res = await fetch(
-    apiConfig.baseURL + apiConfig.post.refresh,
+    apiConfig.baseURL() + apiConfig.post.refresh,
     requestOptions
   );
   const result = await res.json();
@@ -337,8 +340,20 @@ const restaurantSearch = async ( name: string, config: string, offset: number) =
   return response;
 }
 
-const popularSnacks = async () => {
-  const response = await api.get(apiConfig.get.popularSnacks);
+const popularSnacks = async (date) => {
+  const response = await api.get(apiConfig.get.popularSnacks +  getCalendar(date));
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const addSnacks = async (data) => {
+  const response = await api.post(apiConfig.get.addSnacks, data);
+  if (!response.ok) logError(response);
+  return response;
+}
+
+const snackSearch = async (name: string) => {
+  const response = await api.get(apiConfig.get.snackSearch + name);
   if (!response.ok) logError(response);
   return response;
 }
@@ -360,7 +375,7 @@ const register = async (payload: AuthProps) => {
   return response;
 };
 const upload = async (uri) => {
-  const address = apiConfig.baseURL + apiConfig.post.upload;
+  const address = apiConfig.baseURL() + apiConfig.post.upload;
   const token = await getToken();
   const uriParts = uri.split(".");
   const fileType = uriParts[uriParts.length - 1];
@@ -382,6 +397,7 @@ const upload = async (uri) => {
 };
 
 const delCookedMeal = async (id: number, data: Object) => {
+  const baseURL = AppBackend.getBaseUrl()
   const address = baseURL.slice(0, baseURL.length-1) + '/api' + apiConfig.del.cookedMeal + id;
   const token = await getToken();
   const response = await Axios(address, {
@@ -480,12 +496,13 @@ const getDocs = async () => {
 const changeURL = () => {
   const current = api.getBaseURL();
   const change =
-    current === apiConfig.testURL ? apiConfig.baseURL : apiConfig.testURL;
+    current === apiConfig.testURL ? apiConfig.baseURL() : apiConfig.testURL;
   api.setBaseURL(change);
   Alert.alert("change", `changed from: ${current}\nto: ${change}`);
 };
 
 const getPreview = async (id) => {
+  const baseURL = AppBackend.getBaseUrl()
   const response = await api.get(`${baseURL}api/meals/recipe-info/${id}`);
   if (!response.ok) logError(response);
   return response.data;
@@ -534,5 +551,7 @@ export default {
   getRestaurants,
   getRestaurantMenu,
   restaurantSearch,
-  popularSnacks
+  popularSnacks,
+  addSnacks,
+  snackSearch,
 };

@@ -1,6 +1,6 @@
 import { AuthProps } from "./../components/interfaces/index";
 export interface apiProps {
-  baseURL: string;
+  baseURL: () => string;
   testURL: string;
   get: {
     dailyConsumption: string;
@@ -22,6 +22,8 @@ export interface apiProps {
     getRestaurantMenu: string
     restaurantSearch: string
     popularSnacks: string
+    addSnacks: string
+    snackSearch: string
   };
   post: {
     addCookedMeal: string;

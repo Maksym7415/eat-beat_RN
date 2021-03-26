@@ -12,8 +12,8 @@ interface Props {
 
 const RadioInputs = [
   { label: "Recommend a Recipe", value: 0, disabled: false },
-  { label: "Recommend a Restaurant Dish", value: 1, disabled: false },
-  { label: "Add a Snack", value: 2, disabled: true },
+  { label: "Recommend a Dish", value: 1, disabled: false },
+  { label: "Add a Snack", value: 2, disabled: false },
 ];
 
 const ActionModal: FC<Props> = ({ visible, onClick, onClose }) => {

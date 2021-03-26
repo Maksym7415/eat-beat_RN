@@ -87,7 +87,16 @@ export const SnacksStack =  (props) => {
       <Stack.Screen
         options={({ navigation, route, }) => {
           return {
-            title: "previewSnack",
+            headerLeft: () => (
+              <Icon
+                style={{ marginLeft: 16 }}
+                onPress={() => navigation.goBack()}
+                name={"arrow-back"}
+                color={Col.White}
+                size={24}
+              />
+            ),
+            title: route.params.item.meal.name,
             headerStyle: {
               elevation: 1,
               backgroundColor: Col.Snacks,

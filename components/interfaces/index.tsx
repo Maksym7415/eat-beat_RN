@@ -48,6 +48,11 @@ export interface Cal {
   date: Date;
 }
 
+export interface SearchByIngredientsParam {
+  id: number
+  name: string
+}
+
 export interface Memo {
   calendar: {
     visible: boolean;
@@ -67,6 +72,8 @@ export interface Memo {
   isShow: object;
   editMode: boolean;
   toggleEdit: (v: boolean) => void;
+  searchByIngredientsParams: SearchByIngredientsParam[]
+  setSearchByIngredientsParams: (params: SearchByIngredientsParam[]) => void
 }
 
 export interface CalendarInterface {
@@ -92,6 +99,17 @@ interface Ingredients extends Properties {
     amount: number;
     unit: string;
   };
+}
+
+export interface RecipeIngredient {
+  id: number
+  amount: number
+  consistency: string
+  name: string
+  image: string
+  aisle: string
+  unit: string,
+  possibleUnits?: string[]
 }
 
 interface Nutrition {
@@ -142,6 +160,8 @@ export interface RecommendedMeals {
   occasions: string[];
   analyzedInstructions: string[];
   name?: string
+  is_partner?: boolean
+  restName?: string
 }
 
 export interface ConsumptionProps {
@@ -290,10 +310,10 @@ export interface Styles {
 export interface ConfirmationButton {
   title: string
   onClickHandler: (event: GestureResponderEvent) => void
-  bckColor: string 
+  bckColor: string
   textColor: string
-  fts: string 
-  ftw: string 
+  fts: string
+  ftw: string
   border: object
   disabled: boolean
 }

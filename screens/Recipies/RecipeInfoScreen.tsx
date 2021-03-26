@@ -17,10 +17,11 @@ import server from "../../server";
 import Nutrient from "../../components/Nutrient";
 import NutritionItem from "../../components/Nutrition";
 import { NavProps } from "../../components/interfaces";
-import { baseURL } from "../../url";
 import useValidation from "../../utils/validation";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useIsFocused } from "@react-navigation/native";
+import AppBackend from '../../components/BackendSwitcher/store'
+
 
 interface Item {
   title: string;
@@ -162,7 +163,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
 
   useEffect(() => {
     getDefaultConfig();
-    if (feed.uri) setImage(`${baseURL}${feed?.uri}`);
+    if (feed.uri) setImage(`${AppBackend.getBaseUrl()}${feed?.uri}`);
   }, [editMode]);
 
   return Object.keys(feed).length && !disabled ? (
@@ -173,7 +174,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
             <View style={styles.imageContainer}>
               <ImageBackground
                 source={{
-                  uri: image ? image : `${baseURL}${feed?.uri}`,
+                  uri: image ? image : `${AppBackend.getBaseUrl()}${feed?.uri}`,
                 }}
                 style={styles.image}
               >

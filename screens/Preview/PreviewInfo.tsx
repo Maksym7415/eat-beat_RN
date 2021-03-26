@@ -10,7 +10,6 @@ import Text from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
 import { useIsFocused } from "@react-navigation/native";
 import { Button } from "../../components/MyComponents";
-import { baseURL } from "../../url";
 import { pageSettings } from '../config'
 import EditModal from '../../components/EditModal';
 import { AppContext } from "../../components/AppContext";
@@ -18,6 +17,9 @@ import {
   Fetching,
   Memo,
 } from "../../components/interfaces";
+
+import AppBackend from '../../components/BackendSwitcher/store'
+
 
 interface ModalData {
   id: number;
@@ -104,19 +106,26 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   const addMeal = async (id, { servings, creationTime }) => {
     const pageData = {
       recipes: {
-        date: creationTime, 
+        date: creationTime,
         quantity: servings,
         mealId: id
       },
       restaurants: {
-        date: creationTime, 
+        date: creationTime,
         quantity: servings,
-        meal: {...modalData.meal, title: modalData.meal.name}, 
+        meal: {...modalData.meal, title: modalData.meal.name},
+      },
+      snacks: {
+        date: creationTime,
+        quantity: servings,
+        meal: {...modalData.meal, title: modalData.meal.name},
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
     if(result.ok) {
-      navigation.navigate('meals')
+      setModalData({ ...modalData, modalVisible: false });
+      navigation.navigate('meals');
+
     }
   }
 
@@ -126,7 +135,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
         id: data.id,
         name: data.meal.name,
         meal: data.meal,
-        modalVisible: true
+        modalVisible: true,
+        creationTime: new Date().getTime(),
     });
   }
   useEffect(() => {
@@ -156,7 +166,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
                 <Image
                   source={{
                     uri:
-                      image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+                      image && image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
                   }}
                   style={styles.image}
                 />
@@ -165,6 +175,15 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
               )}
             </View>
             <View style={styles.nameContainer}>
+            {item.meal.is_partner !== undefined ? 
+                <View>
+                  <View style={styles.restaurantContainer}>
+                    <SvgMaker style={styles.icons} name={'partnerStar'} />
+                    <Text type="cap">{item.meal.restName || 'without name'}</Text>
+                  </View>
+                  <Divider styler={styles.horizontalDivider} />
+                </View> : null
+              }
               <View style={styles.catagoryContainer}>
                 {getImage(
                   vegetarian,
@@ -181,8 +200,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           </View>
           <View>
             <Nutrient
-              name={page === 'recipes' ? "Number of servings" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price} €`}
+              name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price || 0}`}
               recipe={true}
               isUnit={true}
             />
@@ -323,6 +342,21 @@ const styles = StyleSheet.create({
   addToMealsFromsnacks: {
     paddingHorizontal: 8,
     backgroundColor: Col.Snacks
-  }
+  },
+  horizontalDivider: {
+    marginTop: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    borderLeftColor: Col.Divider,
+  },
+  restaurantContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5
+  },
 });
+
 export default PreviewInfo;

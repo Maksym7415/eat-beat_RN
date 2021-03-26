@@ -5,6 +5,7 @@ import { Col } from '../../components/Config';
 import SvgMaker from '../../components/SvgMaker';
 import Typography from '../../components/custom/Typography';
 import Constants from 'expo-constants';
+import Version from '../../components/Version';
 
 function About(params) {
     const [aboutInfo, setAboutInfo] = useState({})
@@ -24,11 +25,12 @@ function About(params) {
                     <View style={styles.logoContainer}>
                         <SvgMaker name='eatBeatLogo' />
                     </View>
-                    <View style={styles.version}>
-                        <Typography type='cap' style={{color: Col.White}}>
-                                {`version ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}
-                        </Typography>
-                    </View>
+                    <Version style={styles.version} />
+                    {/*<View style={styles.version}>*/}
+                    {/*    <Typography type='cap' style={{color: Col.White}}>*/}
+                    {/*            {`version ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}*/}
+                    {/*    </Typography>*/}
+                    {/*</View>*/}
 
                 </View>
                 <View style={styles.aboutAppContainer}>
