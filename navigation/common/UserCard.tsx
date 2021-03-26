@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing, Typ } from "../../components/Config";
-import { baseURL } from '../../url';
+import AppBackend from '../../components/BackendSwitcher/store'
+
 
 const UserCard = ({ color, isDrawer }) => {
   const { myData } = useContext(AppContext);
@@ -12,16 +13,16 @@ const UserCard = ({ color, isDrawer }) => {
         style={styles.image}
         source={{
           uri:
-            baseURL + myData.userAvatar,
+            AppBackend.getBaseUrl() + myData.userAvatar,
         }}
       />
-      {isDrawer ? 
+      {isDrawer ?
         (
           <View style={styles.textContainer}>
             <Text style={styles.nameText}>{myData.name}</Text>
             <Text style={{color: Col.White}}>{myData.email}</Text>
           </View>
-        ) : 
+        ) :
         (
           <Text style={styles.text}>{myData.email}</Text>
         )

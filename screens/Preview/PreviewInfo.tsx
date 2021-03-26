@@ -10,7 +10,6 @@ import Text from "../../components/custom/Typography";
 import SvgMaker from "../../components/SvgMaker";
 import { useIsFocused } from "@react-navigation/native";
 import { Button } from "../../components/MyComponents";
-import { baseURL } from "../../url";
 import { pageSettings } from '../config'
 import EditModal from '../../components/EditModal';
 import { AppContext } from "../../components/AppContext";
@@ -18,6 +17,9 @@ import {
   Fetching,
   Memo,
 } from "../../components/interfaces";
+
+import AppBackend from '../../components/BackendSwitcher/store'
+
 
 interface ModalData {
   id: number;
@@ -104,19 +106,19 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   const addMeal = async (id, { servings, creationTime }) => {
     const pageData = {
       recipes: {
-        date: creationTime, 
+        date: creationTime,
         quantity: servings,
         mealId: id
       },
       restaurants: {
-        date: creationTime, 
+        date: creationTime,
         quantity: servings,
-        meal: {...modalData.meal, title: modalData.meal.name}, 
+        meal: {...modalData.meal, title: modalData.meal.name},
       },
       snacks: {
-        date: creationTime, 
+        date: creationTime,
         quantity: servings,
-        meal: {...modalData.meal, title: modalData.meal.name}, 
+        meal: {...modalData.meal, title: modalData.meal.name},
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
@@ -147,7 +149,6 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
     <View style={styles.container}>
       <LayoutScroll>
         <View>
-          {console.log(new Date(modalData.creationTime))}
         <EditModal
           clicked={fetching.clicked}
           data={modalData}
@@ -165,7 +166,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
                 <Image
                   source={{
                     uri:
-                      image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
+                      image && image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
                   }}
                   style={styles.image}
                 />
