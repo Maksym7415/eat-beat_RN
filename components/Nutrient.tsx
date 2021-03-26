@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Col, Spacing } from "./Config";
 import { Text } from "./custom/Typography";
+import RoundNumber from '../utils/roundNumber'
 
 interface Props {
   name?: string;
@@ -35,7 +36,7 @@ const Nutrient: FC<Props> = ({
           }`}</Text>
           <View style={styles.nutrient_numbers}>
             <Text type="h6" style={styles.unit}>
-              {currentValue}
+              {RoundNumber(currentValue)}
             </Text>
             {!recipe && (
               <View style={styles.maxCount}>
