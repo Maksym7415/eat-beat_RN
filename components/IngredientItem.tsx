@@ -27,8 +27,9 @@ const IngredientItem: React.FC<IngredientItemProps> = (props) => {
     <View style={styles.container}>
       <TouchableOpacity style={styles.checkBoxHolder} onPress={props.checkbox.onPress} activeOpacity={0.7}>
         <CheckBox
-          name={name}
+          name={props.name}
           value={props.checkbox.checked}
+          onCheck={() => {}}
           size={props.checkbox.size || 18}
           blend={props.checkbox.bgColor || Col.Profile}
           checkColor={props.checkbox.checkColor || Col.White}
@@ -68,8 +69,9 @@ export const ActionsRow: React.FC<ActionsRowProps> = (props) => {
       <View style={[styles.row, styles.center]}>
         <TouchableOpacity style={styles.checkBoxHolder} onPress={props.checkbox.onPress} activeOpacity={0.7}>
           <CheckBox
-            name={name}
+            name={'summary'}
             value={props.checkbox.checked}
+            onCheck={() => {}}
             size={props.checkbox.size || 18}
             blend={props.checkbox.bgColor || Col.Profile}
             checkColor={props.checkbox.checkColor || Col.White}
