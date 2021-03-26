@@ -29,7 +29,6 @@ const IngredientItem: React.FC<IngredientItemProps> = (props) => {
         <CheckBox
           name={props.name}
           value={props.checkbox.checked}
-          onCheck={() => {}}
           size={props.checkbox.size || 18}
           blend={props.checkbox.bgColor || Col.Profile}
           checkColor={props.checkbox.checkColor || Col.White}
@@ -71,7 +70,6 @@ export const ActionsRow: React.FC<ActionsRowProps> = (props) => {
           <CheckBox
             name={'summary'}
             value={props.checkbox.checked}
-            onCheck={() => {}}
             size={props.checkbox.size || 18}
             blend={props.checkbox.bgColor || Col.Profile}
             checkColor={props.checkbox.checkColor || Col.White}
