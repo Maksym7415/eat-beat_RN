@@ -10,7 +10,7 @@ import Splash from "./screens/SplashScreen";
 import { ProfileData } from "./components/Config";
 import { AppContext } from "./components/AppContext";
 import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
-import { Cal, Memo, ProfileProps, UserData } from "./components/interfaces";
+import { Cal, Memo, ProfileProps, SearchByIngredientsParam, UserData } from './components/interfaces';
 import AsyncStorage from "@react-native-community/async-storage";
 import BackendSwitcher from './components/BackendSwitcher'
 import AppBackend from './components/BackendSwitcher/store';
@@ -38,6 +38,7 @@ export default function App() {
   const [userData, setUserData] = useState<UserData>(ProfileData);
   const [recipeId, setRecipeId] = useState<number>(0);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [searchByIngredientsParams, setSearchByIngredientsParams] = useState<SearchByIngredientsParam[]>([])
 
   const ApiInterceptor = async () => {
     api.addAsyncResponseTransform(async (Res) => {
@@ -144,6 +145,10 @@ export default function App() {
       isShow: show,
       editMode,
       toggleEdit: (v: boolean) => setEditMode(v),
+      searchByIngredientsParams: searchByIngredientsParams,
+      setSearchByIngredientsParams: (params) => {
+        setSearchByIngredientsParams(params)
+      }
     }),
     [cal, show, userData, fetching, recipeId, editMode]
   );
