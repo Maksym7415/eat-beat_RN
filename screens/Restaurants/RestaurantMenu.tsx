@@ -94,7 +94,7 @@ function RestaurantMenu({ navigation, route }) {
         navigation.navigate("previewRestaurantScreen", {
             title: item.name,
             details: { ...item, instructions: item.description, page: 'restaurants', nutrients: item.nutrition.nutrients, from: 'restaurantMenu' },
-            item: {meal: {...item, title: item.name, is_partner: route.params.is_partner}, quantity: 1, date: correctFormat()}
+            item: {meal: {...item, nutrients: item.nutrition.nutrients, title: item.name, restName: route.params.restName, is_partner: route.params.isPartner}, quantity: 1, date: correctFormat()}
           });
       }
 

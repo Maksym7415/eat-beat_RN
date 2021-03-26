@@ -174,6 +174,15 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
               )}
             </View>
             <View style={styles.nameContainer}>
+            {item.meal.is_partner !== undefined ? 
+                <View>
+                  <View style={styles.restaurantContainer}>
+                    <SvgMaker style={styles.icons} name={'partnerStar'} />
+                    <Text type="cap">{item.meal.restName || 'without name'}</Text>
+                  </View>
+                  <Divider styler={styles.horizontalDivider} />
+                </View> : null
+              }
               <View style={styles.catagoryContainer}>
                 {getImage(
                   vegetarian,
@@ -191,7 +200,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           <View>
             <Nutrient
               name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price}`}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price || 0}`}
               recipe={true}
               isUnit={true}
             />
@@ -332,7 +341,21 @@ const styles = StyleSheet.create({
   addToMealsFromsnacks: {
     paddingHorizontal: 8,
     backgroundColor: Col.Snacks
-  }
+  },
+  horizontalDivider: {
+    marginTop: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    marginBottom: 10,
+    borderBottomWidth: 0.5,
+    borderLeftColor: Col.Divider,
+  },
+  restaurantContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5
+  },
 });
 
 export default PreviewInfo;

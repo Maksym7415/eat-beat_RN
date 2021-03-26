@@ -18,17 +18,15 @@ interface Props {
 }
 
 
-function RestaurantViewLayout({ id, title, address, description, is_partner, setOpen, navigation, distance } : Props) {
-
+function RestaurantViewLayout({ id, title, address, description, isPartner, setOpen, navigation, distance } : Props) {
     const menuHandler = (title: string) => {
         async function getMenu(restId: number) {
             const result = await server.getRestaurantMenu(restId);
             const correctFormat = {}
             result.data.forEach((el) => correctFormat[el.category] = [...(correctFormat[el.category] || []),  el]);
-            console.log(correctFormat)
             if(result.ok) {
                 setOpen(false);
-                navigation.navigate('restaurantMenu', {title, is_partner, menu: correctFormat});
+                navigation.navigate('restaurantMenu', {title, isPartner, menu: correctFormat, restName: title});
             }
         }
         getMenu(id)
@@ -43,8 +41,8 @@ function RestaurantViewLayout({ id, title, address, description, is_partner, set
                     </TouchableOpacity>
                 </View>
                 <View style={styles.titleContainer}>
-                {is_partner && <SvgMaker name='partnerStar' />}
-                    <Text type='bodyBold' style={{paddingLeft: is_partner ? 10 : 0}}>
+                {isPartner && <SvgMaker name='partnerStar' />}
+                    <Text type='bodyBold' style={{paddingLeft: isPartner ? 10 : 0}}>
                         {title}
                     </Text>
                 </View>
@@ -67,7 +65,7 @@ function RestaurantViewLayout({ id, title, address, description, is_partner, set
                     <Button
                         label="OPEN MENU"
                         onPress={() => menuHandler(title)}
-                        style={styles[`btnStyle${Number(is_partner)}`]}
+                        style={styles[`btnStyle${Number(isPartner)}`]}
                     />
                 </View>
             </View>

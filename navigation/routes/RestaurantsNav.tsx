@@ -133,8 +133,11 @@ export const RestaurantsStack = () => {
           },
         })}
         name="restaurantMenu"
-        component={RestaurantMenu}
-      />
+      >
+        {(props) => {
+          return <RestaurantMenu {...props}/>
+        }}
+        </Stack.Screen>
     </Stack.Navigator>
   );
 };
