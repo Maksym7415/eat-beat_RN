@@ -38,7 +38,8 @@ const apiConfig: apiProps = {
     getRestaurantMenu: "/restaurants/restaurant-menu/",
     restaurantSearch: "/restaurants/search?name=",
     popularSnacks: "/snacks/popular?date=",
-    addSnacks: "/snacks/eat-snack"
+    addSnacks: "/snacks/eat-snack",
+    snackSearch: "/snacks/search?name=",
   },
   post: {
     signIn: "/auth/sign-in",
@@ -351,6 +352,12 @@ const addSnacks = async (data) => {
   return response;
 }
 
+const snackSearch = async (name: string) => {
+  const response = await api.get(apiConfig.get.snackSearch + name);
+  if (!response.ok) logError(response);
+  return response;
+}
+
 const signIn = async (payload: AuthProps) => {
   const encrypted = await encryption(payload)
   const address = apiConfig.post.signIn;
@@ -546,4 +553,5 @@ export default {
   restaurantSearch,
   popularSnacks,
   addSnacks,
+  snackSearch,
 };

@@ -263,6 +263,8 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
       description,
       title,
       name,
+      restName,
+      is_partner
     } = item;
       const details = {
         image: image ,
@@ -276,7 +278,9 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
         glutenFree,
         dairyFree,
         veryPopular,
-        price
+        price,
+        restName,
+        is_partner
       };
       navigation.navigate('previewRestaurantScreen', {
         title,

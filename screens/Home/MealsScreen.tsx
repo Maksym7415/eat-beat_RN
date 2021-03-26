@@ -37,7 +37,7 @@ const recommendScreens = {
 const screens = {
   'recipe': Col.Green,
   'restaurant': Col.Grey5,
-  'snacks': Col.Snacks
+  'snack': Col.Snacks
 } 
 
 

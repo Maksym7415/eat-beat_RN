@@ -88,7 +88,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
       nutrition,
       price,
       description,
-      name
+      name,
+      restName,
+      is_partner
     } = item;
     const details = {
       image: image || '',
@@ -105,7 +107,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
       glutenFree,
       dairyFree,
       veryPopular,
-      price
+      price,
+      restName,
+      is_partner
     };
     navigation.navigate('previewRestaurantScreen', {
       title: name,
