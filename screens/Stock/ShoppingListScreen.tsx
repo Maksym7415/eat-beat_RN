@@ -89,7 +89,8 @@ const ShoppingListScreen: FC<NavProps> = ({ navigation }) => {
       }
     })
     if (toOrder.length) {
-      console.log('ShoppingListScreen -> setIngredientsOrderList', toOrder)
+      setCheckedIds({})
+      setSelectAllChecked(false)
       setIngredientsOrderList(toOrder)
       navigation.push('foodOrdering')
     }
