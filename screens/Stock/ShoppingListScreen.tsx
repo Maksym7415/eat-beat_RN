@@ -1,7 +1,8 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { View, FlatList, TouchableOpacity } from 'react-native';
+import { AppContext } from "../../components/AppContext";
 import { Col } from "../../components/Config";
-import { NavProps, RecipeIngredient } from '../../components/interfaces';
+import { Memo, NavProps, RecipeIngredient } from '../../components/interfaces';
 import { styles } from './MyFridgeScreen.styles';
 
 import IngredientItem, { ActionsRow } from '../../components/IngredientItem';
@@ -36,6 +37,7 @@ const mapData = (data: any[]): IngredientItemData[] => {
 
 const ShoppingListScreen: FC<NavProps> = ({ navigation }) => {
 
+  const { setIngredientsOrderList } = useContext<Memo>(AppContext)
   const [data, setData] = useState<IngredientItemData[]>(mapData(MOCKED))
   const [checkedIds, setCheckedIds] = useState<CheckedMap>({})
   const [loading, setLoading] = useState<boolean>(false)
@@ -79,7 +81,19 @@ const ShoppingListScreen: FC<NavProps> = ({ navigation }) => {
   }, [selectAllChecked])
 
   const onPressOrder = useCallback(() => {
-  }, [])
+    const ids = Object.keys(checkedIds)
+    const toOrder: RecipeIngredient[] = []
+    data.forEach((ingredient) => {
+      if (ids.indexOf(String(ingredient.id)) !== -1) {
+        toOrder.push(ingredient)
+      }
+    })
+    if (toOrder.length) {
+      console.log('ShoppingListScreen -> setIngredientsOrderList', toOrder)
+      setIngredientsOrderList(toOrder)
+      navigation.push('foodOrdering')
+    }
+  }, [checkedIds])
 
   const onPressAdd = useCallback(() => {
     setSearchModalVisible(true)

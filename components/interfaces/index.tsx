@@ -74,6 +74,8 @@ export interface Memo {
   toggleEdit: (v: boolean) => void;
   searchByIngredientsParams: SearchByIngredientsParam[]
   setSearchByIngredientsParams: (params: SearchByIngredientsParam[]) => void
+  ingredientsOrderList: RecipeIngredient[]
+  setIngredientsOrderList: (ingredients: RecipeIngredient[]) => void
 }
 
 export interface CalendarInterface {
