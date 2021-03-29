@@ -152,7 +152,6 @@ export default function App() {
       },
       ingredientsOrderList: ingredientsOrderList,
       setIngredientsOrderList: (ingredients: RecipeIngredient[]) => {
-        console.log('App -> setIngredientsOrderList -> ingredients', ingredients)
         setIngredientsOrderList(ingredients)
       }
     }),
