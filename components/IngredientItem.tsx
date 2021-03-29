@@ -14,8 +14,8 @@ interface checkBoxProps {
 }
 
 interface IngredientItemProps {
-  checkbox: checkBoxProps,
-  image: string
+  checkbox?: checkBoxProps,
+  image?: string
   amount: string
   unit: string
   name: string
@@ -25,18 +25,22 @@ interface IngredientItemProps {
 const IngredientItem: React.FC<IngredientItemProps> = (props) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.checkBoxHolder} onPress={props.checkbox.onPress} activeOpacity={0.7}>
-        <CheckBox
-          name={props.name}
-          value={props.checkbox.checked}
-          size={props.checkbox.size || 18}
-          blend={props.checkbox.bgColor || Col.Profile}
-          checkColor={props.checkbox.checkColor || Col.White}
-        />
-      </TouchableOpacity>
-      <View style={styles.imageHolder}>
-        <Image style={styles.image} source={{uri: props.image,}} />
-      </View>
+      {!!props.checkbox &&
+        <TouchableOpacity style={styles.checkBoxHolder} onPress={props.checkbox.onPress} activeOpacity={0.7}>
+          <CheckBox
+            name={props.name}
+            value={props.checkbox.checked}
+            size={props.checkbox.size || 18}
+            blend={props.checkbox.bgColor || Col.Profile}
+            checkColor={props.checkbox.checkColor || Col.White}
+          />
+        </TouchableOpacity>
+      }
+      {!!props.image &&
+        <View style={styles.imageHolder}>
+          <Image style={styles.image} source={{uri: props.image,}} />
+        </View>
+      }
       <View style={styles.amountHolder}>
         <Text type="h6">{props.amount}</Text>
       </View>

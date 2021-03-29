@@ -8,6 +8,8 @@ import BurgerIcon from '../common/BurgerIcon';
 import MyFridgeScreen from '../../screens/Stock/MyFridgeScreen';
 import ShoppingListScreen from '../../screens/Stock/ShoppingListScreen';
 import ScannerScreen from '../../screens/Stock/ScannerScreen';
+import FoodOrderingScreen from '../../screens/Stock/FoodOrderingScreen'
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -71,6 +73,30 @@ export const StockStack = () => {
           };
         }}
         name={'stock'} component={StockTopNavigator}
+      />
+      <Stack.Screen
+        options={({ navigation, ...other }) => {
+          return {
+            headerLeft: () => (
+              <Icon
+                style={{ marginLeft: 16 }}
+                onPress={() => navigation.goBack()}
+                name={"arrow-back"}
+                color={Col.White}
+                size={24}
+              />
+            ),
+            title: "Food Ordering",
+            headerStyle: {
+              elevation: 1,
+              backgroundColor: Col.Stocks,
+            },
+            headerTitleStyle: {
+              color: "white",
+            },
+          };
+        }}
+        name={'foodOrdering'} component={FoodOrderingScreen}
       />
     </Stack.Navigator>
   )
