@@ -96,7 +96,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
     if (veryPopular) iconsArray.push("popular");
     return iconsArray;
   };
-  const mnarr = ["Calories", "Protein", "Fat", "Carbohydrates"];
+  const mnarr = ["Calories", "Protein", "Total Fat", "Carbs"];
   const mainNutrients = nutrients
     ? nutrients.filter((el) => mnarr.includes(el.title))
     : [];
