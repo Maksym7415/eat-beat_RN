@@ -352,8 +352,8 @@ const addSnacks = async (data) => {
   return response;
 }
 
-const snackSearch = async (name: string) => {
-  const response = await api.get(apiConfig.get.snackSearch + name);
+const snackSearch = async (name: string, offset:number = 0) => {
+  const response = await api.get(apiConfig.get.snackSearch + name + `&offset=${offset}`);
   if (!response.ok) logError(response);
   return response;
 }

@@ -75,7 +75,12 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
     setFetching({ ...fetching, myFetching: true });
     const result  = await server.snackSearch(state);
     if(result.ok) {
-      setFeed({results: result.data});  
+      setFeed({
+        ...feed,
+        results: result.data.results,
+        offset: result.data.offset,
+        totalResults: result.data.totalResults,
+      });  
     }
     setFetching({ ...fetching, myFetching: false });
   };
