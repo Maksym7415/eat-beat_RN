@@ -156,6 +156,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
+    setFetching((f) => ({ ...f, clicked: true }));
     const data = {
       mealId: modalData.data.id,
       quantity: servings,
@@ -164,6 +165,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
     const result = await server.addCookedMeal(data);
     if(!result.ok) return;
     setModalData({ ...modalData, modalVisible: false });
+    setFetching((f) => ({ ...f, clicked: false }));
     navigation.navigate("meals");
     isFetching();
   };
@@ -297,6 +299,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   return (
     <View style={styles.canvas}>
       <EditModal
+        clicked={fetching.clicked}
         data={modalData}
         date={calendar.date}
         setData={(id, body) => addMeal(id, body)}
