@@ -1,20 +1,22 @@
-import { create } from "apisauce";
+import { create } from 'apisauce';
+import { apiProps, cacheProps, changePassProps, errorProps, mailAuth, updatePassProps, } from './interface';
+import * as Device from 'expo-device';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Alert, Platform } from 'react-native';
 import {
-  apiProps,
-  cacheProps,
-  changePassProps,
-  errorProps,
-  mailAuth,
-  updatePassProps,
-} from "./interface";
-import * as Device from "expo-device";
-import AsyncStorage from "@react-native-community/async-storage";
-import { Alert, Platform } from "react-native";
-import { AuthProps } from "../components/interfaces";
+  AuthProps,
+  GetStockIngredientsParams,
+  RecipeIngredient,
+  RemoveStockIngredientsParams,
+  SearchIngredientsParams,
+  SearchRecipesByIngredientsParams,
+  SearchRecipesByIngredientsResponse,
+  StockType,
+  UpdateStockIngredientsParams
+} from '../components/interfaces';
 import encryption from '../utils/dataEncryption';
-import Axios from "axios";
+import Axios from 'axios';
 import AppBackend from '../components/BackendSwitcher/store'
-import App from '../App';
 
 const apiConfig: apiProps = {
   baseURL: () => AppBackend.getBaseUrl() + "api",
@@ -352,8 +354,8 @@ const addSnacks = async (data) => {
   return response;
 }
 
-const snackSearch = async (name: string) => {
-  const response = await api.get(apiConfig.get.snackSearch + name);
+const snackSearch = async (name: string, offset:number = 0) => {
+  const response = await api.get(apiConfig.get.snackSearch + name + `&offset=${offset}`);
   if (!response.ok) logError(response);
   return response;
 }
@@ -508,6 +510,121 @@ const getPreview = async (id) => {
   return response.data;
 }
 
+const searchRecipesByIngredients =
+  async (params: SearchRecipesByIngredientsParams): Promise<SearchRecipesByIngredientsResponse> =>
+{
+  console.log('---')
+  console.log('getRecipesByIngredients -> params', params)
+
+  let url = AppBackend.getBaseUrl() + 'api/meals/get-recipes-by-ingredients?ingredients=' + params.ingredients
+  const response = await api.get(url)
+  console.log('getRecipesByIngredients -> ', url, 'response', response)
+
+  if (!response.ok) {
+    logError(response);
+    return { results: [] }
+  } else {
+    return response.data as SearchRecipesByIngredientsResponse
+  }
+}
+
+const addToStocks = async (type: StockType, data: Partial<RecipeIngredient>[]): Promise<boolean> => {
+  console.log('---')
+  console.log('addToStocks -> type', type)
+  console.log('addToStocks -> data', data)
+
+  let url: string = AppBackend.getBaseUrl() + 'api/food-stocks/add-ingredients'
+  const postBody = { ingredients: data, type }
+  const response = await api.post(url, postBody)
+  console.log('addToStocks -> POST -> ', postBody, url, 'response:', response)
+
+  if (!response.ok) {
+    logError(response);
+    return false
+  } else {
+    return true
+  }
+}
+
+const updateInStocks = async (ingredientId: number, params: UpdateStockIngredientsParams): Promise<boolean> => {
+  console.log('---')
+  console.log('updateInStocks -> params', params)
+
+  let url: string = AppBackend.getBaseUrl() + 'api/food-stocks/update-ingredient/' + ingredientId
+  const postBody = { type: params.type, amount: params.amount }
+  const response = await api.patch(url, postBody)
+
+  console.log('updateInStocks -> PATCH -> ', postBody, url, 'response:', response)
+  if (!response.ok) {
+    logError(response);
+    return false
+  } else {
+    return true
+  }
+}
+
+const removeFromStocks = async (params: RemoveStockIngredientsParams): Promise<boolean> => {
+  console.log('---')
+  console.log('removeFromStocks -> params', params)
+
+  let url: string = AppBackend.getBaseUrl() + 'api/food-stocks/remove-ingredients?type='
+    + params.type + '&ingredients=' + params.ingredients.join(',')
+  const response = await api.delete(url)
+  console.log('removeFromStocks -> DELETE -> ', url, 'response:', response)
+
+  if (!response.ok) {
+    logError(response);
+    return false
+  } else {
+    return true
+  }
+}
+
+const getStocks = async (params: GetStockIngredientsParams): Promise<RecipeIngredient[]> => {
+  console.log('---')
+  console.log('getStocks -> params', params)
+  let url = AppBackend.getBaseUrl() + 'api/food-stocks/my-food-stocks?type=' + params.type
+  if (params.offset) {
+    url += '&offset=' + params.offset
+  }
+  if (params.limit) {
+    url += '&limit=' + params.limit
+  }
+
+  const response = await api.get(url)
+  console.log('getStocks -> GET -> ', url, 'response:', response)
+
+  if (!response.ok) {
+    logError(response);
+    return []
+  } else {
+    return response.data as RecipeIngredient[]
+  }
+}
+
+const searchIngredients = async (params: SearchIngredientsParams): Promise<RecipeIngredient[]> => {
+  console.log('---')
+  console.log('searchIngredients -> params', params)
+
+  let url = AppBackend.getBaseUrl() + 'api/food-stocks/search-ingredients' +
+    '?name=' + params.name
+  if (params.offset) {
+    url += '&offset=' + params.offset
+  }
+  if (params.limit) {
+    url += '&limit=' + params.limit
+  }
+  const response = await api.get(url)
+  console.log('searchIngredients -> GET -> ', url, 'response:', response)
+
+  if (!response.ok) {
+    logError(response);
+    return []
+  } else {
+    return response.data as RecipeIngredient[]
+  }
+}
+
 export default {
   api,
   setup,
@@ -554,4 +671,10 @@ export default {
   popularSnacks,
   addSnacks,
   snackSearch,
+  addToStocks,
+  updateInStocks,
+  removeFromStocks,
+  searchIngredients,
+  getStocks,
+  searchRecipesByIngredients,
 };

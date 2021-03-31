@@ -54,16 +54,28 @@ const RecipesTopNavigator = () => (
     }}
     initialRouteName="recommended"
   >
-    <TopTabs.Screen name="recommended"> 
+    <Stack.Screen
+      name={'recommended'}
+      options={() => ({
+        title: 'Recommended'
+      })}
+    >
       {(props) => <RecommendedScreen {...props} page={'recipes'}/>}
-    </TopTabs.Screen>
-    <TopTabs.Screen name="search">
+    </Stack.Screen>
+    <Stack.Screen
+      name={'recipesSearch'}
+      options={() => ({
+        title: 'Search'
+      })}
+    >
       {(props) => <SearchRecipeScreen {...props} page={'recipes'}/>}
-    </TopTabs.Screen>
-    <TopTabs.Screen
-      name="user_recipies"
+    </Stack.Screen>
+    <Stack.Screen
+      name={'user_recipies'}
+      options={() => ({
+        title: 'My recipes'
+      })}
       component={UserRecipes}
-      options={{ title: "my recipes" }}
     />
   </TopTabs.Navigator>
 );

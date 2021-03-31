@@ -14,8 +14,8 @@ import {
   Memo,
   NavProps,
   recipeSettings,
-  RecommendedMeals,
-} from "../../components/interfaces";
+  RecommendedMeals, SearchByIngredientsParam,
+} from '../../components/interfaces';
 import { Col, Spacing } from "../../components/Config";
 import { AppContext } from "../../components/AppContext";
 import SearchModal from "../../components/SearchModal";
@@ -57,6 +57,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
     setSearchByIngredientsParams
   } = useContext<Memo>(AppContext);
 
+  const [byIngredientsParams, setByIngredientsParams] = useState<SearchByIngredientsParam[]>([])
   const [state, setState] = useState<string>("");
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -90,6 +91,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const startSearch = async () => {
     let config = "";
+    if(!state) return;
     if (filterConfig.intolerances.length)
       config += `&intolerances=${filterConfig.intolerances}`;
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
@@ -156,6 +158,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const addMeal: AddMealsFun = async (id, { creationTime, servings }) => {
+    setFetching((f) => ({ ...f, clicked: true }));
     const data = {
       mealId: modalData.data.id,
       quantity: servings,
@@ -164,6 +167,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
     const result = await server.addCookedMeal(data);
     if(!result.ok) return;
     setModalData({ ...modalData, modalVisible: false });
+    setFetching((f) => ({ ...f, clicked: false }));
     navigation.navigate("meals");
     isFetching();
   };
@@ -192,8 +196,8 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(() => getPreferences(response.data));
-      saveFilterConfig(getPreferences(response.data));
+      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
+      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
     }
   };
 
@@ -269,22 +273,50 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
       });
   };
 
+  const startSearchByIngredients = async () => {
+    setFetching({ ...fetching, myFetching: true }); // WTF ???
+    const ingredients = byIngredientsParams.map(ing => ing.name).join(',')
+    const response = await server.searchRecipesByIngredients({ ingredients: ingredients })
+    if (response.results.length) {
+      setFeed({
+        results: response.results,
+        offset: 0,
+        totalResults: response.results.length
+      })
+    }
+    setFetching({ ...fetching, myFetching: false });
+  }
+
   useEffect(() => {
     getFilter();
   }, []);
 
   const isFocused = useIsFocused();
   useEffect(() => {
-    if (isFocused) getFilter();
+    if (isFocused) {
+      getFilter();
+      if (searchByIngredientsParams.length) {
+        setByIngredientsParams([...searchByIngredientsParams])
+        setSearchByIngredientsParams([])
+      } else {
+        setByIngredientsParams([])
+      }
+    }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (byIngredientsParams.length) {
+      startSearchByIngredients()
+    }
+  }, [byIngredientsParams])
 
   const getResultsForText = (): string => {
     let resultsFor: string = null
     if (!!state) {
       resultsFor = 'Results for: ' + state
-    } else if (searchByIngredientsParams.length) {
+    } else if (byIngredientsParams.length) {
       resultsFor = 'Results for: '
-      searchByIngredientsParams.forEach((ing) => {
+      byIngredientsParams.forEach((ing) => {
         resultsFor += ing.name + ', '
       })
       resultsFor = resultsFor.substring(0, resultsFor.length -2)
@@ -297,6 +329,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   return (
     <View style={styles.canvas}>
       <EditModal
+        clicked={fetching.clicked}
         data={modalData}
         date={calendar.date}
         setData={(id, body) => addMeal(id, body)}

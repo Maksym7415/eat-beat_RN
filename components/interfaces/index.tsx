@@ -74,6 +74,8 @@ export interface Memo {
   toggleEdit: (v: boolean) => void;
   searchByIngredientsParams: SearchByIngredientsParam[]
   setSearchByIngredientsParams: (params: SearchByIngredientsParam[]) => void
+  ingredientsOrderList: RecipeIngredient[]
+  setIngredientsOrderList: (ingredients: RecipeIngredient[]) => void
 }
 
 export interface CalendarInterface {
@@ -101,13 +103,47 @@ interface Ingredients extends Properties {
   };
 }
 
+export enum StockType {
+  'fridge' = 'fridge',
+  'shoppingList' = 'shoppingList',
+}
+
+export interface GetStockIngredientsParams {
+  type: StockType
+  offset?: number
+  limit?: number
+}
+
+export interface SearchIngredientsParams {
+  name: string
+  offset?: number
+  limit?: number
+}
+
+export interface SearchRecipesByIngredientsParams {
+  ingredients: string
+  limit?: number
+}
+
+export interface SearchRecipesByIngredientsResponse {
+  results: RecommendedMeals[]
+}
+
+export interface UpdateStockIngredientsParams {
+  type: StockType
+  amount: number
+}
+
+export interface RemoveStockIngredientsParams {
+  type: StockType
+  ingredients: number[]
+}
+
 export interface RecipeIngredient {
   id: number
   amount: number
-  consistency: string
   name: string
   image: string
-  aisle: string
   unit: string,
   possibleUnits?: string[]
 }

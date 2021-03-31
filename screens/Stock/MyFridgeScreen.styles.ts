@@ -25,5 +25,20 @@ export const styles = StyleSheet.create({
   },
   suggestionInputOption: {
 
+  },
+  addButtonHolder: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+  },
+  buttonsHolder: {
+    paddingHorizontal: 16,
+    height: 80,
+    width: '100%',
+  },
+  emptyHolder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 })

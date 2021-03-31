@@ -1,11 +1,12 @@
-import React, { FC, useEffect, useState } from "react";
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
-import { NavProps } from "../../components/interfaces";
-import Text from "../../components/custom/Typography";
-import { Col, Spacing } from "../../components/Config";
-import CheckBox from "../../components/custom/CheckBox";
-import LayoutScroll from "../../components/custom/LayoutScroll";
-import { Button } from "../../components/MyComponents";
+import React, { FC, useState } from 'react';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { NavProps, RecipeIngredient, StockType } from '../../components/interfaces';
+import server from '../../server';
+import Text from '../../components/custom/Typography';
+import { Col, Spacing } from '../../components/Config';
+import CheckBox from '../../components/custom/CheckBox';
+import LayoutScroll from '../../components/custom/LayoutScroll';
+import { Button } from '../../components/MyComponents';
 
 interface IngProps {
   item: {
@@ -18,11 +19,17 @@ interface IngProps {
       unit: string;
     };
   };
+  onPress: (ingredient: Partial<RecipeIngredient>, checked: boolean) => void
 }
 
-const Ingredient = ({ item }: IngProps) => {
+const Ingredient = ({ item, onPress }: IngProps) => {
   const { image, name, unit, amount, weightPerServing } = item;
   const [check, setCheck] = useState(false);
+  const onPressCheckBox = () => {
+    setCheck(!check)
+    onPress(item, !check)
+  }
+
   return (
     <TouchableOpacity
       onPress={() => setCheck(!check)}
@@ -31,7 +38,7 @@ const Ingredient = ({ item }: IngProps) => {
       <CheckBox
         name={name}
         value={check}
-        onCheck={(a, b) => setCheck(!check)}
+        onCheck={(a, b) => onPressCheckBox()}
         size={18}
         blend={Col.Dark}
       />
@@ -67,16 +74,48 @@ const Ingredient = ({ item }: IngProps) => {
 
 const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
 
+  const [loading, setLoading] = useState<boolean>(false)
+  const [selected, setSelected] = useState<Partial<RecipeIngredient>[]>([])
+  const onPressIngredient = (ingredient: Partial<RecipeIngredient>, checked: boolean) => {
+    const items = [...selected]
+    const index = items.findIndex(ing => ing.id === ingredient.id)
+    if (checked) {
+      if (index === -1) {
+        items.push(ingredient)
+      }
+    } else {
+      if (index > -1) {
+        items.splice(index, 1)
+      }
+    }
+    setSelected(items)
+  }
+
+  const onPressAddToShoppingList = async () => {
+    if (selected.length) {
+      setLoading(true)
+      const success = await server.addToStocks(StockType.shoppingList, selected)
+      setLoading(false)
+      if (success) {
+        navigation.navigate('shoppingList')
+      } else {
+        Alert.alert("Error", 'Unable to add selected ingredients to shopping list');
+      }
+    }
+  }
+
   return (
     <LayoutScroll style={styles.container}>
       {item.meal.ingredients.map((ele, ind) => (
-        <Ingredient key={`_${ind}`} item={ele} />
+        <Ingredient key={`_${ind}`} item={ele} onPress={onPressIngredient}/>
       ))}
       <Button
+        isShow={true}
+        clicked={loading}
         label="Add selected products to My Shopping List"
-        onPress={() => console.log("")}
+        onPress={onPressAddToShoppingList}
         style={{ backgroundColor: Col.Recipes }}
-        deactivate={true}
+        deactivate={selected.length === 0}
       />
     </LayoutScroll>
   );

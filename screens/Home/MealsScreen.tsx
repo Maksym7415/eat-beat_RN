@@ -84,17 +84,17 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
       : "";
     const page = item.source
     const data = {
-      recipes: {
+      recipe: {
         page: 'recipes',
         data: {...item, instructions: instructions || item.description, nutrients: item.nutrients},
         previewScreen: 'previewPage'
       },
-      restaurants: {
+      restaurant: {
         page: 'restaurants',
         data: {...item, instructions: instructions || item.description, nutrients: item.nutrients},
         previewScreen: 'previewPage'
       },
-      snacks: {
+      snack: {
         page: 'snacks',
         data: {...item, instructions: '', nutrients: item.nutrients, ingredients: [], price: 0},
         previewScreen: 'previewSnack'
