@@ -10,6 +10,7 @@ export interface SuggestionInputOption {
 }
 
 interface SuggestionInputProps {
+  errorMessage?: string
   readonly?: boolean
   highlight?: boolean
   highlightColor?: string
@@ -106,7 +107,7 @@ class SuggestionInput extends React.PureComponent<SuggestionInputProps, Suggesti
   }
 
   render() {
-    const { readonly, onChangeText, defaultValue } = this.props
+    const { readonly, onChangeText, defaultValue, errorMessage } = this.props
     const { options, opened, selected } = this.state
     const textInputValue = selected ? options.find(i => i.id === selected).value : defaultValue
     return (
@@ -117,6 +118,9 @@ class SuggestionInput extends React.PureComponent<SuggestionInputProps, Suggesti
           onChangeText={onChangeText}
           defaultValue={textInputValue}
         />
+        {!!errorMessage &&
+          <Text type={'cap'} style={{color: Col.Error}}>{errorMessage}</Text>
+        }
         {options.length > 0 &&
           <TouchableOpacity style={styles.inputIcon} onPress={this.toggleOpen} activeOpacity={0.7}>
             <SvgMaker name={opened ? 'arrowUp' : 'arrowDown'} />

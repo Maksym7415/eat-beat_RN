@@ -1,7 +1,10 @@
-import React, { FC, useCallback, useState } from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
-import { Col } from "../../components/Config";
-import { NavProps, RecipeIngredient } from '../../components/interfaces';
+import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import { FlatList, TouchableOpacity, View } from 'react-native';
+import server from '../../server';
+import roundNumber from '../../utils/roundNumber';
+import { AppContext } from '../../components/AppContext';
+import { Col } from '../../components/Config';
+import { Memo, NavProps, RecipeIngredient, SearchByIngredientsParam, StockType } from '../../components/interfaces';
 import { styles } from './MyFridgeScreen.styles';
 
 import IngredientItem, { ActionsRow } from '../../components/IngredientItem';
@@ -10,9 +13,9 @@ import { Button } from '../../components/MyComponents';
 import ModalCommon from '../../components/ModalCommon'
 import SearchIngredients from '../../components/SearchIngredients';
 import DeleteConfirmation from '../../components/DeleteConfirmation';
-
-import MOCKED from './mocked.ingredients.json'
 import Loader from '../../components/Loader';
+import { useIsFocused } from '@react-navigation/native';
+import Text from '../../components/custom/Typography';
 
 interface IngredientItemData extends RecipeIngredient {}
 interface CheckedMap {
@@ -35,7 +38,8 @@ const mapData = (data: any[]): IngredientItemData[] => {
 
 const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
 
-  const [data, setData] = useState<IngredientItemData[]>(mapData(MOCKED))
+  const { setIngredientsOrderList, setSearchByIngredientsParams } = useContext<Memo>(AppContext)
+  const [data, setData] = useState<IngredientItemData[]>([])
   const [checkedIds, setCheckedIds] = useState<CheckedMap>({})
   const [loading, setLoading] = useState<boolean>(false)
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false)
@@ -43,6 +47,13 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false)
   const [editableIngredient, setEditableIngredient] = useState<RecipeIngredient>(null)
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false)
+
+  const fetchIngredients = async (): Promise<void> => {
+    const updated = await server.getStocks({type: StockType.fridge})
+    setData(updated)
+    setCheckedIds({})
+    setSelectAllChecked(false)
+  }
 
   const onPressCheckbox = (id: number): void => {
     const map = { ...checkedIds }
@@ -54,19 +65,19 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
     setCheckedIds(map)
   }
 
-  const onPressEdit = useCallback((id: number) => {
+  const onPressEdit = (id: number) => {
     const ingredient = data.find(ing => ing.id === id)
     if (ingredient) {
-      setEditableIngredient(ingredient)
+      setEditableIngredient({...ingredient, possibleUnits: [ingredient.unit]})
       setEditModalVisible(true)
     }
-  }, [])
+  }
 
-  const onPressDelete = useCallback(() => {
+  const onPressDelete = () => {
     setDeleteModalVisible(true)
-  }, [checkedIds])
+  }
 
-  const onPressSelectAll = useCallback(() => {
+  const onPressSelectAll = () => {
     const map: CheckedMap = {}
     if (!selectAllChecked) {
       data.forEach((item) => {
@@ -75,62 +86,105 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
     }
     setSelectAllChecked(!selectAllChecked)
     setCheckedIds(map)
-  }, [selectAllChecked])
+  }
 
-  const onPressSearch = useCallback(() => {
-  }, [])
+  const onPressOrder = useCallback(() => {
+    const ids = Object.keys(checkedIds)
+    const toSearch: SearchByIngredientsParam[] = []
+    data.forEach((ingredient) => {
+      if (ids.indexOf(String(ingredient.id)) !== -1) {
+        toSearch.push({id: ingredient.id, name: ingredient.name})
+      }
+    })
+    if (toSearch.length) {
+      setCheckedIds({})
+      setSelectAllChecked(false)
+      setSearchByIngredientsParams(toSearch)
+      navigation.navigate('recipesSearch')
+    }
+  }, [checkedIds])
 
   const onPressAdd = useCallback(() => {
     setSearchModalVisible(true)
   }, [])
 
-  const onAddIngredient = useCallback((ingredient: RecipeIngredient) => {
-    // TODO: send "add" request and re-fetch data
-    console.log('MyFridgeScreen -> onAddIngredientFromSearch -> ingredient', ingredient)
+  const onAddIngredient = useCallback(async (ingredient: RecipeIngredient) => {
     setSearchModalVisible(false)
+    setLoading(true)
+    const success = await server.addToStocks(StockType.fridge, [ingredient])
+    if (success) {
+      await fetchIngredients()
+    }
+    setLoading(false)
   }, [])
 
-  const onUpdateIngredient = useCallback((ingredient: RecipeIngredient) => {
-    // TODO: send "update" request and re-fetch data
-    console.log('MyFridgeScreen -> onUpdateIngredient -> ingredient', ingredient)
+  const onUpdateIngredient = useCallback(async (ingredient: RecipeIngredient) => {
     setEditModalVisible(false)
+    setLoading(true)
+    const success = await server.updateInStocks(
+      ingredient.id,
+      {type: StockType.fridge, amount: ingredient.amount}
+    )
+    if (success) {
+      await fetchIngredients()
+    }
     setEditableIngredient(null)
+    setLoading(false)
   }, [])
 
-  const onDeleteIngredients = useCallback(() => {
-    // TODO: send "delete" request and re-fetch data
-    console.log('MyFridgeScreen -> onDeleteIngredients -> ids', Object.keys(checkedIds))
+  const onDeleteIngredients = useCallback(async () => {
     setDeleteModalVisible(false)
+    setLoading(true)
+    const success = await server.removeFromStocks({
+      type: StockType.fridge,
+      ingredients: Object.keys(checkedIds).map(id => parseInt(id))
+    })
+    if (success) {
+      await fetchIngredients()
+    }
+    setLoading(false)
   }, [checkedIds])
+
+  const onScreenFocus = useIsFocused();
+  useEffect(() => {
+    if (onScreenFocus) {
+      setLoading(true)
+      server.getStocks({type: StockType.fridge}).then((ingredients) => {
+        setData(ingredients)
+      }).finally(() => {
+        setLoading(false)
+      })
+    }
+  }, [onScreenFocus]);
 
   return (
     <View style={styles.container}>
       {searchModalVisible &&
-        <ModalCommon visible={searchModalVisible}>
-          <SearchIngredients
-            onPressOk={onAddIngredient}
-            onPressCancel={() => setSearchModalVisible(false)}
-          />
-        </ModalCommon>
+      <ModalCommon visible={searchModalVisible}>
+        <SearchIngredients
+          onPressOk={onAddIngredient}
+          onPressCancel={() => setSearchModalVisible(false)}
+        />
+      </ModalCommon>
       }
       {editModalVisible &&
-        <ModalCommon visible={editModalVisible}>
-          <SearchIngredients
-            title={`Update ${editableIngredient.name}`}
-            toEdit={editableIngredient}
-            onPressOk={onUpdateIngredient}
-            onPressCancel={() => setEditModalVisible(false)}
-          />
-        </ModalCommon>
+      <ModalCommon visible={editModalVisible}>
+        <SearchIngredients
+          title={`Update ${editableIngredient.name}`}
+          toEdit={editableIngredient}
+          onPressOk={onUpdateIngredient}
+          onPressCancel={() => setEditModalVisible(false)}
+        />
+      </ModalCommon>
       }
       {deleteModalVisible &&
-        <ModalCommon visible={deleteModalVisible}>
-          <DeleteConfirmation
-            amount={Object.keys(checkedIds).length}
-            onPressConfirm={onDeleteIngredients}
-            onPressCancel={() => setDeleteModalVisible(false)}
-          />
-        </ModalCommon>
+      <ModalCommon visible={deleteModalVisible}>
+        <DeleteConfirmation
+          amount={Object.keys(checkedIds).length}
+          onPressConfirm={onDeleteIngredients}
+          onPressCancel={() => setDeleteModalVisible(false)}
+        />
+      </ModalCommon>
       }
       <FlatList
         style={{flexGrow: 0}}
@@ -148,7 +202,7 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
                 onPress: () => onPressCheckbox(item.item.id)
               }}
               image={`https://spoonacular.com/cdn/ingredients_100x100/${item.item.image}`}
-              amount={'' + item.item.amount}
+              amount={'' + roundNumber(item.item.amount)}
               unit={item.item.unit}
               name={item.item.name}
               onPressEdit={() => onPressEdit(item.item.id)}
@@ -156,22 +210,29 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
           )
         }}
       />
+      {data.length > 0 &&
       <ActionsRow
         amount={Object.keys(checkedIds).length}
         checkbox={{checked: selectAllChecked, onPress: onPressSelectAll, bgColor: Col.Stocks}}
         onPressDeleteSelected={onPressDelete}
       />
-      <View style={{paddingHorizontal: 16, height: 80, width: '100%'}}>
+      }
+      {data.length === 0 &&
+      <View style={styles.emptyHolder}>
+        <Text type={'body'}>Fridge is empty</Text>
+      </View>
+      }
+      <View style={styles.buttonsHolder}>
         {Object.keys(checkedIds).length > 0 && (
           <Button
             label={'SEARCH RECIPES WITH SELECTED ITEMS'}
             isShow={true}
             style={{backgroundColor: Col.Recipes}}
-            onPress={onPressSearch}
+            onPress={onPressOrder}
           />
         )}
       </View>
-      <View style={{alignItems:'flex-end'}}>
+      <View style={styles.addButtonHolder}>
         <TouchableOpacity onPress={onPressAdd} activeOpacity={0.7}>
           <IconMaker name={'addRounded'} fill={'#fff'}/>
         </TouchableOpacity>
