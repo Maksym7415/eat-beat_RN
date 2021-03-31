@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavProps, RecipeIngredient, StockType } from '../../components/interfaces';
 import server from '../../server';
 import Text from '../../components/custom/Typography';
@@ -98,6 +98,8 @@ const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
       setLoading(false)
       if (success) {
         navigation.navigate('shoppingList')
+      } else {
+        Alert.alert("Error", 'Unable to add selected ingredients to shopping list');
       }
     }
   }
