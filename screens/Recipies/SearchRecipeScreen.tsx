@@ -91,6 +91,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const startSearch = async () => {
     let config = "";
+    if(!state) return;
     if (filterConfig.intolerances.length)
       config += `&intolerances=${filterConfig.intolerances}`;
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
