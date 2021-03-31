@@ -91,7 +91,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
       config += `&intolerances=${filterConfig.intolerances}`;
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
-      config += `&type=${filterConfig.mealTypes}`;
+      config += `&mealType=${filterConfig.mealTypes}`;
     showModal(false, page);
     setFetching({ ...fetching, myFetching: true });
     const response = await server.restaurantSearch(state, config, 0);
@@ -228,7 +228,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
       config += `&intolerances=${filterConfig.intolerances}`;
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
-      config += `&type=${filterConfig.mealTypes}`;
+      config += `&mealType=${filterConfig.mealTypes}`;
     showModal(false, page);
     const response = await server.restaurantSearch(
       state,
