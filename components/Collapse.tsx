@@ -23,7 +23,7 @@ interface Props {
   cb?: () => void,
 }
 
-const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, routeToCb }) => {
+const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, routeToCb=() => {} }) => {
   const [arrow, setArrow] = useState(false);
   return (
       <View style={styles.container}>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     borderLeftColor: Col.Grey3,
   },
   collapseText: {
-    width: "50%",
+    width: "55%",
     marginBottom: 6,
     color: Col.Grey,
   },
