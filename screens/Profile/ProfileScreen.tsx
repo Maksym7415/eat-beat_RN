@@ -55,7 +55,7 @@ export default class ProfileScreen extends Component<NavProps> {
     Alert.alert(
       "Change Password",
       response.ok
-        ? "You have successfully changed you password"
+        ? "You have successfully changed your password"
         : `${response.data.message}`
     );
   };
