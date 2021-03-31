@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imageHolder: {
-    width: '15%',
+    width: '12%',
     marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   amountHolder: {
     marginLeft: 5,
-    width: '15%',
+    width: '18%',
     justifyContent: 'center',
   },
   nameHolder: {

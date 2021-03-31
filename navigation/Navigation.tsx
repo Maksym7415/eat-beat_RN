@@ -47,6 +47,7 @@ export const DrawerNavigator = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
+        lazy={false}
         initialRouteName="homeDrawer"
         drawerContent={(props) => DrawerLayout(props)}
       >

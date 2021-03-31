@@ -14,8 +14,8 @@ import {
   Memo,
   NavProps,
   recipeSettings,
-  RecommendedMeals,
-} from "../../components/interfaces";
+  RecommendedMeals, SearchByIngredientsParam,
+} from '../../components/interfaces';
 import { Col, Spacing } from "../../components/Config";
 import { AppContext } from "../../components/AppContext";
 import SearchModal from "../../components/SearchModal";
@@ -57,6 +57,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
     setSearchByIngredientsParams
   } = useContext<Memo>(AppContext);
 
+  const [byIngredientsParams, setByIngredientsParams] = useState<SearchByIngredientsParam[]>([])
   const [state, setState] = useState<string>("");
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -271,22 +272,50 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
       });
   };
 
+  const startSearchByIngredients = async () => {
+    setFetching({ ...fetching, myFetching: true }); // WTF ???
+    const ingredients = byIngredientsParams.map(ing => ing.name).join(',')
+    const response = await server.searchRecipesByIngredients({ ingredients: ingredients })
+    if (response.results.length) {
+      setFeed({
+        results: response.results,
+        offset: 0,
+        totalResults: response.results.length
+      })
+    }
+    setFetching({ ...fetching, myFetching: false });
+  }
+
   useEffect(() => {
     getFilter();
   }, []);
 
   const isFocused = useIsFocused();
   useEffect(() => {
-    if (isFocused) getFilter();
+    if (isFocused) {
+      getFilter();
+      if (searchByIngredientsParams.length) {
+        setByIngredientsParams([...searchByIngredientsParams])
+        setSearchByIngredientsParams([])
+      } else {
+        setByIngredientsParams([])
+      }
+    }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (byIngredientsParams.length) {
+      startSearchByIngredients()
+    }
+  }, [byIngredientsParams])
 
   const getResultsForText = (): string => {
     let resultsFor: string = null
     if (!!state) {
       resultsFor = 'Results for: ' + state
-    } else if (searchByIngredientsParams.length) {
+    } else if (byIngredientsParams.length) {
       resultsFor = 'Results for: '
-      searchByIngredientsParams.forEach((ing) => {
+      byIngredientsParams.forEach((ing) => {
         resultsFor += ing.name + ', '
       })
       resultsFor = resultsFor.substring(0, resultsFor.length -2)

@@ -1,12 +1,10 @@
 import React from 'react';
 import { Keyboard, Pressable, StyleSheet, View, Image, TextInput } from 'react-native';
 import { Col, Spacing } from './Config';
+import server from '../server';
 import { Text } from './custom/Typography';
 import SuggestionInput, { SuggestionInputOption } from './SuggestionInput';
 import { Button } from './MyComponents';
-
-// TODO: remove
-import MOCKED_INGREDIENTS from '../screens/Stock/mocked.ingredients.json'
 
 import { RecipeIngredient } from './interfaces';
 import Select, { SelectOption } from './Select';
@@ -29,6 +27,7 @@ interface SearchIngredientsState {
   selectedIngredientAmount: number
   selectedIngredientAmountError: boolean
   searchResults: RecipeIngredient[]
+  searchError: string
 }
 
 class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIngredientsState> {
@@ -58,14 +57,20 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
     selectedIngredientUnits: null,
     selectedIngredientAmount: 1,
     selectedIngredientAmountError: false,
-    searchResults: []
+    searchResults: [],
+    searchError: null
   }
 
   private suggestionInputRef: React.RefObject<SuggestionInput> = React.createRef()
 
   onChangeSearchText = (text: string) => {
     const enableSearch = text && text.length >= 3
-    this.setState({searchQuery: text, searchEnabled: enableSearch, searchComplete: false})
+    this.setState({
+      searchQuery: text,
+      searchEnabled: enableSearch,
+      searchComplete: false,
+      searchError: null
+    })
   }
 
   onSelectIngredient = (option: SuggestionInputOption) => {
@@ -81,7 +86,7 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
 
   onChangeAmount = (amount: string) => {
     const castedToNumber = Number(amount)
-    if (!!amount && !isNaN(castedToNumber) && castedToNumber < 1000) {
+    if (!!amount && !isNaN(castedToNumber) && castedToNumber < 10000) {
       this.setState({ selectedIngredientAmount: Number(amount), selectedIngredientAmountError: false })
     } else {
       this.setState({ selectedIngredientAmountError: true })
@@ -89,19 +94,23 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
   }
 
   onRunSearch = () => {
-    this.setState({ searchLoading: true }, async () => {
-      // TODO: send search request here
-      this.setState({searchResults: MOCKED_INGREDIENTS}, () => {
-        const options = this.state.searchResults.map((ingredient) => {
-          return { id: '' + ingredient.id, value: ingredient.name }
-        })
-        if (this.suggestionInputRef && this.suggestionInputRef.current) {
-          this.suggestionInputRef.current.setOptions(options, () => {
-            Keyboard.dismiss()
-            this.suggestionInputRef.current.toggleOpen()
+    this.setState({ searchLoading: true, searchError: null }, async () => {
+      const result = await server.searchIngredients({ name: this.state.searchQuery })
+      this.setState({searchResults: result}, () => {
+        if (this.state.searchResults.length) {
+          const options = this.state.searchResults.map((ingredient) => {
+            return { id: '' + ingredient.id, value: ingredient.name }
           })
+          if (this.suggestionInputRef && this.suggestionInputRef.current) {
+            this.suggestionInputRef.current.setOptions(options, () => {
+              Keyboard.dismiss()
+              this.suggestionInputRef.current.toggleOpen()
+            })
+          }
+          this.setState({ searchLoading: false, searchComplete: true })
+        } else {
+          this.setState({searchLoading: false, searchError: 'Nothing found'})
         }
-        this.setState({ searchLoading: false, searchComplete: true })
       })
     })
   }
@@ -126,8 +135,6 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
     } else {
       // STUB
       unitsOptions.push({id: 'g', value: 'g'})
-      unitsOptions.push({id: 'Kg', value: 'Kg'})
-      unitsOptions.push({id: 'cup', value: 'Cup'})
     }
     return unitsOptions
   }
@@ -142,10 +149,11 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
       selectedIngredient,
       selectedIngredientUnits,
       selectedIngredientAmount,
-      selectedIngredientAmountError
+      selectedIngredientAmountError,
+      searchError
     } = this.state
 
-    const okButtonEnabled = !!selectedIngredientUnits && !!selectedIngredientAmount
+    const okButtonEnabled = !!selectedIngredientUnits && !selectedIngredientAmountError
     const editMode = !!toEdit
 
     return (
@@ -161,9 +169,10 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
             }
             <SuggestionInput
               ref={this.suggestionInputRef}
+              errorMessage={searchError}
               readonly={editMode}
               highlight={searchEnabled && !searchComplete}
-              highlightColor={Col.Stocks}
+              highlightColor={searchError ? Col.Error : Col.Stocks}
               defaultValue={searchQuery}
               onChangeText={this.onChangeSearchText}
               onSelectOption={this.onSelectIngredient}
@@ -245,6 +254,7 @@ const styles = StyleSheet.create({
   },
   modalInputHolder: {
     flexDirection: 'row',
+    minHeight: 60,
   },
   ingredientImage: {
     width: 42,

@@ -2,6 +2,7 @@ import React, { FC, useContext } from 'react';
 import { View, FlatList } from 'react-native';
 import { AppContext } from "../../components/AppContext";
 import { Memo, NavProps } from '../../components/interfaces';
+import roundNumber from '../../utils/roundNumber';
 import IngredientItem from '../../components/IngredientItem';
 import Text from "../../components/custom/Typography";
 import { styles } from './FoodOrderingScreen.styles';
@@ -24,7 +25,7 @@ const FoodOrderingScreen: FC<NavProps> = ({ navigation }) => {
           return (
             <IngredientItem
               key={`ingredient_${item.index}`}
-              amount={'' + item.item.amount}
+              amount={'' + roundNumber(item.item.amount)}
               unit={item.item.unit}
               name={item.item.name}
             />
