@@ -91,7 +91,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
       config += `&intolerances=${filterConfig.intolerances}`;
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
-      config += `&type=${filterConfig.mealTypes}`;
+      config += `&mealType=${filterConfig.mealTypes}`;
     showModal(false, page);
     setFetching({ ...fetching, myFetching: true });
     const response = await server.restaurantSearch(state, config, 0);
@@ -115,11 +115,6 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
     diets,
     mealTypes,
   }: recipeSettings) => {
-      console.log({
-        intolerances,
-        diets,
-        mealTypes,
-      })
     setFetching((f) => ({ ...f, clicked: true, deactivate: true }));
     setTimeout(() => {
       setFilterConfig({
@@ -215,8 +210,8 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(() => getPreferences(response.data));
-      saveFilterConfig(getPreferences(response.data));
+      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
+      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
     }
   };
 
@@ -228,7 +223,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
       config += `&intolerances=${filterConfig.intolerances}`;
     if (filterConfig.diets.length) config += `&diet=${filterConfig.diets}`;
     if (filterConfig.mealTypes.length)
-      config += `&type=${filterConfig.mealTypes}`;
+      config += `&mealType=${filterConfig.mealTypes}`;
     showModal(false, page);
     const response = await server.restaurantSearch(
       state,

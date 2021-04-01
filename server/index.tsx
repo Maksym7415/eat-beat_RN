@@ -538,6 +538,18 @@ const addToStocks = async (type: StockType, data: Partial<RecipeIngredient>[]): 
   const response = await api.post(url, postBody)
   console.log('addToStocks -> POST -> ', postBody, url, 'response:', response)
 
+  if (response.data && response.data.message) {
+    let message = response.data.message
+    if (response.data.missedIngredients) {
+      message += ': '
+      response.data.missedIngredients.forEach((ing: RecipeIngredient) => {
+        message += ing.name + '(' + ing.unit + '), '
+      })
+      message = message.substring(0, message.length -2)
+    }
+    Alert.alert('Error', message)
+  }
+
   if (!response.ok) {
     logError(response);
     return false
