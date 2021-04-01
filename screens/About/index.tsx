@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as Linking from 'expo-linking';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import { Col } from '../../components/Config';
@@ -9,6 +10,10 @@ import Version from '../../components/Version';
 
 function About(params) {
     const [aboutInfo, setAboutInfo] = useState({})
+
+    const siteLink = () => {
+        Linking.openURL(aboutInfo.link)
+    } 
 
     useEffect(() => {
         (async () => {
@@ -38,7 +43,7 @@ function About(params) {
                         <Typography type='bodyBold' style={{paddingBottom: 4}}>
                             Visit our site
                         </Typography>
-                        <Typography >
+                        <Typography onPress={siteLink} style={styles.link}>
                             {aboutInfo.link}
                         </Typography>
                     </View>
@@ -80,5 +85,8 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         paddingTop: 32,
+    },
+    link: {
+        textDecorationLine: 'underline',
     }
 })

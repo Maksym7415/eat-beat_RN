@@ -27,7 +27,7 @@ export default function Version (props: Props) {
   return (
     <TouchableOpacity style={props.style || styles.container} activeOpacity={1} onPress={onPressVersion}>
       <Typography type='cap' style={{color: Col.White}}>
-        {`version ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}
+        {`Version ${Constants.nativeAppVersion}-${Constants.nativeBuildVersion}`}
       </Typography>
     </TouchableOpacity>
   )
