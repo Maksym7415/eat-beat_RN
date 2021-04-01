@@ -7,6 +7,7 @@ import { Col, Spacing } from '../../components/Config';
 import CheckBox from '../../components/custom/CheckBox';
 import LayoutScroll from '../../components/custom/LayoutScroll';
 import { Button } from '../../components/MyComponents';
+import RoundNumber from '../../utils/roundNumber';
 
 interface IngProps {
   item: {
@@ -57,7 +58,7 @@ const Ingredient = ({ item, onPress }: IngProps) => {
         />
       </View>
       <Text type="h6" style={{ width: "15%" }}>
-        {amount}
+        {RoundNumber(amount)}
       </Text>
       <Text type="cap" style={{ color: Col.Grey, width: "20%" }}>
         {unit}
