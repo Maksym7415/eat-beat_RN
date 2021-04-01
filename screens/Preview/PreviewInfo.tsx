@@ -175,7 +175,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
               )}
             </View>
             <View style={styles.nameContainer}>
-            {item.meal.is_partner !== undefined ? 
+            {item.meal.is_partner ? 
                 <View>
                   <View style={styles.restaurantContainer}>
                     <SvgMaker style={styles.icons} name={'partnerStar'} />
