@@ -79,7 +79,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
     glutenFree,
     dairyFree,
     veryPopular,
-    price
+    price,
   } = feed;
   const getImage = (
     vegetarian: boolean,
@@ -201,7 +201,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           <View>
             <Nutrient
               name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : `${price || 0}`}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit : `${price || 0}`}
               recipe={true}
               isUnit={true}
             />
