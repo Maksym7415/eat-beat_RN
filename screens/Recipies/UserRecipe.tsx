@@ -96,6 +96,7 @@ export default function UserRecipes({ navigation }) {
               if (fetching.clicked) return;
               setModalData({ ...modalData, modalVisible: false });
             }}
+            bg={Col.Recipes}
           />
           {feed ? (
             feed.map(({ id, title, recipe }, index) => (
