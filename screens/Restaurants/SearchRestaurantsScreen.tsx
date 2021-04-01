@@ -115,11 +115,6 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
     diets,
     mealTypes,
   }: recipeSettings) => {
-      console.log({
-        intolerances,
-        diets,
-        mealTypes,
-      })
     setFetching((f) => ({ ...f, clicked: true, deactivate: true }));
     setTimeout(() => {
       setFilterConfig({
@@ -215,8 +210,8 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(() => getPreferences(response.data));
-      saveFilterConfig(getPreferences(response.data));
+      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
+      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
     }
   };
 
