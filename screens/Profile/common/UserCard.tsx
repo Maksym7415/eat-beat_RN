@@ -26,14 +26,6 @@ interface Props {
 const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
   const [edit, setEdit] = useState(false);
   const [userName, setUserName] = useState(name);
-  useEffect(() => {
-    (async () => {
-      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
-      }
-    })();
-  }, []);
 
   const checkPermission = async () => {
     const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
