@@ -6,7 +6,7 @@ import { ErrorMessage } from "./MyComponents";
 import { Col, Spacing } from "./Config";
 import { InputProps } from "./interfaces";
 
-const formikInput: FC<InputProps> = ({ value, label, error, maxLength }) => {
+const formikInput: FC<InputProps> = ({ value, label, error, maxLength, clear }) => {
   const {
     values,
     handleChange,
@@ -23,6 +23,11 @@ const formikInput: FC<InputProps> = ({ value, label, error, maxLength }) => {
       style: { fontFamily: "Roboto_400Regular" },
     });
   }, [hide]);
+
+  useEffect(() => {
+    if(clear)  values[value] = ''
+  }, [clear])
+
   return (
     <>
       <View
