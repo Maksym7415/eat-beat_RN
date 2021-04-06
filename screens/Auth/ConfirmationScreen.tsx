@@ -66,8 +66,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
           Confirmation
         </Text>
         <Text type="body2" style={styles.header}>
-          Thanks for registration. You'll receive a verification code in “
-          {Email}” in order to activate your account.
+          Thanks for registration. We will message you on “{Email}” in order to activate your account.
         </Text>
         <Formik
           initialValues={{ verificationCode: "" }}
