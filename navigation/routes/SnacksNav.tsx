@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import React, { useContext } from "react";
 import { Text } from 'react-native';
 import { Col } from "../../components/Config";
@@ -10,14 +9,14 @@ import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
 import SearchSnackScreen from '../../screens/Snacks/SearchSnackScreen';
 import RecommendedScreen from '../../screens/Snacks/PopularSnacksScreen';
-import PreviewScreen from '../../screens/Preview/PreviewInfo';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
 
 const SnackTopNavigator = () => (
   <TopTabs.Navigator
-    tabBarOptions={{
+      lazy={true} 
+      tabBarOptions={{
       style: {
         backgroundColor: Col.Header,
         elevation: 0,
@@ -84,32 +83,6 @@ export const SnacksStack =  (props) => {
         name="snacksPage"
         component={SnackTopNavigator}
       />
-      <Stack.Screen
-        options={({ navigation, route, }) => {
-          return {
-            headerLeft: () => (
-              <Icon
-                style={{ marginLeft: 16 }}
-                onPress={() => navigation.goBack()}
-                name={"arrow-back"}
-                color={Col.White}
-                size={24}
-              />
-            ),
-            title: route.params.item.meal.name,
-            headerStyle: {
-              elevation: 1,
-              backgroundColor: Col.Snacks,
-            },
-            headerTitleStyle: {
-              color: "white",
-            },
-          };
-        }}
-        name="previewSnack"
-      >
-      {(previewProps) => <PreviewScreen page={'snacks'} {...previewProps} item={previewProps.route.params.item}/>}
-      </Stack.Screen>
     </Stack.Navigator>
   );
 };

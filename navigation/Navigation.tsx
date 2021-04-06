@@ -18,6 +18,10 @@ import { ProfileStack } from "./routes/ProfileNav";
 import { RestaurantsStack } from "./routes/RestaurantsNav";
 import { AboutStack } from './routes/AboutNav';
 import { SnacksStack } from './routes/SnacksNav';
+import PreviewScreen from '../screens/Preview/PreviewInfo';
+import { Col } from "../components/Config";
+import { MaterialIcons as Icon } from "@expo/vector-icons";
+
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -42,10 +46,56 @@ export const Auth = () => (
   </NavigationContainer>
 );
 
+export const Main = () => {
+  return  (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="drawerMain"
+        headerMode="none"
+        screenOptions={{
+          animationEnabled: false,
+        }}
+      >
+        <Stack.Screen
+          options={({ navigation, route, }) => {
+            return {
+              headerLeft: () => (
+                <Icon
+                  style={{ marginLeft: 16 }}
+                  onPress={() => navigation.goBack()}
+                  name={"arrow-back"}
+                  color={Col.White}
+                  size={24}
+                />
+              ),
+              title: route.params.item.meal.name,
+              headerStyle: {
+                elevation: 1,
+                backgroundColor: Col.Snacks,
+              },
+              headerTitleStyle: {
+                color: "white",
+              },
+            };
+          }}
+          name="previewSnack"
+        >
+          {(previewProps) => <PreviewScreen page={'snacks'} {...previewProps} item={previewProps.route.params.item} title={previewProps.route.params.item.meal.name}/>}
+      </Stack.Screen>
+  
+        <Stack.Screen name="drawerMain" component={DrawerNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+} 
+
+
+
+
 // Drawer Navigator
 export const DrawerNavigator = () => {
   return (
-    <NavigationContainer>
+    // <NavigationContainer>
       <Drawer.Navigator
         lazy={false}
         initialRouteName="homeDrawer"
@@ -87,6 +137,6 @@ export const DrawerNavigator = () => {
           component={AboutStack}
         />
       </Drawer.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 };
