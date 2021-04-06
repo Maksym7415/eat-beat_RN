@@ -6,6 +6,7 @@ export interface InputProps {
   label: string;
   error?: boolean;
   maxLength?: number;
+  clear?: boolean | string
 }
 
 export interface AuthProps {
