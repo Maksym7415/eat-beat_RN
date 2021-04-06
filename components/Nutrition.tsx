@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Col } from "./Config";
 import Text from "./custom/Typography";
+import roundNumber from '../utils/roundNumber';
 interface Props {
   item: {
     name: string;
@@ -39,7 +40,7 @@ const NutritionItem: FC<Props> = ({ item }) => {
         type="body2"
         style={{ width: "20%", textAlign: "right", color: Col.Dark }}
       >
-        {currentValue}
+        {roundNumber(currentValue)}
       </Text>
       {!recipe && (
         <Text type="body2" style={{ width: "18%", color: Col.Faded }}>
