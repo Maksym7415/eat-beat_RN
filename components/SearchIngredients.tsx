@@ -86,7 +86,7 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
 
   onChangeAmount = (amount: string) => {
     const castedToNumber = Number(amount)
-    if (!!amount && !isNaN(castedToNumber) && castedToNumber < 10000) {
+    if (!!amount && !isNaN(castedToNumber) && castedToNumber < 10000 && castedToNumber > 0) {
       this.setState({ selectedIngredientAmount: Number(amount), selectedIngredientAmountError: false })
     } else {
       this.setState({ selectedIngredientAmountError: true })
