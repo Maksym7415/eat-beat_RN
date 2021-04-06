@@ -57,7 +57,14 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, ro
                       //   uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
                       // }}
                     />}
-                    <Text style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}} onPress={() => routeToCb(item)}>{item.name}</Text>
+                    <View style={{width: '75%'}}>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode={'tail'}
+                        style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}}
+                        onPress={() => routeToCb(item)}
+                      >{item.name}</Text>
+                    </View>
                   </View>
                   {isPrecent && <Divider styler={styles.verticalDivider} />}
                   {isPrecent ?
@@ -93,9 +100,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    display: 'flex',
     flexDirection: "row",
-    alignItems: 'center'
+    alignItems: 'center',
   },
   image: {
     width: 48,
@@ -124,7 +130,6 @@ const styles = StyleSheet.create({
     borderLeftColor: Col.Grey3,
   },
   collapseText: {
-    width: "55%",
     marginBottom: 6,
     color: Col.Grey,
   },
