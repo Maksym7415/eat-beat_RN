@@ -44,6 +44,13 @@ const empty = {
   veryPopular: false,
 };
 const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, title }) => {
+  let displayAddToMealsButton = true
+  if (routeFrom && routeFrom === 'mealsScreen') {
+    displayAddToMealsButton = false
+  }
+  if (item && item.from && item.from === 'mealsScreen') {
+    displayAddToMealsButton = false
+  }
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -186,7 +193,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
               )}
             </View>
             <View style={styles.nameContainer}>
-            {item.meal.is_partner ? 
+            {item.meal.is_partner ?
                 <View>
                   <View style={styles.restaurantContainer}>
                     <SvgMaker style={styles.icons} name={'partnerStar'} />
@@ -252,13 +259,14 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
           </View>
         </View>
       </LayoutScroll>
-      {routeFrom !== 'mealsScreen' ? <View style={{left: 0, right: 0, bottom: 0}}>
-        <Button
-          label="ADD TO MEALS"
-          style={styles[`addToMealsFrom${page}`]}
-          onPress={() => modalAction(item)}
-        />
-    </View> : null}
+      {displayAddToMealsButton &&
+        <View style={{left: 0, right: 0, bottom: 0}}>
+          <Button
+            label="ADD TO MEALS"
+            style={styles[`addToMealsFrom${page}`]}
+            onPress={() => modalAction(item)}
+          />
+        </View>}
   </View>
   </>
   ) : (
@@ -281,14 +289,14 @@ const styles = StyleSheet.create({
     height: 95,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center', 
-    justifyContent: "flex-start", 
-    backgroundColor: Col.Snacks, 
-    paddingTop: 30, 
+    alignItems: 'center',
+    justifyContent: "flex-start",
+    backgroundColor: Col.Snacks,
+    paddingTop: 30,
   },
   headerText: {
-    color: Col.White, 
-    marginLeft: 30, 
+    color: Col.White,
+    marginLeft: 30,
     fontSize: 20
   },
   border: {
