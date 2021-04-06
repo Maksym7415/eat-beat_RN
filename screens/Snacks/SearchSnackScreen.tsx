@@ -186,6 +186,7 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
                       actionHandler={actionHandler}
                       notShowScore={true}
                       onPreview={() => onPreview(item)}
+                      page={'snacks'}
                     />
                   </View>
                 ))}

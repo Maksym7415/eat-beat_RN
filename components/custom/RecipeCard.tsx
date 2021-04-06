@@ -19,6 +19,7 @@ interface Props {
   actionHandler: (id: string, title: string, data: object) => void;
   onPreview?: () => void;
   notShowScore?: boolean;
+  page?: string
 }
 
 const RecipeCard: FC<Props> = ({
@@ -26,6 +27,7 @@ const RecipeCard: FC<Props> = ({
   actionHandler,
   onPreview,
   notShowScore,
+  page,
 }) => {
   const {
     id,
@@ -59,7 +61,7 @@ const RecipeCard: FC<Props> = ({
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPreview}>
       <View style={styles.container}>
-        <ImageBackground style={styles.imageContainer} source={{ uri: image }}>
+        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : image }}>
           <LinearGradient
             start={[0, 0]}
             end={[0, 1]}

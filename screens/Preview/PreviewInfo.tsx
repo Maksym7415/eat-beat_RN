@@ -64,16 +64,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       modalVisible: false,
       creationTime: new Date(date).getTime(),
     });
-  const getInfo = () => {
-    const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const Page =
-      fetcher.routes.map((el) => el.name)[0] === "homePage"
-        ? "previewPage"
-        : "previewRecommendedPage";
-    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
-      ?.details;
-    return spread ? { ...spread } : { ...empty };
-  };
+  const spoonacularUrl = 'https://spoonacular.com/cdn/ingredients_100x100/'
   const [feed, setFeed] = useState({ ...empty });
   const {
     image,
@@ -184,7 +175,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
                 <Image
                   source={{
                     uri:
-                      image && image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
+                      image && page === 'snacks' ? spoonacularUrl + image : image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
                   }}
                   style={styles.image}
                 />
