@@ -109,6 +109,7 @@ const HomeScreen: FC<NavProps> = ({ navigation }) => {
           pullToRefresh
           refreshing={refreshing}
           onRefresh={onRefresh}
+          scrollStyle={{paddingBottom: 70}}
         >
           <View style={styles.boxContainer}>
             <View style={styles.box}>
