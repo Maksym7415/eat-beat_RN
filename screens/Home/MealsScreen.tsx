@@ -100,7 +100,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         previewScreen: 'previewSnack'
       }
     }
-    navigation.navigate(data[page].previewScreen, {
+    navigation.push(data[page].previewScreen, {
       title: item.name,
       details: {page: data[page].page },
       item: { from: 'mealsScreen', meal: data[page].data, id: item.id,  },

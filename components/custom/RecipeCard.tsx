@@ -97,7 +97,7 @@ const RecipeCard: FC<Props> = ({
           </LinearGradient>
         </ImageBackground>
         <View style={styles.infoContainer}>
-          {is_partner !== undefined ? <View>
+          {is_partner !== undefined  && is_partner ? <View>
             <View style={styles.restaurantContainer}>
               <SvgMaker style={styles.icons} name={'partnerStar'} />
               <Text type="bodyBold2">{restName || 'without name'}</Text>

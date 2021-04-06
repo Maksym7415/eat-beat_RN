@@ -17,7 +17,7 @@ import {
   Fetching,
   Memo,
 } from "../../components/interfaces";
-
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 import AppBackend from '../../components/BackendSwitcher/store'
 
 
@@ -43,7 +43,7 @@ const empty = {
   dairyFree: false,
   veryPopular: false,
 };
-const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item }) => {
+const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, title }) => {
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -146,6 +146,17 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   }, [focus]);
 
   return Object.keys(feed).length ? (
+    <>
+    {page === 'snacks' ? <View style={styles.headerContainer}>
+      <Icon
+        style={{ marginLeft: 16, paddingTop: 5 }}
+        onPress={() => navigation.goBack()}
+        name={"arrow-back"}
+        color={Col.White}
+        size={24}
+      />
+      <Text style={styles.headerText}>{title}</Text>
+    </View> : null}
     <View style={styles.container}>
       <LayoutScroll>
         <View>
@@ -201,7 +212,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           <View>
             <Nutrient
               name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit : `${price || 0}`}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit || item.meal.unit : `${price || 0}`}
               recipe={true}
               isUnit={true}
             />
@@ -249,11 +260,14 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
         />
     </View> : null}
   </View>
+  </>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
     </View>
+
   );
+
 };
 
 const styles = StyleSheet.create({
@@ -262,6 +276,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.medium,
     paddingVertical: Spacing.r_small,
     backgroundColor: Col.Background,
+  },
+  headerContainer: {
+    height: 95,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center', 
+    justifyContent: "flex-start", 
+    backgroundColor: Col.Snacks, 
+    paddingTop: 30, 
+  },
+  headerText: {
+    color: Col.White, 
+    marginLeft: 30, 
+    fontSize: 20
   },
   border: {
     borderColor: Col.Grey2,
