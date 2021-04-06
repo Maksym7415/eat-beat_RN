@@ -38,13 +38,13 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
       gender: chips,
       preferences: disabled,
     };
-
+    
     if (age) Object.assign(personalObject, { age });
     if (height) Object.assign(personalObject, { height });
     if (currentWeight) Object.assign(personalObject, { currentWeight });
     if (selected) Object.assign(personalObject, { fkActivityId: selected });
     if (disabled) {
-      if (age && height && currentWeight) {
+      if (age && height && currentWeight && chips) {
         setFetching({ clicked: true, deactivate: true });
         const res = await server.updateProfile(personalObject);
         if (res) {
@@ -99,11 +99,13 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             <Text type="body">Gender</Text>
             <View style={[styles.row, styles.wide]}>
               <ToggleChip
+                required={!chips && disabled}
                 title={"Male"}
                 state={chips === "male"}
                 onPress={() => setChips("male")}
               />
               <ToggleChip
+                required={!chips && disabled}
                 title={"Female"}
                 state={chips === "female"}
                 onPress={() => setChips("female")}
