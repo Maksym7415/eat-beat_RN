@@ -117,6 +117,7 @@ export default function App() {
   };
 
   const loginHandler = async (successPage: boolean) => {
+    setCal({visible: false, date: new Date()})
     ApiInterceptor();
     await getUserData();
     if (successPage) return;
