@@ -169,6 +169,7 @@ class SearchIngredients extends React.Component<SearchIngredientsProps, SearchIn
             }
             <SuggestionInput
               ref={this.suggestionInputRef}
+              placeholder={'enter name'}
               errorMessage={searchError}
               readonly={editMode}
               highlight={searchEnabled && !searchComplete}
