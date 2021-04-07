@@ -12,38 +12,6 @@ import server from '../../server'
 import { correctFormat } from '../../utils/date';
 import { Col } from '../../components/Config';
 
-const mockData = {
-    Salad: [
-        {
-            id: 1,
-            name: 'Greek salad',
-            image: 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2010/4/23/0/BX0204_greek-salad_s4x3.jpg.rend.hgtvcom.826.620.suffix/1529943050536.jpeg'
-        },
-        {
-            id: 2,
-            name: `Caesar salad with parmesan and lemon`,
-            image: 'https://www.simplyrecipes.com/thmb/j1WtO-KNzo7D7e3j5skU2CIQGk4=/1800x1200/filters:fill(auto,1)/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2009__09__caesar-salad-horiz-a-1800-4a465eb53456465091e34138675259c2.jpg'
-        },
-        {
-            id: 3,
-            name: 'Vegetable salad',
-            image: 'https://static.onecms.io/wp-content/uploads/sites/19/2011/04/08/chunky-vegetable-salad-ay-2000.jpg'
-        }
-    ],
-    Meat: [
-        {
-            id: 1,
-            name: 'Fresh meat with sous',
-            image: 'https://media.wired.com/photos/5b493b6b0ea5ef37fa24f6f6/125:94/w_2393,h_1800,c_limit/meat-80049790.jpg'
-        },
-        {
-            id: 2,
-            name: 'Just Roast meat:)',
-            image: 'https://hallmark.brightspotcdn.com/dims4/default/8d68940/2147483647/strip/true/crop/3000x1684+0+0/resize/1140x640!/quality/90/?url=http%3A%2F%2Fhallmark-channel-brightspot.s3.amazonaws.com%2F69%2F94%2F04ce790dbdf55d6eb5cd689e2fa6%2Fhome-family-everyday-roast-beef.jpg'
-        },
-    ]
-}
-
 interface ModalData {
     id: number;
     name: string;

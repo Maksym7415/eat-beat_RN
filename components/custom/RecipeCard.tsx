@@ -53,7 +53,6 @@ const RecipeCard: FC<Props> = ({
     if (vegan) iconsArray.push("vegan");
     if (glutenFree) iconsArray.push("glutenFree");
     if (dairyFree) iconsArray.push("dairyFree");
-    if (veryPopular) iconsArray.push("popular");
     return iconsArray;
   };
   return (
