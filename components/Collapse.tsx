@@ -45,12 +45,13 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, ro
         {arrow ? (
             <View>
               <Divider styler={styles.collapseDivider} />
-              {data.map((item) => (
-                <View key={item.name} style={{ flexDirection: "row", justifyContent: isPrecent ? 'flex-start': 'space-between', paddingHorizontal: 4, alignItems: 'center' }}>
+              
+              {data.map((item, key) => (
+                <View key={item.name + key} style={{ flexDirection: "row", justifyContent: isPrecent ? 'flex-start': 'space-between', paddingHorizontal: 4, alignItems: 'center' }}>
                   <View style={styles.imageContainer}>
                     {!isPrecent && <Image
                     source={{
-                      uri: item.image || 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2010/4/23/0/BX0204_greek-salad_s4x3.jpg.rend.hgtvcom.826.620.suffix/1529943050536.jpeg',
+                      uri: AppBackend.getBaseUrl() + item.image,
                     }}
                     style={styles.image}
                       // source={{
