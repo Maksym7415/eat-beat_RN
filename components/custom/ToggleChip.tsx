@@ -10,6 +10,7 @@ interface Props {
   style?: ViewStyle;
   selectedColor?: string;
   disabled?: boolean;
+  required?: boolean;
 }
 
 const ToggleChip: FC<Props> = ({
@@ -19,6 +20,7 @@ const ToggleChip: FC<Props> = ({
   onPress,
   disabled,
   selectedColor = Col.Grey,
+  required
 }) => {
   return (
     <Pressable
@@ -27,6 +29,7 @@ const ToggleChip: FC<Props> = ({
         styles.container,
         {
           backgroundColor: disabled ? styles.disabled : state ? selectedColor : Col.White,
+          borderColor: required ? 'red' : 'white'
         },
         style,
       ]}

@@ -196,8 +196,8 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
-      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
+      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes, intolerances: filter.intolerances, diets: filter.diets } : response.data));
+      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes, intolerances: filter.intolerances, diets: filter.diets } : response.data));
     }
   };
 

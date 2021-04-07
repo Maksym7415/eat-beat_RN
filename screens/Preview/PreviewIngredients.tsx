@@ -60,15 +60,15 @@ const Ingredient = ({ item, onPress }: IngProps) => {
       <Text type="h6" style={{ width: "15%" }}>
         {RoundNumber(amount)}
       </Text>
-      <Text type="cap" style={{ color: Col.Grey, width: "20%" }}>
+      <Text type="cap" style={{ color: Col.Grey, width: "25%" }}>
         {unit}
       </Text>
-      <Text type="cap" style={{ width: "25%", flexWrap: "wrap" }}>
+      <Text type="cap" style={{ width: "35%", flexWrap: "wrap" }}>
         {name}
       </Text>
-      <Text type="cap" style={{ width: "15%", textAlign: "right" }}>
-        ({`${weightPerServing?.amount || 0}${weightPerServing?.unit || "g"}`})
-      </Text>
+      {/*<Text type="cap" style={{ width: "15%", textAlign: "right" }}>*/}
+      {/*  ({`${weightPerServing?.amount || 0}${weightPerServing?.unit || "g"}`})*/}
+      {/*</Text>*/}
     </TouchableOpacity>
   );
 };

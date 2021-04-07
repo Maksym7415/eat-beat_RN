@@ -9,7 +9,7 @@ import server, { api } from "./server";
 import Splash from "./screens/SplashScreen";
 import { ProfileData } from "./components/Config";
 import { AppContext } from "./components/AppContext";
-import { Auth, DrawerNavigator as Main } from "./navigation/Navigation";
+import { Auth, Main } from "./navigation/Navigation";
 import { Cal, Memo, ProfileProps, RecipeIngredient, SearchByIngredientsParam, UserData } from './components/interfaces';
 import AsyncStorage from "@react-native-community/async-storage";
 import BackendSwitcher from './components/BackendSwitcher'
@@ -117,6 +117,7 @@ export default function App() {
   };
 
   const loginHandler = async (successPage: boolean) => {
+    setCal({visible: false, date: new Date()})
     ApiInterceptor();
     await getUserData();
     if (successPage) return;

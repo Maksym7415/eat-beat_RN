@@ -19,16 +19,13 @@ const Validation = Yup.object().shape({
     .typeError("Code must be a number"),
 });
 
-interface Val {
-  verificationCode: number;
-}
-
 const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
   const Email = route.params.email;
 
   const [clicked, setClicked] = useState(false);
   const [resend, setResend] = useState(false);
   const [error, setError] = useState(false);
+  const [clear, setClear] = useState(false)
   const onConfirm = async (value) => {
     setClicked(true);
     const verified = await server.verifyAccount(value.verificationCode);
@@ -43,6 +40,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
 
   const handleResend = async () => {
     setResend(true);
+    setClear(true);
     setTimeout(setResend(false), 60000);
     const sent = await server.resendCode(Email);
     if (sent) {
@@ -50,7 +48,9 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
         "Verification",
         "Please Check your Email for the Verification Code"
       );
+      setClear(false);
     } else {
+      setClear(false);
       Alert.alert(
         "Error",
         "Sorry!\nSomething went wrong while trying to get a new code, please try again later."
@@ -66,8 +66,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
           Confirmation
         </Text>
         <Text type="body2" style={styles.header}>
-          Thanks for registration. You'll receive a verification code in “
-          {Email}” in order to activate your account.
+          Thanks for registration. We will message you on “{Email}” in order to activate your account.
         </Text>
         <Formik
           initialValues={{ verificationCode: "" }}
@@ -81,6 +80,7 @@ const ConfirmationScreen: FC<NavProps> = ({ navigation, route }) => {
                 label="Enter your code"
                 error={error}
                 maxLength={5}
+                clear={clear}
               />
               <ErrorMessage
                 visible={error}

@@ -45,19 +45,27 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, ro
         {arrow ? (
             <View>
               <Divider styler={styles.collapseDivider} />
-              {data.map((item) => (
-                <View key={item.name} style={{ flexDirection: "row", justifyContent: isPrecent ? 'flex-start': 'space-between', paddingHorizontal: 4, alignItems: 'center' }}>
+              
+              {data.map((item, key) => (
+                <View key={item.name + key} style={{ flexDirection: "row", justifyContent: isPrecent ? 'flex-start': 'space-between', paddingHorizontal: 4, alignItems: 'center' }}>
                   <View style={styles.imageContainer}>
                     {!isPrecent && <Image
                     source={{
-                      uri: item.image || 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2010/4/23/0/BX0204_greek-salad_s4x3.jpg.rend.hgtvcom.826.620.suffix/1529943050536.jpeg',
+                      uri: AppBackend.getBaseUrl() + item.image,
                     }}
                     style={styles.image}
                       // source={{
                       //   uri: image && image.slice(0, 4) === "http" ? image : `${baseURL}${image}`,
                       // }}
                     />}
-                    <Text style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}} onPress={() => routeToCb(item)}>{item.name}</Text>
+                    <View style={{width: '75%'}}>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode={'tail'}
+                        style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}}
+                        onPress={() => routeToCb(item)}
+                      >{item.name}</Text>
+                    </View>
                   </View>
                   {isPrecent && <Divider styler={styles.verticalDivider} />}
                   {isPrecent ?
@@ -93,9 +101,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    display: 'flex',
     flexDirection: "row",
-    alignItems: 'center'
+    alignItems: 'center',
   },
   image: {
     width: 48,
@@ -124,7 +131,6 @@ const styles = StyleSheet.create({
     borderLeftColor: Col.Grey3,
   },
   collapseText: {
-    width: "55%",
     marginBottom: 6,
     color: Col.Grey,
   },

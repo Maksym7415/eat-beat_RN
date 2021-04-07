@@ -17,7 +17,7 @@ import {
   Fetching,
   Memo,
 } from "../../components/interfaces";
-
+import { MaterialIcons as Icon } from "@expo/vector-icons";
 import AppBackend from '../../components/BackendSwitcher/store'
 
 
@@ -43,7 +43,14 @@ const empty = {
   dairyFree: false,
   veryPopular: false,
 };
-const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item }) => {
+const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, title }) => {
+  let displayAddToMealsButton = true
+  if (routeFrom && routeFrom === 'mealsScreen') {
+    displayAddToMealsButton = false
+  }
+  if (item && item.from && item.from === 'mealsScreen') {
+    displayAddToMealsButton = false
+  }
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -57,16 +64,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
       modalVisible: false,
       creationTime: new Date(date).getTime(),
     });
-  const getInfo = () => {
-    const fetcher = navigation.dangerouslyGetParent().dangerouslyGetState();
-    const Page =
-      fetcher.routes.map((el) => el.name)[0] === "homePage"
-        ? "previewPage"
-        : "previewRecommendedPage";
-    const spread = fetcher.routes.filter((el) => el.name === Page)[0].params
-      ?.details;
-    return spread ? { ...spread } : { ...empty };
-  };
+  const spoonacularUrl = 'https://spoonacular.com/cdn/ingredients_100x100/'
   const [feed, setFeed] = useState({ ...empty });
   const {
     image,
@@ -146,6 +144,17 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
   }, [focus]);
 
   return Object.keys(feed).length ? (
+    <>
+    {page === 'snacks' ? <View style={styles.headerContainer}>
+      <Icon
+        style={{ marginLeft: 16, paddingTop: 5 }}
+        onPress={() => navigation.goBack()}
+        name={"arrow-back"}
+        color={Col.White}
+        size={24}
+      />
+      <Text style={styles.headerText}>{title}</Text>
+    </View> : null}
     <View style={styles.container}>
       <LayoutScroll>
         <View>
@@ -166,7 +175,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
                 <Image
                   source={{
                     uri:
-                      image && image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
+                      image && page === 'snacks' ? spoonacularUrl + image : image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
                   }}
                   style={styles.image}
                 />
@@ -175,7 +184,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
               )}
             </View>
             <View style={styles.nameContainer}>
-            {item.meal.is_partner ? 
+            {item.meal.is_partner ?
                 <View>
                   <View style={styles.restaurantContainer}>
                     <SvgMaker style={styles.icons} name={'partnerStar'} />
@@ -201,7 +210,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           <View>
             <Nutrient
               name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit : `${price || 0}`}
+              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit || item.meal.unit : `${price || 0}`}
               recipe={true}
               isUnit={true}
             />
@@ -241,19 +250,23 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item })
           </View>
         </View>
       </LayoutScroll>
-      {routeFrom !== 'mealsScreen' ? <View style={{left: 0, right: 0, bottom: 0}}>
-        <Button
-          label="ADD TO MEALS"
-          style={styles[`addToMealsFrom${page}`]}
-          onPress={() => modalAction(item)}
-        />
-    </View> : null}
+      {displayAddToMealsButton &&
+        <View style={{left: 0, right: 0, bottom: 0}}>
+          <Button
+            label="ADD TO MEALS"
+            style={styles[`addToMealsFrom${page}`]}
+            onPress={() => modalAction(item)}
+          />
+        </View>}
   </View>
+  </>
   ) : (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color={Col.Black} />
     </View>
+
   );
+
 };
 
 const styles = StyleSheet.create({
@@ -262,6 +275,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.medium,
     paddingVertical: Spacing.r_small,
     backgroundColor: Col.Background,
+  },
+  headerContainer: {
+    height: 95,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: "flex-start",
+    backgroundColor: Col.Snacks,
+    paddingTop: 30,
+  },
+  headerText: {
+    color: Col.White,
+    marginLeft: 30,
+    fontSize: 20
   },
   border: {
     borderColor: Col.Grey2,

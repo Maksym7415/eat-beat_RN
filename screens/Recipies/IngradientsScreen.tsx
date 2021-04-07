@@ -4,17 +4,20 @@ import {
   StyleSheet,
   TextInput,
   Text,
-  ActivityIndicator,
-} from "react-native";
+  ActivityIndicator, Alert,
+} from 'react-native';
 import { AppContext } from "../../components/AppContext";
 import { Col, Spacing } from "../../components/Config";
 import { Button, Divider } from "../../components/MyComponents";
 import server from "../../server";
 import IngradientRow from "./Components/IngradientRow";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import { RecipeIngredient, StockType } from '../../components/interfaces';
 
 export default function IngradientScreen({ navigation }) {
   const { recipeId, editMode, toggleEdit } = useContext(AppContext);
+  const [selected, setSelected] = useState<Partial<RecipeIngredient>[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
   const [feed, setFeed] = useState<object>({});
   const [checked, setChecked] = useState<object>({});
   const [value, setValue] = useState<string>("");
@@ -63,6 +66,17 @@ export default function IngradientScreen({ navigation }) {
     setChecked((val) => ({ ...val, [name]: check }));
   };
 
+  useEffect(() => {
+    if (feed && feed.ingredients) {
+      setSelected(feed.ingredients.map((ing => {
+        delete ing.nutrition
+        return {...ing}
+      })))
+    } else {
+      setSelected([])
+    }
+  }, [checked])
+
   const changeHandler = (text) => {
     setValue(text);
   };
@@ -76,6 +90,20 @@ export default function IngradientScreen({ navigation }) {
     getRecipeInfo();
     toggleEdit(false);
   };
+
+  const onPressAddToShoppingList = async () => {
+    if (selected.length) {
+      setLoading(true)
+      const success = await server.addToStocks(StockType.shoppingList, selected)
+      setLoading(false)
+      if (success) {
+        navigation.navigate('shoppingList')
+      } else {
+        Alert.alert("Error", 'Unable to add selected ingredients to shopping list');
+      }
+    }
+  }
+
 
   return Object.keys(feed).length ? (
     <LayoutScroll style={{ flexGrow: 1, backgroundColor: Col.Background }}>
@@ -97,10 +125,11 @@ export default function IngradientScreen({ navigation }) {
             </View>
             <View style={{ flexGrow: 1, paddingHorizontal: Spacing.medium }}>
               <Button
+                clicked={loading}
                 label="Add products to My Shopping List"
-                onPress={() => console.log("")}
+                onPress={onPressAddToShoppingList}
                 style={{ backgroundColor: Col.Recipes }}
-                deactivate={!Object.values(checked).filter((el) => el).length}
+                deactivate={selected.length === 0}
               />
             </View>
             {/* <View style={styles.btnConatiner}>

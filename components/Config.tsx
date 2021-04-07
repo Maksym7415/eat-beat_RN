@@ -55,6 +55,7 @@ export const Col = {
   Grey3: "#E7E7E7",
   Grey4: "#FAFAFA",
   Grey5: "#ADB4BB",
+  Grey6: "#979797",
   Info: "#5E6CEB",
   c: "#3B990F",
 };
