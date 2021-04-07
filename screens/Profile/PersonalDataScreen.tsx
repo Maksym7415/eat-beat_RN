@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext, useEffect } from "react";
+import React, { useState, FC, useContext, useEffect, useRef } from 'react';
 import { View, Switch, StyleSheet } from "react-native";
 import Text from "../../components/custom/Typography";
 import server from "../../server";
@@ -28,21 +28,29 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     deactivate: false,
   });
 
+  const ageValueRef = useRef()
+  const heightValueRef = useRef()
+  const weightValueRef = useRef()
+
   const enableEditing = () => {
     setDisabled(!disabled);
   };
 
   const savePersonalDataHandler = async () => {
-    const { age, height, currentWeight } = feed;
+    const age = !!ageValueRef.current && isNaN(Number(ageValueRef.current)) ? 20 : Number(ageValueRef.current)
+    const height = !!heightValueRef.current && isNaN(Number(heightValueRef.current)) ? 170 : Number(heightValueRef.current)
+    const currentWeight = !!weightValueRef.current && isNaN(Number(weightValueRef.current)) ? 50 : Number(weightValueRef.current)
+
     const personalObject = {
       gender: chips,
       preferences: disabled,
     };
-    
+
     if (age) Object.assign(personalObject, { age });
     if (height) Object.assign(personalObject, { height });
     if (currentWeight) Object.assign(personalObject, { currentWeight });
     if (selected) Object.assign(personalObject, { fkActivityId: selected });
+
     if (disabled) {
       if (age && height && currentWeight && chips) {
         setFetching({ clicked: true, deactivate: true });
@@ -113,6 +121,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             </View>
           </View>
           <InputFeild
+            ref={ageValueRef}
             label="Age"
             onChange={(value) => setFeed({ ...feed, age: Number(value) })}
             limit={[18, 120]}
@@ -121,6 +130,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             suffix="years"
           />
           <InputFeild
+            ref={heightValueRef}
             label="Height"
             limit={[130, 220]}
             onChange={(value) => setFeed({ ...feed, height: Number(value) })}
@@ -129,6 +139,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             suffix="cm"
           />
           <InputFeild
+            ref={weightValueRef}
             label="Weight"
             limit={[30, 200]}
             onChange={(value) =>
