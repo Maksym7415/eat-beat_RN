@@ -162,6 +162,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             </View>
           </View>
         </View>
+        <View style={{height: 200}}/>
       </LayoutScroll>
       <View style={{ padding: Spacing.medium }}>
         <Button
