@@ -10,6 +10,7 @@ export interface SuggestionInputOption {
 }
 
 interface SuggestionInputProps {
+  placeholder?: string
   errorMessage?: string
   readonly?: boolean
   highlight?: boolean
@@ -107,12 +108,14 @@ class SuggestionInput extends React.PureComponent<SuggestionInputProps, Suggesti
   }
 
   render() {
-    const { readonly, onChangeText, defaultValue, errorMessage } = this.props
+    const { readonly, onChangeText, defaultValue, errorMessage, placeholder } = this.props
     const { options, opened, selected } = this.state
     const textInputValue = selected ? options.find(i => i.id === selected).value : defaultValue
     return (
       <View style={styles.container}>
         <TextInput
+          placeholderTextColor={Col.Grey6}
+          placeholder={placeholder}
           editable={!readonly}
           style={this.getInputStyles()}
           onChangeText={onChangeText}
