@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, forwardRef, Ref, useEffect, useImperativeHandle, useState } from 'react';
 import { StyleSheet, TextInput, View } from "react-native";
 import { Col, Spacing } from "../../../components/Config";
 import Text from "../../../components/custom/Typography";
@@ -13,7 +13,7 @@ interface Props {
   limit?: number[];
 }
 
-const InputFeild: FC<Props> = ({
+const InputFeild: FC<Props> = forwardRef(({
   label,
   onChange,
   input,
@@ -21,8 +21,9 @@ const InputFeild: FC<Props> = ({
   disabled = false,
   required = false,
   limit = [0, 1],
-}) => {
+}, ref: Ref<React.ReactText>) => {
   const [value, setValue] = useState(input);
+  useImperativeHandle(ref, () => value);
   const handleChange = () => {
     if (value === "") return;
     let newVal: number = isNaN(Number(value)) ? 18 : Number(value);
@@ -54,7 +55,7 @@ const InputFeild: FC<Props> = ({
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -72,4 +73,4 @@ const styles = StyleSheet.create({
     marginRight: Spacing.medium,
   },
 });
-export default InputFeild;
+export default InputFeild
