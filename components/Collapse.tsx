@@ -6,7 +6,7 @@ import SvgMaker from "./SvgMaker";
 import { Text } from "../components/custom/Typography";
 import { Divider } from "./MyComponents";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import AppBackend from '../components/BackendSwitcher/store'
+import AppBackend from '../components/BackendSwitcher/store';
 
 
 interface dataArray {

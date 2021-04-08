@@ -150,6 +150,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
             <View key={`${index}`} style={styles.cardContainer}>
               <RecipeCard
                 details={item}
+                page='restaurant'
                 actionHandler={actionHandler}
                 onPreview={() => onPreview(item)}
               />
