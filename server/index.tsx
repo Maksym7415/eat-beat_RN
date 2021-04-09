@@ -7,7 +7,7 @@ import {
   AuthProps,
   GetStockIngredientsParams,
   RecipeIngredient,
-  RemoveStockIngredientsParams,
+  RemoveStockIngredientsParams, SearchByBarcodeParams,
   SearchIngredientsParams,
   SearchRecipesByIngredientsParams,
   SearchRecipesByIngredientsResponse,
@@ -17,6 +17,7 @@ import {
 import encryption from '../utils/dataEncryption';
 import Axios from 'axios';
 import AppBackend from '../components/BackendSwitcher/store'
+import MOCKED_INGREDIENTS from '../screens/Stock/mocked.ingredients.json';
 
 const apiConfig: apiProps = {
   baseURL: () => AppBackend.getBaseUrl() + "api",
@@ -42,6 +43,7 @@ const apiConfig: apiProps = {
     popularSnacks: "/snacks/popular?date=",
     addSnacks: "/snacks/eat-snack",
     snackSearch: "/snacks/search?name=",
+    barcodeSearch: "/todo-implement-search-by-barcode-endpoint",
   },
   post: {
     signIn: "/auth/sign-in",
@@ -637,6 +639,16 @@ const searchIngredients = async (params: SearchIngredientsParams): Promise<Recip
   }
 }
 
+//TODO: update after backend implementation
+const searchByBarcode = async (params: SearchByBarcodeParams): Promise<RecipeIngredient> => {
+  console.log('server.searchByBarcode(', params.code,  ')')
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(Math.random() > 0.5 ? MOCKED_INGREDIENTS[0] : null)
+    }, 1000)
+  })
+}
+
 export default {
   api,
   setup,
@@ -689,4 +701,5 @@ export default {
   searchIngredients,
   getStocks,
   searchRecipesByIngredients,
+  searchByBarcode,
 };
