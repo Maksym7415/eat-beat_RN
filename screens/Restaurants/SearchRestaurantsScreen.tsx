@@ -346,6 +346,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
                       details={item}
                       actionHandler={actionHandler}
                       notShowScore={true}
+                      page='restaurant'
                       onPreview={() => onPreview(item)}
                     />
                   </View>
