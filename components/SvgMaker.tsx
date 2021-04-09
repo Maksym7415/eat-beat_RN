@@ -7,9 +7,20 @@ interface IIcons {
 
 const Icons: IIcons = {
   default: ``,
+  scannerMask: `
+<svg width="360" height="640" viewBox="0 0 360 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M360 0H0V640H360V0ZM88 220C83.5817 220 80 223.582 80 228V412C80 416.418 83.5817 420 88 420H272C276.418 420 280 416.418 280 412V228C280 223.582 276.418 220 272 220H88Z" fill="black" fill-opacity="0.4"/>
+</svg>
+`,
+
   arrowUp: `
 <svg width="10" height="5" viewBox="0 0 10 5" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M10 5L5 -4.37114e-07L0 5L10 5Z" fill="#333942"/>
+</svg>
+`,
+  close: `
+<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="white"/>
 </svg>
 `,
   arrowDown: `
@@ -324,6 +335,7 @@ return `<svg width="24" height="24" viewBox="0 0 24 24"  xmlns="http://www.w3.or
 interface Props {
   name:
   | "default"
+  | "close"
   | "arrowUp"
   | "arrowDown"
   | "edit"
@@ -340,6 +352,7 @@ interface Props {
   | "camera"
   | "logo"
   | "myLocation"
+  | "scannerMask"
   style?: object;
 }
 

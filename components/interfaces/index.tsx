@@ -121,6 +121,10 @@ export interface SearchIngredientsParams {
   limit?: number
 }
 
+export interface SearchByBarcodeParams {
+  code: string
+}
+
 export interface SearchRecipesByIngredientsParams {
   ingredients: string
   limit?: number

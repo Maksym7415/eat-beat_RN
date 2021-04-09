@@ -26,6 +26,8 @@
     "babel-plugin-inline-dotenv": "^1.6.0",
     "dotenv": "^8.2.0",
     "expo": "~39.0.2",
+    "expo-barcode-scanner": "~9.0.0",
+    "expo-camera": "~9.0.0",
     "expo-cli": "^4.3.0",
     "expo-device": "~2.3.0",
     "expo-font": "~8.3.0",
