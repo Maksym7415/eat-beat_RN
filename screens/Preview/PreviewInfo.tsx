@@ -30,7 +30,6 @@ interface ModalData {
   data: object;
 }
 
-
 const empty = {
   image: "",
   name: "",
@@ -79,6 +78,16 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
     veryPopular,
     price,
   } = feed;
+  const previewSettings = {
+    'recipes': {
+      name: "Number of servings",
+      currentValue: (recipeServings || servings)
+    },
+    'snacks': {
+      name: "Standart unit",
+      currentValue: item.meal.standartUnit || item.meal.unit
+    }
+  }
   const getImage = (
     vegetarian: boolean,
     vegan: boolean,
@@ -209,8 +218,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
           </View>
           <View>
             <Nutrient
-              name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit || item.meal.unit : `${price || 0}`}
+              name={previewSettings[page].name || 'Price'}
+              currentValue={previewSettings[page].currentValue ||  `${price || 0}`}
               recipe={true}
               isUnit={true}
             />
