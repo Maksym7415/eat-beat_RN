@@ -31,13 +31,17 @@ const RestaurantsTopNavigator = () => (
     }}
     initialRouteName="recommended"
   >
-    <TopTabs.Screen name="recommended">
+    <Stack.Screen name="recommendedRestaurant" 
+      options={() => ({
+        title: 'recommended'
+      })}
+    >
       {(props) => <RecommendScreen {...props} page='restaurants' />}
-    </TopTabs.Screen>
-    <TopTabs.Screen name="search" >
+    </Stack.Screen>
+    <Stack.Screen name="search" >
       {(props) => <SearchRestaurantsScreen {...props} page={'restaurants'} />}
-    </TopTabs.Screen>
-    <TopTabs.Screen
+    </Stack.Screen>
+    <Stack.Screen
       name="restaurant_map"
       component={RestaurantMap}
       options={{ title: "Map" }}
