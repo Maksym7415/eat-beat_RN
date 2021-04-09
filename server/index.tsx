@@ -441,7 +441,6 @@ const changePassword = async (options: changePassProps) => {
   const address = apiConfig.put.password;
   const encrypted = await encryption(options)
   const response = await api.patch(address, encrypted);
-  if (!response.ok) logError(response);
   return response;
 };
 
