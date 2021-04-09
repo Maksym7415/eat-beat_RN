@@ -86,6 +86,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
     'snacks': {
       name: "Standart unit",
       currentValue: item.meal.standartUnit || item.meal.unit
+    },
+    'restaurants': {
+      name: null,
+      currentValue: price
     }
   }
   const getImage = (
@@ -193,10 +197,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
               )}
             </View>
             <View style={styles.nameContainer}>
-            {item.meal.is_partner ?
+            {item.meal.is_partner !== undefined ?
                 <View>
                   <View style={styles.restaurantContainer}>
-                    <SvgMaker style={styles.icons} name={'partnerStar'} />
+                    {item.meal.is_partner && <SvgMaker style={styles.icons} name={'partnerStar'} />}
                     <Text type="cap">{item.meal.restName || 'without name'}</Text>
                   </View>
                   <Divider styler={styles.horizontalDivider} />
@@ -219,7 +223,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
           <View>
             <Nutrient
               name={previewSettings[page].name || 'Price'}
-              currentValue={previewSettings[page].currentValue ||  `${price || 0}`}
+              currentValue={previewSettings[page].currentValue || 0}
               recipe={true}
               isUnit={true}
             />
