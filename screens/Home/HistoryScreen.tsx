@@ -26,9 +26,9 @@ interface Offset {
 }
 
 const recommendScreens = {
-  0: 'recommendedDrawer',
-  1: 'restaurants',
-  2: 'snacks'
+  0: 'recommendedRecipe',
+  1: 'recommendedRestaurant',
+  2: 'SnacksPopular'
 }
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
