@@ -30,9 +30,9 @@ const HomeTopNavigator = () => (
     }}
     initialRouteName="home"
   >
-    <TopTabs.Screen name="home" component={HomeScreen} />
-    <TopTabs.Screen name="meals" component={MealsScreen} />
-    <TopTabs.Screen name="history" component={HistoryScreen} />
+    <Stack.Screen name="home" component={HomeScreen} />
+    <Stack.Screen name="meals" component={MealsScreen} />
+    <Stack.Screen name="history" component={HistoryScreen} />
   </TopTabs.Navigator>
 );
 
