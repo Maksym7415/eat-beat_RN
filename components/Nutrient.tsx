@@ -36,7 +36,7 @@ const Nutrient: FC<Props> = ({
           }`}</Text>
           <View style={styles.nutrient_numbers}>
             <Text type="h6" style={styles.unit}>
-              {RoundNumber(currentValue)}
+              {isNaN(currentValue) ? currentValue : RoundNumber(currentValue)}
             </Text>
             {!recipe && (
               <View style={styles.maxCount}>
