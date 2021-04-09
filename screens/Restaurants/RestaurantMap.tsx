@@ -27,7 +27,7 @@ const tallin = {
 }
 
 function RestaurantMap({ navigation }) {
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState({});
     const [restaurants, setRestaurants] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
     const [restData, setRestData] = useState({});
@@ -91,19 +91,18 @@ function RestaurantMap({ navigation }) {
             <TouchableOpacity style={styles.myLocation} onPress={getUserCoordinates}>
                 <SvgMaker name='myLocation' />
             </TouchableOpacity>
-            {location &&
                 <MapView
                     style={styles.map}
                     initialRegion={{...tallin, ...getDeltasCoord(tallin.latitude, tallin.longitude)}}
                     //onRegionChange={(reg) => console.log(reg)}
                     //region={{...location, ...getDeltasCoord(tallin.latitude, tallin.longitude)}}
                 >
-                   {location && [...restaurants, location].map((rest, key) =>  
-                    <Marker key={key} onPress={(coords) => setDataRestaraunt(coords, rest.id, rest.address, rest.description, rest.name, rest.is_partner, {latitude: rest.coordinates.lat, longitude: rest.coordinates.lng})} key={key} coordinate={{ latitude : rest.coordinates.lat , longitude : rest.coordinates.lng }}>
+                   {[...restaurants, location].map((rest, key) =>  
+                    <Marker key={key} onPress={(coords) => setDataRestaraunt(coords, rest.id, rest.address, rest.description, rest.name, rest.is_partner, {latitude: rest.coordinates?.lat, longitude: rest.coordinates?.lng})} key={key} coordinate={{ latitude : rest.coordinates?.lat || 0 , longitude : rest.coordinates?.lng || 0 }}>
                         <CustomMarker {...rest}/>
                     </Marker>
                     )}
-                </MapView>}
+                </MapView>
                 {open && <RestaurantViewLayout setOpen={setOpen} {...restData} navigation={navigation}/>}
         </View>
     )
