@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { NavProps, RecipeIngredient, StockType } from '../../components/interfaces';
+import { NavProps, RecipeIngredient } from '../../components/interfaces';
 import server from '../../server';
 import Scanner from '../../components/Scanner';
 import { Col } from '../../components/Config';
+import moment from 'moment'
 
 const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
 
@@ -12,9 +13,12 @@ const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
   }
 
   const onAdd = async (ingredient: RecipeIngredient): Promise<void> => {
-    // TODO: add something to somewhere (TDB)
-    // await server.addToStocks(StockType.fridge, [ingredient])
-    navigation.navigate('SnacksPopular')
+    await server.addSnacks({
+      meal: {...ingredient, id: false, spoonacularId: ingredient.id},
+      quantity: 1,
+      date: moment().format('YYYY-MM-DD HH:mm')
+    });
+    navigation.navigate('meals')
   }
 
   const onExit = () => {
@@ -24,7 +28,7 @@ const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
   if (!useIsFocused()) return null
   return (
     <Scanner
-      addLabel={'ADD TO FRIDGE'}
+      addLabel={'ADD TO MEALS'}
       color={Col.Snacks}
       onAdd={onAdd}
       onExit={onExit}
