@@ -51,23 +51,21 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     if (currentWeight) Object.assign(personalObject, { currentWeight });
     if (selected) Object.assign(personalObject, { fkActivityId: selected });
 
+    setFetching({ clicked: true, deactivate: true });
     if (disabled) {
       if (age && height && currentWeight && chips) {
-        setFetching({ clicked: true, deactivate: true });
         const res = await server.updateProfile(personalObject);
         if (res) {
-          setFetching({ clicked: false, deactivate: false });
           getData();
         }
       }
     } else {
-      setFetching({ clicked: true, deactivate: true });
       const res = await server.updateProfile(personalObject);
       if (res) {
-        setFetching({ clicked: false, deactivate: false });
         getData();
       }
     }
+    setFetching({ clicked: false, deactivate: false });
   };
 
   const refreshPage = () => {
