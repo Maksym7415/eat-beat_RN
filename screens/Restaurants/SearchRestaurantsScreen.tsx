@@ -209,9 +209,10 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const getFilter = async () => {
     const response = await server.getSearchFilter();
-    if (response.ok) {
-      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
-      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes } : response.data));
+    if (response.ok ) {
+      const checkFilter = Object.values(filterConfig).some((el) => el)
+      setFilter(() => getPreferences(checkFilter ? filter : response.data));
+      saveFilterConfig(getPreferences(checkFilter ? filter : response.data));
     }
   };
 
