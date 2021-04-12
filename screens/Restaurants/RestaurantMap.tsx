@@ -7,6 +7,7 @@ import CustomMarker from './components/CustomMarker';
 import RestaurantViewLayout from './components/RestaurantViewLayout';
 import { GOOGLE_MAP_API_KEY } from '../../constants';
 import server from '../../server';
+import { useIsFocused } from '@react-navigation/native';
 
 const getDeltasCoord = (latitude: number, longitude: number) => {
     const { width, height } = Dimensions.get('window');
@@ -32,6 +33,7 @@ function RestaurantMap({ navigation }) {
     const [errorMsg, setErrorMsg] = useState(null);
     const [restData, setRestData] = useState({});
     const [open, setOpen] = useState(false)
+    const screenFocused = useIsFocused();
 
     const getLocation = async () => {
         let location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
@@ -74,7 +76,7 @@ function RestaurantMap({ navigation }) {
         return () => {
             _unsubscribe();
         }
-    }, []);
+    }, [screenFocused]);
 
     useEffect(() => {
         async function restaurants() {
@@ -97,7 +99,7 @@ function RestaurantMap({ navigation }) {
                     //onRegionChange={(reg) => console.log(reg)}
                     //region={{...location, ...getDeltasCoord(tallin.latitude, tallin.longitude)}}
                 >
-                   {[...restaurants, location].map((rest, key) =>  
+                   {[...restaurants, location].map((rest, key) =>
                     <Marker key={key} onPress={(coords) => setDataRestaraunt(coords, rest.id, rest.address, rest.description, rest.name, rest.is_partner, {latitude: rest.coordinates?.lat, longitude: rest.coordinates?.lng})} key={key} coordinate={{ latitude : rest.coordinates?.lat || 0 , longitude : rest.coordinates?.lng || 0 }}>
                         <CustomMarker {...rest}/>
                     </Marker>
