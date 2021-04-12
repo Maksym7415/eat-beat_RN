@@ -68,10 +68,17 @@ export default function IngradientScreen({ navigation }) {
 
   useEffect(() => {
     if (feed && feed.ingredients) {
-      setSelected(feed.ingredients.map((ing => {
-        delete ing.nutrition
-        return {...ing}
-      })))
+      console.log('checked', checked)
+      const names = Object.keys(checked)
+      const ingredients: RecipeIngredient[] = []
+      feed.ingredients.forEach((item) => {
+        names.forEach((name) => {
+          if (item.name === name) {
+            ingredients.push({...item})
+          }
+        })
+      })
+      setSelected(ingredients)
     } else {
       setSelected([])
     }
