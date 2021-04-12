@@ -30,30 +30,30 @@ const SnackTopNavigator = () => (
     }}
     initialRouteName="SnacksPopular"
   >
-    <TopTabs.Screen
+    <Stack.Screen
       name="SnacksPopular"
       options={() => ({
         title: 'Popular'
       })}
     >
       {(props) => <RecommendedScreen {...props} page='snacks'/>}
-    </TopTabs.Screen>
-    <TopTabs.Screen
+    </Stack.Screen>
+    <Stack.Screen
       name="SnacksSearch"
       options={() => ({
         title: 'Search'
       })}
     >
         {(props) => <SearchSnackScreen {...props}  page='snacks'/>}
-    </TopTabs.Screen>
-    <TopTabs.Screen
+    </Stack.Screen>
+    <Stack.Screen
       name="SnacksScanner"
       options={() => ({
         title: 'Scanner'
       })}
     >
         {(props) => <SnacksScannerScreen {...props} page='snacksScanner'/>}
-    </TopTabs.Screen>
+    </Stack.Screen>
   </TopTabs.Navigator>
 );
 

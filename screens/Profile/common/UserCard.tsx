@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as Permissions from 'expo-permissions';
 import SvgMaker from "../../../components/SvgMaker";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Col, Font, Spacing } from "../../../components/Config";
@@ -26,7 +27,6 @@ interface Props {
 const UserCard: FC<Props> = ({ image, name, email, onUpdate }) => {
   const [edit, setEdit] = useState(false);
   const [userName, setUserName] = useState(name);
-
   const checkPermission = async () => {
     const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
     if (granted) {

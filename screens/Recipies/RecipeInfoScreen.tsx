@@ -8,6 +8,7 @@ import {
   TextInput,
   ActivityIndicator,
   ImageBackground,
+  Alert
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { Col, Spacing } from "../../components/Config";
@@ -73,6 +74,24 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     startValidation,
     getDefaultConfig,
   ] = useValidation(cfg);
+
+  const checkPermission = async () => {
+    const { granted } = await ImagePicker.getCameraRollPermissionsAsync();
+    if (granted) {
+      pickAvatar();
+    } else {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status === "granted") {
+        pickAvatar();
+      } else {
+        Alert.alert(
+          "Access Permission",
+          "Sorry, we need camera roll permissions to make this work!"
+        );
+      }
+    }
+  };
+
   const pickAvatar = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -180,7 +199,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
               >
                 {editMode ? (
                   <Icon
-                    onPress={pickAvatar}
+                    onPress={checkPermission}
                     name={"camera-plus"}
                     color={Col.White}
                     size={58}
