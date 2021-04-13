@@ -85,7 +85,6 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     getData();
   }, []);
 
-  console.log('ACTIVITY', ACTIVITY)
   return (
     <View style={styles.canvas}>
       <LayoutScroll>

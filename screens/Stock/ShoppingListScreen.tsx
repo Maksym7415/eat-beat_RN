@@ -49,7 +49,7 @@ const ShoppingListScreen: FC<NavProps> = ({ navigation }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false)
 
   const fetchIngredients = async (): Promise<void> => {
-    const updated = await server.getStocks({type: StockType.shoppingList})
+    const updated = await server.getStocks({type: StockType.shoppingList, offset: 0, limit: 100})
     setData(updated)
     setCheckedIds({})
     setSelectAllChecked(false)
@@ -149,7 +149,8 @@ const ShoppingListScreen: FC<NavProps> = ({ navigation }) => {
   useEffect(() => {
     if (onScreenFocus) {
       setLoading(true)
-      server.getStocks({type: StockType.shoppingList}).then((ingredients) => {
+      server.getStocks({type: StockType.shoppingList, offset: 0, limit: 100})
+      .then((ingredients) => {
         setData(ingredients)
       }).finally(() => {
         setLoading(false)
