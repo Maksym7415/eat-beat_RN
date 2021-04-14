@@ -151,6 +151,17 @@ export interface RecipeIngredient {
   image: string
   unit: string,
   possibleUnits?: string[]
+
+  spoonacularId?: number
+  standartUnit?: string
+  standartAmount?: number
+  standartWeight?: number
+  isPopular?: boolean
+  original?: string
+  originalName?: string
+  unitShort?: string
+  unitLong?: string
+  nutrition?: any
 }
 
 interface Nutrition {

@@ -9,7 +9,7 @@ import moment from 'moment'
 const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
 
   const onSearch = async (code: string): Promise<RecipeIngredient> => {
-    return await server.searchByBarcode({ code })
+    return await server.snackByBarcode({ code })
   }
 
   const onAdd = async (ingredient: RecipeIngredient): Promise<void> => {
