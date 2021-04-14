@@ -115,6 +115,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
   const focus = useIsFocused();
 
   const addMeal = async (id, { servings, creationTime }) => {
+    setFetching({ clicked: true, deactivate: true });
+    console.log(modalData)
     const pageData = {
       recipes: {
         date: creationTime,
@@ -124,7 +126,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       restaurants: {
         date: creationTime,
         quantity: servings,
-        meal: {...modalData.meal, title: modalData.meal.name},
+        meal: {...modalData.meal, title: modalData.meal.name, is_partner: !!modalData.meal.is_partner},
       },
       snacks: {
         date: creationTime,
@@ -133,6 +135,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
+    setFetching({ clicked: false, deactivate: false });
     if(result.ok) {
       setModalData({ ...modalData, modalVisible: false });
       navigation.navigate('meals');
