@@ -121,6 +121,10 @@ export interface SearchIngredientsParams {
   limit?: number
 }
 
+export interface SearchByBarcodeParams {
+  code: string
+}
+
 export interface SearchRecipesByIngredientsParams {
   ingredients: string
   limit?: number
@@ -147,6 +151,17 @@ export interface RecipeIngredient {
   image: string
   unit: string,
   possibleUnits?: string[]
+
+  spoonacularId?: number
+  standartUnit?: string
+  standartAmount?: number
+  standartWeight?: number
+  isPopular?: boolean
+  original?: string
+  originalName?: string
+  unitShort?: string
+  unitLong?: string
+  nutrition?: any
 }
 
 interface Nutrition {

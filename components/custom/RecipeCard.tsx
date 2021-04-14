@@ -13,6 +13,7 @@ import Text from "./Typography";
 import { RecommendedMeals } from "../../components/interfaces";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import { Divider } from "../../components/MyComponents";
+import AppBackend from '../BackendSwitcher/store'
 
 interface Props {
   details: RecommendedMeals;
@@ -60,7 +61,7 @@ const RecipeCard: FC<Props> = ({
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPreview}>
       <View style={styles.container}>
-        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : image }}>
+        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : page === 'restaurant' ? AppBackend.getBaseUrl() + image : image }}>
           <LinearGradient
             start={[0, 0]}
             end={[0, 1]}
@@ -98,10 +99,10 @@ const RecipeCard: FC<Props> = ({
           </LinearGradient>
         </ImageBackground>
         <View style={styles.infoContainer}>
-          {is_partner !== undefined  && is_partner ? <View>
+          {is_partner !== undefined ? <View>
             <View style={styles.restaurantContainer}>
-              <SvgMaker style={styles.icons} name={'partnerStar'} />
-              <Text type="bodyBold2">{restName || 'without name'}</Text>
+              {is_partner && <SvgMaker style={styles.icons} name={'partnerStar'} />}
+              <Text type="bodyBold2">{restName}</Text>
             </View>
             <Divider styler={styles.horizontalDivider} />
           </View> : null}

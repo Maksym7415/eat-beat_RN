@@ -124,6 +124,7 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
       nutrition,
       price,
       name,
+      standartUnit
     } = item;
     const details = {
       image: image ,
@@ -138,6 +139,7 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
       glutenFree,
       dairyFree,
       veryPopular,
+      standartUnit,
       price: price || '0'
     };
     navigation.navigate('previewSnack', {

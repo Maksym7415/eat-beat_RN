@@ -1,0 +1,9 @@
+[
+  { "title": "BMR", "value": 1 },
+  { "title": "Sedentary", "value": 2 },
+  { "title": "Light", "value": 3 },
+  { "title": "Moderate", "value": 4 },
+  { "title": "Active", "value": 5 },
+  { "title": "Very active", "value": 6 },
+  { "title": "Extra active", "value": 7 }
+]

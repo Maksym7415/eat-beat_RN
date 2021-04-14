@@ -49,7 +49,7 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false)
 
   const fetchIngredients = async (): Promise<void> => {
-    const updated = await server.getStocks({type: StockType.fridge})
+    const updated = await server.getStocks({type: StockType.fridge, offset: 0, limit: 100})
     setData(updated)
     setCheckedIds({})
     setSelectAllChecked(false)
@@ -149,7 +149,8 @@ const MyFridgeScreen: FC<NavProps> = ({ navigation }) => {
   useEffect(() => {
     if (onScreenFocus) {
       setLoading(true)
-      server.getStocks({type: StockType.fridge}).then((ingredients) => {
+      server.getStocks({type: StockType.fridge, offset: 0, limit: 100})
+      .then((ingredients) => {
         setData(ingredients)
       }).finally(() => {
         setLoading(false)

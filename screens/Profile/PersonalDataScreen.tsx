@@ -1,5 +1,5 @@
 import React, { useState, FC, useContext, useEffect, useRef } from 'react';
-import { View, Switch, StyleSheet } from "react-native";
+import { View, Switch, StyleSheet, Picker } from "react-native";
 import Text from "../../components/custom/Typography";
 import server from "../../server";
 import Select from "../../components/custom/Select";
@@ -16,6 +16,7 @@ import { AppContext } from "../../components/AppContext";
 import InputFeild from "./common/InputFeild";
 import { useIsFocused } from "@react-navigation/native";
 import LayoutScroll from "../../components/custom/LayoutScroll";
+import ACTIVITY from './activity.json'
 
 const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
   const { myData, getData } = useContext<Memo>(AppContext);
@@ -51,23 +52,21 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     if (currentWeight) Object.assign(personalObject, { currentWeight });
     if (selected) Object.assign(personalObject, { fkActivityId: selected });
 
+    setFetching({ clicked: true, deactivate: true });
     if (disabled) {
       if (age && height && currentWeight && chips) {
-        setFetching({ clicked: true, deactivate: true });
         const res = await server.updateProfile(personalObject);
         if (res) {
-          setFetching({ clicked: false, deactivate: false });
           getData();
         }
       }
     } else {
-      setFetching({ clicked: true, deactivate: true });
       const res = await server.updateProfile(personalObject);
       if (res) {
-        setFetching({ clicked: false, deactivate: false });
         getData();
       }
     }
+    setFetching({ clicked: false, deactivate: false });
   };
 
   const refreshPage = () => {
@@ -153,12 +152,15 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             <Text type="body" style={styles.activityText}>
               Activity
             </Text>
-            <View style={{ width: "50%" }}>
-              <Select
-                selected={selected}
-                required={disabled}
-                onSelect={(value) => setSelected(value)}
-              />
+            <View style={[styles.picker, { width: "50%" }]}>
+              <Picker
+                enabled={!disabled}
+                selectedValue={selected}
+                onValueChange={value => setSelected(value)}
+              >
+                {ACTIVITY.map((option, i) =>
+                  <Picker.Item key={`picker_item_${i}`} label={option.title} value={option.value} />)}
+              </Picker>
             </View>
           </View>
         </View>
@@ -216,5 +218,10 @@ const styles = StyleSheet.create({
   saveBtn: {
     backgroundColor: Col.Grey,
   },
+  picker: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Col.Inactive,
+  }
 });
 export default PersonalDataScreen;

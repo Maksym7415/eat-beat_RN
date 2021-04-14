@@ -55,7 +55,7 @@ const RecipesTopNavigator = () => (
     initialRouteName="recommended"
   >
     <Stack.Screen
-      name={'recommended'}
+      name={'recommendedRecipe'}
       options={() => ({
         title: 'Recommended'
       })}

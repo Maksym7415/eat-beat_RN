@@ -48,6 +48,7 @@ const CookedMealCard: FC<Props> = ({
 }) => {
   const { id, name, image, creationTime, servings, isPartner, source } = item;
   const [date, time] = creationTime.split(' ');
+  const spoonacularUrl = 'https://spoonacular.com/cdn/ingredients_100x100/'
   return (
     <View style={{...styles.container, borderLeftColor: bgColor}}>
       <View
@@ -88,10 +89,11 @@ const CookedMealCard: FC<Props> = ({
       ></View>
       <View style={styles.imageDetails}>
         <View>
+          {console.log(source)}
           <Image
             style={styles.image}
             source={{
-              uri: image && image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
+              uri: image && image.slice(0, 4) === "http" ? image : source === 'snack' ? spoonacularUrl + image : `${AppBackend.getBaseUrl()}${image}`,
             }}
           />
         </View>

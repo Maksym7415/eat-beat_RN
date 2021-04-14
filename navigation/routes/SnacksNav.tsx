@@ -9,13 +9,14 @@ import { DrawerActions } from "@react-navigation/native";
 import BurgerIcon from "../common/BurgerIcon";
 import SearchSnackScreen from '../../screens/Snacks/SearchSnackScreen';
 import RecommendedScreen from '../../screens/Snacks/PopularSnacksScreen';
+import SnacksScannerScreen from '../../screens/Snacks/SnacksScannerScreen';
 
 const Stack = createStackNavigator();
 const TopTabs = createMaterialTopTabNavigator();
 
 const SnackTopNavigator = () => (
   <TopTabs.Navigator
-      lazy={true} 
+      lazy={true}
       tabBarOptions={{
       style: {
         backgroundColor: Col.Header,
@@ -27,17 +28,32 @@ const SnackTopNavigator = () => (
       scrollEnabled: true,
       allowFontScaling: true,
     }}
-    initialRouteName="popular"
+    initialRouteName="SnacksPopular"
   >
-    <TopTabs.Screen name="Popular">
+    <Stack.Screen
+      name="SnacksPopular"
+      options={() => ({
+        title: 'Popular'
+      })}
+    >
       {(props) => <RecommendedScreen {...props} page='snacks'/>}
-    </TopTabs.Screen>
-    <TopTabs.Screen name="search" >
+    </Stack.Screen>
+    <Stack.Screen
+      name="SnacksSearch"
+      options={() => ({
+        title: 'Search'
+      })}
+    >
         {(props) => <SearchSnackScreen {...props}  page='snacks'/>}
-    </TopTabs.Screen>
-    <TopTabs.Screen name="Scanner" >
-        {(props) => <Text>Scanner</Text>}
-    </TopTabs.Screen>
+    </Stack.Screen>
+    <Stack.Screen
+      name="SnacksScanner"
+      options={() => ({
+        title: 'Scanner'
+      })}
+    >
+        {(props) => <SnacksScannerScreen {...props} page='snacksScanner'/>}
+    </Stack.Screen>
   </TopTabs.Navigator>
 );
 

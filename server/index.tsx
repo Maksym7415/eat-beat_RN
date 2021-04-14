@@ -7,7 +7,7 @@ import {
   AuthProps,
   GetStockIngredientsParams,
   RecipeIngredient,
-  RemoveStockIngredientsParams,
+  RemoveStockIngredientsParams, SearchByBarcodeParams,
   SearchIngredientsParams,
   SearchRecipesByIngredientsParams,
   SearchRecipesByIngredientsResponse,
@@ -17,6 +17,7 @@ import {
 import encryption from '../utils/dataEncryption';
 import Axios from 'axios';
 import AppBackend from '../components/BackendSwitcher/store'
+import MOCKED_INGREDIENTS from '../screens/Stock/mocked.ingredients.json';
 
 const apiConfig: apiProps = {
   baseURL: () => AppBackend.getBaseUrl() + "api",
@@ -42,6 +43,7 @@ const apiConfig: apiProps = {
     popularSnacks: "/snacks/popular?date=",
     addSnacks: "/snacks/eat-snack",
     snackSearch: "/snacks/search?name=",
+    barcodeSearch: "/todo-implement-search-by-barcode-endpoint",
   },
   post: {
     signIn: "/auth/sign-in",
@@ -441,7 +443,6 @@ const changePassword = async (options: changePassProps) => {
   const address = apiConfig.put.password;
   const encrypted = await encryption(options)
   const response = await api.patch(address, encrypted);
-  if (!response.ok) logError(response);
   return response;
 };
 
@@ -637,6 +638,42 @@ const searchIngredients = async (params: SearchIngredientsParams): Promise<Recip
   }
 }
 
+const searchByBarcode = async (params: SearchByBarcodeParams): Promise<RecipeIngredient> => {
+  let ingredient: RecipeIngredient = null
+  const response = await api.get(
+    AppBackend.getBaseUrl() + 'api/food-stocks/product-barcode?barcode=' + params.code
+  )
+  if (response.ok) {
+    //@ts-ignore
+    if (response.data && response.data.length) {
+      //@ts-ignore
+      ingredient = response.data[0]
+    }
+  } else {
+    //@ts-ignore
+    logError(response);
+  }
+  return ingredient
+}
+
+const snackByBarcode = async (params: SearchByBarcodeParams): Promise<RecipeIngredient> => {
+  let ingredient: RecipeIngredient = null
+  const response = await api.get(
+    AppBackend.getBaseUrl() + 'api/snacks/barcode?barcode=' + params.code
+  )
+  if (response.ok) {
+    //@ts-ignore
+    if (response.data && response.data.length) {
+      //@ts-ignore
+      ingredient = response.data[0]
+    }
+  } else {
+    //@ts-ignore
+    logError(response);
+  }
+  return ingredient
+}
+
 export default {
   api,
   setup,
@@ -689,4 +726,6 @@ export default {
   searchIngredients,
   getStocks,
   searchRecipesByIngredients,
+  searchByBarcode,
+  snackByBarcode,
 };

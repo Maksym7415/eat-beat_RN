@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavProps, RecipeIngredient, StockType } from '../../components/interfaces';
 import server from '../../server';
@@ -28,8 +28,11 @@ const Ingredient = ({ item, onPress }: IngProps) => {
   const [check, setCheck] = useState(false);
   const onPressCheckBox = () => {
     setCheck(!check)
-    onPress(item, !check)
   }
+
+  useEffect(() => {
+    onPress(item, check)
+  }, [check])
 
   return (
     <TouchableOpacity

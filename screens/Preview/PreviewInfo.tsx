@@ -30,7 +30,6 @@ interface ModalData {
   data: object;
 }
 
-
 const empty = {
   image: "",
   name: "",
@@ -79,6 +78,20 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
     veryPopular,
     price,
   } = feed;
+  const previewSettings = {
+    'recipes': {
+      name: "Number of servings",
+      currentValue: (recipeServings || servings)
+    },
+    'snacks': {
+      name: "Standart unit",
+      currentValue: item.meal.standartUnit || item.meal.unit
+    },
+    'restaurants': {
+      name: null,
+      currentValue: price
+    }
+  }
   const getImage = (
     vegetarian: boolean,
     vegan: boolean,
@@ -102,6 +115,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
   const focus = useIsFocused();
 
   const addMeal = async (id, { servings, creationTime }) => {
+    setFetching({ clicked: true, deactivate: true });
     const pageData = {
       recipes: {
         date: creationTime,
@@ -111,7 +125,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       restaurants: {
         date: creationTime,
         quantity: servings,
-        meal: {...modalData.meal, title: modalData.meal.name},
+        meal: {...modalData.meal, title: modalData.meal.name, is_partner: !!modalData.meal.is_partner, description: modalData.meal.instructions},
       },
       snacks: {
         date: creationTime,
@@ -120,6 +134,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       }
     }
     const result = await pageSettings[page].add(pageData[page]);
+    setFetching({ clicked: false, deactivate: false });
     if(result.ok) {
       setModalData({ ...modalData, modalVisible: false });
       navigation.navigate('meals');
@@ -184,10 +199,10 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
               )}
             </View>
             <View style={styles.nameContainer}>
-            {item.meal.is_partner ?
+            {item.meal.is_partner !== undefined ?
                 <View>
                   <View style={styles.restaurantContainer}>
-                    <SvgMaker style={styles.icons} name={'partnerStar'} />
+                    {item.meal.is_partner && <SvgMaker style={styles.icons} name={'partnerStar'} />}
                     <Text type="cap">{item.meal.restName || 'without name'}</Text>
                   </View>
                   <Divider styler={styles.horizontalDivider} />
@@ -209,8 +224,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
           </View>
           <View>
             <Nutrient
-              name={page === 'recipes' ? "Number of servings" : page === 'snacks' ? "Standart unit" : 'Price'}
-              currentValue={page === 'recipes' ? (recipeServings || servings) : page === 'snacks' ? item.meal.standartUnit || item.meal.unit : `${price || 0}`}
+              name={previewSettings[page].name || 'Price'}
+              currentValue={previewSettings[page].currentValue || 0}
               recipe={true}
               isUnit={true}
             />

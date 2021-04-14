@@ -19,9 +19,9 @@ import LayoutScroll from "../../components/custom/LayoutScroll";
 import { useIsFocused } from "@react-navigation/native";
 
 const recommendScreens = {
-  0: 'recommendedDrawer',
-  1: 'restaurants',
-  2: 'snacks'
+  0: 'recommendedRecipe',
+  1: 'recommendedRestaurant',
+  2: 'SnacksPopular'
 }
 
 const HomeScreen: FC<NavProps> = ({ navigation }) => {

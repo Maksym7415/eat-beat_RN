@@ -1,11 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import {
-  StyleSheet,
-  ScrollView,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NavProps } from "../../components/interfaces";
 import Chart from "../../components/Chart";
 import server from "../../server";
@@ -26,9 +20,9 @@ interface Offset {
 }
 
 const recommendScreens = {
-  0: 'recommendedDrawer',
-  1: 'restaurants',
-  2: 'snacks'
+  0: 'recommendedRecipe',
+  1: 'recommendedRestaurant',
+  2: 'SnacksPopular'
 }
 
 const HistoryScreen: FC<NavProps> = ({ navigation }) => {
@@ -48,15 +42,8 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
     }
   };
 
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    event.persist();
-    if (event?.nativeEvent?.contentOffset?.x >= offset.count + 586) {
-      setOffset((value) => ({
-        ...value,
-        count: event.nativeEvent.contentOffset.x,
-        offset: value.offset + 10,
-      }));
-    }
+  const handleScroll = (count: number) => {
+    setOffset({ count, offset: offset.offset + 10 });
   };
 
   const addRecommended = (value: number) => {
@@ -71,25 +58,14 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   return (
     <View style={styles.canvas}>
-      <ActionButton
-        style={styles.actionButton}
-        onPress={() => setActionBtn(!actionBtn)}
-      />
-      <ActionModal
-        visible={actionBtn}
-        onClick={(value: number) => addRecommended(value)}
-        onClose={() => setActionBtn(false)}
-      />
+      <ActionButton style={styles.actionButton} onPress={() => setActionBtn(!actionBtn)} />
+      <ActionModal visible={actionBtn} onClick={(value: number) => addRecommended(value)} onClose={() => setActionBtn(false)} />
       <View style={styles.header}>
         <Text type="h6">Your health score</Text>
       </View>
-      <ScrollView
-        horizontal={true}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        <Chart data={data} />
-      </ScrollView>
+      <View style={{ backgroundColor: "white", paddingVertical: 32 }}>
+        <Chart data={data} scaleDates={false} onReachEnd={handleScroll} />
+      </View>
     </View>
   );
 };
