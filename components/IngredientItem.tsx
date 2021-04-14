@@ -42,7 +42,7 @@ const IngredientItem: React.FC<IngredientItemProps> = (props) => {
         </View>
       }
       <View style={styles.amountHolder}>
-        <Text type="h6">{props.amount}</Text>
+        <Text type="bodyBold">{props.amount}</Text>
       </View>
       <View style={styles.unitHolder}>
         <Text type="cap">{props.unit}</Text>
