@@ -116,7 +116,6 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
 
   const addMeal = async (id, { servings, creationTime }) => {
     setFetching({ clicked: true, deactivate: true });
-    console.log(modalData)
     const pageData = {
       recipes: {
         date: creationTime,
@@ -126,7 +125,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       restaurants: {
         date: creationTime,
         quantity: servings,
-        meal: {...modalData.meal, title: modalData.meal.name, is_partner: !!modalData.meal.is_partner},
+        meal: {...modalData.meal, title: modalData.meal.name, is_partner: !!modalData.meal.is_partner, description: modalData.meal.instructions},
       },
       snacks: {
         date: creationTime,
