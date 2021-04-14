@@ -158,7 +158,8 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
                 selectedValue={selected}
                 onValueChange={value => setSelected(value)}
               >
-                {ACTIVITY.map((option) => <Picker.Item label={option.title} value={option.value} />)}
+                {ACTIVITY.map((option, i) =>
+                  <Picker.Item key={`picker_item_${i}`} label={option.title} value={option.value} />)}
               </Picker>
             </View>
           </View>

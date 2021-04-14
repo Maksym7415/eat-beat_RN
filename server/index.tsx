@@ -638,14 +638,23 @@ const searchIngredients = async (params: SearchIngredientsParams): Promise<Recip
   }
 }
 
-//TODO: update after backend implementation
 const searchByBarcode = async (params: SearchByBarcodeParams): Promise<RecipeIngredient> => {
+  let ingredient: RecipeIngredient = null
   console.log('server.searchByBarcode(', params.code,  ')')
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(Math.random() > 0.5 ? MOCKED_INGREDIENTS[0] : null)
-    }, 1000)
-  })
+  const response = await api.get(
+    AppBackend.getBaseUrl() + 'api/food-stocks/product-barcode?barcode=' + params.code
+  )
+  if (response.ok) {
+    //@ts-ignore
+    if (response.data && response.data.length) {
+      //@ts-ignore
+      ingredient = response.data[0]
+    }
+  } else {
+    //@ts-ignore
+    logError(response);
+  }
+  return ingredient
 }
 
 export default {
