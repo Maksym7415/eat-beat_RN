@@ -88,8 +88,9 @@ const Scanner: FC<ScannerProps> = ({ color, addLabel, onSearch, onAdd, onExit })
                 )}
               </View>
               <View style={styles.modalProductTitleHolder}>
-                <Text type={'body2'} >Found product - </Text>
-                <Text type={'bodyBold2'} >{ingredient.name}</Text>
+                <Text type={'body2'} numberOfLines={2} ellipsizeMode={'tail'}>
+                  Found product - <Text type={'bodyBold2'} >{ingredient.name}</Text>
+                </Text>
               </View>
             </View>
           </View>
@@ -145,6 +146,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalProductTitleHolder: {
+    flexShrink: 1,
     marginLeft: 16,
     flexDirection: 'row',
     alignItems: 'center',
