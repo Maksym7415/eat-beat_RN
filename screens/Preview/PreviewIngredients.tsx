@@ -116,7 +116,7 @@ const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
       <Button
         isShow={true}
         clicked={loading}
-        label="Add selected products to My Shopping List"
+        label="ADD SELECTED TO SHOPPING LIST"
         onPress={onPressAddToShoppingList}
         style={{ backgroundColor: Col.Recipes }}
         deactivate={selected.length === 0}
