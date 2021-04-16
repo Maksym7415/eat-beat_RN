@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavProps, RecipeIngredient, StockType } from '../../components/interfaces';
 import server from '../../server';
@@ -20,29 +20,20 @@ interface IngProps {
       unit: string;
     };
   };
+  check: boolean
   onPress: (ingredient: Partial<RecipeIngredient>, checked: boolean) => void
 }
 
-const Ingredient = ({ item, onPress }: IngProps) => {
-  const { image, name, unit, amount, weightPerServing } = item;
-  const [check, setCheck] = useState(false);
-  const onPressCheckBox = () => {
-    setCheck(!check)
-  }
-
-  useEffect(() => {
-    onPress(item, check)
-  }, [check])
-
+const Ingredient = ({ item, check, onPress }: IngProps) => {
+  const { image, name, unit, amount } = item;
   return (
     <TouchableOpacity
-      onPress={() => setCheck(!check)}
+      onPress={() => onPress(item, !check)}
       style={styles.ingredient}
     >
       <CheckBox
         name={name}
         value={check}
-        onCheck={(a, b) => onPressCheckBox()}
         size={18}
         blend={Col.Dark}
       />
@@ -69,9 +60,6 @@ const Ingredient = ({ item, onPress }: IngProps) => {
       <Text type="cap" style={{ width: "35%", flexWrap: "wrap" }}>
         {name}
       </Text>
-      {/*<Text type="cap" style={{ width: "15%", textAlign: "right" }}>*/}
-      {/*  ({`${weightPerServing?.amount || 0}${weightPerServing?.unit || "g"}`})*/}
-      {/*</Text>*/}
     </TouchableOpacity>
   );
 };
@@ -101,6 +89,7 @@ const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
       const success = await server.addToStocks(StockType.shoppingList, selected)
       setLoading(false)
       if (success) {
+        setSelected([])
         navigation.navigate('shoppingList')
       } else {
         Alert.alert("Error", 'Unable to add selected ingredients to shopping list');
@@ -111,7 +100,12 @@ const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
   return (
     <LayoutScroll style={styles.container}>
       {item.meal.ingredients.map((ele, ind) => (
-        <Ingredient key={`_${ind}`} item={ele} onPress={onPressIngredient}/>
+        <Ingredient
+          key={`_${ind}`}
+          item={ele}
+          onPress={onPressIngredient}
+          check={!!selected.find(item => item.id === ele.id)}
+        />
       ))}
       <Button
         isShow={true}
