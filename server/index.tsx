@@ -324,7 +324,6 @@ const addRestaurantsMeal = async (data: any) => {
 
 const getRestaurants = async () => {
   const address = apiConfig.get.getRestaurants;
-  console.log(address, 'address')
   const response = await api.get(address);
   if (!response.ok) logError(response);
   return response;

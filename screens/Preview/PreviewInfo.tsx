@@ -256,7 +256,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
                         recipe: true,
                         name: elm.title,
                         unit: elm.unit,
-                        currentValue: elm.amount,
+                        currentValue: elm.amount || 0,
                       }}
                     />
                   ))}

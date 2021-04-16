@@ -11,6 +11,14 @@ import { AppContext } from "../../components/AppContext";
 import server from '../../server'
 import { correctFormat } from '../../utils/date';
 import { Col } from '../../components/Config';
+import AppBackend from '../../components/BackendSwitcher/store';
+
+const thirdPartyUrl = {
+    'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
+    'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
+    'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
+    'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
+}
 
 interface ModalData {
     id: number;
@@ -35,6 +43,7 @@ function RestaurantMenu({ navigation, route }) {
         modalVisible: false,
         creationTime: new Date(date).getTime(),
       });
+    const backendAppUrl = AppBackend.getBaseUrl();
 
       const addMenuItem = async (id: number, {servings, creationTime}: object) => {
         setModalData({
@@ -86,7 +95,13 @@ function RestaurantMenu({ navigation, route }) {
                 >
                     {route.params.menu && Object.keys(route.params.menu).map((elm , key) => 
                     <View key={key} style={styles.collapseWrapper}>
-                        <Collapse title={elm} icon_type={false} isPrecent={false} data={route.params.menu[elm]} cb={(data) => modalAction(data)} routeToCb={previewPage}/>
+                        <Collapse 
+                            title={elm} 
+                            icon_type={false} 
+                            isPrecent={false} 
+                            data={route.params.menu[elm].map((el) => el.image === 'default_dish_image.png' ? {...el, image: backendAppUrl + el.image} : {...el, image: thirdPartyUrl[backendAppUrl] + el.image })} 
+                            cb={(data) => modalAction(data)} routeToCb={previewPage}
+                        />
                     </View>)}
                 </ScrollView>
             </View>
