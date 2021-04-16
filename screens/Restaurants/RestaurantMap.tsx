@@ -59,22 +59,25 @@ function RestaurantMap({ navigation }) {
     }
 
     useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
+        if (screenFocused) {
+            console.log('RestaurantMap -> screenFocused');
+            (async () => {
+                let { status } = await Location.requestPermissionsAsync();
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    return;
+                }
+                getLocation();
+            })();
+            const _unsubscribe = navigation.addListener(
+              'blur',
+              (_) => {
+                  setOpen(false)
+              }
+            );
+            return () => {
+                _unsubscribe();
             }
-            getLocation();
-        })();
-        const _unsubscribe = navigation.addListener(
-            'blur',
-            (_) => {
-              setOpen(false)
-            }
-          );
-        return () => {
-            _unsubscribe();
         }
     }, [screenFocused]);
 
