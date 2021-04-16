@@ -51,7 +51,7 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, ro
                   <View style={styles.imageContainer}>
                     {!isPrecent && <Image
                     source={{
-                      uri: AppBackend.getBaseUrl() + item.image,
+                      uri: item.image,
                     }}
                     style={styles.image}
                       // source={{
