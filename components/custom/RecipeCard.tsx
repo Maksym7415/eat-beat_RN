@@ -102,7 +102,7 @@ const RecipeCard: FC<Props> = ({
           {is_partner !== undefined ? <View>
             <View style={styles.restaurantContainer}>
               {is_partner && <SvgMaker style={styles.icons} name={'partnerStar'} />}
-              <Text type="bodyBold2">{restName}</Text>
+              <Text style={{maxWidth: 125}} type="bodyBold2">{restName}</Text>
             </View>
             <Divider styler={styles.horizontalDivider} />
           </View> : null}
