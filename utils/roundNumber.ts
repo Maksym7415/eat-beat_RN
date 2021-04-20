@@ -1,4 +1,4 @@
-export default  (value: number | string) => {
+export default  (value: number | string): string => {
     if (typeof value === 'undefined') {
         value = 0
     }
@@ -11,7 +11,7 @@ export default  (value: number | string) => {
         }
     }
     const [_, signs] = String(value).split('.');
-    if(!signs) return value
+    if(!signs) return '' + value
     if(signs.length > 2) return Number(value).toFixed(2);
-    return value;
+    return '' + value;
 }
