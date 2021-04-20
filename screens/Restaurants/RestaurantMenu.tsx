@@ -50,7 +50,7 @@ function RestaurantMenu({ navigation, route }) {
             ...modalData,
             modalVisible: false
         })
-       const result = await server.addRestaurantsMeal({quantity: servings, date: creationTime, meal: {...modalData.meal, title: modalData.meal.name, is_partner: route.params.is_partner}});
+       const result = await server.addRestaurantsMeal({quantity: servings, date: creationTime, meal: {...modalData.meal, title: modalData.meal.name, is_partner: route.params.isPartner}});
         if(result.ok) {
             navigation.navigate("meals");
         }

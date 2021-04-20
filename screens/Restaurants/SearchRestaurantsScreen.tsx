@@ -71,6 +71,11 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
     diets: "",
     mealTypes: "",
   });
+  const [copyServerResponse, setCopyServerResponse] = useState({
+    intolerances: [],
+    diets: [],
+    mealTypes: [],
+  }); 
   const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
@@ -210,9 +215,23 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok ) {
-      const checkFilter = Object.values(filterConfig).some((el) => el)
-      setFilter(() => getPreferences(checkFilter ? filter : response.data));
-      saveFilterConfig(getPreferences(checkFilter ? filter : response.data));
+      let result = false;
+      const [diets, intolerances, mealTypes] = Object.values(response.data);
+      const [copyDiets, copyIntolerances, copyMealTypes] = Object.values(copyServerResponse);
+      const copyElements = [...copyDiets, ...copyIntolerances, ...copyMealTypes];
+      setCopyServerResponse(response.data)
+      if(copyElements.length) {
+        result = [...diets, ...intolerances, ...mealTypes].map((el, i) => el.isUsers === copyElements[i].isUsers).every((v) => v);
+      }
+
+      if(result) {
+        setFilter(() => getPreferences(filter));
+        saveFilterConfig(getPreferences(filter));
+        
+      } else {
+        setFilter(() => getPreferences(response.data));
+        saveFilterConfig(getPreferences(response.data));
+      }   
     }
   };
 
