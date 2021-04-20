@@ -186,7 +186,7 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
                     <RecipeCard
                       details={item}
                       actionHandler={actionHandler}
-                      notShowScore={true}
+                      notShowScore
                       onPreview={() => onPreview(item)}
                       page={'snacks'}
                     />
