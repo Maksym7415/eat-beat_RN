@@ -23,6 +23,14 @@ interface Props {
   page?: string
 }
 
+const thirdPartyUrl = {
+  'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
+  'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
+  'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
+  'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
+}
+
+
 const RecipeCard: FC<Props> = ({
   details,
   actionHandler,
@@ -61,7 +69,7 @@ const RecipeCard: FC<Props> = ({
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPreview}>
       <View style={styles.container}>
-        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : page === 'restaurant' ? AppBackend.getBaseUrl() + image : image }}>
+        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : page === 'restaurant' ? image === 'default_dish_image.png' ? AppBackend.getBaseUrl() + image : thirdPartyUrl[AppBackend.getBaseUrl()] : image }}>
           <LinearGradient
             start={[0, 0]}
             end={[0, 1]}
