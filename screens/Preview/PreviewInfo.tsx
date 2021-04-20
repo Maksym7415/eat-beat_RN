@@ -237,7 +237,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
                     name={item.title}
                     unit={item.unit}
                     intakeNorm={item.intakeNorm}
-                    currentValue={item.amount}
+                    currentValue={item.amount || 0}
                   />
                 </View>
               ))}
