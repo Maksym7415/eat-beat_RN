@@ -183,14 +183,29 @@ export default function App() {
   }, [])
 
 
-  if (!prepared) {
+
+
+
+  if (!prepared || !loaded) {
+    console.log('App render: Splash screen: prepared, loaded', prepared, loaded)
     return (<Splash />)
   }
 
-  return (
-    <AppContext.Provider value={appContext}>
-      {loaded ? logged ? <Main /> : <Auth /> : <Splash />}
-      <BackendSwitcher />
-    </AppContext.Provider>
-  );
+  if (logged) {
+    console.log('App render: Main stack: logged', logged)
+    return (
+      <AppContext.Provider value={appContext}>
+        <Main />
+        <BackendSwitcher />
+      </AppContext.Provider>
+    );
+  } else {
+    console.log('App render: Auth stack: logged', logged)
+    return (
+      <AppContext.Provider value={appContext}>
+        <Auth />
+        <BackendSwitcher />
+      </AppContext.Provider>
+    );
+  }
 }
