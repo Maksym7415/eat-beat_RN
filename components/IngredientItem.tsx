@@ -1,9 +1,10 @@
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import CheckBox from './custom/CheckBox';
 import Text from "./custom/Typography";
 import { Col } from './Config';
 import SvgMaker from './SvgMaker';
+import { IngredientProducts, Product } from './interfaces';
 
 interface checkBoxProps {
   checked: boolean
@@ -21,6 +22,7 @@ interface IngredientItemProps {
   name: string
   onPressEdit?: () => void
 }
+
 
 const IngredientItem: React.FC<IngredientItemProps> = (props) => {
   return (
@@ -55,6 +57,32 @@ const IngredientItem: React.FC<IngredientItemProps> = (props) => {
           <SvgMaker name={'edit'} />
         </TouchableOpacity>
       )}
+    </View>
+  )
+}
+
+interface ProductItemProps extends Product {
+  onChangeAmount: () => void
+  backgroundColor?: string
+}
+export const ProductItem: React.FC<ProductItemProps> = (props) => {
+  return (
+    <View style={[styles.container, {backgroundColor: props.backgroundColor ? props.backgroundColor : Col.Ghost}]}>
+      <View style={styles.amountHolder}>
+        <Text type="bodyBold">{props.quantity}</Text>
+      </View>
+      <View style={styles.unitHolder}>
+        <Text type="cap">{props.units}</Text>
+      </View>
+      <View style={styles.nameHolder}>
+        <Text type="cap" ellipsizeMode={'tail'} numberOfLines={2}>{props.name}</Text>
+      </View>
+      <View style={styles.priceHolder}>
+        <Text type="cap">{props.price} {props.currency || '€'}</Text>
+      </View>
+      <TouchableOpacity style={[styles.actionHolder, styles.amountButton]} onPress={props.onChangeAmount}>
+        <Text type="cap">{props.amount}</Text>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -159,6 +187,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  amountButton: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Col.Stocks
+  },
+  priceHolder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   deleteText: {
     color: Col.Red
   },
@@ -168,5 +206,15 @@ const styles = StyleSheet.create({
   actionLabelHolder: {
     marginLeft: 8,
     justifyContent: 'center',
+  },
+  input: {
+    width: '100%',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Col.Ghost,
+    paddingHorizontal: 6,
+  },
+  error: {
+    borderColor: Col.Error,
   }
 })

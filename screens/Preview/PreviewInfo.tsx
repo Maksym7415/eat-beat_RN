@@ -30,6 +30,13 @@ interface ModalData {
   data: object;
 }
 
+const thirdPartyUrl = {
+  'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
+  'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
+  'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
+  'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
+}
+
 const empty = {
   image: "",
   name: "",
@@ -190,7 +197,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
                 <Image
                   source={{
                     uri:
-                      image && page === 'snacks' ? spoonacularUrl + image : image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
+                      image && image !== 'default_dish_image.png' ? thirdPartyUrl[AppBackend.getBaseUrl()] + image : page === 'snacks' ? spoonacularUrl + image : image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
                   }}
                   style={styles.image}
                 />
@@ -237,7 +244,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
                     name={item.title}
                     unit={item.unit}
                     intakeNorm={item.intakeNorm}
-                    currentValue={item.amount}
+                    currentValue={item.amount || 0}
                   />
                 </View>
               ))}

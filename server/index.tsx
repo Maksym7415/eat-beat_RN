@@ -6,11 +6,13 @@ import { Alert, Platform } from 'react-native';
 import {
   AuthProps,
   GetStockIngredientsParams,
+  IngredientProducts,
+  MatchProductsRequestParams, OrderProductsRequestParams,
   RecipeIngredient,
   RemoveStockIngredientsParams, SearchByBarcodeParams,
   SearchIngredientsParams,
   SearchRecipesByIngredientsParams,
-  SearchRecipesByIngredientsResponse,
+  SearchRecipesByIngredientsResponse, Shop,
   StockType,
   UpdateStockIngredientsParams
 } from '../components/interfaces';
@@ -673,6 +675,50 @@ const snackByBarcode = async (params: SearchByBarcodeParams): Promise<RecipeIngr
   return ingredient
 }
 
+const getShops = async (): Promise<Shop[]> => {
+  const response = await api.get(
+    AppBackend.getBaseUrl() + 'api/food-stocks/all-supermarkets'
+  )
+  console.log('---')
+  console.log('getShops -> response', response.status, response.data)
+  //@ts-ignore
+  if (response.ok && response.data && response.data.length) {
+    //@ts-ignore
+    return response.data
+  } else {
+    //@ts-ignore
+    logError(response);
+  }
+  return []
+}
+
+const matchProducts = async (params: MatchProductsRequestParams): Promise<IngredientProducts[]> => {
+  const response = await api.post(AppBackend.getBaseUrl() + 'api/food-stocks/search-products', params)
+  console.log('---')
+  console.log('matchProducts -> response', response.status, response.data)
+  if (response.ok) {
+    //@ts-ignore
+    return response.data
+  } else {
+    //@ts-ignore
+    logError(response);
+  }
+  return []
+}
+
+const orderProducts = async (params: OrderProductsRequestParams): Promise<boolean> => {
+  console.log('---')
+  console.log('orderProducts -> params', params)
+  const response = await api.post(AppBackend.getBaseUrl() + 'api/food-stocks/order-products', params)
+  console.log('orderProducts -> response', response.status, response.data)
+  if (!response.ok) {
+    //@ts-ignore
+    logError(response);
+    return false
+  }
+  return true
+}
+
 export default {
   api,
   setup,
@@ -727,4 +773,7 @@ export default {
   searchRecipesByIngredients,
   searchByBarcode,
   snackByBarcode,
+  getShops,
+  matchProducts,
+  orderProducts,
 };

@@ -144,6 +144,38 @@ export interface RemoveStockIngredientsParams {
   ingredients: number[]
 }
 
+export interface Product {
+  id: number
+  name: string
+  price: number
+  currency: string
+  quantity: number
+  units: string
+  amount?: number
+}
+
+export interface Shop {
+  shop_id: number
+  shop_title: string
+}
+
+export interface MatchProductsRequestParams {
+  shop_id: number
+  ingredients: RecipeIngredient[]
+}
+
+export interface IngredientProducts {
+  ingredient_id: number
+  ingredient_amount: number
+  selectedProduct?: number
+  products: Product[]
+}
+
+export interface OrderProductsRequestParams {
+  shop_id: number,
+  products: Product[]
+}
+
 export interface RecipeIngredient {
   id: number
   amount: number

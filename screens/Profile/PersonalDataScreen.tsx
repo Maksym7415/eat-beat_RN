@@ -50,8 +50,7 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
     if (age) Object.assign(personalObject, { age });
     if (height) Object.assign(personalObject, { height });
     if (currentWeight) Object.assign(personalObject, { currentWeight });
-    if (selected) Object.assign(personalObject, { fkActivityId: selected });
-
+    if (selected || 1) Object.assign(personalObject, { fkActivityId: selected || 1 });
     setFetching({ clicked: true, deactivate: true });
     if (disabled) {
       if (age && height && currentWeight && chips) {
