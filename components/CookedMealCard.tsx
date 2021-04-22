@@ -6,6 +6,13 @@ import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
 import AppBackend from '../components/BackendSwitcher/store'
 
+const thirdPartyUrl = {
+  'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
+  'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
+  'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
+  'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
+}
+
 
 interface editProps {
   id: number;
@@ -30,14 +37,7 @@ interface Props {
   bgColor: string
 }
 
-const getTime = (value: number) => {
-  const Now = new Date(value);
-  const Hours = Now.getHours();
-  const Minutes = Now.getMinutes();
-  return `${Hours < 10 ? "0" + Hours : Hours}:${
-    Minutes < 10 ? "0" + Minutes : Minutes
-  }`;
-};
+
 
 const CookedMealCard: FC<Props> = ({
   item,
@@ -48,7 +48,22 @@ const CookedMealCard: FC<Props> = ({
 }) => {
   const { id, name, image, creationTime, servings, isPartner, source } = item;
   const [date, time] = creationTime.split(' ');
-  const spoonacularUrl = 'https://spoonacular.com/cdn/ingredients_100x100/'
+  const spoonacularUrl = 'https://spoonacular.com/cdn/ingredients_100x100/';
+
+  const getImageUrl = (image: string, source: string) => {
+    let imageUrl = '';
+    if(source === 'recipe') {
+      imageUrl = image
+    } else if(source === 'snack') {
+      imageUrl = spoonacularUrl + image
+    } else if(image !== 'default_dish_image.png') {
+      imageUrl = thirdPartyUrl[AppBackend.getBaseUrl()] + image
+    } else {
+      imageUrl = `${AppBackend.getBaseUrl()}${image}`
+    }
+    return imageUrl
+  }
+
   return (
     <View style={{...styles.container, borderLeftColor: bgColor}}>
       <View
@@ -89,11 +104,10 @@ const CookedMealCard: FC<Props> = ({
       ></View>
       <View style={styles.imageDetails}>
         <View>
-          {console.log(source)}
           <Image
             style={styles.image}
             source={{
-              uri: image && image.slice(0, 4) === "http" ? image : source === 'snack' ? spoonacularUrl + image : `${AppBackend.getBaseUrl()}${image}`,
+              uri: image && getImageUrl(image, source)
             }}
           />
         </View>
