@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     color: Col.Back
   },
   notFoundText: {
-    // color: Col.Back
+    marginLeft: 8,
   },
   selectShopHolder: {
     paddingHorizontal: 16,
