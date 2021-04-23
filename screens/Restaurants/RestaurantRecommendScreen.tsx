@@ -128,6 +128,12 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
     }
   }, [focus]);
 
+  useEffect(() => {
+    navigation.addListener('focus', () => {
+      setFeed([]);
+    })
+  }, [])
+
   return feed?.length ? (
     <View style={styles.canvas}>
       <EditModal
