@@ -248,7 +248,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
     const response = await server.restaurantSearch(
       state,
       config,
-      feed.offset + 10
+      Number(feed.offset) + 10
     );
     if (response.ok) {
       if (!response.data.results.length) {
@@ -377,7 +377,7 @@ const SearchRestaurantScreen: FC<NavProps> = ({ navigation, page }) => {
                   label="SHOW MORE"
                   onPress={showMore}
                   deactivate={
-                    feed.totalResults === feed.results.length
+                    feed.totalResults == feed.results.length
                       ? true
                       : fetching.deactivate
                   }
