@@ -128,6 +128,17 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
     }
   }, [focus]);
 
+  useEffect(() => {
+    const _unsubscribe = navigation.addListener('blur', () => {
+      setFeed([]);
+    });
+
+    return () => {
+      _unsubscribe()
+    }
+
+  }, [])
+
   return feed?.length ? (
     <View style={styles.canvas}>
       <EditModal
