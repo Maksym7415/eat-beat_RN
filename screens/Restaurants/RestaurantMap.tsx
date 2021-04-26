@@ -28,7 +28,7 @@ const tallin = {
 }
 
 function RestaurantMap({ navigation }) {
-    const [location, setLocation] = useState({});
+    const [location, setLocation] = useState({coordinates: {}});
     const [restaurants, setRestaurants] = useState([])
     const [errorMsg, setErrorMsg] = useState(null);
     const [restData, setRestData] = useState({});
@@ -45,30 +45,30 @@ function RestaurantMap({ navigation }) {
 
 
     const getDistance = async (originCoords, destinationCoords) => {
-        const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.latitude},${originCoords.longitude}&destination=${destinationCoords.latitude},${destinationCoords.longitude}&mode=driver&sensor=true&key=${GOOGLE_MAP_API_KEY}`);
-        const result = await data.json();
-        return result.routes[0].legs[0].distance.text;
+        // const data = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.lat},${originCoords.lng}&destination=${destinationCoords.latitude},${destinationCoords.longitude}&mode=driver&sensor=true&key=${GOOGLE_MAP_API_KEY}`);
+        // const result = await data.json();
+        // return result.routes[0].legs[0].distance.text;
 }
 
     const setDataRestaraunt =  async (_, id, address, description, title, isPartner, coords) => {
         if(!title) {
             return;
         }
-        setRestData({id, address, description: description || 'test description', title, isPartner, distance: await getDistance(tallin, coords)});
+        setRestData({id, address, description: description || 'test description', title, isPartner, distance: await getDistance(location.coordinates, coords)});
         setOpen(true);
     }
 
     useEffect(() => {
         if (screenFocused) {
             console.log('RestaurantMap -> screenFocused');
-            (async () => {
-                let { status } = await Location.requestPermissionsAsync();
-                if (status !== 'granted') {
-                    setErrorMsg('Permission to access location was denied');
-                    return;
-                }
-                getLocation();
-            })();
+            // (async () => {
+            //     let { status } = await Location.requestPermissionsAsync();
+            //     if (status !== 'granted') {
+            //         setErrorMsg('Permission to access location was denied');
+            //         return;
+            //     }
+            //     getLocation();
+            // })();
             const _unsubscribe = navigation.addListener(
               'blur',
               (_) => {
@@ -93,14 +93,14 @@ function RestaurantMap({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.myLocation} onPress={getUserCoordinates}>
+            {/* <TouchableOpacity style={styles.myLocation} onPress={getUserCoordinates}>
                 <SvgMaker name='myLocation' />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
                 <MapView
                     style={styles.map}
                     initialRegion={{...tallin, ...getDeltasCoord(tallin.latitude, tallin.longitude)}}
                     //onRegionChange={(reg) => console.log(reg)}
-                    //region={{...location, ...getDeltasCoord(tallin.latitude, tallin.longitude)}}
+                    //region={{...location.coordinates, latitude: location.coordinates.lat, longitude: location.coordinates.lng}}
                 >
                    {[...restaurants, location].map((rest, key) =>
                     <Marker key={key} onPress={(coords) => setDataRestaraunt(coords, rest.id, rest.address, rest.description, rest.name, rest.is_partner, {latitude: rest.coordinates?.lat, longitude: rest.coordinates?.lng})} key={key} coordinate={{ latitude : rest.coordinates?.lat || 0 , longitude : rest.coordinates?.lng || 0 }}>
