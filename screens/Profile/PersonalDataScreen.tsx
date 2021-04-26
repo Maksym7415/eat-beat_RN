@@ -153,7 +153,6 @@ const PersonalDataScreen: FC<NavProps> = ({ navigation }) => {
             </Text>
             <View style={[styles.picker, { width: "50%" }]}>
               <Picker
-                enabled={!disabled}
                 selectedValue={selected}
                 onValueChange={value => setSelected(value)}
               >
