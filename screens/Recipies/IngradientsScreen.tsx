@@ -13,6 +13,7 @@ import server from "../../server";
 import IngradientRow from "./Components/IngradientRow";
 import LayoutScroll from "../../components/custom/LayoutScroll";
 import { RecipeIngredient, StockType } from '../../components/interfaces';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function IngradientScreen({ navigation }) {
   const { recipeId, editMode, toggleEdit } = useContext(AppContext);
@@ -68,7 +69,6 @@ export default function IngradientScreen({ navigation }) {
 
   useEffect(() => {
     if (feed && feed.ingredients) {
-      console.log('checked', checked)
       const names = Object.keys(checked)
       const ingredients: RecipeIngredient[] = []
       feed.ingredients.forEach((item) => {
@@ -111,6 +111,13 @@ export default function IngradientScreen({ navigation }) {
     }
   }
 
+  const onScreenFocus = useIsFocused();
+  useEffect(() => {
+    if (onScreenFocus) {
+      setSelected([])
+      setChecked({})
+    }
+  }, [onScreenFocus])
 
   return Object.keys(feed).length ? (
     <LayoutScroll style={{ flexGrow: 1, backgroundColor: Col.Background }}>

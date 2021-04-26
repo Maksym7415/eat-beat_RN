@@ -200,14 +200,19 @@ const FoodOrderingScreen: FC<NavProps> = ({ navigation }) => {
                   >
                     <Picker.Item value={0} label={'Select product'} key={`select_${item.item.id}_product`}/>
                     {found.products.map(p => {
+                      let label = p.price + ' ' + (p.currency ? p.currency : '€') + ', '
+                      if (p.quantity) {
+                        label += p.quantity
+                      }
+                      if (p.units) {
+                        label += p.units +  ', '
+                      }
+                      label += p.name
                       return (
                           <Picker.Item
                             key={`product_${p.id}`}
                             value={p.id}
-                            label={
-                              p.price + ' ' + (p.currency ? p.currency : '€') + ', ' +
-                              p.quantity + p.units +  ', ' + p.name
-                            }
+                            label={label}
                           />
                       )
                     })}

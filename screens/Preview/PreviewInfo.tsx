@@ -159,6 +159,21 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
         creationTime: new Date().getTime(),
     });
   }
+
+  const getImageUrl = (image: string) => {
+    let imageUrl = '';
+    if(page === 'recipes') {
+      imageUrl = image
+    } else if(page === 'snacks') {
+      imageUrl = spoonacularUrl + image
+    } else if(image !== 'default_dish_image.png') {
+      imageUrl = thirdPartyUrl[AppBackend.getBaseUrl()] + image
+    } else {
+      imageUrl = `${AppBackend.getBaseUrl()}${image}`
+    }
+    return imageUrl
+  }
+
   useEffect(() => {
     if (focus) {
       setFeed(item.meal)
@@ -197,7 +212,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
                 <Image
                   source={{
                     uri:
-                      image && image !== 'default_dish_image.png' ? thirdPartyUrl[AppBackend.getBaseUrl()] + image : page === 'snacks' ? spoonacularUrl + image : image.slice(0, 4) === "http" ? image : `${AppBackend.getBaseUrl()}${image}`,
+                      image && getImageUrl(image)
                   }}
                   style={styles.image}
                 />

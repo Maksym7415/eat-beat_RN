@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View, Alert } from "react-native";
 import { Col, Spacing } from "../../../components/Config";
 import { MaterialIcons as Icon } from "@expo/vector-icons";
 import Text from "../../../components/custom/Typography";
@@ -10,16 +10,29 @@ interface Props {
 }
 
 const EditPassword: FC<Props> = ({ label, onEdit }) => {
-  const [value, setValue] = useState("");
-  const [newValue, setNewValue] = useState("");
+  const [value, setValue] = useState(null);
+  const [newValue, setNewValue] = useState(null);
   const [edit, setEdit] = useState(false);
   const onSubmit = () => {
-    if (value.length > 5 && value !== newValue && newValue.length > 5) {
+    if (value?.length > 5 && value !== newValue && newValue?.length > 5) {
       onEdit(value, newValue);
     }
+    
     setEdit(!edit);
-    setValue("");
-    setNewValue("");
+    setValue(null);
+    setNewValue(null);
+    if(newValue?.length < 6 && newValue !== null) {
+      return Alert.alert(
+        "error",
+        "new password length is less than 6 symbols",
+      );
+    }
+    if(value?.length < 6 && value !== null) {
+      return Alert.alert(
+        "error",
+        "old password length is less than 6 symbols",
+      );
+    } 
   };
   return (
     <View style={styles.container}>
@@ -27,7 +40,7 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
         <Text>{label}</Text>
         <TextInput
           maxLength={50}
-          value={value}
+          value={value || ''}
           editable={edit}
           style={edit ? styles.editInput : styles.textInput}
           secureTextEntry={!edit}
@@ -37,7 +50,7 @@ const EditPassword: FC<Props> = ({ label, onEdit }) => {
         {edit ? (
           <TextInput
             maxLength={50}
-            value={newValue}
+            value={newValue || ''}
             style={styles.editInput}
             secureTextEntry={true}
             placeholder="New Password"

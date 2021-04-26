@@ -56,11 +56,11 @@ function RestaurantViewLayout({ id, title, address, description, isPartner, setO
                         {description}
                     </Text>
                 </View>
-                <View style={styles.distanceContainer}>
+                {/* <View style={styles.distanceContainer}>
                     <Text>
                         {distance}
                     </Text>
-                </View>
+                </View> */}
                 <View>
                     <Button
                         label="OPEN MENU"
