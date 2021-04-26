@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavProps, RecipeIngredient, StockType } from '../../components/interfaces';
 import server from '../../server';
@@ -8,6 +8,7 @@ import CheckBox from '../../components/custom/CheckBox';
 import LayoutScroll from '../../components/custom/LayoutScroll';
 import { Button } from '../../components/MyComponents';
 import RoundNumber from '../../utils/roundNumber';
+import { useIsFocused } from '@react-navigation/native';
 
 interface IngProps {
   item: {
@@ -96,6 +97,11 @@ const PreviewIngredients: FC<NavProps> = ({ navigation, item }) => {
       }
     }
   }
+
+  const onScreenFocus = useIsFocused();
+  useEffect(() => {
+    setSelected([])
+  }, [onScreenFocus])
 
   return (
     <LayoutScroll style={styles.container}>
