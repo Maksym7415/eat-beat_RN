@@ -8,6 +8,7 @@ import Text from "../../components/custom/Typography";
 import { useIsFocused } from "@react-navigation/native";
 import ActionButton from "./common/ActionButton";
 import ActionModal from "../../components/ActionModal";
+import moment from 'moment'
 
 interface HealthScore {
   date: string;
@@ -32,18 +33,29 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   const getHealthsScore = async () => {
     const response = await server.getHistory(offset.offset);
-    const newFeed = { ...data };
+    const newFeed: {[key: string]: any} = { ...data };
     if (response.ok) {
       const historyFeed: HealthScore[] = response.data.data;
       historyFeed.forEach(({ date, healthScore }) => {
         Object.assign(newFeed, { [date]: healthScore });
       });
-      setData(newFeed);
+
+      const dates = Object.keys(newFeed)
+      dates.sort((a, b) => {
+        if (moment(a).valueOf() > moment(b).valueOf()) return 1
+        if (moment(a).valueOf() < moment(b).valueOf()) return -1
+        return 0
+      })
+      const sortedFeed: {[key: string]: any} = {}
+      dates.forEach((date) => {
+        sortedFeed[date] = newFeed[date]
+      })
+      setData(sortedFeed);
     }
   };
 
   const handleScroll = (count: number) => {
-    setOffset({ count, offset: offset.offset + 10 });
+    // setOffset({ count, offset: offset.offset + 10 });
   };
 
   const addRecommended = (value: number) => {
@@ -53,8 +65,17 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   let focus = useIsFocused();
   useEffect(() => {
-    if (focus) getHealthsScore();
-  }, [focus, offset.offset]);
+    if (focus) {
+      setOffset({ count: 0, offset: 0 })
+      getHealthsScore();
+    }
+  }, [focus]);
+
+  useEffect(() => {
+    if (focus && offset.offset) {
+      getHealthsScore();
+    }
+  }, [offset.offset]);
 
   return (
     <View style={styles.canvas}>
@@ -64,7 +85,7 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
         <Text type="h6">Your health score</Text>
       </View>
       <View style={{ backgroundColor: "white", paddingVertical: 32 }}>
-        <Chart data={data} scaleDates={false} onReachEnd={handleScroll} />
+        {Object.keys(data).length > 0 && <Chart data={data} scaleDates={false} onReachEnd={handleScroll} />}
       </View>
     </View>
   );
