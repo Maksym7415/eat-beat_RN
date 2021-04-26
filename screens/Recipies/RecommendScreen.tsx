@@ -132,9 +132,12 @@ const RecommendedScreen: FC<NavProps> = ({ navigation }) => {
 
 
   useEffect(() => {
-    navigation.addListener("focus", () => {
+    const _unsubscribe = navigation.addListener("blur", () => {
       setFeed([]);
   });
+  return () => {
+    _unsubscribe();
+  }
   }, [])
 
   return feed?.length ? (
