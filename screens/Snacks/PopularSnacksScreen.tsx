@@ -86,7 +86,9 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
       veryPopular,
       nutrition,
       name,
-      standartUnit
+      standartUnit,
+      standartWeight,
+      standartAmount,
     } = item;
     const details = {
       image,
@@ -102,6 +104,8 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
       dairyFree,
       veryPopular,
       standartUnit,
+      standartWeight,
+      standartAmount,
       price: item.price || '0'
     };
     navigation.navigate('previewSnack', {
