@@ -13,7 +13,7 @@ import {
 import { AppContext } from "../../components/AppContext";
 import EditModal from "../../components/EditModal";
 import { Button } from "../../components/MyComponents";
-import { useIsFocused } from "@react-navigation/native";
+import { CommonActions, useIsFocused } from "@react-navigation/native";
 import server from "../../server";
 
 
@@ -131,8 +131,16 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, clear }) => {
   useEffect(() => {
     if(!clear) {
       setFeed([]);
+      navigation.dispatch((state) => {
+        const routes = state.routes.map((r) => r.name === 'recommendedRestaurant' ? ({...r, params: {clear: undefined}}): r);
+        return CommonActions.reset({
+          ...state,
+          routes,
+        });
+      });
     }
     }, [clear])
+  
 
   return feed?.length ? (
     <View style={styles.canvas}>
