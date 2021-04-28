@@ -47,6 +47,7 @@ const Scanner: FC<ScannerProps> = ({ color, addLabel, onSearch, onAdd, onExit })
   const onPressTryAgain = () => {
     setMessage(messages.scanning)
     setDisplayNotFound(false)
+    setDisplayAddProductModal(false)
     setScanningEnabled(true)
   }
 
@@ -95,6 +96,7 @@ const Scanner: FC<ScannerProps> = ({ color, addLabel, onSearch, onAdd, onExit })
             </View>
           </View>
           <View style={styles.modalButtons}>
+            <Text type={'button'} onPress={onPressTryAgain} style={[styles.modalButton, {color}]}>CANCEL</Text>
             <Text type={'button'} onPress={onPressAdd} style={[styles.modalButton, {color}]}>{addLabel}</Text>
           </View>
         </ModalCommon>
