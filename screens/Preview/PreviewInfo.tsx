@@ -30,13 +30,6 @@ interface ModalData {
   data: object;
 }
 
-const thirdPartyUrl = {
-  'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
-  'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
-  'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
-  'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
-}
-
 const empty = {
   image: "",
   name: "",
@@ -169,7 +162,7 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
     } else if(page === 'snacks') {
       imageUrl = spoonacularUrl + image
     } else if(image !== 'default_dish_image.png') {
-      imageUrl = thirdPartyUrl[AppBackend.getBaseUrl()] + image
+      imageUrl = AppBackend.getBasethirdPartyUrl() + image
     } else {
       imageUrl = `${AppBackend.getBaseUrl()}${image}`
     }

@@ -69,7 +69,7 @@ const RecipeCard: FC<Props> = ({
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPreview}>
       <View style={styles.container}>
-        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : page === 'restaurant' ? image === 'default_dish_image.png' ? AppBackend.getBaseUrl() + image : thirdPartyUrl[AppBackend.getBaseUrl()] + image : image }}>
+        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : page === 'restaurant' ? image === 'default_dish_image.png' ? AppBackend.getBaseUrl().baseUrl + image : AppBackend.getBaseUrl().baseThirdPartyUrl + image : image }}>
           <LinearGradient
             start={[0, 0]}
             end={[0, 1]}
