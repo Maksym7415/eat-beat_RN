@@ -21,7 +21,7 @@ import server from "../../server";
 
 type AddMealsFun = (id: number, props: AddMealsProps) => void;
 let DontRefresh = false;
-const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
+const RecommendedScreen: FC<NavProps> = ({ navigation, clear }) => {
   const { calendar, isFetching } = useContext<Memo>(AppContext);
   const [fetching, setFetching] = useState<Fetching>({
     clicked: false,
@@ -113,7 +113,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
     };
     navigation.navigate('previewRestaurantScreen', {
       title: name,
-      details: {...details, page: 'restaurants'},
+      details: {...details, page: 'restaurants', fromPage: 'recommendedRestaurant'},
       item: {meal: details, id: item.id}
     });
     DontRefresh = true;
@@ -129,15 +129,10 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
   }, [focus]);
 
   useEffect(() => {
-    const _unsubscribe = navigation.addListener('blur', () => {
+    if(!clear) {
       setFeed([]);
-    });
-
-    return () => {
-      _unsubscribe()
     }
-
-  }, [])
+    }, [clear])
 
   return feed?.length ? (
     <View style={styles.canvas}>
