@@ -99,6 +99,7 @@ function RestaurantMenu({ navigation, route }) {
                             title={elm} 
                             icon_type={false} 
                             isPrecent={false} 
+                            requestData={route.params.menu[elm]}
                             data={route.params.menu[elm].map((el) => el.image === 'default_dish_image.png' ? {...el, image: backendAppUrl + el.image} : {...el, image: thirdPartyUrl[backendAppUrl] + el.image })} 
                             cb={(data) => modalAction(data)} routeToCb={previewPage}
                         />

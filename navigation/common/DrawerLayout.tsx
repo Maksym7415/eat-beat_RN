@@ -61,7 +61,7 @@ const Item = ({
   </TouchableOpacity>
 )};
 
-const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks, Col.Stocks];
+const Colors = [Col.Main, Col.Recipes, Col.Profile, Col.Restaurants, Col.Snacks, Col.Stocks,];
 
 const DrawerLayout = (props) => {
   const { navigation } = props;
@@ -113,22 +113,6 @@ const DrawerLayout = (props) => {
           icon="foodStocks"
           label="Food Stocks"
           onPress={() => navigate("stockDrawer")}
-        />
-        <Divider />
-        <Item
-          index={6}
-          focus={props.state.index}
-          icon="shoppingList"
-          label="Shopping List"
-          disabled
-        />
-        <Divider />
-        <Item
-          index={7}
-          focus={props.state.index}
-          icon="barcodeScanner"
-          label="Barcode Scanner"
-          disabled
         />
         <Divider />
         <Item

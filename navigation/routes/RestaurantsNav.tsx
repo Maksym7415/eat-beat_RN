@@ -36,7 +36,7 @@ const RestaurantsTopNavigator = () => (
         title: 'recommended'
       })}
     >
-      {(props) => <RecommendScreen {...props} page='restaurants' />}
+      {(props) => <RecommendScreen {...props} page='restaurants' clear={props.route.params?.clear} />}
     </Stack.Screen>
     <Stack.Screen name="search" >
       {(props) => <SearchRestaurantsScreen {...props} page={'restaurants'} />}
@@ -98,7 +98,7 @@ export const RestaurantsStack = () => {
           headerLeft: () => (
             <Icon
               style={{ marginLeft: 16 }}
-              onPress={() => navigation.goBack()}
+              onPress={() => route.params.details.fromPage ? navigation.navigate(route.params.details.fromPage, {clear: true}) : navigation.goBack()}
               name={"arrow-back"}
               color={Col.White}
               size={24}

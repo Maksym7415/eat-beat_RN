@@ -23,7 +23,7 @@ interface Props {
   cb?: () => void,
 }
 
-const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, routeToCb=() => {} }) => {
+const Collapse: FC<Props> = ({ title, styler, icon_type, requestData, data, isPrecent, cb, routeToCb=() => {} }) => {
   const [arrow, setArrow] = useState(false);
   return (
       <View style={styles.container}>
@@ -72,7 +72,7 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, data, isPrecent, cb, ro
                     <Text style={styles.collapseText}>{`${
                       item.value || 0
                     } %`}</Text> :
-                    <TouchableOpacity onPress={() => cb(item)}>
+                    <TouchableOpacity onPress={() => cb(requestData[key])}>
                       <SvgMaker name='addMenuIcon'/>
                     </TouchableOpacity>
                   }

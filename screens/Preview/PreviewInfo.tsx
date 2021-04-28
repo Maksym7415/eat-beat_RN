@@ -84,6 +84,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
     dairyFree,
     veryPopular,
     price,
+    standartWeight,
+    standartAmount,
   } = feed;
   const previewSettings = {
     'recipes': {
@@ -91,8 +93,8 @@ const PreviewInfo: FC<NavProps> = ({ navigation, route, page, routeFrom, item, t
       currentValue: (recipeServings || servings)
     },
     'snacks': {
-      name: "Standart unit",
-      currentValue: item.meal.standartUnit || item.meal.unit
+      name: "Standard serving",
+      currentValue: `${standartAmount} ${item.meal.standartUnit || item.meal.unit} (${standartWeight}g)`
     },
     'restaurants': {
       name: null,
