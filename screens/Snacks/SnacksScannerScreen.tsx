@@ -1,12 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { NavProps, RecipeIngredient } from '../../components/interfaces';
+import { AppContext } from '../../components/AppContext';
 import server from '../../server';
 import Scanner from '../../components/Scanner';
 import { Col } from '../../components/Config';
+import { Memo, NavProps, RecipeIngredient } from '../../components/interfaces';
 import moment from 'moment'
 
 const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
+
+  const { calendar } = useContext<Memo>(AppContext)
 
   const onSearch = async (code: string): Promise<RecipeIngredient> => {
     return await server.snackByBarcode({ code })
@@ -16,7 +19,7 @@ const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
     await server.addSnacks({
       meal: {...ingredient, id: false, spoonacularId: ingredient.id},
       quantity: 1,
-      date: moment().format('YYYY-MM-DD HH:mm')
+      date: moment(calendar.date).format('YYYY-MM-DD HH:mm')
     });
     navigation.navigate('meals')
   }
