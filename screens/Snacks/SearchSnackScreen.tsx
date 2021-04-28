@@ -70,17 +70,21 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
   };
 
   const startSearch = async () => {
-    console.log('start search')
+    if(!state) return;
     showModal(false, page);
     setFetching({ ...fetching, myFetching: true });
     const result  = await server.snackSearch(state);
     if(result.ok) {
-      setFeed({
-        ...feed,
-        results: result.data.results,
-        offset: result.data.offset,
-        totalResults: result.data.totalResults,
-      });  
+      if(!result.data.results.length) {
+        setFeed('No snacks found') 
+      } else {
+        setFeed({
+          ...feed,
+          results: result.data.results,
+          offset: result.data.offset,
+          totalResults: result.data.totalResults,
+        });  
+      }
     }
     setFetching({ ...fetching, myFetching: false });
   };
@@ -158,14 +162,14 @@ const SearchSnackScreen: FC<NavProps> = ({ navigation, page }) => {
         hideModal={() => setModalData({ ...modalData, modalVisible: false })}
         bg={Col.Snacks}
       />
-      <SearchModal
+      {isShow[page] && <SearchModal
         modalVisible={isShow[page]}
         hideModal={() => showModal(false, page)}
         onChangeHandler={onChangeHandler}
         value={state}
         searchHandler={startSearch}
         page={page}
-      />
+      />}
       <ScrollView>
         {!fetching.myFetching ? (
           typeof feed === "string" ? (
