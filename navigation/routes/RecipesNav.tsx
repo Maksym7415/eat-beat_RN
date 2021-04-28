@@ -60,7 +60,7 @@ const RecipesTopNavigator = () => (
         title: 'Recommended'
       })}
     >
-      {(props) => <RecommendedScreen {...props} page={'recipes'}/>}
+      {(props) => <RecommendedScreen {...props} clear={props.route.params?.clear} page={'recipes'}/>}
     </Stack.Screen>
     <Stack.Screen
       name={'recipesSearch'}
@@ -186,7 +186,7 @@ export const RecommendedStack = () => {
           headerLeft: () => (
             <Icon
               style={{ marginLeft: 16 }}
-              onPress={() => navigation.goBack()}
+              onPress={() => route.params.details.fromPage ? navigation.navigate(route.params.details.fromPage, {clear: true}) : navigation.goBack()}
               name={"arrow-back"}
               color={Col.White}
               size={24}
