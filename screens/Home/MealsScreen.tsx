@@ -69,7 +69,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
 
   const addRecommended = (value: number) => {
     setActionBtn(false);
-    navigation.navigate(recommendScreens[value]);
+    navigation.navigate(recommendScreens[value], {clear: false});
   };
 
   const updateMeal = async (id, body) => {

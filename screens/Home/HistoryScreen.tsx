@@ -60,7 +60,7 @@ const HistoryScreen: FC<NavProps> = ({ navigation }) => {
 
   const addRecommended = (value: number) => {
     setActionBtn(false);
-    navigation.navigate(recommendScreens[value]);
+    navigation.navigate(recommendScreens[value], {clear: false});
   };
 
   let focus = useIsFocused();

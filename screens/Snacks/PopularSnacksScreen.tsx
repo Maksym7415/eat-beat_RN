@@ -41,7 +41,6 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, page }) => {
   const serveData = async () => {
     setFetching({ clicked: true, deactivate: true });
     const response = await server.popularSnacks(date);
-    console.log(response)
     if (response.ok) {
       setFetching({ clicked: false, deactivate: false });
       return setFeed(response.data);

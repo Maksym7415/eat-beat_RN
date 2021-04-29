@@ -3,42 +3,49 @@
     "id": "0",
     "title": "QA",
     "url": "https://logisticbrocker.hopto.org/eat-beat-test/",
+    "thirdPartyUrl": "https://logisticbrocker.hopto.org/eat-beat-test",
     "isDefault": false
   },
   {
     "id": "1",
     "title": "DEV LOCAL 1",
     "url": "http://192.168.3.115:8081/",
+    "thirdPartyUrl": "http://192.168.3.115:3000/",
     "isDefault": false
   },
   {
     "id": "2",
     "title": "DEV LOCAL 2",
     "url": "http://10.4.30.157:8081/",
+    "thirdPartyUrl": "http://10.4.30.157:3000/",
     "isDefault": false
   },
   {
     "id": "3",
     "title": "QA REMOTE",
     "url": "http://52.72.42.64:8082/",
+    "thirdPartyUrl": "http://52.72.42.64:3001/",
     "isDefault": true
   },
   {
     "id": "4",
     "title": "DEV REMOTE",
     "url": "http://52.72.42.64:8081/",
+    "thirdPartyUrl": "http://52.72.42.64:3000/",
     "isDefault": false
   },
   {
     "id": "5",
     "title": "DEV 192.168.0.75",
     "url": "http://192.168.0.75:8081/",
+    "thirdPartyUrl": "",
     "isDefault": false
   },
   {
     "id": "6",
     "title": "PRODUCTION",
     "url": "http://46.172.83.123:8082/",
+    "thirdPartyUrl": "'http://46.172.83.123:3001",
     "isDefault": false
   }
 ]

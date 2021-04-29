@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   View,
   Modal,
@@ -17,8 +17,15 @@ export default function SearchModal({
   searchHandler,
   page
 }: any) {
+
+  const ref = useRef<TextInput>();
+
   return (
-    <Modal animationType="fade" transparent={true} visible={modalVisible}>
+    <Modal animationType="fade" transparent={true} visible={modalVisible} onShow={() => {
+      if (ref.current) {
+        ref.current.focus()
+      }
+    }}>
       <View style={styles[`container${page}`]}>
         <Icon
           onPress={hideModal}
@@ -27,7 +34,7 @@ export default function SearchModal({
           size={24}
         />
         <TextInput
-          autoFocus
+          ref={ref}
           value={value}
           style={styles.input}
           placeholder="Search"
