@@ -11,5 +11,6 @@ export interface BackendItem {
   id: string
   title: string
   url: string
+  thirdPartyUrl: string
   isDefault: boolean
 }

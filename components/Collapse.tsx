@@ -63,7 +63,7 @@ const Collapse: FC<Props> = ({ title, styler, icon_type, requestData, data, isPr
                         numberOfLines={2}
                         ellipsizeMode={'tail'}
                         style={{...styles.collapseText, textDecorationLine: isPrecent ? '' : 'underline'}}
-                        onPress={() => routeToCb(item)}
+                        onPress={() => routeToCb(requestData[key])}
                       >{item.name}</Text>
                     </View>
                   </View>

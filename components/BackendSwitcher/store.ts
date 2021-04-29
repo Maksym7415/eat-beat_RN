@@ -6,18 +6,24 @@ const storeKey = '@backend'
 
 export class BackendSwitcherStore {
 
-  private baseUrl: string = null
-  private backendItems: BackendItem[] = []
+  private baseUrl: string = null;
+  private baseThirdPartyUrl: string = null;
+  private backendItems: BackendItem[] = [];
 
   public setup = async () => {
     await this.load()
     await this.setBaseUrl()
+    await this.setBasethirdPartyUrl()
   }
 
   public getBaseUrl = () => {
     return this.baseUrl
   }
 
+  public getBasethirdPartyUrl = () => {
+    return this.baseThirdPartyUrl
+  }
+  
   public getBackendItems = () => {
     return [ ...this.backendItems ]
   }
@@ -35,6 +41,7 @@ export class BackendSwitcherStore {
   public setList = async (list: BackendItem[]) => {
     this.backendItems = [...list]
     await this.setBaseUrl()
+    await this.setBasethirdPartyUrl()
     await this.save()
   }
 
@@ -54,6 +61,21 @@ export class BackendSwitcherStore {
     console.log('baseUrl', this.baseUrl)
   }
 
+  private setBasethirdPartyUrl = async () => {
+    this.backendItems.forEach((item) => {
+      if (item.isDefault) {
+        this.baseThirdPartyUrl = item.thirdPartyUrl
+      }
+    })
+    if (!this.baseThirdPartyUrl) {
+      if (this.backendItems.length) {
+        await this.setAsDefault({...this.backendItems[0]})
+      } else {
+        throw new Error('Can\'t detect basethirdPartyUrl, please check ./backend.json')
+      }
+    }
+    console.log('basethirdPartyUrl', this.baseThirdPartyUrl)
+  }
 
   private load = async () => {
     const str = await AsyncStorage.getItem(storeKey)

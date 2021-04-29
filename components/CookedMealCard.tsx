@@ -6,14 +6,6 @@ import { Text } from "./custom/Typography";
 import { Divider } from "./MyComponents";
 import AppBackend from '../components/BackendSwitcher/store'
 
-const thirdPartyUrl = {
-  'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
-  'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
-  'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
-  'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
-}
-
-
 interface editProps {
   id: number;
   name: string;
@@ -53,13 +45,13 @@ const CookedMealCard: FC<Props> = ({
   const getImageUrl = (image: string, source: string) => {
     let imageUrl = '';
     if(source === 'recipe') {
-      imageUrl = image
+      imageUrl = image;
     } else if(source === 'snack') {
-      imageUrl = spoonacularUrl + image
+      imageUrl = spoonacularUrl + image;
     } else if(image !== 'default_dish_image.png') {
-      imageUrl = thirdPartyUrl[AppBackend.getBaseUrl()] + image
+      imageUrl = AppBackend.getBasethirdPartyUrl() + image;
     } else {
-      imageUrl = `${AppBackend.getBaseUrl()}${image}`
+      imageUrl = `${AppBackend.getBaseUrl()}${image}`;
     }
     return imageUrl
   }
