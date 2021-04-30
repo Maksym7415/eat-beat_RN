@@ -45,7 +45,7 @@
     "id": "6",
     "title": "PRODUCTION",
     "url": "http://46.172.83.123:8082/",
-    "thirdPartyUrl": "'http://46.172.83.123:3001",
+    "thirdPartyUrl": "http://46.172.83.123:3001/",
     "isDefault": false
   }
 ]

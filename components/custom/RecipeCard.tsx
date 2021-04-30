@@ -52,6 +52,7 @@ const RecipeCard: FC<Props> = ({
     is_partner,
     restName,
   } = details;
+  const spoonacularUrl = 'https://spoonacular.com/cdn/ingredients_100x100/'
   const getImage = (
     vegetarian: boolean,
     vegan: boolean,
@@ -66,10 +67,25 @@ const RecipeCard: FC<Props> = ({
     if (dairyFree) iconsArray.push("dairyFree");
     return iconsArray;
   };
+
+  const getImageUrl = (image: string) => {
+    let imageUrl = '';
+    if(page === 'recipes') {
+      imageUrl = image
+    } else if(page === 'snacks') {
+      imageUrl = spoonacularUrl + image
+    } else if(image !== 'default_dish_image.png') {
+      imageUrl = AppBackend.getBasethirdPartyUrl() + image
+    } else {
+      imageUrl = `${AppBackend.getBaseUrl()}${image}`
+    }
+    return imageUrl
+  }
+
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPreview}>
       <View style={styles.container}>
-        <ImageBackground style={styles.imageContainer} source={{ uri: page === 'snacks' ? `https://spoonacular.com/cdn/ingredients_100x100/${image}` : page === 'restaurant' ? image === 'default_dish_image.png' ? AppBackend.getBaseUrl().baseUrl + image : AppBackend.getBaseUrl().baseThirdPartyUrl + image : image }}>
+        <ImageBackground style={styles.imageContainer} source={{ uri: getImageUrl(image) }}>
           <LinearGradient
             start={[0, 0]}
             end={[0, 1]}
