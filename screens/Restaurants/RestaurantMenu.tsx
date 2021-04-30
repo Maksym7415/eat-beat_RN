@@ -13,12 +13,6 @@ import { correctFormat } from '../../utils/date';
 import { Col } from '../../components/Config';
 import AppBackend from '../../components/BackendSwitcher/store';
 
-const thirdPartyUrl = {
-    'http://10.4.30.157:8081/': 'http://10.4.30.157:3000/',
-    'http://192.168.3.115:8081/': 'http://192.168.3.115:3000/',
-    'http://52.72.42.64:8082/': 'http://52.72.42.64:3001/',
-    'http://52.72.42.64:8081/': 'http://52.72.42.64:3000/'
-}
 
 interface ModalData {
     id: number;
@@ -44,6 +38,7 @@ function RestaurantMenu({ navigation, route }) {
         creationTime: new Date(date).getTime(),
       });
     const backendAppUrl = AppBackend.getBaseUrl();
+    const thirdPartyUrl = AppBackend.getBasethirdPartyUrl()
 
       const addMenuItem = async (id: number, {servings, creationTime}: object) => {
         setModalData({
@@ -100,7 +95,7 @@ function RestaurantMenu({ navigation, route }) {
                             icon_type={false} 
                             isPrecent={false} 
                             requestData={route.params.menu[elm]}
-                            data={route.params.menu[elm].map((el) => el.image === 'default_dish_image.png' ? {...el, image: backendAppUrl + el.image} : {...el, image: thirdPartyUrl[backendAppUrl] + el.image })} 
+                            data={route.params.menu[elm].map((el) => el.image === 'default_dish_image.png' ? {...el, image: backendAppUrl + el.image} : {...el, image: thirdPartyUrl + el.image })} 
                             cb={(data) => modalAction(data)} routeToCb={previewPage}
                         />
                     </View>)}
