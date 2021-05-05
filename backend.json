@@ -25,7 +25,7 @@
     "title": "QA REMOTE",
     "url": "http://52.72.42.64:8082/",
     "thirdPartyUrl": "http://52.72.42.64:3001/",
-    "isDefault": true
+    "isDefault": false
   },
   {
     "id": "4",
@@ -46,6 +46,6 @@
     "title": "PRODUCTION",
     "url": "http://46.172.83.123:8082/",
     "thirdPartyUrl": "http://46.172.83.123:3001/",
-    "isDefault": false
+    "isDefault": true
   }
 ]
