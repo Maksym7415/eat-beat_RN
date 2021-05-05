@@ -168,6 +168,7 @@ const RecommendedScreen: FC<NavProps> = ({ navigation, clear }) => {
                 details={item}
                 actionHandler={actionHandler}
                 onPreview={() => onPreview(item)}
+                page='recipes'
               />
             </View>
           ))}
