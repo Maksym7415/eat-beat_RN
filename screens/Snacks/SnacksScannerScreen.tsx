@@ -19,7 +19,7 @@ const SnacksScannerScreen: FC<NavProps> = ({ navigation }) => {
     await server.addSnacks({
       meal: {...ingredient, id: false, spoonacularId: ingredient.id},
       quantity: 1,
-      date: moment(calendar.date).format('YYYY-MM-DD HH:mm')
+      date: `${moment(calendar.date).format('YYYY-MM-DD')} ${moment().format('HH:mm')}`
     });
     navigation.navigate('meals')
   }
