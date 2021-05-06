@@ -143,7 +143,7 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         onRight={deleteHandler}
         visible={popAlert.visible}
       />
-      {feed.length ? <ScrollView>
+      {feed?.length ? <ScrollView>
         {feed.map((item, key) => (
           <CookedMealCard
           key={key}

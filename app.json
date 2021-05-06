@@ -23,7 +23,7 @@
     },
     "android": {
       "package": "com.prod.eatbeat",
-      "versionCode": 120,
+      "versionCode": 121,
       "config": {
         "googleMaps": { "apiKey": "AIzaSyDXUf622T_5pXNoTVXrOC0VIbt3x0iCNho" }
      }
