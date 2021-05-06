@@ -11,6 +11,7 @@ import server from "../../server";
 import ActionButton from "./common/ActionButton";
 import ActionModal from "../../components/ActionModal";
 import { useIsFocused } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface ModalData {
   id: number;
@@ -142,26 +143,32 @@ const MealsScreen: FC<NavProps> = ({ navigation, route }) => {
         onRight={deleteHandler}
         visible={popAlert.visible}
       />
-      <FlatList
+      {feed.length ? <ScrollView>
+        {feed.map((item, key) => (
+          <CookedMealCard
+          key={key}
+          item={item}
+          bgColor={item.isPartner ? Col.Main : screens[item.source]}
+          actionHandler={(props: editProps) =>
+            setModalData({ ...props, modalVisible: true })
+          }
+          onClick={() => onPreview(item)}
+          onDelete={(id, name, source) => {
+            if (!Busy) setPopAlert({ id, name, visible: true, source });
+          }}
+        />
+        ))}
+      </ScrollView> : <EmptyList/>}
+      {/* <FlatList
         data={feed}
         ListEmptyComponent={() => <EmptyList />}
-        keyExtractor={(item) => `${item.id}`}
+        // keyExtractor={(item) => `${item.id}`}
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => 
          (
-          <CookedMealCard
-            item={item}
-            bgColor={item.isPartner ? Col.Main : screens[item.source]}
-            actionHandler={(props: editProps) =>
-              setModalData({ ...props, modalVisible: true })
-            }
-            onClick={() => onPreview(item)}
-            onDelete={(id, name, source) => {
-              if (!Busy) setPopAlert({ id, name, visible: true, source });
-            }}
-          />
+          
         )}
-      />
+      /> */}
     </View>
   );
 };
