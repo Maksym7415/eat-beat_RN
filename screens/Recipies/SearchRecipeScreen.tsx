@@ -386,6 +386,7 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
                       actionHandler={actionHandler}
                       notShowScore={true}
                       onPreview={() => onPreview(item)}
+                      page='recipes'
                     />
                   </View>
                 ))}
