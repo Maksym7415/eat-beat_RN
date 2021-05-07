@@ -120,8 +120,8 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
           (el) =>
             el.title === "Calories" ||
             el.title === "Protein" ||
-            el.title === "Fat" ||
-            el.title === "Carbohydrates"
+            el.title === "Total Fat" ||
+            el.title === "Carbs"
         ),
         nutrients: nutrition.nutrients,
         servings,
