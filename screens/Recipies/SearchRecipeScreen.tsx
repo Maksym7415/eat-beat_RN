@@ -75,6 +75,11 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
     diets: "",
     mealTypes: "",
   });
+  const [copyServerResponse, setCopyServerResponse] = useState({
+    intolerances: [],
+    diets: [],
+    mealTypes: [],
+  }); 
   const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
   const [modalData, setModalData] = useState<ModalData>({
     id: 0,
@@ -196,8 +201,22 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
   const getFilter = async () => {
     const response = await server.getSearchFilter();
     if (response.ok) {
-      setFilter(() => getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes, intolerances: filter.intolerances, diets: filter.diets } : response.data));
-      saveFilterConfig(getPreferences(filterConfig.mealTypes ? {...response.data, mealTypes: filter.mealTypes, intolerances: filter.intolerances, diets: filter.diets } : response.data));
+      let result = false;
+      const [diets, intolerances, mealTypes] = Object.values(response.data);
+      const [copyDiets, copyIntolerances, copyMealTypes] = Object.values(copyServerResponse);
+      const copyElements = [...copyDiets, ...copyIntolerances, ...copyMealTypes];
+      setCopyServerResponse(response.data)
+      if(copyElements.length) {
+        result = [...diets, ...intolerances, ...mealTypes].map((el, i) => el.isUsers === copyElements[i].isUsers).every((v) => v);
+      }
+      if(result) {
+        setFilter(() => getPreferences(filter));
+        saveFilterConfig(getPreferences(filter));
+        
+      } else {
+        setFilter(() => getPreferences(response.data));
+        saveFilterConfig(getPreferences(response.data));
+      }   
     }
   };
 
@@ -275,7 +294,8 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const startSearchByIngredients = async () => {
     setFetching({ ...fetching, myFetching: true }); // WTF ???
-    const ingredients = byIngredientsParams.map(ing => ing.name).join(',')
+    const ingredients = byIngredientsParams.map(ing => ing.name).join(',');
+    setState(`meals that contain - ${ingredients}`);
     const response = await server.searchRecipesByIngredients({ ingredients: ingredients })
     if (response.results.length) {
       setFeed({
@@ -283,7 +303,14 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
         offset: 0,
         totalResults: response.results.length
       })
+    } else {
+        setFeed({
+          results: [],
+          offset: 0,
+          totalResults: 0
+        })
     }
+    
     setFetching({ ...fetching, myFetching: false });
   }
 
