@@ -294,7 +294,8 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
 
   const startSearchByIngredients = async () => {
     setFetching({ ...fetching, myFetching: true }); // WTF ???
-    const ingredients = byIngredientsParams.map(ing => ing.name).join(',')
+    const ingredients = byIngredientsParams.map(ing => ing.name).join(',');
+    setState(`meals that contain - ${ingredients}`);
     const response = await server.searchRecipesByIngredients({ ingredients: ingredients })
     if (response.results.length) {
       setFeed({
@@ -302,7 +303,14 @@ const SearchRecipeScreen: FC<NavProps> = ({ navigation, page }) => {
         offset: 0,
         totalResults: response.results.length
       })
+    } else {
+        setFeed({
+          results: [],
+          offset: 0,
+          totalResults: 0
+        })
     }
+    
     setFetching({ ...fetching, myFetching: false });
   }
 
