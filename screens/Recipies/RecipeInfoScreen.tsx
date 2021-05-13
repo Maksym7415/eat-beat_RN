@@ -112,10 +112,10 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
   const getRecipeInfo = useCallback(async () => {
     const response = await server.getRecipeInfo(recipeId);
     if (response.ok) {
-      const { title, instruction, nutrition, servings, image } = response.data;
+      const { title, instructions, nutrition, servings, image } = response.data;
       setFeed({
         title,
-        instruction,
+        instruction: instructions,
         mainNutrients: nutrition.nutrients.filter(
           (el) =>
             el.title === "Calories" ||
@@ -125,7 +125,7 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
         ),
         nutrients: nutrition.nutrients,
         servings,
-        ingredients: nutrition.ingredient,
+        ingredients: nutrition.ingredients,
         uri: image,
       });
       setCfg((config) => ({
@@ -145,8 +145,6 @@ const RecipeInfoScreen: FC<NavProps> = ({ navigation }) => {
     setDisabled(true);
     const res = await server.updateRecipe(recipeId, {
       title: title.value || feed.title,
-      instruction: feed.instruction,
-      ingredients: feed.ingredients,
       servings: +servings.value || +feed.servings,
     });
     if (!res.ok) {
