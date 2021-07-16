@@ -44,8 +44,8 @@
   {
     "id": "6",
     "title": "PRODUCTION",
-    "url": "http://eat-beat.telesens.net/",
-    "thirdPartyUrl": "http://eat-beat.telesens.net:3001/",
+    "url": "https://eat-beat.telesens.net:8082/",
+    "thirdPartyUrl": "https://eat-beat.telesens.net:3001/",
     "isDefault": true
   }
 ]
